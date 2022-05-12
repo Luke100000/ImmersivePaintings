@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[35,)"
+issueTrackerURL = "https://github.com/Luke100000/immersivePaintings/issues"
+license = "GNU"
+
+[[mods]]
+modId = "immersive_paintings"
+version = "${version}"
+displayName = "Immersive Airships"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/immersivePaintings"
+authors = "Luke100000"
+description = '''
+    Use your own paintings!
+    '''
+logoFile = "logoFile.png"
+
+[[dependencies.immersive_paintings]]
+modId = "forge"
+mandatory = true
+versionRange = "[36,)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.immersive_paintings]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2]"
+ordering = "NONE"
+side = "BOTH"

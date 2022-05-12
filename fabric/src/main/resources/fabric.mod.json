@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "immersive_paintings",
+  "version": "${version}",
+  "name": "Immersive Paintings",
+  "description": "Use your own paintings!",
+  "authors": [
+    "Luke100000"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/immersivePaintings",
+    "sources": "https://github.com/Luke100000/immersivePaintings",
+    "issues": "https://github.com/Luke100000/immersivePaintings/issues"
+  },
+  "license": "GNU",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "immersive_paintings.fabric.CommonFabric"
+    ],
+    "client": [
+      "immersive_paintings.fabric.ClientFabric"
+    ]
+  },
+  "mixins": [
+    "immersive_paintings.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "java": ">=8",
+    "fabric-api-base": ">=0.1.0"
+  }
+}
