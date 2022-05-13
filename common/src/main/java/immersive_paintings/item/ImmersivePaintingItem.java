@@ -1,11 +1,8 @@
 package immersive_paintings.item;
 
-import net.minecraft.entity.Entity;
+import immersive_paintings.entity.AbstractImmersiveDecorationEntity;
+import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.decoration.GlowItemFrameEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,13 +14,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-public class PaintingItem extends Item {
-    private final EntityType<? extends AbstractDecorationEntity> entityType;
-
-
-    public PaintingItem(Settings settings) {
+public class ImmersivePaintingItem extends Item {
+    public ImmersivePaintingItem(Settings settings) {
         super(settings);
-        entityType = EntityType.PAINTING;
     }
 
     public ActionResult useOnBlock(ItemUsageContext context) {
@@ -36,29 +29,18 @@ public class PaintingItem extends Item {
             return ActionResult.FAIL;
         } else {
             World world = context.getWorld();
-            Object abstractDecorationEntity;
-            if (this.entityType == EntityType.PAINTING) {
-                abstractDecorationEntity = new PaintingEntity(world, blockPos2, direction);
-            } else if (this.entityType == EntityType.ITEM_FRAME) {
-                abstractDecorationEntity = new ItemFrameEntity(world, blockPos2, direction);
-            } else {
-                if (this.entityType != EntityType.GLOW_ITEM_FRAME) {
-                    return ActionResult.success(world.isClient);
-                }
-
-                abstractDecorationEntity = new GlowItemFrameEntity(world, blockPos2, direction);
-            }
+            ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, blockPos2, direction);
 
             NbtCompound nbtCompound = itemStack.getNbt();
             if (nbtCompound != null) {
-                EntityType.loadFromEntityNbt(world, playerEntity, (Entity)abstractDecorationEntity, nbtCompound);
+                EntityType.loadFromEntityNbt(world, playerEntity, paintingEntity, nbtCompound);
             }
 
-            if (((AbstractDecorationEntity)abstractDecorationEntity).canStayAttached()) {
+            if (paintingEntity.canStayAttached()) {
                 if (!world.isClient) {
-                    ((AbstractDecorationEntity)abstractDecorationEntity).onPlace();
+                    ((AbstractImmersiveDecorationEntity)paintingEntity).onPlace();
                     world.emitGameEvent(playerEntity, GameEvent.ENTITY_PLACE, blockPos);
-                    world.spawnEntity((Entity)abstractDecorationEntity);
+                    world.spawnEntity(paintingEntity);
                 }
 
                 itemStack.decrement(1);
