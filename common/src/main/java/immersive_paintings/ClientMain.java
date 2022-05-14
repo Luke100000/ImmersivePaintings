@@ -5,7 +5,7 @@ import immersive_paintings.network.ClientNetworkManager;
 public class ClientMain {
     public static void postLoad() {
         //finish the items
-        ItemsClient.postLoad();
+        Client.postLoad();
 
         Main.networkManager = new ClientNetworkManager();
     }

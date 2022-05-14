@@ -1,6 +1,6 @@
 package immersive_paintings;
 
-public class ItemsClient {
+public class Client {
     public static void postLoad() {
 
     }

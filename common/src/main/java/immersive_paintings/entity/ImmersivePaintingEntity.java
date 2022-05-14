@@ -1,10 +1,11 @@
 package immersive_paintings.entity;
 
 import immersive_paintings.Entities;
+import immersive_paintings.client.render.entity.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,8 +29,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
         super(Entities.PAINTING, world, pos);
 
-        width = 1;
-        height = 1;
+        width = 3;
+        height = 3;
 
         setFacing(direction);
     }
@@ -95,6 +96,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        return super.interact(player, hand);
+        MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getUuid()));
+        return ActionResult.CONSUME;
     }
 }

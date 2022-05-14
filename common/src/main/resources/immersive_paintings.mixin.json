@@ -4,7 +4,6 @@
   "package": "immersive_paintings.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-
   ],
   "client": [
   ],
