@@ -1,7 +1,7 @@
 package immersive_paintings.entity;
 
 import immersive_paintings.Entities;
-import immersive_paintings.client.render.entity.gui.ImmersivePaintingScreen;
+import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundEvents;
@@ -22,31 +23,41 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
-    private int width;
-    private int height;
-    private Identifier motive;
+    private Identifier motive = new Identifier("unknown");
 
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
         super(Entities.PAINTING, world, pos);
-
-        width = 3;
-        height = 3;
 
         setFacing(direction);
     }
 
     public ImmersivePaintingEntity(EntityType<Entity> type, World world) {
-        super(EntityType.PAINTING, world);
+        super(type, world);
     }
 
     @Override
     public int getWidthPixels() {
-        return width * 16;
+        return 3 * 16;
     }
 
     @Override
     public int getHeightPixels() {
-        return height * 16;
+        return 3 * 16;
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        nbt.putString("Motive", motive.toString());
+        nbt.putByte("Facing", (byte)this.facing.getHorizontal());
+        super.writeCustomDataToNbt(nbt);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        this.motive = new Identifier(nbt.getString("Motive"));
+        this.facing = Direction.fromHorizontal(nbt.getByte("Facing"));
+        super.readCustomDataFromNbt(nbt);
+        this.setFacing(this.facing);
     }
 
     @Override
@@ -96,7 +107,11 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getUuid()));
-        return ActionResult.CONSUME;
+        if (player.world.isClient) {
+            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getUuid()));
+            return ActionResult.CONSUME;
+        } else {
+            return ActionResult.PASS;
+        }
     }
 }

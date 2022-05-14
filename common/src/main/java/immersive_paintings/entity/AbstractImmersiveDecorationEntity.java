@@ -52,7 +52,6 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         double d = (double)this.attachmentPos.getX() + 0.5;
         double e = (double)this.attachmentPos.getY() + 0.5;
         double f = (double)this.attachmentPos.getZ() + 0.5;
-        double g = 0.46875;
         double h = this.method_6893(this.getWidthPixels());
         double i = this.method_6893(this.getHeightPixels());
         d -= (double)this.facing.getOffsetX() * 0.46875;
@@ -117,8 +116,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public boolean handleAttack(Entity attacker) {
-        if (attacker instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity)attacker;
+        if (attacker instanceof PlayerEntity playerEntity) {
             if (!this.world.canPlayerModifyAt(playerEntity, this.attachmentPos)) {
                 return true;
             }
@@ -210,29 +208,20 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     public float applyRotation(BlockRotation rotation) {
         if (this.facing.getAxis() != Direction.Axis.Y) {
             switch (rotation) {
-                case CLOCKWISE_180: {
-                    this.facing = this.facing.getOpposite();
-                    break;
-                }
-                case COUNTERCLOCKWISE_90: {
-                    this.facing = this.facing.rotateYCounterclockwise();
-                    break;
-                }
-                case CLOCKWISE_90: {
-                    this.facing = this.facing.rotateYClockwise();
-                    break;
-                }
+                case CLOCKWISE_180 -> this.facing = this.facing.getOpposite();
+                case COUNTERCLOCKWISE_90 -> this.facing = this.facing.rotateYCounterclockwise();
+                case CLOCKWISE_90 -> this.facing = this.facing.rotateYClockwise();
             }
         }
         float f = MathHelper.wrapDegrees(this.getYaw());
         switch (rotation) {
-            case CLOCKWISE_180: {
+            case CLOCKWISE_180 -> {
                 return f + 180.0f;
             }
-            case COUNTERCLOCKWISE_90: {
+            case COUNTERCLOCKWISE_90 -> {
                 return f + 90.0f;
             }
-            case CLOCKWISE_90: {
+            case CLOCKWISE_90 -> {
                 return f + 270.0f;
             }
         }

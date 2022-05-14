@@ -1,4 +1,4 @@
-package immersive_paintings.client.render.entity;
+package immersive_paintings.resources;
 
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
