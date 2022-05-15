@@ -3,6 +3,7 @@ package immersive_paintings.entity;
 import immersive_paintings.Entities;
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
+import immersive_paintings.resources.PaintingManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -37,12 +38,12 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public int getWidthPixels() {
-        return 3 * 16;
+        return PaintingManager.getPainting(motive).width * 16;
     }
 
     @Override
     public int getHeightPixels() {
-        return 3 * 16;
+        return PaintingManager.getPainting(motive).height * 16;
     }
 
     @Override
@@ -108,10 +109,18 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (player.world.isClient) {
-            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getUuid()));
+            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getId()));
             return ActionResult.CONSUME;
         } else {
             return ActionResult.PASS;
         }
+    }
+
+    public Identifier getMotive() {
+        return motive;
+    }
+
+    public void setMotive(Identifier motive) {
+        this.motive = motive;
     }
 }

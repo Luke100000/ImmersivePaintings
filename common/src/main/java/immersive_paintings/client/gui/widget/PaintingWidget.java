@@ -1,48 +1,55 @@
 package immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import immersive_paintings.resources.Paintings;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.math.MathHelper;
 
 public class PaintingWidget extends ButtonWidget {
-    public PaintingWidget(int x, int y, int width, int height, PressAction onPress) {
-        this(x, y, width, height, onPress, EMPTY);
+    private final Paintings.PaintingData painting;
+
+    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress) {
+        this(painting, x, y, width, height, onPress, EMPTY);
     }
 
-    public PaintingWidget(int x, int y, int width, int height, PressAction onPress, TooltipSupplier tooltipSupplier) {
+    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);
+        this.painting = painting;
     }
 
     @Override
     public void onPress() {
-        this.onPress.onPress(this);
+        onPress.onPress(this);
     }
 
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        TextRenderer textRenderer = minecraftClient.textRenderer;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.alpha);
-        int i = this.getYImage(this.isHovered());
+        RenderSystem.setShaderTexture(0, painting.textureIdentifier);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.drawTexture(matrices, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
-        this.drawTexture(matrices, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
-        this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
-        int j = this.active ? 0xFFFFFF : 0xA0A0A0;
-        ClickableWidget.drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0f) << 24);
+        
+        matrices.push();
+        int tw = painting.width * painting.resolution;
+        int th = painting.height * painting.resolution;
+        float scale = Math.min((float)width / tw, (float)height / th);
+        if (isHovered()) {
+            scale *= 1.1;
+        }
+        matrices.translate(x + (this.width - tw * scale) / 2, y + (this.height - th * scale) / 2, 0.0f);
+        matrices.scale(scale, scale, 1.0f);
+        drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
+        renderBackground(matrices, minecraftClient, mouseX, mouseY);
+        matrices.pop();
 
-        if (this.isHovered()) {
-            this.renderTooltip(matrices, mouseX, mouseY);
+        if (isHovered()) {
+            renderTooltip(matrices, mouseX, mouseY);
         }
     }
 }

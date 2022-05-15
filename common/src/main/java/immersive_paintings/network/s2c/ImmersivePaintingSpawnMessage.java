@@ -23,14 +23,14 @@ public final class ImmersivePaintingSpawnMessage implements Message, Packet<Clie
     private final UUID uuid;
     private final BlockPos pos;
     private final Direction facing;
-    private final Identifier motive;
+    private final String motive;
 
     public ImmersivePaintingSpawnMessage(ImmersivePaintingEntity entity) {
         this.id = entity.getId();
         this.uuid = entity.getUuid();
         this.pos = entity.getDecorationBlockPos();
         this.facing = entity.getHorizontalFacing();
-        this.motive = new Identifier("");
+        this.motive = entity.getMotive().toString();
     }
 
     @Override
@@ -55,7 +55,7 @@ public final class ImmersivePaintingSpawnMessage implements Message, Packet<Clie
     }
 
     public Identifier motive() {
-        return motive;
+        return new Identifier(motive);
     }
 
     @Override

@@ -27,7 +27,7 @@ public final class CommonFabric implements ModInitializer {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new FabricPaintings());
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-            NetworkHandler.sendToPlayer(new PaintingListResponse(PaintingManager.fetchAllPaintings()), handler.player)
+            NetworkHandler.sendToPlayer(new PaintingListResponse(PaintingManager.getServerPaintings()), handler.player)
         );
     }
 }

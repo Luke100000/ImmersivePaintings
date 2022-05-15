@@ -1,22 +1,27 @@
 package immersive_paintings.client.gui;
 
 import immersive_paintings.client.gui.widget.PaintingWidget;
+import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.network.c2s.PaintingModifyRequest;
+import immersive_paintings.resources.PaintingManager;
 import immersive_paintings.resources.Paintings;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ImmersivePaintingScreen extends Screen {
-    final UUID uuid;
-    private List<Paintings.PaintingData> filteredPaintings;
+    final int entityId;
+    private final List<Identifier> filteredPaintings = new ArrayList<>();
 
-    public ImmersivePaintingScreen(UUID uuid) {
+    public ImmersivePaintingScreen(int entityId) {
         super(new LiteralText("Painting"));
-        this.uuid = uuid;
+        this.entityId = entityId;
     }
 
     @Override
@@ -28,11 +33,28 @@ public class ImmersivePaintingScreen extends Screen {
     protected void init() {
         super.init();
 
+        filteredPaintings.clear();
+        filteredPaintings.addAll(PaintingManager.getClientPaintings().keySet());
+
         // paintings
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 8; x++) {
-                addDrawableChild(new PaintingWidget((int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 60 + y * 52, 48, 48, sender -> {
-                }));
+                int i = y * 8 + x;
+                if (i < filteredPaintings.size()) {
+                    Identifier identifier = filteredPaintings.get(i);
+                    Paintings.PaintingData painting = PaintingManager.getPainting(identifier);
+                    addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 60 + y * 52, 48, 48, sender -> {
+                        NetworkHandler.sendToServer(new PaintingModifyRequest(entityId, identifier));
+                    }, (ButtonWidget b, MatrixStack matrices, int mx, int my) -> {
+                        renderTooltip(matrices, List.of(
+                                new LiteralText(identifier.getPath()),
+                                new LiteralText("author").formatted(Formatting.ITALIC),
+                                new LiteralText(painting.width + "x" + painting.height + " at " + painting.resolution + "px").formatted(Formatting.ITALIC)
+                                ), mx, my);
+                    }));
+                } else {
+                    break;
+                }
             }
         }
 

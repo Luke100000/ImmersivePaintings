@@ -1,51 +1,21 @@
 package immersive_paintings.client.render.entity.renderer;
 
 import immersive_paintings.entity.ImmersivePaintingEntity;
-import net.minecraft.client.MinecraftClient;
+import immersive_paintings.resources.PaintingManager;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 
-import java.util.Objects;
-
 public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePaintingEntity> {
-    private final NativeImageBackedTexture texture;
-    private final Identifier identifier;
-
     public ImmersivePaintingEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
-
-        texture = new NativeImageBackedTexture(92, 92, true);
-        identifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("immersive_painting/", texture);
     }
 
     @Override
     public void render(ImmersivePaintingEntity paintingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        assert MinecraftClient.getInstance().world != null;
-        double time = (MinecraftClient.getInstance().world.getTimeOfDay() % 24000) / 24000.0;
-        NativeImage img = Objects.requireNonNull(texture.getImage());
-        for (int x = 0; x < 92; ++x) {
-            for (int y = 0; y < 92; ++y) {
-                img.setColor(x, y, 0xFFFFFFFF);
-            }
-        }
-        for (int p = 0; p < 38; p++) {
-            int x = (int)(47 + p * Math.cos(time * Math.PI * 2));
-            int y = (int)(47 + p * Math.sin(time * Math.PI * 2));
-            img.setColor(x, y, 0xFF000000);
-        }
-        for (int p = 0; p < 44; p++) {
-            int x = (int)(47 + p * Math.cos(time * Math.PI * 2 * 60));
-            int y = (int)(47 + p * Math.sin(time * Math.PI * 2 * 60));
-            img.setColor(x, y, 0xFF000000);
-        }
-        texture.upload();
-
         matrixStack.push();
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0f - f));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
@@ -57,7 +27,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
     @Override
     public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
-        return identifier;
+        return PaintingManager.getPainting(paintingEntity.getMotive()).textureIdentifier;
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumer vertexConsumer, ImmersivePaintingEntity entity, int width, int height) {

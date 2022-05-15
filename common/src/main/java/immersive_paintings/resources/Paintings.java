@@ -3,6 +3,7 @@ package immersive_paintings.resources;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
+import immersive_paintings.Main;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
@@ -21,8 +22,6 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
     private static final int FILE_SUFFIX_LENGTH = ".json".length();
     private final Gson gson = new GsonBuilder().create();
     String dataType = "paintings";
-
-    public static Map<Identifier, PaintingData> paintings;
 
     @Override
     protected Map<Identifier, PaintingData> prepare(ResourceManager manager, Profiler profiler) {
@@ -68,15 +67,16 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
 
     @Override
     protected void apply(Map<Identifier, PaintingData> prepared, ResourceManager manager, Profiler profiler) {
-        paintings = prepared;
+        PaintingManager.setServerPaintings(prepared);
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     public static final class PaintingData implements Serializable {
-        transient public final NativeImage image;
+        transient public NativeImage image;
         public final int width;
         public final int height;
         public final int resolution;
+        transient public boolean requested = false;
+        transient public Identifier textureIdentifier = Main.locate("paintings/unknown");
 
         public PaintingData(NativeImage image, int width, int height, int resolution) {
             this.image = image;

@@ -40,7 +40,7 @@ public final class CommonForge {
     @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().world.isClient) {
-            NetworkHandler.sendToPlayer(new PaintingListResponse(PaintingManager.fetchAllPaintings()), (ServerPlayerEntity)event.getPlayer());
+            NetworkHandler.sendToPlayer(new PaintingListResponse(PaintingManager.getServerPaintings()), (ServerPlayerEntity)event.getPlayer());
         }
     }
 
