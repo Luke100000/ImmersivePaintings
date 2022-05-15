@@ -1,6 +1,7 @@
 package immersive_paintings.entity;
 
 import immersive_paintings.Entities;
+import immersive_paintings.Items;
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import immersive_paintings.resources.PaintingManager;
@@ -9,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -122,5 +122,6 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     public void setMotive(Identifier motive) {
         this.motive = motive;
+        updateAttachmentPosition();
     }
 }

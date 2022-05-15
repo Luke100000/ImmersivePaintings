@@ -58,41 +58,41 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         }
         int light = WorldRenderer.getLightmapCoordinates(entity.world, new BlockPos(centerX, centerY, centerZ));
 
-        //back
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1, 0, -0.5f, 0, 0, -1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 0, 0, -0.5f, 0, 0, -1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 0, 1, -0.5f, 0, 0, -1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1, 1, -0.5f, 0, 0, -1, light);
-
         //front
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1, 0, 0.5f, 0, 0, 1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 0, 0, 0.5f, 0, 0, 1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 0, 1, 0.5f, 0, 0, 1, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1, 1, 0.5f, 0, 0, 1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 0, 1, -0.5f, 0, 0, -1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1, 1, -0.5f, 0, 0, -1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1, 0, -0.5f, 0, 0, -1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 0, 0, -0.5f, 0, 0, -1, light);
+
+        //back
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 0, 0, 0.5f, 0, 0, 1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1, 0, 0.5f, 0, 0, 1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1, 1, 0.5f, 0, 0, 1, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 0, 1, 0.5f, 0, 0, 1, light);
 
         //top
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1, 1, -0.5f, 0, 1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 0, 1, -0.5f, 0, 1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 0, 1 - 1.0f / height, 0.5f, 0, 1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1, 1 - 1.0f / height, 0.5f, 0, 1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 0, 0, -0.5f, 0, 1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1, 0, -0.5f, 0, 1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1, 1.0f / height, 0.5f, 0, 1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 0, 1.0f / height, 0.5f, 0, 1, 0, light);
 
         //bottom
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1, 1.0f / height, 0.5f, 0, -1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 0, 1.0f / height, 0.5f, 0, -1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 0, 0, -0.5f, 0, -1, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1, 0, -0.5f, 0, -1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 0, 1 - 1.0f / height, 0.5f, 0, -1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1, 1 - 1.0f / height, 0.5f, 0, -1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1, 1, -0.5f, 0, -1, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 0, 1, -0.5f, 0, -1, 0, light);
 
         //left
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1 - 1.0f / width, 1, 0.5f, -1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1 - 1.0f / width, 0, 0.5f, -1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1, 0, -0.5f, -1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1, 1, -0.5f, -1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 1.0f / width, 0, 0.5f, -1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 1.0f / width, 1, 0.5f, -1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, bottom, 0, 1, -0.5f, -1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, right, top, 0, 0, -0.5f, -1, 0, 0, light);
 
         //right
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 0, 1, -0.5f, 1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 0, 0, -0.5f, 1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1.0f / width, 0, 0.5f, 1, 0, 0, light);
-        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1.0f / width, 1, 0.5f, 1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1, 0, -0.5f, 1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1, 1, -0.5f, 1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, bottom, 1 - 1.0f / width, 1, 0.5f, 1, 0, 0, light);
+        vertex(matrix4f, matrix3f, vertexConsumer, left, top, 1 - 1.0f / width, 0, 0.5f, 1, 0, 0, light);
     }
 
     private void vertex(Matrix4f positionMatrix, Matrix3f normalMatrix, VertexConsumer vertexConsumer, float x, float y, float u, float v, float z, int normalX, int normalY, int normalZ, int light) {
