@@ -27,7 +27,6 @@ public class PaintingWidget extends ButtonWidget {
 
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, painting.textureIdentifier);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
@@ -45,7 +44,6 @@ public class PaintingWidget extends ButtonWidget {
         matrices.translate(x + (this.width - tw * scale) / 2, y + (this.height - th * scale) / 2, 0.0f);
         matrices.scale(scale, scale, 1.0f);
         drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
-        renderBackground(matrices, minecraftClient, mouseX, mouseY);
         matrices.pop();
 
         if (isHovered()) {
