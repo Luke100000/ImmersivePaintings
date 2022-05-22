@@ -2,12 +2,12 @@ package immersive_paintings.network;
 
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import immersive_paintings.network.s2c.OpenGuiRequest;
-import immersive_paintings.network.s2c.PaintingListResponse;
+import immersive_paintings.network.s2c.PaintingListMessage;
 
 public interface NetworkManager {
     void handleImmersivePaintingSpawnMessage(ImmersivePaintingSpawnMessage message);
 
     void handleOpenGuiRequest(OpenGuiRequest request);
 
-    void handlePaintingListResponse(PaintingListResponse response);
+    void handlePaintingListResponse(PaintingListMessage response);
 }

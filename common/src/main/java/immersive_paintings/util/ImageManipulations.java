@@ -167,4 +167,24 @@ public class ImageManipulations {
         }
         return 0xff000000 | (r) | (g << 8) | (b << 16);
     }
+
+    public static int[] imageToInts(NativeImage image) {
+        int[] is = new int[image.getWidth() * image.getHeight()];
+        for (int x = 0; x < image.getWidth(); ++x) {
+            for (int y = 0; y < image.getHeight(); ++y) {
+                is[x + y * image.getWidth()] = image.getColor(x, y);
+            }
+        }
+        return is;
+    }
+
+    public static NativeImage intsToImage(int width, int height, int[] is) {
+        NativeImage image = new NativeImage(width, height, false);
+        for (int x = 0; x < image.getWidth(); ++x) {
+            for (int y = 0; y < image.getHeight(); ++y) {
+                image.setColor(x, y, is[x + y * image.getWidth()]);
+            }
+        }
+        return image;
+    }
 }

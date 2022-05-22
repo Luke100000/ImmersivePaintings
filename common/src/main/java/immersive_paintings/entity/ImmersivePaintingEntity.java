@@ -4,7 +4,7 @@ import immersive_paintings.Entities;
 import immersive_paintings.Items;
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
-import immersive_paintings.resources.PaintingManager;
+import immersive_paintings.resources.ClientPaintingManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -38,12 +38,12 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public int getWidthPixels() {
-        return PaintingManager.getPainting(motive).width * 16;
+        return ClientPaintingManager.getPainting(motive).width * 16;
     }
 
     @Override
     public int getHeightPixels() {
-        return PaintingManager.getPainting(motive).height * 16;
+        return ClientPaintingManager.getPainting(motive).height * 16;
     }
 
     @Override

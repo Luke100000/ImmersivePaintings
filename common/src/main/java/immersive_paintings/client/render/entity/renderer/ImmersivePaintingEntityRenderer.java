@@ -1,7 +1,7 @@
 package immersive_paintings.client.render.entity.renderer;
 
 import immersive_paintings.entity.ImmersivePaintingEntity;
-import immersive_paintings.resources.PaintingManager;
+import immersive_paintings.resources.ClientPaintingManager;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -27,7 +27,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
     @Override
     public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
-        return PaintingManager.getPainting(paintingEntity.getMotive()).textureIdentifier;
+        return ClientPaintingManager.getPainting(paintingEntity.getMotive()).textureIdentifier;
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumer vertexConsumer, ImmersivePaintingEntity entity, int width, int height) {

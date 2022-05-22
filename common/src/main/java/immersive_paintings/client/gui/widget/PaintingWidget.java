@@ -35,8 +35,8 @@ public class PaintingWidget extends ButtonWidget {
         RenderSystem.enableDepthTest();
         
         matrices.push();
-        int tw = painting.width * painting.resolution;
-        int th = painting.height * painting.resolution;
+        int tw = painting.getPixelWidth();
+        int th = painting.getPixelHeight();
         float scale = Math.min((float)width / tw, (float)height / th);
         if (isHovered()) {
             scale *= 1.1;

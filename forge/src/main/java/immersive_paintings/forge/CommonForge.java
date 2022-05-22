@@ -4,15 +4,16 @@ import immersive_paintings.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
-import immersive_paintings.network.s2c.PaintingListResponse;
-import immersive_paintings.resources.PaintingManager;
+import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -40,7 +41,7 @@ public final class CommonForge {
     @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().world.isClient) {
-            NetworkHandler.sendToPlayer(new PaintingListResponse(PaintingManager.getServerPaintings()), (ServerPlayerEntity)event.getPlayer());
+            NetworkHandler.sendToPlayer(new PaintingListMessage(), (ServerPlayerEntity)event.getPlayer());
         }
     }
 
@@ -48,6 +49,7 @@ public final class CommonForge {
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
         RegistrationImpl.ENTITY_ATTRIBUTES.forEach((type, attributes) -> event.put(type, attributes.get().build()));
     }
+
     public static boolean firstLoad = true;
 
     @SubscribeEvent
@@ -57,5 +59,10 @@ public final class CommonForge {
             ClientMain.postLoad();
             firstLoad = false;
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartingEvent event) {
+        ServerPaintingManager.server = event.getServer();
     }
 }

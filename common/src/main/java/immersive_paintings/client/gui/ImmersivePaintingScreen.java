@@ -7,7 +7,8 @@ import immersive_paintings.client.gui.widget.PaintingWidget;
 import immersive_paintings.client.gui.widget.PercentageSliderWidget;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
-import immersive_paintings.resources.PaintingManager;
+import immersive_paintings.network.c2s.RegisterPaintingRequest;
+import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Paintings;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
@@ -44,13 +45,11 @@ public class ImmersivePaintingScreen extends Screen {
     private NativeImage currentImage;
     private String currentImageName;
     private PixelatorSettings settings;
+    private NativeImage pixelatedImage;
 
     public ImmersivePaintingScreen(int entityId) {
         super(new LiteralText("Painting"));
         this.entityId = entityId;
-
-        setPage(Page.SELECTION_YOURS);
-        search("");
     }
 
     @Override
@@ -61,6 +60,9 @@ public class ImmersivePaintingScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+
+        setPage(Page.SELECTION_YOURS);
+        search("");
     }
 
     @Override
@@ -113,11 +115,8 @@ public class ImmersivePaintingScreen extends Screen {
                 textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 40, 180, 20,
                         new LiteralText("URL")));
                 textFieldWidget.setMaxLength(1024);
-                textFieldWidget.setChangedListener(this::search);
 
-                addDrawableChild(new ButtonWidget(width / 2 - 40, height / 2 - 15, 80, 20, new TranslatableText("Load"), sender -> {
-                    //load file
-                }));
+                addDrawableChild(new ButtonWidget(width / 2 - 40, height / 2 - 15, 80, 20, new TranslatableText("Load"), sender -> loadImage(Path.of(textFieldWidget.getText()))));
 
                 //screenshots
 
@@ -204,9 +203,13 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 70, 80, 20, new LiteralText("Cancel"), v -> setPage(Page.NEW)));
 
-                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 70, 80, 20, new LiteralText("Save"), v -> {
-                    //todo save
-                }));
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 70, 80, 20, new LiteralText("Save"),
+                        v -> NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Paintings.PaintingData(
+                                pixelatedImage,
+                                settings.width,
+                                settings.height,
+                                settings.resolution
+                        )))));
             }
             case SELECTION_YOURS, SELECTION_DATAPACKS, SELECTION_PLAYERS -> {
                 rebuildPaintings();
@@ -239,7 +242,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
                     Identifier identifier = filteredPaintings.get(i);
-                    Paintings.PaintingData painting = PaintingManager.getPainting(identifier);
+                    Paintings.PaintingData painting = ClientPaintingManager.getPainting(identifier);
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 60 + y * 52, 48, 48,
                             sender -> NetworkHandler.sendToServer(new PaintingModifyRequest(entityId, identifier)),
                             (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, List.of(
@@ -261,7 +264,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void search(String s) {
         filteredPaintings.clear();
-        filteredPaintings.addAll(PaintingManager.getClientPaintings().keySet().stream().filter(k -> k.toString().contains(s)).toList());
+        filteredPaintings.addAll(ClientPaintingManager.getPaintings().keySet().stream().filter(k -> k.toString().contains(s)).toList());
         setSelectionPage(selectionPage);
     }
 
@@ -278,16 +281,18 @@ public class ImmersivePaintingScreen extends Screen {
     @Override
     public void filesDragged(List<Path> paths) {
         Path path = paths.get(0);
-        currentImage = loadImage(path);
-        currentImageName = path.getFileName().toString().replaceFirst("[.][^.]+$", "");
-        setPage(Page.CREATE);
-        settings = new PixelatorSettings();
-        pixelateImage();
+        loadImage(path);
     }
 
 
-    private NativeImage loadImage(Path path) {
-        return loadImage(path, Main.locate("temp"));
+    private void loadImage(Path path) {
+        currentImage = loadImage(path, Main.locate("temp"));
+        if (currentImage != null) {
+            currentImageName = path.getFileName().toString().replaceFirst("[.][^.]+$", "");
+            settings = new PixelatorSettings();
+            setPage(Page.CREATE);
+            pixelateImage();
+        }
     }
 
     private NativeImage loadImage(Path path, Identifier identifier) {
@@ -303,26 +308,26 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private void pixelateImage() {
-        NativeImage image = new NativeImage(settings.resolution * settings.width, settings.resolution * settings.height, false);
+        pixelatedImage = new NativeImage(settings.resolution * settings.width, settings.resolution * settings.height, false);
 
         //downscale
-        ImageManipulations.resize(image, currentImage, settings.zoom, settings.offsetX, settings.offsetY);
+        ImageManipulations.resize(pixelatedImage, currentImage, settings.zoom, settings.offsetX, settings.offsetY);
 
         //dither
         if (settings.dither > 0) {
             if (settings.colors > 0) {
-                ImageManipulations.dither(image, settings.dither / settings.colors);
+                ImageManipulations.dither(pixelatedImage, settings.dither / settings.colors);
             } else {
-                ImageManipulations.dither(image, settings.dither * 0.125);
+                ImageManipulations.dither(pixelatedImage, settings.dither * 0.125);
             }
         }
 
         //reduce colors
         if (settings.colors > 0) {
-            ImageManipulations.reduceColors(image, settings.colors);
+            ImageManipulations.reduceColors(pixelatedImage, settings.colors);
         }
 
-        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(image));
+        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(pixelatedImage));
     }
 
     enum Page {
