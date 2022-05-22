@@ -9,6 +9,7 @@ import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -26,15 +27,17 @@ public class RegisterPaintingRequest implements Message {
     public void receive(PlayerEntity e) {
         String id = e.getGameProfile().getName() + "_" + name;
         id = id.toLowerCase(Locale.ROOT).replaceAll("[^A-Za-z0-9_.-]", "");
+        Identifier identifier = Main.locate(id);
+        Paintings.PaintingData painting = Paintings.PaintingData.fromNbt(this.painting.getNbt());
+
         ServerPaintingManager.registerPainting(
-                Main.locate(id),
-                Paintings.PaintingData.fromNbt(painting.getNbt())
+                identifier,
+                painting
         );
 
         //update clients
-        //todo don't perform a full list update!
         for (ServerPlayerEntity player : Objects.requireNonNull(e.getServer()).getPlayerManager().getPlayerList()) {
-            NetworkHandler.sendToPlayer(new PaintingListMessage(), player);
+            NetworkHandler.sendToPlayer(new PaintingListMessage(identifier, painting), player);
         }
     }
 }

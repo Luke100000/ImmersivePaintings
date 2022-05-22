@@ -12,11 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PaintingListMessage implements Message {
-    private final Map<String, SerializableNbt> paintings;
+    private final Map<String, SerializableNbt> paintings = new HashMap<>();
+    private final boolean clear;
 
     public PaintingListMessage() {
-        this.paintings = new HashMap<>();
-
         //datapack paintings
         for (Map.Entry<Identifier, Paintings.PaintingData> entry : ServerPaintingManager.getDatapackPaintings().entrySet()) {
             this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
@@ -26,6 +25,13 @@ public class PaintingListMessage implements Message {
         for (Map.Entry<Identifier, Paintings.PaintingData> entry : ServerPaintingManager.get().getCustomServerPaintings().entrySet()) {
             this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
         }
+
+        clear = true;
+    }
+
+    public PaintingListMessage(Identifier identifier, Paintings.PaintingData painting) {
+        this.paintings.put(identifier.toString(), new SerializableNbt(painting.toNbt()));
+        clear = false;
     }
 
     @Override
@@ -39,5 +45,9 @@ public class PaintingListMessage implements Message {
             paintings.put(new Identifier(entry.getKey()), Paintings.PaintingData.fromNbt(entry.getValue().getNbt()));
         }
         return paintings;
+    }
+
+    public boolean shouldClear() {
+        return clear;
     }
 }

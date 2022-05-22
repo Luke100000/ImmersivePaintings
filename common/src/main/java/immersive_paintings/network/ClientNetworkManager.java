@@ -36,6 +36,9 @@ public class ClientNetworkManager implements NetworkManager {
 
     @Override
     public void handlePaintingListResponse(PaintingListMessage response) {
-        ClientPaintingManager.setPaintings(response.getPaintings());
+        if (response.shouldClear()) {
+            ClientPaintingManager.getPaintings().clear();
+        }
+        ClientPaintingManager.getPaintings().putAll(response.getPaintings());
     }
 }

@@ -13,10 +13,6 @@ public class ClientPaintingManager {
 
     static Map<Identifier, Paintings.PaintingData> paintings = new HashMap<>();
 
-    public static void setPaintings(Map<Identifier, Paintings.PaintingData> paintings) {
-        ClientPaintingManager.paintings = paintings;
-    }
-
     public static Map<Identifier, Paintings.PaintingData> getPaintings() {
         return paintings;
     }
