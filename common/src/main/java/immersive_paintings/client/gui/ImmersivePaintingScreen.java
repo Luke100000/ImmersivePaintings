@@ -26,9 +26,11 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,6 +49,9 @@ public class ImmersivePaintingScreen extends Screen {
     private PixelatorSettings settings;
     private NativeImage pixelatedImage;
 
+    private List<File> screenshots = List.of();
+    private int screenshotPage;
+
     public ImmersivePaintingScreen(int entityId) {
         super(new LiteralText("Painting"));
         this.entityId = entityId;
@@ -63,6 +68,12 @@ public class ImmersivePaintingScreen extends Screen {
 
         setPage(Page.SELECTION_YOURS);
         search("");
+
+        File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
+        File[] files = file.listFiles(v -> v.getName().endsWith(".png"));
+        if (files != null) {
+            screenshots = Arrays.stream(files).toList();
+        }
     }
 
     @Override
@@ -119,12 +130,13 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 - 40, height / 2 - 15, 80, 20, new TranslatableText("Load"), sender -> loadImage(Path.of(textFieldWidget.getText()))));
 
                 //screenshots
+                rebuildScreenshots();
 
                 //screenshot page
-                addDrawableChild(new ButtonWidget(width / 2 - 65, height / 2 + 70, 30, 20, new LiteralText("<<"), sender -> setSelectionPage(selectionPage - 1)));
+                addDrawableChild(new ButtonWidget(width / 2 - 65, height / 2 + 70, 30, 20, new LiteralText("<<"), sender -> setScreenshotPage(selectionPage - 1)));
                 pageWidget = addDrawableChild(new ButtonWidget(width / 2 - 65 + 30, height / 2 + 70, 70, 20, new LiteralText(""), sender -> {
                 }));
-                addDrawableChild(new ButtonWidget(width / 2 - 65 + 100, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setSelectionPage(selectionPage + 1)));
+                addDrawableChild(new ButtonWidget(width / 2 - 65 + 100, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setScreenshotPage(selectionPage + 1)));
             }
             case CREATE -> {
                 //Identifier
@@ -168,7 +180,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 10;
 
                 //color reduction
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 10, 0, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 10, 1, 16, v -> {
                     settings.colors = v;
                     pixelateImage();
                 }));
@@ -204,12 +216,15 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 70, 80, 20, new LiteralText("Cancel"), v -> setPage(Page.NEW)));
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 70, 80, 20, new LiteralText("Save"),
-                        v -> NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Paintings.PaintingData(
-                                pixelatedImage,
-                                settings.width,
-                                settings.height,
-                                settings.resolution
-                        )))));
+                        v -> {
+                            NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Paintings.PaintingData(
+                                    pixelatedImage,
+                                    settings.width,
+                                    settings.height,
+                                    settings.resolution
+                            )));
+                            setPage(Page.SELECTION_YOURS);
+                        }));
             }
             case SELECTION_YOURS, SELECTION_DATAPACKS, SELECTION_PLAYERS -> {
                 rebuildPaintings();
@@ -257,6 +272,37 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
+    private void rebuildScreenshots() {
+        for (PaintingWidget w : paintingWidgetList) {
+            remove(w);
+        }
+        paintingWidgetList.clear();
+
+        // paintings
+        for (int x = 0; x < 8; x++) {
+            int i = x + screenshotPage * 8;
+            if (i >= 0 && i < screenshots.size()) {
+                File file = screenshots.get(i);
+                NativeImage image = loadImage(file.toPath(), Main.locate("screenshot_" + x));
+                if (image != null) {
+                    Paintings.PaintingData painting = new Paintings.PaintingData(image, 16);
+                    painting.textureIdentifier = Main.locate("screenshot_" + x);
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 + 50, 64, 48,
+                            (b) -> {
+                                currentImage = image;
+                                currentImageName = file.getName();
+                                settings = new PixelatorSettings();
+                                setPage(Page.CREATE);
+                                pixelateImage();
+                            },
+                            (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, new LiteralText(file.getName()), mx, my))));
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
     private void setPage(Page page) {
         this.page = page;
         rebuild();
@@ -276,6 +322,16 @@ public class ImmersivePaintingScreen extends Screen {
 
     private int getMaxPages() {
         return (int)Math.ceil(filteredPaintings.size() / 24.0);
+    }
+
+    private void setScreenshotPage(int p) {
+        screenshotPage = Math.min(getScreenshotMaxPages() - 1, Math.max(0, p));
+        rebuildScreenshots();
+        pageWidget.setMessage(new LiteralText((screenshotPage + 1) + " / " + getScreenshotMaxPages()));
+    }
+
+    private int getScreenshotMaxPages() {
+        return (int)Math.ceil(screenshots.size() / 24.0);
     }
 
     @Override
@@ -315,7 +371,7 @@ public class ImmersivePaintingScreen extends Screen {
 
         //dither
         if (settings.dither > 0) {
-            if (settings.colors > 0) {
+            if (settings.colors > 1) {
                 ImageManipulations.dither(pixelatedImage, settings.dither / settings.colors);
             } else {
                 ImageManipulations.dither(pixelatedImage, settings.dither * 0.125);
@@ -323,7 +379,7 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         //reduce colors
-        if (settings.colors > 0) {
+        if (settings.colors > 1) {
             ImageManipulations.reduceColors(pixelatedImage, settings.colors);
         }
 

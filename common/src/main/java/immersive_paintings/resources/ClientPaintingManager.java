@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientPaintingManager {
-    static final Paintings.PaintingData DEFAULT = new Paintings.PaintingData(new NativeImage(2, 2, false), 1, 1, 2);
+    static final Paintings.PaintingData DEFAULT = new Paintings.PaintingData(new NativeImage(2, 2, false), 2);
 
     static Map<Identifier, Paintings.PaintingData> paintings = new HashMap<>();
 

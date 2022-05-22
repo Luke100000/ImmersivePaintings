@@ -2,7 +2,6 @@ package immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.resources.Paintings;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -10,10 +9,6 @@ import net.minecraft.text.LiteralText;
 
 public class PaintingWidget extends ButtonWidget {
     private final Paintings.PaintingData painting;
-
-    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress) {
-        this(painting, x, y, width, height, onPress, EMPTY);
-    }
 
     public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);

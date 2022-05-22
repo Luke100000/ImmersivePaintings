@@ -49,17 +49,11 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
 
                     int resolution = jsonElement.get("resolution").getAsInt();
-                    data = new PaintingData(nativeImage,
-                            nativeImage.getWidth() / resolution,
-                            nativeImage.getHeight() / resolution,
-                            resolution);
+                    data = new PaintingData(nativeImage, resolution);
                 }
 
                 if (data == null) {
-                    data = new PaintingData(nativeImage,
-                            nativeImage.getWidth() / 32,
-                            nativeImage.getHeight() / 32,
-                            32);
+                    data = new PaintingData(nativeImage, 32);
                 }
 
                 map.put(identifier, data);
@@ -91,6 +85,13 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             this.image = image;
             this.width = width;
             this.height = height;
+            this.resolution = resolution;
+        }
+
+        public PaintingData(NativeImage image, int resolution) {
+            this.image = image;
+            this.width = image.getWidth() / resolution;
+            this.height = image.getHeight() / resolution;
             this.resolution = resolution;
         }
 
