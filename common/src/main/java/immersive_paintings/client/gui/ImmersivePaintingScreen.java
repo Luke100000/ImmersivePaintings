@@ -137,6 +137,7 @@ public class ImmersivePaintingScreen extends Screen {
                 pageWidget = addDrawableChild(new ButtonWidget(width / 2 - 65 + 30, height / 2 + 70, 70, 20, new LiteralText(""), sender -> {
                 }));
                 addDrawableChild(new ButtonWidget(width / 2 - 65 + 100, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setScreenshotPage(selectionPage + 1)));
+                setScreenshotPage(screenshotPage);
             }
             case CREATE -> {
                 //Identifier
@@ -279,15 +280,15 @@ public class ImmersivePaintingScreen extends Screen {
         paintingWidgetList.clear();
 
         // paintings
-        for (int x = 0; x < 8; x++) {
-            int i = x + screenshotPage * 8;
+        for (int x = 0; x < 6; x++) {
+            int i = x + screenshotPage * 6;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
                 NativeImage image = loadImage(file.toPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
                     Paintings.PaintingData painting = new Paintings.PaintingData(image, 16);
                     painting.textureIdentifier = Main.locate("screenshot_" + x);
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 + 50, 64, 48,
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
                             (b) -> {
                                 currentImage = image;
                                 currentImageName = file.getName();
@@ -331,7 +332,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private int getScreenshotMaxPages() {
-        return (int)Math.ceil(screenshots.size() / 24.0);
+        return (int)Math.ceil(screenshots.size() / 8.0);
     }
 
     @Override

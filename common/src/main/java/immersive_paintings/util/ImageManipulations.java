@@ -16,7 +16,7 @@ public class ImageManipulations {
                 double red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
                 for (int px = (int)(ox + f * x); px < Math.min(source.getWidth() - 1, ox + f * (x + 1)); px++) {
-                    for (int py = (int)(oy + f * y); py < Math.min(source.getWidth() - 1, oy + f * (y + 1)); py++) {
+                    for (int py = (int)(oy + f * y); py < Math.min(source.getHeight() - 1, oy + f * (y + 1)); py++) {
                         int c = source.getColor(px, py);
                         red += NativeImage.getRed(c);
                         green += NativeImage.getGreen(c);
