@@ -49,24 +49,24 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         if (this.facing == null) {
             return;
         }
-        double d = (double)this.attachmentPos.getX() + 0.5;
-        double e = (double)this.attachmentPos.getY() + 0.5;
-        double f = (double)this.attachmentPos.getZ() + 0.5;
-        double h = this.method_6893(this.getWidthPixels());
-        double i = this.method_6893(this.getHeightPixels());
-        d -= (double)this.facing.getOffsetX() * 0.46875;
-        f -= (double)this.facing.getOffsetZ() * 0.46875;
+        double x = (double)this.attachmentPos.getX() + 0.5;
+        double y = (double)this.attachmentPos.getY() + 0.5;
+        double z = (double)this.attachmentPos.getZ() + 0.5;
+        double oz = this.method_6893(this.getWidthPixels());
+        double oy = this.method_6893(this.getHeightPixels());
+        x -= (double)this.facing.getOffsetX() * 7.0 / 16.0;
+        z -= (double)this.facing.getOffsetZ() * 7.0 / 16.0;
         Direction direction = this.facing.rotateYCounterclockwise();
-        this.setPos(d += h * (double)direction.getOffsetX(), e += i, f += h * (double)direction.getOffsetZ());
-        double j = this.getWidthPixels();
-        double k = this.getHeightPixels();
-        double l = this.getWidthPixels();
+        this.setPos(x += oz * (double)direction.getOffsetX(), y += oy, z += oz * (double)direction.getOffsetZ());
+        double offsetX = this.getWidthPixels();
+        double offsetY = this.getHeightPixels();
+        double offsetZ = this.getWidthPixels();
         if (this.facing.getAxis() == Direction.Axis.Z) {
-            l = 1.0;
+            offsetZ = 1.0;
         } else {
-            j = 1.0;
+            offsetX = 1.0;
         }
-        this.setBoundingBox(new Box(d - (j /= 32.0), e - (k /= 32.0), f - (l /= 32.0), d + j, e + k, f + l));
+        this.setBoundingBox(new Box(x - (offsetX /= 32.0), y - (offsetY /= 32.0), z - (offsetZ /= 32.0), x + offsetX, y + offsetY, z + offsetZ));
     }
 
     private double method_6893(int i) {

@@ -59,6 +59,14 @@ public class ImageManipulations {
         float[] hsv = new float[3];
         float[][] hist = new float[3][256];
 
+        // base
+        int base = image.getWidth() * image.getHeight() / 255 * 8;
+        for (int i = 0; i < 3; i++) {
+            for (int x = 0; x < 256; x++) {
+                hist[i][x] = base;
+            }
+        }
+
         // create histogram
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
@@ -71,7 +79,7 @@ public class ImageManipulations {
         }
 
         // find bin boundaries and calculate centers
-        int binSize = image.getWidth() * image.getHeight() / bins;
+        int binSize = image.getWidth() * image.getHeight() / bins + base * 255 / bins;
         float[][] lookup = new float[3][256];
         for (int i = 0; i < 3; i++) {
             int start = 0;

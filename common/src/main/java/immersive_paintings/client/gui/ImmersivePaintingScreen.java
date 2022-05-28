@@ -29,13 +29,15 @@ import net.minecraft.util.Identifier;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ImmersivePaintingScreen extends Screen {
     final int entityId;
+
+    private String filteredString = "";
+    private int filteredResolution = 0;
+    private int filteredWidth = 0;
+    private int filteredHeight = 0;
     private final List<Identifier> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
@@ -67,13 +69,21 @@ public class ImmersivePaintingScreen extends Screen {
         super.init();
 
         setPage(Page.SELECTION_YOURS);
-        search("");
+        clearSearch();
+        updateSearch();
 
         File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
         File[] files = file.listFiles(v -> v.getName().endsWith(".png"));
         if (files != null) {
             screenshots = Arrays.stream(files).toList();
         }
+    }
+
+    private void clearSearch() {
+        filteredString = "";
+        filteredResolution = 0;
+        filteredWidth = 0;
+        filteredHeight = 0;
     }
 
     @Override
@@ -119,11 +129,10 @@ public class ImmersivePaintingScreen extends Screen {
             addDrawableChild(new ButtonWidget(width / 2 - 50 + 150, height / 2 - 90 - 22, 100, 20, new LiteralText("New Painting"), sender -> setPage(Page.NEW))).active = page != Page.NEW;
         }
 
-        TextFieldWidget textFieldWidget;
         switch (page) {
             case NEW -> {
                 //URL
-                textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 40, 180, 20,
+                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 40, 180, 20,
                         new LiteralText("URL")));
                 textFieldWidget.setMaxLength(1024);
 
@@ -141,7 +150,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 //Identifier
-                textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 100, 180, 20,
+                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 100, 180, 20,
                         new LiteralText("Identifier")));
                 textFieldWidget.setMaxLength(256);
                 textFieldWidget.setText(currentImageName);
@@ -181,7 +190,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 10;
 
                 //color reduction
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 10, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 12, 1, 25, v -> {
                     settings.colors = v;
                     pixelateImage();
                 }));
@@ -209,7 +218,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 //offset
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% zoom", 1, 1, 10, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% zoom", 1, 1, 3, v -> {
                     settings.zoom = v;
                     pixelateImage();
                 }));
@@ -238,10 +247,54 @@ public class ImmersivePaintingScreen extends Screen {
                 setSelectionPage(selectionPage);
 
                 //search
-                textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 50 - 35, height / 2 - 90, 130, 20,
+                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 50 - 35, height / 2 - 90, 130, 20,
                         new LiteralText("search")));
                 textFieldWidget.setMaxLength(64);
-                textFieldWidget.setChangedListener(this::search);
+                textFieldWidget.setChangedListener((s) -> {
+                    filteredString = s;
+                    updateSearch();
+                });
+
+                //filter resolution
+                int[] resolutions = new int[] {0, 8, 16, 32, 64};
+                int x = width / 2 - 200;
+                List<ButtonWidget> list = new LinkedList<>();
+                for (int res : resolutions) {
+                    LiteralText text = new LiteralText(res == 0 ? "all" : String.valueOf(res));
+                    ButtonWidget widget = addDrawableChild(new ButtonWidget(x, height / 2 - 50, 25, 20, text, v -> {
+                        filteredResolution = res;
+                        updateSearch();
+                        list.forEach(b -> b.active = true);
+                        v.active = false;
+                    }));
+                    widget.active = res != filteredResolution;
+                    list.add(widget);
+                    x += 25;
+                }
+
+                //width
+                TextFieldWidget textField = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 100, height / 2 - 90, 40, 20,
+                        new LiteralText("width")));
+                textField.setMaxLength(2);
+                textField.setChangedListener((s) -> {
+                    try {
+                        filteredWidth = Integer.parseInt(s);
+                        updateSearch();
+                    } catch (NumberFormatException ignored) {
+                    }
+                });
+
+                //height
+                textField = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 100 + 50, height / 2 - 90, 40, 20,
+                        new LiteralText("height")));
+                textField.setMaxLength(2);
+                textField.setChangedListener((s) -> {
+                    try {
+                        filteredHeight = Integer.parseInt(s);
+                        updateSearch();
+                    } catch (NumberFormatException ignored) {
+                    }
+                });
             }
         }
     }
@@ -279,7 +332,7 @@ public class ImmersivePaintingScreen extends Screen {
         }
         paintingWidgetList.clear();
 
-        // paintings
+        // screenshots
         for (int x = 0; x < 6; x++) {
             int i = x + screenshotPage * 6;
             if (i >= 0 && i < screenshots.size()) {
@@ -292,7 +345,7 @@ public class ImmersivePaintingScreen extends Screen {
                             (b) -> {
                                 currentImage = image;
                                 currentImageName = file.getName();
-                                settings = new PixelatorSettings();
+                                settings = new PixelatorSettings(currentImage);
                                 setPage(Page.CREATE);
                                 pixelateImage();
                             },
@@ -309,9 +362,15 @@ public class ImmersivePaintingScreen extends Screen {
         rebuild();
     }
 
-    private void search(String s) {
+    private void updateSearch() {
         filteredPaintings.clear();
-        filteredPaintings.addAll(ClientPaintingManager.getPaintings().keySet().stream().filter(k -> k.toString().contains(s)).toList());
+        filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
+                .filter(v -> v.getKey().toString().contains(filteredString))
+                .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
+                .filter(v -> filteredWidth == 0 || v.getValue().width == filteredWidth)
+                .filter(v -> filteredHeight == 0 || v.getValue().height == filteredHeight)
+                .map(Map.Entry::getKey)
+                .toList());
         setSelectionPage(selectionPage);
     }
 
@@ -346,7 +405,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImage = loadImage(path, Main.locate("temp"));
         if (currentImage != null) {
             currentImageName = path.getFileName().toString().replaceFirst("[.][^.]+$", "");
-            settings = new PixelatorSettings();
+            settings = new PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
         }
@@ -375,7 +434,7 @@ public class ImmersivePaintingScreen extends Screen {
             if (settings.colors > 1) {
                 ImageManipulations.dither(pixelatedImage, settings.dither / settings.colors);
             } else {
-                ImageManipulations.dither(pixelatedImage, settings.dither * 0.125);
+                ImageManipulations.dither(pixelatedImage, settings.dither / 16.0);
             }
         }
 
@@ -416,8 +475,26 @@ public class ImmersivePaintingScreen extends Screen {
             this.zoom = zoom;
         }
 
-        PixelatorSettings() {
-            this(0.25, 10, 16, 3, 2, 0.5, 0.5, 1);
+        PixelatorSettings(NativeImage currentImage) {
+            this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1);
+            double bestScore = 100.0;
+            int w = 1, h = 1;
+            double target = currentImage.getWidth() / (double)currentImage.getHeight();
+            for (int attempt = 0; attempt < 16; attempt++) {
+                double e0 = Math.abs(w / (h + 1.0) - target) * Math.sqrt(w * h);
+                double e1 = Math.abs((w + 1.0) / h - target) * Math.sqrt(w * h);
+                if (e0 < bestScore && e1 < bestScore) {
+                    if (e0 < e1) {
+                        h++;
+                        this.height = h;
+                        bestScore = e0;
+                    } else {
+                        w++;
+                        this.width = w;
+                        bestScore = e1;
+                    }
+                }
+            }
         }
     }
 }
