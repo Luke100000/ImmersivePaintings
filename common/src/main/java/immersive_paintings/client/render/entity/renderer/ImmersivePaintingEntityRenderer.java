@@ -68,8 +68,8 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
         renderFaces("canvas", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
 
-        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(Main.locate("textures/block/frame_oak.png")));
-        renderFrame("wooden_frame", posMat, normMat, vertexConsumer, light, width, height);
+        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(Main.locate("textures/block/frame_vintage_oak.png")));
+        renderFrame("vintage_frame", posMat, normMat, vertexConsumer, light, width, height);
     }
 
     private void renderFaces(String name, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
