@@ -67,6 +67,9 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         //canvas
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
         renderFaces("canvas", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
+
+        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(Main.locate("textures/block/frame_oak.png")));
+        renderFrame("wooden_frame", posMat, normMat, vertexConsumer, light, width, height);
     }
 
     private void renderFaces(String name, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
@@ -85,6 +88,41 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
                         v.n.y,
                         v.n.z,
                         light);
+            }
+        }
+    }
+
+    private void renderFrame(String name, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height) {
+        List<Face> faces = ObjectLoader.objects.get(Main.locate(name + "_bottom"));
+        for (int x = 0; x < width / 16; x++) {
+            for (Face face : faces) {
+                for (FaceVertex v : face.vertices) {
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                }
+            }
+        }
+        faces = ObjectLoader.objects.get(Main.locate(name + "_top"));
+        for (int x = 0; x < width / 16; x++) {
+            for (Face face : faces) {
+                for (FaceVertex v : face.vertices) {
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y + (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                }
+            }
+        }
+        faces = ObjectLoader.objects.get(Main.locate(name + "_left"));
+        for (int y = 0; y < height / 16; y++) {
+            for (Face face : faces) {
+                for (FaceVertex v : face.vertices) {
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                }
+            }
+        }
+        faces = ObjectLoader.objects.get(Main.locate(name + "_right"));
+        for (int y = 0; y < height / 16; y++) {
+            for (Face face : faces) {
+                for (FaceVertex v : face.vertices) {
+                    vertex(posMat, normMat, vertexConsumer, v.v.x - (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                }
             }
         }
     }
