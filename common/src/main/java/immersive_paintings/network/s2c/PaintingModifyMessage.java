@@ -2,22 +2,21 @@ package immersive_paintings.network.s2c;
 
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.entity.ImmersivePaintingEntity;
+import immersive_paintings.network.PaintingDataMessage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class PaintingModifyMessage implements Message {
-    private final int id;
-    private final String motive;
-
+public class PaintingModifyMessage extends PaintingDataMessage {
     public PaintingModifyMessage(ImmersivePaintingEntity painting) {
-        this.id = painting.getId();
-        this.motive = painting.getMotive().toString();
+        super(painting);
     }
 
     @Override
     public void receive(PlayerEntity e) {
-        if (e.world.getEntityById(id) instanceof ImmersivePaintingEntity painting) {
-            painting.setMotive(new Identifier(motive));
+        if (e.world.getEntityById(getEntityId()) instanceof ImmersivePaintingEntity painting) {
+            painting.setMotive(getMotive());
+            painting.setFrame(getFrame());
+            painting.setMaterial(getMaterial());
         }
     }
 }

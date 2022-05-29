@@ -9,15 +9,29 @@ import net.minecraft.text.LiteralText;
 
 public class PaintingWidget extends ButtonWidget {
     private final Paintings.PaintingData painting;
+    private final PressAction onPressRight;
+    private int button;
 
-    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress, TooltipSupplier tooltipSupplier) {
+    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);
+        this.onPressRight = onPressRight;
         this.painting = painting;
     }
 
     @Override
     public void onPress() {
-        onPress.onPress(this);
+        if (button == 0) {
+            onPress.onPress(this);
+        } else {
+            onPressRight.onPress(this);
+        }
+        button = 0;
+    }
+
+    @Override
+    protected boolean isValidClickButton(int button) {
+        this.button = button;
+        return button == 0 || button == 1;
     }
 
     @Override
@@ -28,7 +42,7 @@ public class PaintingWidget extends ButtonWidget {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        
+
         matrices.push();
         int tw = painting.getPixelWidth();
         int th = painting.getPixelHeight();

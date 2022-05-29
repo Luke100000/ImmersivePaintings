@@ -2,6 +2,7 @@ package immersive_paintings.entity;
 
 import immersive_paintings.Entities;
 import immersive_paintings.Items;
+import immersive_paintings.Main;
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import immersive_paintings.resources.ClientPaintingManager;
@@ -24,7 +25,9 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
-    private Identifier motive = new Identifier("unknown");
+    private Identifier motive = Main.locate("none");
+    private Identifier frame = Main.locate("none");
+    private Identifier material = Main.locate("none");
 
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
         super(Entities.PAINTING, world, pos);
@@ -49,6 +52,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putString("Motive", motive.toString());
+        nbt.putString("Frame", frame.toString());
+        nbt.putString("Material", material.toString());
         nbt.putByte("Facing", (byte)this.facing.getHorizontal());
         super.writeCustomDataToNbt(nbt);
     }
@@ -56,6 +61,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         this.motive = new Identifier(nbt.getString("Motive"));
+        this.frame = new Identifier(nbt.getString("Frame"));
+        this.material = new Identifier(nbt.getString("Material"));
         this.facing = Direction.fromHorizontal(nbt.getByte("Facing"));
         super.readCustomDataFromNbt(nbt);
         this.setFacing(this.facing);
@@ -123,5 +130,21 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     public void setMotive(Identifier motive) {
         this.motive = motive;
         updateAttachmentPosition();
+    }
+
+    public Identifier getFrame() {
+        return frame;
+    }
+
+    public void setFrame(Identifier frame) {
+        this.frame = frame;
+    }
+
+    public Identifier getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Identifier material) {
+        this.material = material;
     }
 }
