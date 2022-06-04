@@ -1,7 +1,7 @@
 package immersive_paintings.client.render.entity.renderer;
 
 import immersive_paintings.Main;
-import immersive_paintings.data.ObjectLoader;
+import immersive_paintings.resources.ObjectLoader;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.resources.ClientPaintingManager;
 import net.minecraft.client.render.*;
@@ -66,11 +66,11 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
         //canvas
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-        renderFaces("canvas", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
+        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
 
-        if (entity.getFrame().equals(Main.locate("vintage"))) {
-            vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(Main.locate("textures/block/frame_vintage_oak.png")));
-            renderFrame("vintage_frame", posMat, normMat, vertexConsumer, light, width, height);
+        if (!entity.getFrame().getPath().equals("none")) {
+            vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(entity.getMaterial()));
+            renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, light, width, height);
         }
     }
 
@@ -94,8 +94,17 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         }
     }
 
-    private void renderFrame(String name, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height) {
-        List<Face> faces = ObjectLoader.objects.get(Main.locate(name + "_bottom"));
+    private List<Face> getFaces(Identifier frame, String part) {
+        Identifier id = new Identifier(frame.getNamespace(), frame.getPath() + "/" + part + ".obj");
+        if (ObjectLoader.objects.containsKey(id)) {
+            return ObjectLoader.objects.get(id);
+        } else {
+            return List.of();
+        }
+    }
+
+    private void renderFrame(Identifier frame, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height) {
+        List<Face> faces = getFaces(frame, "bottom");
         for (int x = 0; x < width / 16; x++) {
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
@@ -103,7 +112,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
                 }
             }
         }
-        faces = ObjectLoader.objects.get(Main.locate(name + "_top"));
+        faces = getFaces(frame, "top");
         for (int x = 0; x < width / 16; x++) {
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
@@ -111,7 +120,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
                 }
             }
         }
-        faces = ObjectLoader.objects.get(Main.locate(name + "_left"));
+        faces = getFaces(frame, "left");
         for (int y = 0; y < height / 16; y++) {
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
@@ -119,7 +128,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
                 }
             }
         }
-        faces = ObjectLoader.objects.get(Main.locate(name + "_right"));
+        faces = getFaces(frame, "right");
         for (int y = 0; y < height / 16; y++) {
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {

@@ -21,11 +21,13 @@ public class ClientNetworkManager implements NetworkManager {
             assert world != null;
 
             ImmersivePaintingEntity painting = new ImmersivePaintingEntity(world, message.pos(), message.facing());
-            painting.setId(message.id());
+            painting.setId(message.getEntityId());
             painting.setUuid(message.uuid());
-            painting.setMotive(message.motive());
+            painting.setMotive(message.getMotive());
+            painting.setFrame(message.getFrame());
+            painting.setMaterial(message.getMaterial());
 
-            world.addEntity(message.id(), painting);
+            world.addEntity(message.getEntityId(), painting);
         }
     }
 

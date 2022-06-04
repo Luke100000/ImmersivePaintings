@@ -2,7 +2,8 @@ package immersive_paintings.forge;
 
 import immersive_paintings.Main;
 import immersive_paintings.Renderer;
-import immersive_paintings.data.ObjectLoader;
+import immersive_paintings.resources.FrameLoader;
+import immersive_paintings.resources.ObjectLoader;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
@@ -19,6 +20,7 @@ public final class ClientForge {
     @SubscribeEvent
     public static void data(FMLConstructModEvent event) {
         ((ReloadableResourceManagerImpl) MinecraftClient.getInstance().getResourceManager()).registerReloader(new ObjectLoader());
+        ((ReloadableResourceManagerImpl) MinecraftClient.getInstance().getResourceManager()).registerReloader(new FrameLoader());
     }
     @SubscribeEvent
     public static void setup(FMLClientSetupEvent event) {

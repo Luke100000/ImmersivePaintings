@@ -1,4 +1,4 @@
-package immersive_paintings.data;
+package immersive_paintings.resources;
 
 import immersive_paintings.Main;
 import net.minecraft.resource.ResourceManager;
@@ -34,7 +34,7 @@ public class ObjectLoader extends SinglePreparationResourceReloader<List<Identif
             try {
                 InputStream stream = manager.getResource(id).getInputStream();
                 ArrayList<Face> faces = new Builder(new BufferedReader(new InputStreamReader(stream))).faces;
-                Identifier newId = new Identifier(id.getNamespace(), id.getPath().replace("objects/", "").replace(".obj", ""));
+                Identifier newId = new Identifier(id.getNamespace(), id.getPath());
                 objects.put(newId, faces);
             } catch (IOException e) {
                 throw new RuntimeException(e);

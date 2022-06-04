@@ -10,6 +10,8 @@ import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
 import immersive_paintings.resources.ClientPaintingManager;
+import immersive_paintings.resources.Frame;
+import immersive_paintings.resources.FrameLoader;
 import immersive_paintings.resources.Paintings;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
@@ -31,6 +33,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.util.*;
+
+import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
     final int entityId;
@@ -323,41 +327,30 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<Identifier> frames = List.of(
+                List<Identifier> frames = FrameLoader.frames.values().stream().map(Frame::frame).distinct().toList();
+                List<Identifier> frames2 = List.of(
                         Main.locate("none"),
                         Main.locate("simple"),
                         Main.locate("vintage"),
                         Main.locate("heavy"),
                         Main.locate("antique"));
-                List<ButtonWidget> frameList = new LinkedList<>();
                 for (Identifier frame : frames) {
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new LiteralText(frame.getPath()), v -> {
+                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new LiteralText(identifierToTranslation(frame)), v -> {
                         entity.setFrame(frame);
                         NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
-                        frameList.forEach(b -> b.active = true);
-                        v.active = false;
+                        setPage(Page.FRAME);
                     }));
                     widget.active = !frame.equals(entity.getFrame());
-                    frameList.add(widget);
                     y += 25;
                 }
 
                 //material
                 int py = 0;
                 int px = 0;
-                List<Identifier> materials = List.of(
-                        Main.locate("oak"),
-                        Main.locate("spruce"),
-                        Main.locate("birch"),
-                        Main.locate("jungle"),
-                        Main.locate("acacia"),
-                        Main.locate("dark_oak"),
-                        Main.locate("mangrove"),
-                        Main.locate("crimson"),
-                        Main.locate("hyphae"));
+                List<Identifier> materials = FrameLoader.frames.values().stream().filter(v -> v.frame().equals(entity.getFrame())).map(Frame::material).distinct().toList();
                 List<ButtonWidget> materialList = new LinkedList<>();
                 for (Identifier material : materials) {
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 80 + px * 95, height / 2 - 80 + py * 25, 90, 20, new LiteralText(material.getPath()), v -> {
+                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 80 + px * 95, height / 2 - 80 + py * 25, 90, 20, new LiteralText(identifierToTranslation(material)), v -> {
                         entity.setMaterial(material);
                         NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
                         materialList.forEach(b -> b.active = true);
@@ -376,9 +369,9 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 70, 100, 20, new LiteralText("Done"), v -> close()));
             }
             case DELETE -> {
-                addDrawableChild(new ButtonWidget(width / 2 - 100, height / 2, 100, 20, new LiteralText("Cancel"), v -> setPage(Page.SELECTION_YOURS)));
+                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2, 100, 20, new LiteralText("Cancel"), v -> setPage(Page.SELECTION_YOURS)));
 
-                addDrawableChild(new ButtonWidget(width / 2, height / 2, 100, 20, new LiteralText("Delete"), v -> {
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2, 100, 20, new LiteralText("Delete"), v -> {
                     //todo
                 }));
             }
