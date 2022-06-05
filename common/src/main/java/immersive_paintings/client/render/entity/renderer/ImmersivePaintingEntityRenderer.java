@@ -1,9 +1,9 @@
 package immersive_paintings.client.render.entity.renderer;
 
 import immersive_paintings.Main;
-import immersive_paintings.resources.ObjectLoader;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.resources.ClientPaintingManager;
+import immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;

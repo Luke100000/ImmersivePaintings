@@ -5,6 +5,7 @@ import immersive_paintings.Main;
 import immersive_paintings.client.gui.widget.IntegerSliderWidget;
 import immersive_paintings.client.gui.widget.PaintingWidget;
 import immersive_paintings.client.gui.widget.PercentageSliderWidget;
+import immersive_paintings.client.gui.widget.TexturedButtonWidget;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
@@ -136,6 +137,15 @@ public class ImmersivePaintingScreen extends Screen {
         } else if (page == Page.DELETE) {
             drawCenteredText(matrices, textRenderer, new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), width / 2, 300, height / 2 - 50);
         }
+    }
+
+    private List<Identifier> getMaterialsList() {
+        return FrameLoader.frames.values().stream()
+                .filter(v -> v.frame().equals(entity.getFrame()))
+                .map(Frame::material)
+                .distinct()
+                .sorted(Identifier::compareTo)
+                .toList();
     }
 
 
@@ -327,11 +337,11 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<Identifier> frames = FrameLoader.frames.values().stream().map(Frame::frame).distinct().toList();
+                List<Identifier> frames = FrameLoader.frames.values().stream().map(Frame::frame).distinct().sorted(Identifier::compareTo).toList();
                 for (Identifier frame : frames) {
                     ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new LiteralText(identifierToTranslation(frame)), v -> {
                         entity.setFrame(frame);
-                        entity.setMaterial(FrameLoader.frames.values().stream().filter(f -> f.frame().equals(entity.getFrame())).map(Frame::material).findFirst().orElse(new Identifier("")));
+                        entity.setMaterial(getMaterialsList().get(0));
                         NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
                         setPage(Page.FRAME);
                     }));
@@ -342,20 +352,32 @@ public class ImmersivePaintingScreen extends Screen {
                 //material
                 int py = 0;
                 int px = 0;
-                List<Identifier> materials = FrameLoader.frames.values().stream().filter(v -> v.frame().equals(entity.getFrame())).map(Frame::material).distinct().toList();
+                List<Identifier> materials = getMaterialsList();
                 List<ButtonWidget> materialList = new LinkedList<>();
                 for (Identifier material : materials) {
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 80 + px * 95, height / 2 - 80 + py * 25, 90, 20, new LiteralText(identifierToTranslation(material)), v -> {
-                        entity.setMaterial(material);
-                        NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
-                        materialList.forEach(b -> b.active = true);
-                        v.active = false;
-                    }));
+                    ButtonWidget widget = addDrawableChild(new TexturedButtonWidget(
+                            width / 2 - 80 + px * 65,
+                            height / 2 - 80 + py * 20,
+                            64,
+                            16,
+                            new Identifier(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
+                            0,
+                            0,
+                            64,
+                            32,
+                            new LiteralText(""),
+                            v -> {
+                                entity.setMaterial(material);
+                                NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
+                                materialList.forEach(b -> b.active = true);
+                                v.active = false;
+                            },
+                            (ButtonWidget b, MatrixStack matrixStack, int mx, int my) -> renderTooltip(matrixStack, new LiteralText(identifierToTranslation(material)), mx, my)));
                     widget.active = !material.equals(entity.getMaterial());
                     materialList.add(widget);
 
                     px++;
-                    if (px > 2) {
+                    if (px > 3) {
                         px = 0;
                         py++;
                     }
