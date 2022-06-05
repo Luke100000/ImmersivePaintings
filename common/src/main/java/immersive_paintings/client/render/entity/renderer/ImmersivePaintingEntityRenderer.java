@@ -23,7 +23,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     @Override
     public void render(ImmersivePaintingEntity entity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0f - f));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(matrixStack, vertexConsumerProvider, entity);
         matrixStack.pop();
@@ -69,7 +69,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
 
         if (!entity.getFrame().getPath().equals("none")) {
-            vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(entity.getMaterial()));
+            vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(entity.getMaterial()));
             renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, light, width, height);
         }
     }
@@ -106,39 +106,43 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     private void renderFrame(Identifier frame, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height) {
         List<Face> faces = getFaces(frame, "bottom");
         for (int x = 0; x < width / 16; x++) {
+            float u = x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f;
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
-                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y - (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
                 }
             }
         }
         faces = getFaces(frame, "top");
         for (int x = 0; x < width / 16; x++) {
+            float u = x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f;
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
-                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y + (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
-                }
-            }
-        }
-        faces = getFaces(frame, "left");
-        for (int y = 0; y < height / 16; y++) {
-            for (Face face : faces) {
-                for (FaceVertex v : face.vertices) {
-                    vertex(posMat, normMat, vertexConsumer, v.v.x + (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y + (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
                 }
             }
         }
         faces = getFaces(frame, "right");
         for (int y = 0; y < height / 16; y++) {
+            float u = 0.25f;
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
-                    vertex(posMat, normMat, vertexConsumer, v.v.x - (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z + 1, v.t.u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                    vertex(posMat, normMat, vertexConsumer, v.v.x + (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
+                }
+            }
+        }
+        faces = getFaces(frame, "left");
+        for (int y = 0; y < height / 16; y++) {
+            float u = 0.25f;
+            for (Face face : faces) {
+                for (FaceVertex v : face.vertices) {
+                    vertex(posMat, normMat, vertexConsumer, v.v.x - (width - 16) / 2, v.v.y + y * 16 - (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
                 }
             }
         }
     }
 
     private void vertex(Matrix4f positionMatrix, Matrix3f normalMatrix, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light) {
-        vertexConsumer.vertex(positionMatrix, x, y, z).color(255, 255, 255, 255).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normalMatrix, normalX, normalY, normalZ).next();
+        vertexConsumer.vertex(positionMatrix, x, y, z - 0.5f).color(255, 255, 255, 255).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normalMatrix, normalX, normalY, normalZ).next();
     }
 }

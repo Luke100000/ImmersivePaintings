@@ -54,8 +54,8 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         double z = (double)this.attachmentPos.getZ() + 0.5;
         double oz = this.method_6893(this.getWidthPixels());
         double oy = this.method_6893(this.getHeightPixels());
-        x -= (double)this.facing.getOffsetX() * 7.0 / 16.0;
-        z -= (double)this.facing.getOffsetZ() * 7.0 / 16.0;
+        x -= (double)this.facing.getOffsetX() * 7.5 / 16.0;
+        z -= (double)this.facing.getOffsetZ() * 7.5 / 16.0;
         Direction direction = this.facing.rotateYCounterclockwise();
         this.setPos(x += oz * (double)direction.getOffsetX(), y += oy, z += oz * (double)direction.getOffsetZ());
         double offsetX = this.getWidthPixels();

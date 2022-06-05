@@ -328,15 +328,10 @@ public class ImmersivePaintingScreen extends Screen {
                 //frame
                 int y = height / 2 - 80;
                 List<Identifier> frames = FrameLoader.frames.values().stream().map(Frame::frame).distinct().toList();
-                List<Identifier> frames2 = List.of(
-                        Main.locate("none"),
-                        Main.locate("simple"),
-                        Main.locate("vintage"),
-                        Main.locate("heavy"),
-                        Main.locate("antique"));
                 for (Identifier frame : frames) {
                     ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new LiteralText(identifierToTranslation(frame)), v -> {
                         entity.setFrame(frame);
+                        entity.setMaterial(FrameLoader.frames.values().stream().filter(f -> f.frame().equals(entity.getFrame())).map(Frame::material).findFirst().orElse(new Identifier("")));
                         NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
                         setPage(Page.FRAME);
                     }));
