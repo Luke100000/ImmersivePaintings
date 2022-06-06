@@ -23,10 +23,13 @@ public class RegisterPaintingRequest implements Message {
         this.painting = new SerializableNbt(painting.toFullNbt());
     }
 
+    private String escapeString(String string) {
+        return string.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_.-]", "");
+    }
+
     @Override
     public void receive(PlayerEntity e) {
-        String id = e.getGameProfile().getName() + "_" + name;
-        id = id.toLowerCase(Locale.ROOT).replaceAll("[^A-Za-z0-9_.-]", "");
+        String id = escapeString(e.getGameProfile().getName()) + "/" + escapeString(name);
         Identifier identifier = Main.locate(id);
         Paintings.PaintingData painting = Paintings.PaintingData.fromNbt(this.painting.getNbt());
 

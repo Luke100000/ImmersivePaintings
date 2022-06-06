@@ -75,6 +75,9 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
         public final int height;
         public final int resolution;
 
+        public final String name;
+        public final String author;
+
         @Nullable
         public NativeImage image;
 
@@ -82,10 +85,16 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
         public Identifier textureIdentifier = Main.locate("paintings/unknown");
 
         public PaintingData(@Nullable NativeImage image, int width, int height, int resolution) {
+            this(image, width, height, resolution, "", "");
+        }
+
+        public PaintingData(@Nullable NativeImage image, int width, int height, int resolution, String name, String author) {
             this.image = image;
             this.width = width;
             this.height = height;
             this.resolution = resolution;
+            this.name = name;
+            this.author = author;
         }
 
         public PaintingData(NativeImage image, int resolution) {
@@ -93,6 +102,8 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             this.width = image.getWidth() / resolution;
             this.height = image.getHeight() / resolution;
             this.resolution = resolution;
+            this.name = "";
+            this.author = "";
         }
 
         public NbtCompound toNbt() {
@@ -114,13 +125,15 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             int width = nbt.getInt("width");
             int height = nbt.getInt("height");
             int resolution = nbt.getInt("resolution");
+            String name = nbt.getString("name");
+            String author = nbt.getString("author");
 
             NativeImage image = null;
             if (nbt.contains("image")) {
                 image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("image"));
             }
 
-            return new PaintingData(image, width, height, resolution);
+            return new PaintingData(image, width, height, resolution, name, author);
         }
 
         public int getPixelWidth() {

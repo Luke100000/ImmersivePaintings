@@ -129,6 +129,7 @@ public class ImmersivePaintingScreen extends Screen {
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
 
+            matrices.push();
             matrices.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
             matrices.scale(size, size, 1.0f);
             drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
@@ -198,14 +199,14 @@ public class ImmersivePaintingScreen extends Screen {
                 int y = height / 2 - 60;
 
                 //width
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Width: %s blocks", 3, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Width: %s blocks", settings.width, 1, 16, v -> {
                     settings.width = v;
                     pixelateImage();
                 }));
                 y += 22;
 
                 //height
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Height: %s blocks", 2, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Height: %s blocks", settings.height, 1, 16, v -> {
                     settings.height = v;
                     pixelateImage();
                 }));
@@ -427,8 +428,8 @@ public class ImmersivePaintingScreen extends Screen {
                                 setPage(Page.DELETE);
                             },
                             (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, List.of(
-                                    new LiteralText(identifier.getPath()),
-                                    new LiteralText("author").formatted(Formatting.ITALIC),
+                                    new LiteralText(painting.name),
+                                    new LiteralText("by " + painting.author).formatted(Formatting.ITALIC),
                                     new LiteralText(painting.width + "x" + painting.height + " at " + painting.resolution + "px").formatted(Formatting.ITALIC),
                                     new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY)
                             ), mx, my))));
@@ -600,22 +601,21 @@ public class ImmersivePaintingScreen extends Screen {
 
         PixelatorSettings(NativeImage currentImage) {
             this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1);
-            double bestScore = 100.0;
-            int w = 1, h = 1;
+
             double target = currentImage.getWidth() / (double)currentImage.getHeight();
-            for (int attempt = 0; attempt < 16; attempt++) {
-                double e0 = Math.abs(w / (h + 1.0) - target) * Math.sqrt(w * h);
-                double e1 = Math.abs((w + 1.0) / h - target) * Math.sqrt(w * h);
-                if (e0 < bestScore && e1 < bestScore) {
-                    if (e0 < e1) {
-                        h++;
-                        this.height = h;
-                        bestScore = e0;
-                    } else {
-                        w++;
-                        this.width = w;
-                        bestScore = e1;
-                    }
+            double bestScore = 100;
+
+            double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
+            double dw = currentImage.getWidth() / d;
+            double dh = currentImage.getHeight() / d;
+            for (float diagonal = 3.0f; diagonal < 8.0; diagonal += target) {
+                int pw = (int)(dw * diagonal + 0.5);
+                int ph = (int)(dh * diagonal + 0.5);
+                double e = Math.abs(pw / (double)ph - target) * Math.sqrt(5 + width + height);
+                if (e < bestScore) {
+                    width = pw;
+                    height = ph;
+                    bestScore = e;
                 }
             }
         }
