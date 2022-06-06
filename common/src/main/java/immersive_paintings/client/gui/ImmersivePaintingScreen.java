@@ -182,10 +182,10 @@ public class ImmersivePaintingScreen extends Screen {
                 rebuildScreenshots();
 
                 //screenshot page
-                addDrawableChild(new ButtonWidget(width / 2 - 65, height / 2 + 70, 30, 20, new LiteralText("<<"), sender -> setScreenshotPage(selectionPage - 1)));
+                addDrawableChild(new ButtonWidget(width / 2 - 65, height / 2 + 70, 30, 20, new LiteralText("<<"), sender -> setScreenshotPage(screenshotPage - 1)));
                 pageWidget = addDrawableChild(new ButtonWidget(width / 2 - 65 + 30, height / 2 + 70, 70, 20, new LiteralText(""), sender -> {
                 }));
-                addDrawableChild(new ButtonWidget(width / 2 - 65 + 100, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setScreenshotPage(selectionPage + 1)));
+                addDrawableChild(new ButtonWidget(width / 2 - 65 + 100, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setScreenshotPage(screenshotPage + 1)));
                 setScreenshotPage(screenshotPage);
             }
             case CREATE -> {
@@ -535,7 +535,6 @@ public class ImmersivePaintingScreen extends Screen {
         Path path = paths.get(0);
         loadImage(path);
     }
-
 
     private void loadImage(Path path) {
         currentImage = loadImage(path, Main.locate("temp"));
