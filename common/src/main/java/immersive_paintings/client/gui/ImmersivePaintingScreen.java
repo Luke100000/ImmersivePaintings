@@ -295,6 +295,7 @@ public class ImmersivePaintingScreen extends Screen {
                 textFieldWidget.setChangedListener((s) -> {
                     filteredString = s;
                     updateSearch();
+                    textFieldWidget.setSuggestion(null);
                 });
 
                 //filter resolution
@@ -317,29 +318,31 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 //width
-                TextFieldWidget textField = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 90, 40, 20,
+                TextFieldWidget widthWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 90, 40, 20,
                         new LiteralText("width")));
-                textField.setMaxLength(2);
-                textField.setSuggestion("width");
-                textField.setChangedListener((s) -> {
+                widthWidget.setMaxLength(2);
+                widthWidget.setSuggestion("width");
+                widthWidget.setChangedListener((s) -> {
                     try {
                         filteredWidth = Integer.parseInt(s);
                         updateSearch();
                     } catch (NumberFormatException ignored) {
                     }
+                    widthWidget.setSuggestion(null);
                 });
 
                 //height
-                textField = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80 + 40, height / 2 - 90, 40, 20,
+                TextFieldWidget heightWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80 + 40, height / 2 - 90, 40, 20,
                         new LiteralText("height")));
-                textField.setMaxLength(2);
-                textField.setSuggestion("height");
-                textField.setChangedListener((s) -> {
+                heightWidget.setMaxLength(2);
+                heightWidget.setSuggestion("height");
+                heightWidget.setChangedListener((s) -> {
                     try {
                         filteredHeight = Integer.parseInt(s);
                         updateSearch();
                     } catch (NumberFormatException ignored) {
                     }
+                    heightWidget.setSuggestion(null);
                 });
             }
             case FRAME -> {
@@ -417,6 +420,17 @@ public class ImmersivePaintingScreen extends Screen {
                 if (i >= 0 && i < filteredPaintings.size()) {
                     Identifier identifier = filteredPaintings.get(i);
                     Paintings.PaintingData painting = ClientPaintingManager.getPainting(identifier);
+
+                    //tooltip
+                    List<Text> tooltip = new LinkedList<>();
+                    tooltip.add(new LiteralText(painting.name));
+                    tooltip.add(new LiteralText("by " + painting.author).formatted(Formatting.ITALIC));
+                    tooltip.add(new LiteralText(painting.width + "x" + painting.height + " at " + painting.resolution + "px").formatted(Formatting.ITALIC));
+
+                    if (page == Page.SELECTION_YOURS) {
+                        tooltip.add(new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+                    }
+
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 60 + y * 52, 48, 48,
                             sender -> {
                                 entity.setMotive(identifier);
@@ -427,12 +441,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 deletePainting = identifier;
                                 setPage(Page.DELETE);
                             },
-                            (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, List.of(
-                                    new LiteralText(painting.name),
-                                    new LiteralText("by " + painting.author).formatted(Formatting.ITALIC),
-                                    new LiteralText(painting.width + "x" + painting.height + " at " + painting.resolution + "px").formatted(Formatting.ITALIC),
-                                    new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY)
-                            ), mx, my))));
+                            (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, tooltip, mx, my))));
                 } else {
                     break;
                 }
@@ -477,17 +486,27 @@ public class ImmersivePaintingScreen extends Screen {
     private void setPage(Page page) {
         this.page = page;
         rebuild();
+
+        if (page == Page.SELECTION_DATAPACKS || page == Page.SELECTION_PLAYERS || page == Page.SELECTION_YOURS) {
+            updateSearch();
+        }
     }
 
     private void updateSearch() {
         filteredPaintings.clear();
+
+        String playerName = MinecraftClient.getInstance().player == null ? "" : MinecraftClient.getInstance().player.getGameProfile().getName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
+                .filter(v -> page != Page.SELECTION_YOURS || Objects.equals(v.getValue().author, playerName))
+                .filter(v -> page != Page.SELECTION_PLAYERS || !Objects.equals(v.getValue().author, playerName))
+                .filter(v -> page != Page.SELECTION_DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
                 .filter(v -> filteredWidth == 0 || v.getValue().width == filteredWidth)
                 .filter(v -> filteredHeight == 0 || v.getValue().height == filteredHeight)
                 .map(Map.Entry::getKey)
                 .toList());
+
         setSelectionPage(selectionPage);
     }
 
@@ -565,7 +584,6 @@ public class ImmersivePaintingScreen extends Screen {
 
     public void refreshPage() {
         setPage(page);
-        updateSearch();
     }
 
     enum Page {

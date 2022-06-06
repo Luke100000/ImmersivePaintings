@@ -36,7 +36,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
 
         for (Identifier identifier : manager.findResources(dataType, (path) -> path.endsWith(".png"))) {
             String string = identifier.getPath();
-            Identifier name = new Identifier(identifier.getNamespace(), string.substring(dataTypeLength, string.length() - FILE_SUFFIX_LENGTH));
+            Identifier imageIdentifier = new Identifier(identifier.getNamespace(), string.substring(dataTypeLength, string.length() - FILE_SUFFIX_LENGTH));
 
             try {
                 NativeImage nativeImage = NativeImage.read(manager.getResource(identifier).getInputStream());
@@ -48,17 +48,20 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
 
-                    int resolution = jsonElement.get("resolution").getAsInt();
-                    data = new PaintingData(nativeImage, resolution);
+                    int resolution = JsonHelper.getInt(jsonElement, "author", 32);
+                    String name = JsonHelper.getString(jsonElement, "name", "unknown");
+                    String author = JsonHelper.getString(jsonElement, "author", "unknown");
+
+                    data = new PaintingData(nativeImage, resolution, name, author, true);
                 }
 
                 if (data == null) {
-                    data = new PaintingData(nativeImage, 32);
+                    data = new PaintingData(nativeImage, 32, "unknown", "unknown", true);
                 }
 
                 map.put(identifier, data);
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {
-                LOGGER.error("Couldn't load painting {} from {} ({})", name, identifier, exception);
+                LOGGER.error("Couldn't load painting {} from {} ({})", imageIdentifier, identifier, exception);
             }
         }
 
@@ -77,6 +80,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
 
         public final String name;
         public final String author;
+        public boolean datapack;
 
         @Nullable
         public NativeImage image;
@@ -85,25 +89,31 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
         public Identifier textureIdentifier = Main.locate("paintings/unknown");
 
         public PaintingData(@Nullable NativeImage image, int width, int height, int resolution) {
-            this(image, width, height, resolution, "", "");
+            this(image, width, height, resolution, "", "", false);
         }
 
-        public PaintingData(@Nullable NativeImage image, int width, int height, int resolution, String name, String author) {
+        public PaintingData(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack) {
             this.image = image;
             this.width = width;
             this.height = height;
             this.resolution = resolution;
             this.name = name;
             this.author = author;
+            this.datapack = datapack;
         }
 
         public PaintingData(NativeImage image, int resolution) {
+            this(image, resolution, "", "", false);
+        }
+
+        public PaintingData(NativeImage image, int resolution, String name, String author, boolean datapack) {
             this.image = image;
             this.width = image.getWidth() / resolution;
             this.height = image.getHeight() / resolution;
             this.resolution = resolution;
-            this.name = "";
-            this.author = "";
+            this.name = name;
+            this.author = author;
+            this.datapack = datapack;
         }
 
         public NbtCompound toNbt() {
@@ -111,6 +121,9 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             nbt.putInt("width", width);
             nbt.putInt("height", height);
             nbt.putInt("resolution", resolution);
+            nbt.putString("name", name);
+            nbt.putString("author", author);
+            nbt.putBoolean("datapack", datapack);
             return nbt;
         }
 
@@ -127,13 +140,14 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             int resolution = nbt.getInt("resolution");
             String name = nbt.getString("name");
             String author = nbt.getString("author");
+            boolean datapack = nbt.getBoolean("datapack");
 
             NativeImage image = null;
             if (nbt.contains("image")) {
                 image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("image"));
             }
 
-            return new PaintingData(image, width, height, resolution, name, author);
+            return new PaintingData(image, width, height, resolution, name, author, datapack);
         }
 
         public int getPixelWidth() {

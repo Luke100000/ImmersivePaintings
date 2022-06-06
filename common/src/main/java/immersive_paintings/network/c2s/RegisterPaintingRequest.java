@@ -8,6 +8,7 @@ import immersive_paintings.resources.Paintings;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -31,7 +32,13 @@ public class RegisterPaintingRequest implements Message {
     public void receive(PlayerEntity e) {
         String id = escapeString(e.getGameProfile().getName()) + "/" + escapeString(name);
         Identifier identifier = Main.locate(id);
-        Paintings.PaintingData painting = Paintings.PaintingData.fromNbt(this.painting.getNbt());
+
+        NbtCompound nbt = this.painting.getNbt();
+
+        nbt.putString("author", e.getGameProfile().getName());
+        nbt.putString("name", name);
+
+        Paintings.PaintingData painting = Paintings.PaintingData.fromNbt(nbt);
 
         ServerPaintingManager.registerPainting(
                 identifier,
