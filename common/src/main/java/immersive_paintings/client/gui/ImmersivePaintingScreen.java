@@ -8,6 +8,7 @@ import immersive_paintings.client.gui.widget.PercentageSliderWidget;
 import immersive_paintings.client.gui.widget.TexturedButtonWidget;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
+import immersive_paintings.network.c2s.PaintingDeleteRequest;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
 import immersive_paintings.resources.ClientPaintingManager;
@@ -107,8 +108,6 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-
         if (page == Page.NEW) {
             fill(matrices, width / 2 - 100, height / 2 - 60, width / 2 + 100, height / 2 - 40, 0x10000000);
             List<Text> wrap = FlowingText.wrap(new TranslatableText("Drop an image here, enter a file path or URL or select a screenshot to start."), 220);
@@ -135,8 +134,16 @@ public class ImmersivePaintingScreen extends Screen {
             drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
             matrices.pop();
         } else if (page == Page.DELETE) {
-            drawCenteredText(matrices, textRenderer, new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), width / 2, 300, height / 2 - 50);
+            fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+            List<Text> wrap = FlowingText.wrap(new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), 300);
+            int y = height / 2 - 35;
+            for (Text t : wrap) {
+                drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                y += 15;
+            }
         }
+
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     private List<Identifier> getMaterialsList() {
@@ -386,10 +393,11 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 70, 100, 20, new LiteralText("Done"), v -> close()));
             }
             case DELETE -> {
-                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2, 100, 20, new LiteralText("Cancel"), v -> setPage(Page.SELECTION_YOURS)));
+                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2 + 20, 100, 20, new LiteralText("Cancel"), v -> setPage(Page.SELECTION_YOURS)));
 
-                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2, 100, 20, new LiteralText("Delete"), v -> {
-                    //todo
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 20, 100, 20, new LiteralText("Delete"), v -> {
+                    NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
+                    setPage(Page.SELECTION_YOURS);
                 }));
             }
         }
@@ -552,6 +560,11 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(pixelatedImage));
+    }
+
+    public void refreshPage() {
+        setPage(page);
+        updateSearch();
     }
 
     enum Page {

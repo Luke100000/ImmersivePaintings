@@ -50,6 +50,11 @@ public class ServerPaintingManager {
         }
     }
 
+    public static void deregisterPainting(Identifier identifier) {
+        get().getCustomServerPaintings().remove(identifier);
+        get().setDirty(true);
+    }
+
     private static void loadImage(Identifier i) {
         Paintings.PaintingData data = get().customServerPaintings.get(i);
         try {

@@ -30,7 +30,7 @@ public class PaintingListMessage implements Message {
     }
 
     public PaintingListMessage(Identifier identifier, Paintings.PaintingData painting) {
-        this.paintings.put(identifier.toString(), new SerializableNbt(painting.toNbt()));
+        this.paintings.put(identifier.toString(), painting == null ? null : new SerializableNbt(painting.toNbt()));
         clear = false;
     }
 
@@ -42,7 +42,12 @@ public class PaintingListMessage implements Message {
     public Map<Identifier, Paintings.PaintingData> getPaintings() {
         Map<Identifier, Paintings.PaintingData> paintings = new HashMap<>();
         for (Map.Entry<String, SerializableNbt> entry : this.paintings.entrySet()) {
-            paintings.put(new Identifier(entry.getKey()), Paintings.PaintingData.fromNbt(entry.getValue().getNbt()));
+            Identifier identifier = new Identifier(entry.getKey());
+            if (entry.getValue() == null) {
+                paintings.put(identifier, null);
+            } else {
+                paintings.put(identifier, Paintings.PaintingData.fromNbt(entry.getValue().getNbt()));
+            }
         }
         return paintings;
     }

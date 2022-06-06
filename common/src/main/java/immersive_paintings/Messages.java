@@ -2,6 +2,7 @@ package immersive_paintings;
 
 
 import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.network.c2s.PaintingDeleteRequest;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.ImageRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
@@ -19,5 +20,6 @@ public class Messages {
         NetworkHandler.registerMessage(PaintingModifyRequest.class);
         NetworkHandler.registerMessage(PaintingModifyMessage.class);
         NetworkHandler.registerMessage(RegisterPaintingRequest.class);
+        NetworkHandler.registerMessage(PaintingDeleteRequest.class);
     }
 }
