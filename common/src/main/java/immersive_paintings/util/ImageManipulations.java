@@ -5,18 +5,44 @@ import net.minecraft.client.texture.NativeImage;
 import static java.awt.Color.RGBtoHSB;
 
 public class ImageManipulations {
-    public static void resize(NativeImage image, NativeImage source, double zoom, double offsetX, double offsetY) {
-        float fx = (float)source.getWidth() / image.getWidth();
-        float fy = (float)source.getHeight() / image.getHeight();
-        double f = Math.min(fx, fy) / zoom;
-        int ox = (int)((source.getWidth() - image.getWidth() * f) * offsetX);
-        int oy = (int)((source.getHeight() - image.getHeight() * f) * offsetY);
+    public static int scanForPixelArtMultiple(NativeImage image) {
+        int[] hist = new int[64];
+        for (int y = 0; y < image.getHeight(); y += 7) {
+            int l = 0;
+            int lastColor = 0;
+            for (int x = 0; x < image.getHeight(); x++) {
+                int color = image.getColor(x, y);
+                if (x == 0 || lastColor == color) {
+                    l++;
+                } else {
+                    if (l < hist.length) {
+                        hist[l]++;
+                    }
+                    l = 1;
+                }
+                lastColor = color;
+            }
+        }
+
+        int bestScore = 0;
+        int best = 1;
+        for (int i = 1; i < hist.length; i++) {
+            if (hist[i] > bestScore) {
+                bestScore = hist[i];
+                best = i;
+            }
+        }
+
+        return best;
+    }
+
+    public static void resize(NativeImage image, NativeImage source, double zoom, int ox, int oy) {
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 double red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
-                for (int px = (int)(ox + f * x); px < Math.min(source.getWidth() - 1, ox + f * (x + 1)); px++) {
-                    for (int py = (int)(oy + f * y); py < Math.min(source.getHeight() - 1, oy + f * (y + 1)); py++) {
+                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth() - 1, ox + zoom * (x + 1)); px++) {
+                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight() - 1, oy + zoom * (y + 1)); py++) {
                         int c = source.getColor(px, py);
                         red += NativeImage.getRed(c);
                         green += NativeImage.getGreen(c);
@@ -79,22 +105,23 @@ public class ImageManipulations {
         }
 
         // find bin boundaries and calculate centers
+        //todo hue
         int binSize = image.getWidth() * image.getHeight() / bins + base * 255 / bins;
         float[][] lookup = new float[3][256];
-        for (int i = 0; i < 3; i++) {
+        for (int channel = 0; channel < 3; channel++) {
             int start = 0;
             int sum = 0;
             for (int bin = 0; bin < bins; bin++) {
                 int end = start;
                 int avg = 0;
                 while ((bin == bins - 1 || sum <= binSize) && end < 255) {
-                    sum += hist[i][end];
-                    avg += end * hist[i][end];
+                    sum += hist[channel][end];
+                    avg += end * hist[channel][end];
                     end++;
                 }
 
                 for (int b = start; b < end + 1; b++) {
-                    lookup[i][b] = (float)avg / sum / 255.0f;
+                    lookup[channel][b] = (float)avg / sum / 255.0f;
                 }
 
                 start = end;
@@ -107,8 +134,8 @@ public class ImageManipulations {
             for (int y = 0; y < image.getHeight(); y++) {
                 getHSV(hsv, image.getColor(x, y));
 
-                for (int i = 0; i < 3; i++) {
-                    hsv[i] = lookup[i][toByte(hsv[i])];
+                for (int channel = 0; channel < 3; channel++) {
+                    hsv[channel] = lookup[channel][toByte(hsv[channel])];
                 }
 
                 int c = HSBtoRGB(hsv[0], hsv[1], hsv[2]);

@@ -16,6 +16,16 @@ public class PercentageSliderWidget extends DoubleSliderWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new TranslatableText(text, (int)(getDouble() * 100)));
+        setMessage(new TranslatableText(text, (int)(getValue() * 100)));
+    }
+
+    @Override
+    Double getValue() {
+        return (int)(super.getValue() * 100.0 + 0.5) / 100.0;
+    }
+
+    @Override
+    protected double getOpticalValue() {
+        return (getValue() - min) / (max - min);
     }
 }

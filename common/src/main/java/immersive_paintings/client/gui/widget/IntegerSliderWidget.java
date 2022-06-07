@@ -1,42 +1,35 @@
 package immersive_paintings.client.gui.widget;
 
-import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import java.util.function.Consumer;
 
-public class IntegerSliderWidget extends SliderWidget {
+public class IntegerSliderWidget extends ExtendedSliderWidget<Integer> {
     private final int min;
     private final int max;
-    private final Consumer<Integer> onApplyValue;
     private final String text;
-    private double oldValue = -1;
 
     public IntegerSliderWidget(int x, int y, int width, int height, String text, double value, int min, int max, Consumer<Integer> onApplyValue) {
-        super(x, y, width, height, new LiteralText(""), (value - min) / (max - min));
+        super(x, y, width, height, new LiteralText(""), (value - min) / (max - min), onApplyValue);
         this.min = min;
         this.max = max;
-        this.onApplyValue = onApplyValue;
         this.text = text;
         updateMessage();
     }
 
     @Override
     protected void updateMessage() {
-        setMessage(new TranslatableText(text, getInteger()));
+        setMessage(new TranslatableText(text, getValue()));
     }
 
-    private int getInteger() {
+    @Override
+    Integer getValue() {
         return (int)(value * (max - min) + min);
     }
 
     @Override
-    protected void applyValue() {
-        value = ((double)getInteger() - min) / (max - min);
-        if (value != oldValue) {
-            oldValue = value;
-            onApplyValue.accept(getInteger());
-        }
+    protected double getOpticalValue() {
+        return ((double)getValue() - min) / (max - min);
     }
 }

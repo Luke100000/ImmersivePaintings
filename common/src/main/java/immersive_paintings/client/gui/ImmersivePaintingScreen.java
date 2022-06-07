@@ -2,10 +2,7 @@ package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.Main;
-import immersive_paintings.client.gui.widget.IntegerSliderWidget;
-import immersive_paintings.client.gui.widget.PaintingWidget;
-import immersive_paintings.client.gui.widget.PercentageSliderWidget;
-import immersive_paintings.client.gui.widget.TexturedButtonWidget;
+import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
@@ -36,6 +33,7 @@ import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.util.*;
 
+import static immersive_paintings.util.ImageManipulations.scanForPixelArtMultiple;
 import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
@@ -55,6 +53,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private final List<PaintingWidget> paintingWidgetList = new LinkedList<>();
     private NativeImage currentImage;
+    private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
     private PixelatorSettings settings;
     private NativeImage pixelatedImage;
@@ -219,6 +218,10 @@ public class ImmersivePaintingScreen extends Screen {
                 for (int res : resolutions) {
                     ButtonWidget widget = addDrawableChild(new ButtonWidget(x, y, 25, 20, new LiteralText(String.valueOf(res)), v -> {
                         settings.resolution = res;
+                        if (settings.pixelArt) {
+                            adaptToPixelArt();
+                            refreshPage();
+                        }
                         pixelateImage();
                         list.forEach(b -> b.active = true);
                         v.active = false;
@@ -234,17 +237,26 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 12, 1, 25, v -> {
                     settings.colors = v;
                     pixelateImage();
-                }));
+                })).active = !settings.pixelArt;
                 y += 22;
 
                 //dither
                 addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "%s%% dither", 0.25, v -> {
                     settings.dither = v;
                     pixelateImage();
+                })).active = !settings.pixelArt;
+
+                //pixelArt
+                y = height / 2 - 40;
+                addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 20, 20, new LiteralText("Pixelart"), settings.pixelArt, true, (b) -> {
+                    settings.pixelArt = b;
+                    adaptToPixelArt();
+                    refreshPage();
+                    pixelateImage();
                 }));
+                y += 22;
 
                 //offset X
-                y = height / 2 - 30;
                 addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% X offset", 0.5, v -> {
                     settings.offsetX = v;
                     pixelateImage();
@@ -262,11 +274,11 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% zoom", 1, 1, 3, v -> {
                     settings.zoom = v;
                     pixelateImage();
-                }));
+                })).active = !settings.pixelArt;
 
-                addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 70, 80, 20, new LiteralText("Cancel"), v -> setPage(Page.NEW)));
+                addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 75, 80, 20, new LiteralText("Cancel"), v -> setPage(Page.NEW)));
 
-                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 70, 80, 20, new LiteralText("Save"),
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new LiteralText("Save"),
                         v -> {
                             NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Paintings.PaintingData(
                                     pixelatedImage,
@@ -467,6 +479,7 @@ public class ImmersivePaintingScreen extends Screen {
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
                             (b) -> {
                                 currentImage = image;
+                                currentImagePixelZoomCache = -1;
                                 currentImageName = file.getName();
                                 settings = new PixelatorSettings(currentImage);
                                 setPage(Page.CREATE);
@@ -538,6 +551,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void loadImage(Path path) {
         currentImage = loadImage(path, Main.locate("temp"));
+        currentImagePixelZoomCache = -1;
         if (currentImage != null) {
             currentImageName = path.getFileName().toString().replaceFirst("[.][^.]+$", "");
             settings = new PixelatorSettings(currentImage);
@@ -558,14 +572,50 @@ public class ImmersivePaintingScreen extends Screen {
         return null;
     }
 
+    private static int getCurrentImagePixelZoomCache(NativeImage currentImage) {
+        if (currentImagePixelZoomCache < 0) {
+            currentImagePixelZoomCache = scanForPixelArtMultiple(currentImage);
+        }
+        return currentImagePixelZoomCache;
+    }
+
     private void pixelateImage() {
-        pixelatedImage = new NativeImage(settings.resolution * settings.width, settings.resolution * settings.height, false);
+        pixelatedImage = pixelateImage(currentImage, settings);
+        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(pixelatedImage));
+    }
+
+    private void adaptToPixelArt() {
+        double zoom = getCurrentImagePixelZoomCache(currentImage);
+        settings.width = Math.min(16, (int)(currentImage.getWidth() / zoom / settings.resolution));
+        settings.height = Math.min(16, (int)(currentImage.getHeight() / zoom / settings.resolution));
+    }
+
+    public static NativeImage pixelateImage(NativeImage currentImage, PixelatorSettings settings) {
+        NativeImage pixelatedImage = new NativeImage(settings.resolution * settings.width, settings.resolution * settings.height, false);
+
+        //zoom
+        double zoom;
+        if (settings.pixelArt) {
+            zoom = getCurrentImagePixelZoomCache(currentImage);
+        } else {
+            float fx = (float)currentImage.getWidth() / pixelatedImage.getWidth();
+            float fy = (float)currentImage.getHeight() / pixelatedImage.getHeight();
+            zoom = Math.min(fx, fy) / settings.zoom;
+        }
+
+        //offset
+        int ox = (int)((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
+        int oy = (int)((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
+        if (settings.pixelArt) {
+            ox = ox / ((int)zoom) * ((int)zoom);
+            oy = oy / ((int)zoom) * ((int)zoom);
+        }
 
         //downscale
-        ImageManipulations.resize(pixelatedImage, currentImage, settings.zoom, settings.offsetX, settings.offsetY);
+        ImageManipulations.resize(pixelatedImage, currentImage, zoom, ox, oy);
 
         //dither
-        if (settings.dither > 0) {
+        if (settings.dither > 0 && !settings.pixelArt) {
             if (settings.colors > 1) {
                 ImageManipulations.dither(pixelatedImage, settings.dither / settings.colors);
             } else {
@@ -574,11 +624,11 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         //reduce colors
-        if (settings.colors > 1) {
+        if (settings.colors > 1 && !settings.pixelArt) {
             ImageManipulations.reduceColors(pixelatedImage, settings.colors);
         }
 
-        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(pixelatedImage));
+        return pixelatedImage;
     }
 
     public void refreshPage() {
@@ -595,7 +645,7 @@ public class ImmersivePaintingScreen extends Screen {
         DELETE
     }
 
-    static final class PixelatorSettings {
+    public static final class PixelatorSettings {
         public double dither;
         public int colors;
         public int resolution;
@@ -604,8 +654,9 @@ public class ImmersivePaintingScreen extends Screen {
         public double offsetX;
         public double offsetY;
         public double zoom;
+        public boolean pixelArt;
 
-        PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom) {
+        public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
             this.dither = dither;
             this.colors = colors;
             this.resolution = resolution;
@@ -614,10 +665,11 @@ public class ImmersivePaintingScreen extends Screen {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.zoom = zoom;
+            this.pixelArt = pixelArt;
         }
 
         PixelatorSettings(NativeImage currentImage) {
-            this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1);
+            this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
 
             double target = currentImage.getWidth() / (double)currentImage.getHeight();
             double bestScore = 100;

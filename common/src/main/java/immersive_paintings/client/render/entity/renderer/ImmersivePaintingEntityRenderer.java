@@ -64,11 +64,13 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
         VertexConsumer vertexConsumer;
 
-        //canvas
-        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, 1.0f);
+        boolean hasFrame = !entity.getFrame().getPath().equals("none");
 
-        if (!entity.getFrame().getPath().equals("none")) {
+        //canvas
+        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
+        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, hasFrame ? 1.0f: 0.0f);
+
+        if (hasFrame) {
             vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(entity.getMaterial()));
             renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, light, width, height);
         }
