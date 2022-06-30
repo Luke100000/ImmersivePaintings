@@ -48,7 +48,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
 
-                    int resolution = JsonHelper.getInt(jsonElement, "author", 32);
+                    int resolution = JsonHelper.getInt(jsonElement, "resolution", 32);
                     String name = JsonHelper.getString(jsonElement, "name", "unknown");
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
 

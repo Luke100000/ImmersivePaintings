@@ -29,6 +29,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
@@ -88,7 +90,7 @@ public class ImmersivePaintingScreen extends Screen {
     protected void init() {
         super.init();
 
-        setPage(Page.SELECTION_YOURS);
+        setPage(Page.SELECTION_DATAPACKS);
         clearSearch();
         updateSearch();
 
@@ -213,7 +215,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 //resolution
-                int[] resolutions = new int[] {8, 16, 32, 64};
+                int[] resolutions = new int[] {16, 32, 64, 128};
                 int x = width / 2 - 200;
                 List<ButtonWidget> list = new LinkedList<>();
                 for (int res : resolutions) {
@@ -294,10 +296,10 @@ public class ImmersivePaintingScreen extends Screen {
                 rebuildPaintings();
 
                 // page
-                addDrawableChild(new ButtonWidget(width / 2 - 35 - 30, height / 2 + 70, 30, 20, new LiteralText("<<"), sender -> setSelectionPage(selectionPage - 1)));
-                pageWidget = addDrawableChild(new ButtonWidget(width / 2 - 35, height / 2 + 70, 70, 20, new LiteralText(""), sender -> {
+                addDrawableChild(new ButtonWidget(width / 2 - 35 - 30, height / 2 + 80, 30, 20, new LiteralText("<<"), sender -> setSelectionPage(selectionPage - 1)));
+                pageWidget = addDrawableChild(new ButtonWidget(width / 2 - 35, height / 2 + 80, 70, 20, new LiteralText(""), sender -> {
                 }));
-                addDrawableChild(new ButtonWidget(width / 2 + 35, height / 2 + 70, 30, 20, new LiteralText(">>"), sender -> setSelectionPage(selectionPage + 1)));
+                addDrawableChild(new ButtonWidget(width / 2 + 35, height / 2 + 80, 30, 20, new LiteralText(">>"), sender -> setSelectionPage(selectionPage + 1)));
                 setSelectionPage(selectionPage);
 
                 //search
@@ -312,7 +314,7 @@ public class ImmersivePaintingScreen extends Screen {
                 });
 
                 //filter resolution
-                int[] resolutions = new int[] {0, 8, 16, 32, 64};
+                int[] resolutions = new int[] {0, 16, 32, 64, 128};
                 int x = width / 2 - 200;
                 List<ButtonWidget> list = new LinkedList<>();
                 for (int res : resolutions) {
@@ -444,15 +446,17 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 60 + y * 52, 48, 48,
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 52) - 24, height / 2 - 66 + y * 50, 48, 48,
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
                                 setPage(Page.FRAME);
                             },
                             (b) -> {
-                                deletePainting = identifier;
-                                setPage(Page.DELETE);
+                                if (page == Page.SELECTION_YOURS) {
+                                    deletePainting = identifier;
+                                    setPage(Page.DELETE);
+                                }
                             },
                             (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, tooltip, mx, my))));
                 } else {
@@ -511,8 +515,8 @@ public class ImmersivePaintingScreen extends Screen {
 
         String playerName = MinecraftClient.getInstance().player == null ? "" : MinecraftClient.getInstance().player.getGameProfile().getName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
-                .filter(v -> page != Page.SELECTION_YOURS || Objects.equals(v.getValue().author, playerName))
-                .filter(v -> page != Page.SELECTION_PLAYERS || !Objects.equals(v.getValue().author, playerName))
+                .filter(v -> page != Page.SELECTION_YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
+                .filter(v -> page != Page.SELECTION_PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
                 .filter(v -> page != Page.SELECTION_DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
@@ -562,15 +566,28 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private NativeImage loadImage(String path, Identifier identifier) {
+        InputStream stream = null;
         try {
-            InputStream stream = new URL(path).openStream();
-            NativeImage nativeImage = NativeImage.read(stream);
-            MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(nativeImage));
-            stream.close();
-            return nativeImage;
+            stream = new URL(path).openStream();
         } catch (Exception exception) {
-            exception.printStackTrace();
+            try {
+                stream = new FileInputStream(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        if (stream != null) {
+            try {
+                NativeImage nativeImage = NativeImage.read(stream);
+                MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(nativeImage));
+                stream.close();
+                return nativeImage;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         return null;
     }
 
