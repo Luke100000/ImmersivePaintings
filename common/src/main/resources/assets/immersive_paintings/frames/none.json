@@ -1,5 +1,4 @@
 {
   "frame": "immersive_paintings:none",
-  "material": "immersive_paintings:none",
-  "diagonals": false
+  "material": "immersive_paintings:textures/block/frame/none/none.png"
 }

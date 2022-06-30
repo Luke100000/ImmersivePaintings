@@ -86,7 +86,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
         public NativeImage image;
 
         public boolean requested = false;
-        public Identifier textureIdentifier = Main.locate("paintings/unknown");
+        public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
 
         public PaintingData(@Nullable NativeImage image, int width, int height, int resolution) {
             this(image, width, height, resolution, "", "", false);
