@@ -91,21 +91,13 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         if (!this.world.isSpaceEmpty(this)) {
             return false;
         }
-        int i = Math.max(1, this.getWidthPixels() / 16);
-        int j = Math.max(1, this.getHeightPixels() / 16);
+
         BlockPos blockPos = this.attachmentPos.offset(this.facing.getOpposite());
-        Direction direction = this.facing.rotateYCounterclockwise();
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        for (int k = 0; k < i; ++k) {
-            for (int l = 0; l < j; ++l) {
-                int m = (i - 1) / -2;
-                int n = (j - 1) / -2;
-                mutable.set(blockPos).move(direction, k + m).move(Direction.UP, l + n);
-                BlockState blockState = this.world.getBlockState(mutable);
-                if (blockState.getMaterial().isSolid() || AbstractRedstoneGateBlock.isRedstoneGate(blockState)) continue;
-                return false;
-            }
+        BlockState blockState = this.world.getBlockState(blockPos);
+        if (!blockState.getMaterial().isSolid() && !AbstractRedstoneGateBlock.isRedstoneGate(blockState)) {
+            return false;
         }
+
         return this.world.getOtherEntities(this, this.getBoundingBox(), PREDICATE).isEmpty();
     }
 
