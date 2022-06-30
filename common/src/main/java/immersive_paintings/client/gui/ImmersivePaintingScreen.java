@@ -29,7 +29,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -175,7 +176,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText("URL")));
                 textFieldWidget.setMaxLength(1024);
 
-                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 - 15, 100, 20, new TranslatableText("Load Image"), sender -> loadImage(Path.of(textFieldWidget.getText()))));
+                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 - 15, 100, 20, new TranslatableText("Load Image"), sender -> loadImage(textFieldWidget.getText())));
 
                 //screenshots
                 rebuildScreenshots();
@@ -472,7 +473,7 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * 6;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                NativeImage image = loadImage(file.toPath(), Main.locate("screenshot_" + x));
+                NativeImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
                     Paintings.PaintingData painting = new Paintings.PaintingData(image, 16);
                     painting.textureIdentifier = Main.locate("screenshot_" + x);
@@ -546,28 +547,29 @@ public class ImmersivePaintingScreen extends Screen {
     @Override
     public void filesDragged(List<Path> paths) {
         Path path = paths.get(0);
-        loadImage(path);
+        loadImage(path.toString());
     }
 
-    private void loadImage(Path path) {
+    private void loadImage(String path) {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = path.getFileName().toString().replaceFirst("[.][^.]+$", "");
+            currentImageName = Path.of(path).getFileName().toString().replaceFirst("[.][^.]+$", "");
             settings = new PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
         }
     }
 
-    private NativeImage loadImage(Path path, Identifier identifier) {
+    private NativeImage loadImage(String path, Identifier identifier) {
         try {
-            FileInputStream stream = new FileInputStream(path.toFile());
+            InputStream stream = new URL(path).openStream();
             NativeImage nativeImage = NativeImage.read(stream);
             MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(nativeImage));
             stream.close();
             return nativeImage;
-        } catch (Exception ignored) {
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return null;
     }
