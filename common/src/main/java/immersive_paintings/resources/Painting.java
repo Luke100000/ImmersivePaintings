@@ -4,6 +4,7 @@ import immersive_paintings.Main;
 import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,9 +22,9 @@ public final class Painting {
 
     @Nullable
     public NativeImage image;
-
     public boolean requested = false;
     public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
+    public Resource resource;
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution) {
         this(image, width, height, resolution, "", "", false, UUID.randomUUID().toString());
@@ -41,18 +42,7 @@ public final class Painting {
     }
 
     public Painting(NativeImage image, int resolution) {
-        this(image, resolution, "", "", false, UUID.randomUUID().toString());
-    }
-
-    public Painting(NativeImage image, int resolution, String name, String author, boolean datapack, String hash) {
-        this.image = image;
-        this.width = image.getWidth() / resolution;
-        this.height = image.getHeight() / resolution;
-        this.resolution = resolution;
-        this.name = name;
-        this.author = author;
-        this.datapack = datapack;
-        this.hash = hash;
+        this(image, image.getWidth() / resolution, image.getHeight() / resolution, resolution, "", "", false, UUID.randomUUID().toString());
     }
 
     public NbtCompound toNbt() {

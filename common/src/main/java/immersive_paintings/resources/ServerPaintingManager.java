@@ -68,17 +68,24 @@ public class ServerPaintingManager {
 
     public static NativeImage getImage(Identifier i) {
         if (datapackPaintings.containsKey(i)) {
-            return datapackPaintings.get(i).image;
+            Painting painting = datapackPaintings.get(i);
+            if (painting.image == null) {
+                try {
+                    return painting.image = NativeImage.read(painting.resource.getInputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         } else if (get().customServerPaintings.containsKey(i)) {
             Painting data = get().customServerPaintings.get(i);
             if (data.image == null) {
                 loadImage(i);
             }
             return data.image;
-        } else {
-            //unknown image
-            return null;
         }
+
+        //unknown image
+        return null;
     }
 
     public static class CustomServerPaintings extends PersistentState {

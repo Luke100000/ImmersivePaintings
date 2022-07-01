@@ -3,7 +3,6 @@ package immersive_paintings.resources;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
@@ -36,29 +35,30 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
             Identifier imageIdentifier = new Identifier(identifier.getNamespace(), string.substring(dataTypeLength, string.length() - FILE_SUFFIX_LENGTH));
 
             try {
-                NativeImage nativeImage = NativeImage.read(manager.getResource(identifier).getInputStream());
                 Identifier jsonIdentifier = new Identifier(identifier.getNamespace(), string.replace(".png", ".json"));
 
                 String hash = DigestUtils.sha1Hex(identifier.toString());
 
-                Painting data = null;
+                Painting painting;
                 if (manager.containsResource(jsonIdentifier)) {
                     InputStream inputStream = manager.getResource(jsonIdentifier).getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
 
+                    int width = JsonHelper.getInt(jsonElement, "width", 1);
+                    int height = JsonHelper.getInt(jsonElement, "height", 1);
                     int resolution = JsonHelper.getInt(jsonElement, "resolution", 32);
                     String name = JsonHelper.getString(jsonElement, "name", "unknown");
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
 
-                    data = new Painting(nativeImage, resolution, name, author, true, hash);
+                    painting = new Painting(null, width, height, resolution, name, author, true, hash);
+                } else {
+                    painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, hash);
                 }
 
-                if (data == null) {
-                    data = new Painting(nativeImage, 32, "unknown", "unknown", true, hash);
-                }
+                painting.resource = manager.getResource(identifier);
 
-                map.put(identifier, data);
+                map.put(identifier, painting);
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {
                 LOGGER.error("Couldn't load painting {} from {} ({})", imageIdentifier, identifier, exception);
             }
