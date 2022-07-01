@@ -5,7 +5,7 @@ import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
 import immersive_paintings.network.s2c.PaintingListMessage;
-import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.PaintingsLoader;
 import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -35,7 +35,7 @@ public final class CommonForge {
 
     @SubscribeEvent
     private void onAddReloadListener(AddReloadListenerEvent event) {
-        event.addListener(new Paintings());
+        event.addListener(new PaintingsLoader());
     }
 
     @SubscribeEvent

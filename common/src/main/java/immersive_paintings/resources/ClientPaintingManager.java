@@ -13,17 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientPaintingManager {
-    static final Paintings.PaintingData DEFAULT = new Paintings.PaintingData(new NativeImage(2, 2, false), 2);
+    static final Painting DEFAULT = new Painting(new NativeImage(2, 2, false), 2);
 
-    static Map<Identifier, Paintings.PaintingData> paintings = new HashMap<>();
+    static Map<Identifier, Painting> paintings = new HashMap<>();
 
-    public static Map<Identifier, Paintings.PaintingData> getPaintings() {
+    public static Map<Identifier, Painting> getPaintings() {
         return paintings;
     }
 
-    public static Paintings.PaintingData getPainting(Identifier identifier) {
+    public static Painting getPainting(Identifier identifier) {
         if (paintings.containsKey(identifier)) {
-            Paintings.PaintingData data = paintings.get(identifier);
+            Painting data = paintings.get(identifier);
             if (data.image == null && !data.requested) {
                 data.requested = true;
 
@@ -38,14 +38,14 @@ public class ClientPaintingManager {
     }
 
     public static void loadImage(Identifier i, int[] ints) {
-        Paintings.PaintingData data = ClientPaintingManager.getPaintings().get(i);
+        Painting data = ClientPaintingManager.getPaintings().get(i);
         NativeImage image = ImageManipulations.intsToImage(data.getPixelWidth(), data.getPixelHeight(), ints);
         loadImage(i, image);
         Cache.set(data);
     }
 
     public static void loadImage(Identifier i, @NotNull NativeImage image) {
-        Paintings.PaintingData data = ClientPaintingManager.getPaintings().get(i);
+        Painting data = ClientPaintingManager.getPaintings().get(i);
         data.image = image;
         data.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
                 .registerDynamicTexture("immersive_painting/" + i.getPath().replace(":", "_"), new NativeImageBackedTexture(data.image));

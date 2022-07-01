@@ -4,7 +4,7 @@ import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.PaintingListMessage;
-import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ public class RegisterPaintingRequest implements Message {
     private final String name;
     private final SerializableNbt painting;
 
-    public RegisterPaintingRequest(String name, Paintings.PaintingData painting) {
+    public RegisterPaintingRequest(String name, Painting painting) {
         this.name = name;
         this.painting = new SerializableNbt(painting.toFullNbt());
     }
@@ -38,7 +38,7 @@ public class RegisterPaintingRequest implements Message {
         nbt.putString("author", e.getGameProfile().getName());
         nbt.putString("name", name);
 
-        Paintings.PaintingData painting = Paintings.PaintingData.fromNbt(nbt);
+        Painting painting = Painting.fromNbt(nbt);
 
         ServerPaintingManager.registerPainting(
                 identifier,

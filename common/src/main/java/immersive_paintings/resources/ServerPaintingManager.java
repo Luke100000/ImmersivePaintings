@@ -15,18 +15,18 @@ import java.util.Map;
 
 public class ServerPaintingManager {
     public static MinecraftServer server;
-    private static Map<Identifier, Paintings.PaintingData> datapackPaintings = new HashMap<>();
+    private static Map<Identifier, Painting> datapackPaintings = new HashMap<>();
 
     public static CustomServerPaintings get() {
         return server.getOverworld().getPersistentStateManager()
                 .getOrCreate(CustomServerPaintings::fromNbt, CustomServerPaintings::new, "immersive_paintings");
     }
 
-    public static Map<Identifier, Paintings.PaintingData> getDatapackPaintings() {
+    public static Map<Identifier, Painting> getDatapackPaintings() {
         return datapackPaintings;
     }
 
-    public static void setDatapackPaintings(Map<Identifier, Paintings.PaintingData> datapackPaintings) {
+    public static void setDatapackPaintings(Map<Identifier, Painting> datapackPaintings) {
         ServerPaintingManager.datapackPaintings = datapackPaintings;
     }
 
@@ -34,7 +34,7 @@ public class ServerPaintingManager {
         return Path.of("immersive_paintings", identifier.toString().replace(":", "_") + ".png");
     }
 
-    public static void registerPainting(Identifier identifier, Paintings.PaintingData painting) {
+    public static void registerPainting(Identifier identifier, Painting painting) {
         try {
             if (painting.image != null) {
                 Path path = getPaintingPath(identifier);
@@ -57,7 +57,7 @@ public class ServerPaintingManager {
     }
 
     private static void loadImage(Identifier i) {
-        Paintings.PaintingData data = get().customServerPaintings.get(i);
+        Painting data = get().customServerPaintings.get(i);
         try {
             FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
             data.image = NativeImage.read(stream);
@@ -70,7 +70,7 @@ public class ServerPaintingManager {
         if (datapackPaintings.containsKey(i)) {
             return datapackPaintings.get(i).image;
         } else if (get().customServerPaintings.containsKey(i)) {
-            Paintings.PaintingData data = get().customServerPaintings.get(i);
+            Painting data = get().customServerPaintings.get(i);
             if (data.image == null) {
                 loadImage(i);
             }
@@ -82,12 +82,12 @@ public class ServerPaintingManager {
     }
 
     public static class CustomServerPaintings extends PersistentState {
-        final Map<Identifier, Paintings.PaintingData> customServerPaintings = new HashMap<>();
+        final Map<Identifier, Painting> customServerPaintings = new HashMap<>();
 
         public static CustomServerPaintings fromNbt(NbtCompound nbt) {
             CustomServerPaintings c = new CustomServerPaintings();
             for (String key : nbt.getKeys()) {
-                c.customServerPaintings.put(new Identifier(key), Paintings.PaintingData.fromNbt(nbt.getCompound(key)));
+                c.customServerPaintings.put(new Identifier(key), Painting.fromNbt(nbt.getCompound(key)));
             }
             return c;
         }
@@ -95,13 +95,13 @@ public class ServerPaintingManager {
         @Override
         public NbtCompound writeNbt(NbtCompound nbt) {
             NbtCompound c = new NbtCompound();
-            for (Map.Entry<Identifier, Paintings.PaintingData> entry : customServerPaintings.entrySet()) {
+            for (Map.Entry<Identifier, Painting> entry : customServerPaintings.entrySet()) {
                 c.put(entry.getKey().toString(), entry.getValue().toNbt());
             }
             return c;
         }
 
-        public Map<Identifier, Paintings.PaintingData> getCustomServerPaintings() {
+        public Map<Identifier, Painting> getCustomServerPaintings() {
             return customServerPaintings;
         }
     }

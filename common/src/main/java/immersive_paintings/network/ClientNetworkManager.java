@@ -6,7 +6,7 @@ import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import immersive_paintings.network.s2c.OpenGuiRequest;
 import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.resources.ClientPaintingManager;
-import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.OffThreadException;
@@ -46,7 +46,7 @@ public class ClientNetworkManager implements NetworkManager {
         if (response.shouldClear()) {
             ClientPaintingManager.getPaintings().clear();
         }
-        for (Map.Entry<Identifier, Paintings.PaintingData> entry : response.getPaintings().entrySet()) {
+        for (Map.Entry<Identifier, Painting> entry : response.getPaintings().entrySet()) {
             if (entry.getValue() == null) {
                 ClientPaintingManager.getPaintings().remove(entry.getKey());
             } else {

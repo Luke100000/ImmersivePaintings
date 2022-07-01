@@ -8,10 +8,7 @@ import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
-import immersive_paintings.resources.ClientPaintingManager;
-import immersive_paintings.resources.Frame;
-import immersive_paintings.resources.FrameLoader;
-import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.*;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.MinecraftClient;
@@ -283,7 +280,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new LiteralText("Save"),
                         v -> {
-                            NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Paintings.PaintingData(
+                            NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Painting(
                                     pixelatedImage,
                                     settings.width,
                                     settings.height,
@@ -434,7 +431,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
                     Identifier identifier = filteredPaintings.get(i);
-                    Paintings.PaintingData painting = ClientPaintingManager.getPainting(identifier);
+                    Painting painting = ClientPaintingManager.getPainting(identifier);
 
                     //tooltip
                     List<Text> tooltip = new LinkedList<>();
@@ -479,7 +476,7 @@ public class ImmersivePaintingScreen extends Screen {
                 File file = screenshots.get(i);
                 NativeImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
-                    Paintings.PaintingData painting = new Paintings.PaintingData(image, 16);
+                    Painting painting = new Painting(image, 16);
                     painting.textureIdentifier = Main.locate("screenshot_" + x);
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
                             (b) -> {

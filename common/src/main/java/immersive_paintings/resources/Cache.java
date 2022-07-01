@@ -12,7 +12,7 @@ public class Cache {
         return new File("./immersive_paintings_cache/" + key + ".png");
     }
 
-    public static Optional<NativeImage> get(Paintings.PaintingData image) {
+    public static Optional<NativeImage> get(Painting image) {
         File file = getFile(image.hash);
 
         if (!file.exists()) {
@@ -29,7 +29,7 @@ public class Cache {
         return Optional.empty();
     }
 
-    public static void set(Paintings.PaintingData image) {
+    public static void set(Painting image) {
         try {
             if (image.image != null) {
                 File file = getFile(image.hash);

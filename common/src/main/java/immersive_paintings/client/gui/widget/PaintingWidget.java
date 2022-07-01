@@ -1,18 +1,18 @@
 package immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import immersive_paintings.resources.Paintings;
+import immersive_paintings.resources.Painting;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class PaintingWidget extends ButtonWidget {
-    private final Paintings.PaintingData painting;
+    private final Painting painting;
     private final PressAction onPressRight;
     private int button;
 
-    public PaintingWidget(Paintings.PaintingData painting, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
+    public PaintingWidget(Painting painting, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);
         this.onPressRight = onPressRight;
         this.painting = painting;
