@@ -1,6 +1,7 @@
 package immersive_paintings.dev;
 
 import immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
+import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.texture.NativeImage;
 
 import java.io.File;
@@ -34,7 +35,7 @@ public class DatapackPaintingsGenerator {
             process("Ikran Nebula - Starkiteckt.png", 2, 1, 0, 32, res, false);
             process("Lake - Sarel Theron.jpg", 3, 2, 0.25, 12, res, false);
             process("Life In The Sky - Vladimir Kostuchek.jpg", 3, 2, 0.25, 12, res, false);
-            process("Nevermore - Josef Bartoň.jpg", 3, 2, 0.25, 12, res, false);
+            process("Nevermore - Josef Barton.jpg", 3, 2, 0.25, 12, res, false);
             process("Small Memory - Mikael Gustafsson.jpg", 3, 2, 0.0, 12, res, false);
             process("The Ancient Ones - Jessica Woulfe.jpg", 2, 1, 0.5, 12, res, false);
             process("The Esteemed Palace - Chris Ostrowski.png", 2, 2, 0.25, 12, res, false);
@@ -51,6 +52,13 @@ public class DatapackPaintingsGenerator {
 
     private static void process(String name, int width, int height, double dither, int colors, int resolution, boolean pixelArt) throws IOException {
         NativeImage image = loadImage(name);
+
+        int zoom = ImageManipulations.scanForPixelArtMultiple(image);
+
+        if (image.getWidth() / zoom < width * resolution || image.getHeight() / zoom < height * resolution) {
+            return;
+        }
+
         String[] split = name
                 .replace(".png", "")
                 .replace(".jpg", "")
