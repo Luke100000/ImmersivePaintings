@@ -12,6 +12,7 @@ import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -22,6 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Paintings extends SinglePreparationResourceReloader<Map<Identifier, Paintings.PaintingData>> {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -42,6 +44,8 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
                 NativeImage nativeImage = NativeImage.read(manager.getResource(identifier).getInputStream());
                 Identifier jsonIdentifier = new Identifier(identifier.getNamespace(), string.replace(".png", ".json"));
 
+                String hash = DigestUtils.sha1Hex(identifier.toString());
+
                 PaintingData data = null;
                 if (manager.containsResource(jsonIdentifier)) {
                     InputStream inputStream = manager.getResource(jsonIdentifier).getInputStream();
@@ -52,11 +56,11 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
                     String name = JsonHelper.getString(jsonElement, "name", "unknown");
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
 
-                    data = new PaintingData(nativeImage, resolution, name, author, true);
+                    data = new PaintingData(nativeImage, resolution, name, author, true, hash);
                 }
 
                 if (data == null) {
-                    data = new PaintingData(nativeImage, 32, "unknown", "unknown", true);
+                    data = new PaintingData(nativeImage, 32, "unknown", "unknown", true, hash);
                 }
 
                 map.put(identifier, data);
@@ -80,6 +84,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
 
         public final String name;
         public final String author;
+        public final String hash;
         public boolean datapack;
 
         @Nullable
@@ -93,6 +98,10 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
         }
 
         public PaintingData(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack) {
+            this(image, width, height, resolution, name, author, datapack, UUID.randomUUID().toString());
+        }
+
+        public PaintingData(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
             this.image = image;
             this.width = width;
             this.height = height;
@@ -100,13 +109,14 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             this.name = name;
             this.author = author;
             this.datapack = datapack;
+            this.hash = hash;
         }
 
         public PaintingData(NativeImage image, int resolution) {
-            this(image, resolution, "", "", false);
+            this(image, resolution, "", "", false, UUID.randomUUID().toString());
         }
 
-        public PaintingData(NativeImage image, int resolution, String name, String author, boolean datapack) {
+        public PaintingData(NativeImage image, int resolution, String name, String author, boolean datapack, String hash) {
             this.image = image;
             this.width = image.getWidth() / resolution;
             this.height = image.getHeight() / resolution;
@@ -114,6 +124,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             this.name = name;
             this.author = author;
             this.datapack = datapack;
+            this.hash = hash;
         }
 
         public NbtCompound toNbt() {
@@ -124,6 +135,7 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             nbt.putString("name", name);
             nbt.putString("author", author);
             nbt.putBoolean("datapack", datapack);
+            nbt.putString("hash", hash);
             return nbt;
         }
 
@@ -141,13 +153,14 @@ public class Paintings extends SinglePreparationResourceReloader<Map<Identifier,
             String name = nbt.getString("name");
             String author = nbt.getString("author");
             boolean datapack = nbt.getBoolean("datapack");
+            String hash = nbt.getString("hash");
 
             NativeImage image = null;
             if (nbt.contains("image")) {
                 image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("image"));
             }
 
-            return new PaintingData(image, width, height, resolution, name, author, datapack);
+            return new PaintingData(image, width, height, resolution, name, author, datapack, hash);
         }
 
         public int getPixelWidth() {
