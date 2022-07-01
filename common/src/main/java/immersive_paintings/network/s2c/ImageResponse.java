@@ -9,24 +9,40 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.*;
+
 public class ImageResponse implements Message {
     private final String identifier;
     private final int[] data;
+    private final int segment;
+    private final int totalSegments;
 
-    public ImageResponse(Identifier identifier, int[] data) {
+    private static final Map<Identifier, List<int[]>> buffer = new HashMap<>();
+
+    public ImageResponse(Identifier identifier, int[] data, int segment, int totalSegments) {
         this.identifier = identifier.toString();
         this.data = data;
+        this.segment = segment;
+        this.totalSegments = totalSegments;
     }
 
     @Override
     public void receive(PlayerEntity e) {
         Identifier i = new Identifier(this.identifier);
-        if (ClientPaintingManager.getPaintings().containsKey(i)) {
-            Paintings.PaintingData data = ClientPaintingManager.getPaintings().get(i);
-            data.image = ImageManipulations.intsToImage(data.getPixelWidth(), data.getPixelHeight(), this.data);
-            data.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
-                    .registerDynamicTexture("immersive_painting/" + this.identifier.replace(":", "_"), new NativeImageBackedTexture(data.image));
-            data.image.upload(0, 0, 0, false);
+
+        List<int[]> integers = buffer.computeIfAbsent(i, (k) -> new LinkedList<>());
+        integers.add(data);
+
+        if (segment + 1 == totalSegments) {
+            if (ClientPaintingManager.getPaintings().containsKey(i)) {
+                Paintings.PaintingData data = ClientPaintingManager.getPaintings().get(i);
+                int[] ints = integers.stream().flatMapToInt(Arrays::stream).toArray();
+                data.image = ImageManipulations.intsToImage(data.getPixelWidth(), data.getPixelHeight(), ints);
+                data.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
+                        .registerDynamicTexture("immersive_painting/" + this.identifier.replace(":", "_"), new NativeImageBackedTexture(data.image));
+                data.image.upload(0, 0, 0, false);
+                buffer.remove(i);
+            }
         }
     }
 }

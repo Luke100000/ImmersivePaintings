@@ -10,7 +10,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+
 public class ImageRequest implements Message {
+    private static final int BYTES_PER_MESSAGE = 16 * 1024;
+
     private final String identifier;
 
     public ImageRequest(Identifier identifier) {
@@ -19,12 +23,18 @@ public class ImageRequest implements Message {
 
     @Override
     public void receive(PlayerEntity e) {
-        Identifier i = new Identifier(identifier);
-        NativeImage image = ServerPaintingManager.getImage(i);
+        Identifier identifier = new Identifier(this.identifier);
+        NativeImage image = ServerPaintingManager.getImage(identifier);
 
         if (image != null) {
             int[] is = ImageManipulations.imageToInts(image);
-            NetworkHandler.sendToPlayer(new ImageResponse(i, is), (ServerPlayerEntity)e);
+            int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
+            int split = 0;
+            for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
+                int[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
+                NetworkHandler.sendToPlayer(new ImageResponse(identifier, ints, split, splits), (ServerPlayerEntity)e);
+                split++;
+            }
         }
     }
 }
