@@ -56,36 +56,29 @@ public class ServerPaintingManager {
         get().setDirty(true);
     }
 
-    private static void loadImage(Identifier i) {
-        Painting data = get().customServerPaintings.get(i);
-        try {
-            FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
-            data.image = NativeImage.read(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static Painting getPainting(Identifier i) {
+        if (datapackPaintings.containsKey(i)) {
+            return datapackPaintings.get(i);
+        } else {return get().customServerPaintings.getOrDefault(i, null);}
     }
 
     public static NativeImage getImage(Identifier i) {
-        if (datapackPaintings.containsKey(i)) {
-            Painting painting = datapackPaintings.get(i);
-            if (painting.image == null) {
-                try {
+        Painting painting = getPainting(i);
+
+        if (painting.image == null) {
+            try {
+                if (painting.resource != null) {
                     return painting.image = NativeImage.read(painting.resource.getInputStream());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } else if (get().customServerPaintings.containsKey(i)) {
+                    FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
+                    painting.image = NativeImage.read(stream);
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } else if (get().customServerPaintings.containsKey(i)) {
-            Painting data = get().customServerPaintings.get(i);
-            if (data.image == null) {
-                loadImage(i);
-            }
-            return data.image;
         }
 
-        //unknown image
-        return null;
+        return painting.image;
     }
 
     public static class CustomServerPaintings extends PersistentState {
