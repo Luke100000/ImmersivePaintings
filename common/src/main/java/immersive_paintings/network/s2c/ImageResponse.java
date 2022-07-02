@@ -19,7 +19,7 @@ public class ImageResponse extends SegmentedPaintingMessage {
 
     @Override
     protected String getIdentifier(PlayerEntity e) {
-        return identifier;
+        return identifier + type.name();
     }
 
     @Override
