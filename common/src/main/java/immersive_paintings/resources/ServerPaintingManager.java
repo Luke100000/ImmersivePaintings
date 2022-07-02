@@ -98,14 +98,17 @@ public class ServerPaintingManager {
 
                                     if (zoom >= 1.0f) {
                                         texture.image = painting.texture.image;
-                                        return; //let the server send "links", e.g. thumbnails refers to full if too small
+                                        return;
                                     }
 
                                     w = (int)(image.getWidth() * zoom);
                                     h = (int)(image.getHeight() * zoom);
-                                } else {
+                                } else if (type == Painting.Type.HALF) {
                                     w = image.getWidth() / 2;
                                     h = image.getHeight() / 2;
+                                } else {
+                                    w = image.getWidth() / 4;
+                                    h = image.getHeight() / 4;
                                 }
 
                                 NativeImage target = new NativeImage(w, h, false);

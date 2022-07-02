@@ -1,10 +1,13 @@
 package immersive_paintings.client.render.entity.renderer;
 
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.ObjectLoader;
 import immersive_paintings.resources.Painting;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -33,7 +36,11 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
     @Override
     public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
-        return ClientPaintingManager.getPaintingTexture(paintingEntity.getMotive(), Painting.Type.FULL).textureIdentifier;
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        int resolution = ClientPaintingManager.getPainting(paintingEntity.getMotive()).resolution;
+        double distance = (player == null ? 0 : player.getPos().distanceTo(paintingEntity.getPos())) * resolution;
+        Painting.Type type = distance > Config.getInstance().distanceToQuarter ? Painting.Type.QUARTER : distance > Config.getInstance().distanceToHalf ? Painting.Type.HALF : Painting.Type.FULL;
+        return ClientPaintingManager.getPaintingTexture(paintingEntity.getMotive(), type).textureIdentifier;
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, ImmersivePaintingEntity entity) {

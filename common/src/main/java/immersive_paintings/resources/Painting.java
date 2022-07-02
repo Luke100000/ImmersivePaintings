@@ -22,6 +22,7 @@ public final class Painting {
 
     public Texture texture;
     public Texture half;
+    public Texture quarter;
     public Texture thumbnail;
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution) {
@@ -33,6 +34,9 @@ public final class Painting {
 
         Type halfType = Math.max(width, height) * resolution < Config.getInstance().halfResolutionMinSize ? Type.FULL : Type.HALF;
         this.half = new Texture(null, hash + "_half", halfType);
+
+        Type quarterType = Math.max(width, height) * resolution < Config.getInstance().quarterResolutionMinSize ? halfType : Type.QUARTER;
+        this.quarter = new Texture(null, hash + "_quarter", quarterType);
 
         Type thumbnailType = Math.max(width, height) * resolution < Config.getInstance().thumbnailSize ? Type.FULL : Type.THUMBNAIL;
         this.thumbnail = new Texture(null, hash + "_thumbnail", thumbnailType);
@@ -88,6 +92,7 @@ public final class Painting {
         return switch (type) {
             case FULL -> texture;
             case HALF -> half;
+            case QUARTER -> quarter;
             case THUMBNAIL -> thumbnail;
         };
     }
@@ -95,6 +100,7 @@ public final class Painting {
     public enum Type {
         FULL,
         HALF,
+        QUARTER,
         THUMBNAIL
     }
 
