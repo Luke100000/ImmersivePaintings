@@ -38,6 +38,7 @@ public abstract class SegmentedPaintingMessage implements Message {
             int[] ints = integers.stream().flatMapToInt(Arrays::stream).toArray();
             NativeImage image = ImageManipulations.intsToImage(width, height, ints);
             process(e, image);
+            buffer.remove(i);
         }
     }
 }
