@@ -3,10 +3,7 @@ package immersive_paintings;
 
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.c2s.*;
-import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
-import immersive_paintings.network.s2c.PaintingListMessage;
-import immersive_paintings.network.s2c.PaintingModifyMessage;
-import immersive_paintings.network.s2c.ImageResponse;
+import immersive_paintings.network.s2c.*;
 
 public class Messages {
     public static void bootstrap() {
@@ -19,5 +16,6 @@ public class Messages {
         NetworkHandler.registerMessage(RegisterPaintingRequest.class);
         NetworkHandler.registerMessage(PaintingDeleteRequest.class);
         NetworkHandler.registerMessage(UploadPaintingRequest.class);
+        NetworkHandler.registerMessage(RegisterPaintingResponse.class);
     }
 }

@@ -2,15 +2,17 @@ package immersive_paintings.network;
 
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.entity.ImmersivePaintingEntity;
-import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
-import immersive_paintings.network.s2c.OpenGuiRequest;
-import immersive_paintings.network.s2c.PaintingListMessage;
+import immersive_paintings.network.s2c.*;
 import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.MessageType;
 import net.minecraft.network.OffThreadException;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
 import java.util.Map;
 
@@ -56,6 +58,33 @@ public class ClientNetworkManager implements NetworkManager {
 
         if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
             screen.refreshPage();
+        }
+    }
+
+    @Override
+    public void handlePaintingModifyMessage(PaintingModifyMessage message) {
+        ClientPlayerEntity e = MinecraftClient.getInstance().player;
+        if (e != null && e.world.getEntityById(message.getEntityId()) instanceof ImmersivePaintingEntity painting) {
+            painting.setMotive(message.getMotive());
+            painting.setFrame(message.getFrame());
+            painting.setMaterial(message.getMaterial());
+        }
+    }
+
+    @Override
+    public void handleRegisterPaintingResponse(RegisterPaintingResponse response) {
+        ClientPlayerEntity e = MinecraftClient.getInstance().player;
+
+        if (response.error != null) {
+            MinecraftClient.getInstance().inGameHud.addChatMessage(MessageType.SYSTEM, new TranslatableText("immersive_paintings.error." + response.error), e == null ? Util.NIL_UUID : e.getUuid());
+        }
+
+        if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
+            if (response.error == null) {
+                screen.setPage(ImmersivePaintingScreen.Page.SELECTION_YOURS);
+            } else {
+                screen.setPage(ImmersivePaintingScreen.Page.CREATE);
+            }
         }
     }
 }

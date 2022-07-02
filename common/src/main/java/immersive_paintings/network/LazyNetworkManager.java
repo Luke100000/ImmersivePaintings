@@ -40,6 +40,10 @@ public class LazyNetworkManager {
         }
     }
 
+    public static float getRemainingTime() {
+        return (float)serverQueue.size() / Config.getInstance().maxPacketsPerSecond;
+    }
+
     record LazyPacket(Message message, ServerPlayerEntity player) {
     }
 }

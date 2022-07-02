@@ -113,39 +113,45 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (page == Page.NEW) {
-            fill(matrices, width / 2 - 100, height / 2 - 60, width / 2 + 100, height / 2 - 40, 0x10000000);
-            List<Text> wrap = FlowingText.wrap(new TranslatableText("Drop an image here, enter a file path or URL or select a screenshot to start."), 220);
-            int y = height / 2 - 40 - wrap.size() * 12;
-            for (Text text : wrap) {
-                drawCenteredText(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
-                y += 12;
+        switch (page) {
+            case NEW -> {
+                fill(matrices, width / 2 - 100, height / 2 - 60, width / 2 + 100, height / 2 - 40, 0x10000000);
+                List<Text> wrap = FlowingText.wrap(new TranslatableText("Drop an image here, enter a file path or URL or select a screenshot to start."), 220);
+                int y = height / 2 - 40 - wrap.size() * 12;
+                for (Text text : wrap) {
+                    drawCenteredText(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
+                    y += 12;
+                }
             }
-        } else if (page == Page.CREATE) {
-            int maxWidth = 190;
-            int maxHeight = 135;
-            int tw = settings.resolution * settings.width;
-            int th = settings.resolution * settings.height;
-            float size = Math.min((float)maxWidth / tw, (float)maxHeight / th);
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, Main.locate("temp_pixelated"));
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
-
-            matrices.push();
-            matrices.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
-            matrices.scale(size, size, 1.0f);
-            drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
-            matrices.pop();
-        } else if (page == Page.DELETE) {
-            fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-            List<Text> wrap = FlowingText.wrap(new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), 300);
-            int y = height / 2 - 35;
-            for (Text t : wrap) {
-                drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
-                y += 15;
+            case CREATE -> {
+                int maxWidth = 190;
+                int maxHeight = 135;
+                int tw = settings.resolution * settings.width;
+                int th = settings.resolution * settings.height;
+                float size = Math.min((float)maxWidth / tw, (float)maxHeight / th);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.setShaderTexture(0, Main.locate("temp_pixelated"));
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+                RenderSystem.enableDepthTest();
+                matrices.push();
+                matrices.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
+                matrices.scale(size, size, 1.0f);
+                drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
+                matrices.pop();
+            }
+            case DELETE -> {
+                fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+                List<Text> wrap = FlowingText.wrap(new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), 300);
+                int y = height / 2 - 35;
+                for (Text t : wrap) {
+                    drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    y += 15;
+                }
+            }
+            case LOADING -> {
+                TranslatableText text = new TranslatableText("immersive_paintings.upload", (int)Math.ceil(LazyNetworkManager.getRemainingTime()));
+                drawCenteredText(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
 
@@ -301,7 +307,8 @@ public class ImmersivePaintingScreen extends Screen {
                                     settings.height,
                                     settings.resolution
                             )));
-                            setPage(Page.SELECTION_YOURS);
+
+                            setPage(Page.LOADING);
                         }));
             }
             case SELECTION_YOURS, SELECTION_DATAPACKS, SELECTION_PLAYERS -> {
@@ -513,7 +520,7 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private void setPage(Page page) {
+    public void setPage(Page page) {
         this.page = page;
         rebuild();
 
@@ -666,14 +673,15 @@ public class ImmersivePaintingScreen extends Screen {
         setPage(page);
     }
 
-    enum Page {
+    public enum Page {
         SELECTION_YOURS,
         SELECTION_DATAPACKS,
         SELECTION_PLAYERS,
         NEW,
         CREATE,
         FRAME,
-        DELETE
+        DELETE,
+        LOADING
     }
 
     public static final class PixelatorSettings {

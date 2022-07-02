@@ -1,12 +1,15 @@
 package immersive_paintings.network.c2s;
 
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.PaintingListMessage;
+import immersive_paintings.network.s2c.RegisterPaintingResponse;
 import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,6 +33,19 @@ public class RegisterPaintingRequest implements Message {
 
     @Override
     public void receive(PlayerEntity e) {
+        NativeImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
+
+        if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
+            error("too_large", (ServerPlayerEntity)e);
+            return;
+        }
+
+        long count = ServerPaintingManager.get().getCustomServerPaintings().values().stream().filter(p -> p.author.equals(e.getGameProfile().getName())).count();
+        if (count > Config.getInstance().maxUserImages) {
+            error("limit_reached", (ServerPlayerEntity)e);
+            return;
+        }
+
         String id = escapeString(e.getGameProfile().getName()) + "/" + escapeString(name);
         Identifier identifier = Main.locate(id);
 
@@ -40,7 +56,7 @@ public class RegisterPaintingRequest implements Message {
 
         Painting painting = Painting.fromNbt(nbt);
 
-        painting.texture.image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
+        painting.texture.image = image;
 
         ServerPaintingManager.registerPainting(
                 identifier,
@@ -51,5 +67,11 @@ public class RegisterPaintingRequest implements Message {
         for (ServerPlayerEntity player : Objects.requireNonNull(e.getServer()).getPlayerManager().getPlayerList()) {
             NetworkHandler.sendToPlayer(new PaintingListMessage(identifier, painting), player);
         }
+
+        error(null, (ServerPlayerEntity)e);
+    }
+
+    private void error(String error, ServerPlayerEntity e) {
+        NetworkHandler.sendToPlayer(new RegisterPaintingResponse(error), e);
     }
 }
