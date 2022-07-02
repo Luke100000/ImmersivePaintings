@@ -8,14 +8,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class PaintingWidget extends ButtonWidget {
-    private final Painting painting;
+    private final Painting.Texture thumbnail;
     private final PressAction onPressRight;
     private int button;
 
-    public PaintingWidget(Painting painting, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
+    public PaintingWidget(Painting.Texture thumbnail, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);
         this.onPressRight = onPressRight;
-        this.painting = painting;
+        this.thumbnail = thumbnail;
     }
 
     @Override
@@ -37,15 +37,15 @@ public class PaintingWidget extends ButtonWidget {
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, painting.thumbnail.textureIdentifier);
+        RenderSystem.setShaderTexture(0, thumbnail.textureIdentifier);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
         matrices.push();
-        int tw = painting.thumbnail.image == null ? 32 : painting.thumbnail.image.getWidth();
-        int th = painting.thumbnail.image == null ? 32 : painting.thumbnail.image.getHeight();
+        int tw = thumbnail.image == null ? 32 : thumbnail.image.getWidth();
+        int th = thumbnail.image == null ? 32 : thumbnail.image.getHeight();
         float scale = Math.min((float)width / tw, (float)height / th);
         if (isHovered()) {
             scale *= 1.1;

@@ -15,8 +15,13 @@ public final class Config implements Serializable {
         return INSTANCE;
     }
 
+    @SuppressWarnings("unused")
+    public String README = "https://github.com/Luke100000/ImmersivePaintings/wiki/Config";
+
     public static final int VERSION = 1;
-    public int thumbnailSize = 192;
+    public int thumbnailSize = 128;
+    public int halfResolutionMinSize = 64;
+    public int quarterResolutionMinSize = 64;
 
     public int version = 0;
 

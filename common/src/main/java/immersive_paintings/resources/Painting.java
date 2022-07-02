@@ -1,5 +1,6 @@
 package immersive_paintings.resources;
 
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.texture.NativeImage;
@@ -28,9 +29,13 @@ public final class Painting {
     }
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
-        this.texture = new Texture(image, hash);
-        this.half = new Texture(null, hash + "_half");
-        this.thumbnail = new Texture(null, hash + "_thumbnail");
+        this.texture = new Texture(image, hash, Type.FULL);
+
+        Type halfType = Math.max(width, height) * resolution < Config.getInstance().halfResolutionMinSize ? Type.FULL : Type.HALF;
+        this.half = new Texture(null, hash + "_half", halfType);
+
+        Type thumbnailType = Math.max(width, height) * resolution < Config.getInstance().thumbnailSize ? Type.FULL : Type.THUMBNAIL;
+        this.thumbnail = new Texture(null, hash + "_thumbnail", thumbnailType);
 
         this.width = width;
         this.height = height;
@@ -79,14 +84,6 @@ public final class Painting {
         return new Painting(image, width, height, resolution, name, author, datapack, hash);
     }
 
-    public int getPixelWidth() {
-        return width * resolution;
-    }
-
-    public int getPixelHeight() {
-        return height * resolution;
-    }
-
     public Texture getTexture(Type type) {
         return switch (type) {
             case FULL -> texture;
@@ -101,16 +98,18 @@ public final class Painting {
         THUMBNAIL
     }
 
-    public class Texture {
+    public static class Texture {
         public NativeImage image;
         public boolean requested = false;
         public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
         public Resource resource;
         public final String hash;
+        public final Type link;
 
-        public Texture(NativeImage image, String hash) {
+        public Texture(NativeImage image, String hash, Type link) {
             this.image = image;
             this.hash = hash;
+            this.link = link;
         }
     }
 }

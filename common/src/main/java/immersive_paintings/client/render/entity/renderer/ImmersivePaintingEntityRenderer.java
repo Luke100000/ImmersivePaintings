@@ -33,7 +33,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
     @Override
     public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
-        return ClientPaintingManager.getPainting(paintingEntity.getMotive(), Painting.Type.FULL).texture.textureIdentifier;
+        return ClientPaintingManager.getPaintingTexture(paintingEntity.getMotive(), Painting.Type.FULL).textureIdentifier;
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, ImmersivePaintingEntity entity) {

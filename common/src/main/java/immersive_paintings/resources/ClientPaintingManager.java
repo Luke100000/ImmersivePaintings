@@ -25,20 +25,21 @@ public class ClientPaintingManager {
         return paintings.getOrDefault(identifier, DEFAULT);
     }
 
-    public static Painting getPainting(Identifier identifier, Painting.Type type) {
+    public static Painting.Texture getPaintingTexture(Identifier identifier, Painting.Type type) {
         if (paintings.containsKey(identifier)) {
             Painting painting = paintings.get(identifier);
-            Painting.Texture texture = painting.getTexture(type);
+            Painting.Texture textureOriginal = painting.getTexture(type);
+            Painting.Texture texture = painting.getTexture(textureOriginal.link);
             if (texture.image == null && !texture.requested) {
                 texture.requested = true;
 
                 Cache.get(texture)
                         .ifPresentOrElse((image) -> loadImage(texture, image),
-                                () -> NetworkHandler.sendToServer(new ImageRequest(identifier, type)));
+                                () -> NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link)));
             }
-            return painting;
+            return texture;
         } else {
-            return DEFAULT;
+            return DEFAULT.texture;
         }
     }
 

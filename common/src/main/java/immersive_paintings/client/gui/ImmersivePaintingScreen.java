@@ -431,7 +431,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
                     Identifier identifier = filteredPaintings.get(i);
-                    Painting painting = ClientPaintingManager.getPainting(identifier, Painting.Type.THUMBNAIL);
+                    Painting painting = ClientPaintingManager.getPainting(identifier);
 
                     //tooltip
                     List<Text> tooltip = new LinkedList<>();
@@ -443,7 +443,7 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int)(width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
@@ -478,7 +478,7 @@ public class ImmersivePaintingScreen extends Screen {
                 if (image != null) {
                     Painting painting = new Painting(image, 16);
                     painting.thumbnail.textureIdentifier = Main.locate("screenshot_" + x);
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
                             (b) -> {
                                 currentImage = image;
                                 currentImagePixelZoomCache = -1;
