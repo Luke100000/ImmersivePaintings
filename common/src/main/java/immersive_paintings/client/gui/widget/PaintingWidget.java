@@ -37,15 +37,15 @@ public class PaintingWidget extends ButtonWidget {
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, painting.textureIdentifier);
+        RenderSystem.setShaderTexture(0, painting.thumbnail.textureIdentifier);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
         matrices.push();
-        int tw = painting.getPixelWidth();
-        int th = painting.getPixelHeight();
+        int tw = painting.thumbnail.image == null ? 32 : painting.thumbnail.image.getWidth();
+        int th = painting.thumbnail.image == null ? 32 : painting.thumbnail.image.getHeight();
         float scale = Math.min((float)width / tw, (float)height / th);
         if (isHovered()) {
             scale *= 1.1;

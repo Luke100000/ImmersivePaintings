@@ -12,8 +12,8 @@ public class Cache {
         return new File("./immersive_paintings_cache/" + key + ".png");
     }
 
-    public static Optional<NativeImage> get(Painting image) {
-        File file = getFile(image.hash);
+    public static Optional<NativeImage> get(Painting.Texture texture) {
+        File file = getFile(texture.hash);
 
         if (!file.exists()) {
             return Optional.empty();
@@ -29,13 +29,13 @@ public class Cache {
         return Optional.empty();
     }
 
-    public static void set(Painting image) {
+    public static void set(Painting.Texture texture) {
         try {
-            if (image.image != null) {
-                File file = getFile(image.hash);
+            if (texture.image != null) {
+                File file = getFile(texture.hash);
                 //noinspection ResultOfMethodCallIgnored
                 file.getParentFile().mkdirs();
-                image.image.writeTo(file);
+                texture.image.writeTo(file);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

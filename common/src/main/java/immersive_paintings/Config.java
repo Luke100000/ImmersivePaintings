@@ -16,6 +16,7 @@ public final class Config implements Serializable {
     }
 
     public static final int VERSION = 1;
+    public int thumbnailSize = 192;
 
     public int version = 0;
 

@@ -431,7 +431,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
                     Identifier identifier = filteredPaintings.get(i);
-                    Painting painting = ClientPaintingManager.getPainting(identifier);
+                    Painting painting = ClientPaintingManager.getPainting(identifier, Painting.Type.THUMBNAIL);
 
                     //tooltip
                     List<Text> tooltip = new LinkedList<>();
@@ -477,7 +477,7 @@ public class ImmersivePaintingScreen extends Screen {
                 NativeImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
                     Painting painting = new Painting(image, 16);
-                    painting.textureIdentifier = Main.locate("screenshot_" + x);
+                    painting.thumbnail.textureIdentifier = Main.locate("screenshot_" + x);
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
                             (b) -> {
                                 currentImage = image;

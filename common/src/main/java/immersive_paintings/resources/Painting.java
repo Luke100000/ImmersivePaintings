@@ -17,28 +17,27 @@ public final class Painting {
 
     public final String name;
     public final String author;
-    public final String hash;
     public boolean datapack;
 
-    @Nullable
-    public NativeImage image;
-    public boolean requested = false;
-    public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
-    public Resource resource;
+    public Texture texture;
+    public Texture half;
+    public Texture thumbnail;
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution) {
         this(image, width, height, resolution, "", "", false, UUID.randomUUID().toString());
     }
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
-        this.image = image;
+        this.texture = new Texture(image, hash);
+        this.half = new Texture(null, hash + "_half");
+        this.thumbnail = new Texture(null, hash + "_thumbnail");
+
         this.width = width;
         this.height = height;
         this.resolution = resolution;
         this.name = name;
         this.author = author;
         this.datapack = datapack;
-        this.hash = hash;
     }
 
     public Painting(NativeImage image, int resolution) {
@@ -53,14 +52,13 @@ public final class Painting {
         nbt.putString("name", name);
         nbt.putString("author", author);
         nbt.putBoolean("datapack", datapack);
-        nbt.putString("hash", hash);
+        nbt.putString("hash", texture.hash);
         return nbt;
     }
 
     public NbtCompound toFullNbt() {
-        assert image != null;
         NbtCompound nbt = toNbt();
-        nbt.putIntArray("image", ImageManipulations.imageToInts(image));
+        nbt.putIntArray("texture", ImageManipulations.imageToInts(texture.image));
         return nbt;
     }
 
@@ -74,8 +72,8 @@ public final class Painting {
         String hash = nbt.getString("hash");
 
         NativeImage image = null;
-        if (nbt.contains("image")) {
-            image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("image"));
+        if (nbt.contains("texture")) {
+            image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("texture"));
         }
 
         return new Painting(image, width, height, resolution, name, author, datapack, hash);
@@ -87,5 +85,32 @@ public final class Painting {
 
     public int getPixelHeight() {
         return height * resolution;
+    }
+
+    public Texture getTexture(Type type) {
+        return switch (type) {
+            case FULL -> texture;
+            case HALF -> half;
+            case THUMBNAIL -> thumbnail;
+        };
+    }
+
+    public enum Type {
+        FULL,
+        HALF,
+        THUMBNAIL
+    }
+
+    public class Texture {
+        public NativeImage image;
+        public boolean requested = false;
+        public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
+        public Resource resource;
+        public final String hash;
+
+        public Texture(NativeImage image, String hash) {
+            this.image = image;
+            this.hash = hash;
+        }
     }
 }

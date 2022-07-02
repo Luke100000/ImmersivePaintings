@@ -22,33 +22,38 @@ public class ClientPaintingManager {
     }
 
     public static Painting getPainting(Identifier identifier) {
-        if (paintings.containsKey(identifier)) {
-            Painting data = paintings.get(identifier);
-            if (data.image == null && !data.requested) {
-                data.requested = true;
+        return paintings.getOrDefault(identifier, DEFAULT);
+    }
 
-                Cache.get(data)
-                        .ifPresentOrElse((image) -> loadImage(identifier, image),
-                                () -> NetworkHandler.sendToServer(new ImageRequest(identifier)));
+    public static Painting getPainting(Identifier identifier, Painting.Type type) {
+        if (paintings.containsKey(identifier)) {
+            Painting painting = paintings.get(identifier);
+            Painting.Texture texture = painting.getTexture(type);
+            if (texture.image == null && !texture.requested) {
+                texture.requested = true;
+
+                Cache.get(texture)
+                        .ifPresentOrElse((image) -> loadImage(texture, image),
+                                () -> NetworkHandler.sendToServer(new ImageRequest(identifier, type)));
             }
-            return data;
+            return painting;
         } else {
             return DEFAULT;
         }
     }
 
-    public static void loadImage(Identifier i, int[] ints) {
-        Painting data = ClientPaintingManager.getPaintings().get(i);
-        NativeImage image = ImageManipulations.intsToImage(data.getPixelWidth(), data.getPixelHeight(), ints);
-        loadImage(i, image);
-        Cache.set(data);
+    public static void loadImage(Identifier i, Painting.Type type, int[] ints, int width, int height) {
+        Painting painting = ClientPaintingManager.getPaintings().get(i);
+        Painting.Texture texture = painting.getTexture(type);
+        NativeImage image = ImageManipulations.intsToImage(width, height, ints);
+        loadImage(texture, image);
+        Cache.set(texture);
     }
 
-    public static void loadImage(Identifier i, @NotNull NativeImage image) {
-        Painting data = ClientPaintingManager.getPaintings().get(i);
-        data.image = image;
-        data.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
-                .registerDynamicTexture("immersive_painting/" + i.getPath().replace(":", "_"), new NativeImageBackedTexture(data.image));
-        data.image.upload(0, 0, 0, false);
+    public static void loadImage(Painting.Texture texture, @NotNull NativeImage image) {
+        texture.image = image;
+        texture.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
+                .registerDynamicTexture("immersive_painting/" + texture.hash, new NativeImageBackedTexture(texture.image));
+        texture.image.upload(0, 0, 0, false);
     }
 }

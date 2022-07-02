@@ -1,5 +1,7 @@
 package immersive_paintings.resources;
 
+import immersive_paintings.Config;
+import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
@@ -36,11 +38,12 @@ public class ServerPaintingManager {
 
     public static void registerPainting(Identifier identifier, Painting painting) {
         try {
-            if (painting.image != null) {
+            Painting.Texture texture = painting.getTexture(Painting.Type.FULL);
+            if (texture.image != null) {
                 Path path = getPaintingPath(identifier);
                 //noinspection ResultOfMethodCallIgnored
                 new File(path.getParent().toString()).mkdirs();
-                painting.image.writeTo(path);
+                texture.image.writeTo(path);
             }
 
             get().getCustomServerPaintings().put(identifier, painting);
@@ -62,23 +65,57 @@ public class ServerPaintingManager {
         } else {return get().customServerPaintings.getOrDefault(i, null);}
     }
 
-    public static NativeImage getImage(Identifier i) {
+    public static NativeImage getImage(Identifier i, Painting.Type type) {
         Painting painting = getPainting(i);
+        Painting.Texture texture = painting.getTexture(type);
 
-        if (painting.image == null) {
-            try {
-                if (painting.resource != null) {
-                    return painting.image = NativeImage.read(painting.resource.getInputStream());
-                } else if (get().customServerPaintings.containsKey(i)) {
-                    FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
-                    painting.image = NativeImage.read(stream);
+        if (type == Painting.Type.FULL) {
+            //todo think about caching
+            if (texture.image == null) {
+                try {
+                    if (texture.resource != null) {
+                        return texture.image = NativeImage.read(texture.resource.getInputStream());
+                    } else if (get().customServerPaintings.containsKey(i)) {
+                        FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
+                        texture.image = NativeImage.read(stream);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } else {
+            Cache.get(texture)
+                    .ifPresentOrElse((image) -> texture.image = image,
+                            () -> {
+                                NativeImage image = getImage(i, Painting.Type.FULL);
+
+                                int w, h;
+                                if (type == Painting.Type.THUMBNAIL) {
+                                    float zoom = Math.min(
+                                            (float)Config.getInstance().thumbnailSize / image.getWidth(),
+                                            (float)Config.getInstance().thumbnailSize / image.getHeight()
+                                    );
+
+                                    if (zoom >= 1.0f) {
+                                        texture.image = painting.texture.image;
+                                        return; //let the server send "links", e.g. thumbnails refers to full if too small
+                                    }
+
+                                    w = (int)(image.getWidth() * zoom);
+                                    h = (int)(image.getHeight() * zoom);
+                                } else {
+                                    w = image.getWidth() / 2;
+                                    h = image.getHeight() / 2;
+                                }
+
+                                NativeImage target = new NativeImage(w, h, false);
+                                ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
+
+                                texture.image = target;
+                            });
         }
 
-        return painting.image;
+        return texture.image;
     }
 
     public static class CustomServerPaintings extends PersistentState {

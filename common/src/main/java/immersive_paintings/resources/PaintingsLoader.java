@@ -56,7 +56,7 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                     painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, hash);
                 }
 
-                painting.resource = manager.getResource(identifier);
+                painting.texture.resource = manager.getResource(identifier);
 
                 map.put(identifier, painting);
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {
