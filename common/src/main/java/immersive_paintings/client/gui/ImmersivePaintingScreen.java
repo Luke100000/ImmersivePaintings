@@ -183,7 +183,7 @@ public class ImmersivePaintingScreen extends Screen {
         switch (page) {
             case NEW -> {
                 //URL
-                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 40, 180, 20,
+                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 38, 180, 16,
                         new LiteralText("URL")));
                 textFieldWidget.setMaxLength(1024);
 
@@ -322,7 +322,7 @@ public class ImmersivePaintingScreen extends Screen {
                 setSelectionPage(selectionPage);
 
                 //search
-                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 65, height / 2 - 90, 130, 20,
+                TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 65, height / 2 - 88, 130, 16,
                         new LiteralText("search")));
                 textFieldWidget.setMaxLength(64);
                 textFieldWidget.setSuggestion("search");
@@ -352,7 +352,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 //width
-                TextFieldWidget widthWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 90, 40, 20,
+                TextFieldWidget widthWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 88, 40, 16,
                         new LiteralText("width")));
                 widthWidget.setMaxLength(2);
                 widthWidget.setSuggestion("width");
@@ -366,7 +366,7 @@ public class ImmersivePaintingScreen extends Screen {
                 });
 
                 //height
-                TextFieldWidget heightWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80 + 40, height / 2 - 90, 40, 20,
+                TextFieldWidget heightWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80 + 40, height / 2 - 88, 40, 16,
                         new LiteralText("height")));
                 heightWidget.setMaxLength(2);
                 heightWidget.setSuggestion("height");
