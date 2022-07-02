@@ -1,7 +1,7 @@
 package immersive_paintings.network.c2s;
 
 import immersive_paintings.cobalt.network.Message;
-import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.s2c.ImageResponse;
 import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
@@ -35,7 +35,7 @@ public class ImageRequest implements Message {
             int split = 0;
             for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
                 int[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
-                NetworkHandler.sendToPlayer(new ImageResponse(identifier, type, image.getWidth(), image.getHeight(), ints, split, splits), (ServerPlayerEntity)e);
+                LazyNetworkManager.sendClient(new ImageResponse(identifier, type, image.getWidth(), image.getHeight(), ints, split, splits), (ServerPlayerEntity)e);
                 split++;
             }
         }

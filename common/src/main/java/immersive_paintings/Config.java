@@ -27,6 +27,12 @@ public final class Config implements Serializable {
     public int distanceToHalf = 1024;
     public int distanceToQuarter = 2048;
 
+    public int maxPacketsPerSecond = 10;
+
+    public int maxUserImageWidth = 4096;
+    public int maxUserImageHeight = 4096;
+    public int maxUserImages = 1000;
+
     public int version = 0;
 
     public static File getConfigFile() {
