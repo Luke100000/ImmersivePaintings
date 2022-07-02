@@ -29,6 +29,8 @@ public final class Config implements Serializable {
 
     public int maxPacketsPerSecond = 10;
 
+    public boolean testIfSpaceEmpty = false;
+
     public int maxUserImageWidth = 4096;
     public int maxUserImageHeight = 4096;
     public int maxUserImages = 1000;

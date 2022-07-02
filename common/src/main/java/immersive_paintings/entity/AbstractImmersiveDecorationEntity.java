@@ -1,5 +1,6 @@
 package immersive_paintings.entity;
 
+import immersive_paintings.Config;
 import net.minecraft.block.AbstractRedstoneGateBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -88,7 +89,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     }
 
     public boolean canStayAttached() {
-        if (!this.world.isSpaceEmpty(this)) {
+        if (Config.getInstance().testIfSpaceEmpty && !this.world.isSpaceEmpty(this)) {
             return false;
         }
 
