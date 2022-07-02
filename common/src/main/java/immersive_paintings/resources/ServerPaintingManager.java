@@ -55,8 +55,9 @@ public class ServerPaintingManager {
 
     public static void deregisterPainting(Identifier identifier) {
         get().getCustomServerPaintings().remove(identifier);
-        //todo delete data
         get().setDirty(true);
+        //noinspection ResultOfMethodCallIgnored
+        getPaintingPath(identifier).toFile().delete();
     }
 
     public static Painting getPainting(Identifier i) {
