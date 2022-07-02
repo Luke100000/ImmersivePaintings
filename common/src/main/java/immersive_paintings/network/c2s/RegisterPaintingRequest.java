@@ -21,11 +21,11 @@ public class RegisterPaintingRequest implements Message {
 
     public RegisterPaintingRequest(String name, Painting painting) {
         this.name = name;
-        this.painting = new SerializableNbt(painting.toFullNbt());
+        this.painting = new SerializableNbt(painting.toNbt());
     }
 
     private String escapeString(String string) {
-        return string.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_.-]", "");
+        return string.toLowerCase(Locale.ROOT).replaceAll("[^a-z\\d_.-]", "");
     }
 
     @Override
@@ -39,6 +39,8 @@ public class RegisterPaintingRequest implements Message {
         nbt.putString("name", name);
 
         Painting painting = Painting.fromNbt(nbt);
+
+        painting.texture.image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
 
         ServerPaintingManager.registerPainting(
                 identifier,

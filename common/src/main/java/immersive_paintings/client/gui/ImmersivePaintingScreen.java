@@ -5,10 +5,15 @@ import immersive_paintings.Main;
 import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
+import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
-import immersive_paintings.resources.*;
+import immersive_paintings.network.c2s.UploadPaintingRequest;
+import immersive_paintings.resources.ClientPaintingManager;
+import immersive_paintings.resources.Frame;
+import immersive_paintings.resources.FrameLoader;
+import immersive_paintings.resources.Painting;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +38,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 
+import static immersive_paintings.network.c2s.ImageRequest.BYTES_PER_MESSAGE;
 import static immersive_paintings.util.ImageManipulations.scanForPixelArtMultiple;
 import static immersive_paintings.util.Utils.identifierToTranslation;
 
@@ -280,7 +286,16 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new LiteralText("Save"),
                         v -> {
-                            NetworkHandler.sendToServer(new RegisterPaintingRequest(currentImageName, new Painting(
+                            int[] is = ImageManipulations.imageToInts(pixelatedImage);
+                            int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
+                            int split = 0;
+                            for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
+                                int[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
+                                LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits));
+                                split++;
+                            }
+
+                            LazyNetworkManager.sendServer(new RegisterPaintingRequest(currentImageName, new Painting(
                                     pixelatedImage,
                                     settings.width,
                                     settings.height,

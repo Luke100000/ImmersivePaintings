@@ -2,7 +2,6 @@ package immersive_paintings.resources;
 
 import immersive_paintings.Config;
 import immersive_paintings.Main;
-import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.Resource;
@@ -65,12 +64,6 @@ public final class Painting {
         return nbt;
     }
 
-    public NbtCompound toFullNbt() {
-        NbtCompound nbt = toNbt();
-        nbt.putIntArray("texture", ImageManipulations.imageToInts(texture.image));
-        return nbt;
-    }
-
     public static Painting fromNbt(NbtCompound nbt) {
         int width = nbt.getInt("width");
         int height = nbt.getInt("height");
@@ -79,13 +72,7 @@ public final class Painting {
         String author = nbt.getString("author");
         boolean datapack = nbt.getBoolean("datapack");
         String hash = nbt.getString("hash");
-
-        NativeImage image = null;
-        if (nbt.contains("texture")) {
-            image = ImageManipulations.intsToImage(width * resolution, height * resolution, nbt.getIntArray("texture"));
-        }
-
-        return new Painting(image, width, height, resolution, name, author, datapack, hash);
+        return new Painting(null, width, height, resolution, name, author, datapack, hash);
     }
 
     public Texture getTexture(Type type) {

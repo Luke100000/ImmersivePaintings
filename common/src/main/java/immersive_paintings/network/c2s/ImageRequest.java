@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import java.util.Arrays;
 
 public class ImageRequest implements Message {
-    private static final int BYTES_PER_MESSAGE = 16 * 1024;
+    public static final int BYTES_PER_MESSAGE = 16 * 1024;
 
     private final String identifier;
     private final Painting.Type type;

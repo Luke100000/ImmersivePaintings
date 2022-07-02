@@ -43,10 +43,9 @@ public class ClientPaintingManager {
         }
     }
 
-    public static void loadImage(Identifier i, Painting.Type type, int[] ints, int width, int height) {
+    public static void loadImage(Identifier i, Painting.Type type, NativeImage image) {
         Painting painting = ClientPaintingManager.getPaintings().get(i);
         Painting.Texture texture = painting.getTexture(type);
-        NativeImage image = ImageManipulations.intsToImage(width, height, ints);
         loadImage(texture, image);
         Cache.set(texture);
     }
