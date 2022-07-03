@@ -36,13 +36,13 @@ public class RegisterPaintingRequest implements Message {
         NativeImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
 
         if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
-            error("too_large", (ServerPlayerEntity)e);
+            error("too_large", e, null);
             return;
         }
 
         long count = ServerPaintingManager.get().getCustomServerPaintings().values().stream().filter(p -> p.author.equals(e.getGameProfile().getName())).count();
         if (count > Config.getInstance().maxUserImages) {
-            error("limit_reached", (ServerPlayerEntity)e);
+            error("limit_reached", e, null);
             return;
         }
 
@@ -68,10 +68,10 @@ public class RegisterPaintingRequest implements Message {
             NetworkHandler.sendToPlayer(new PaintingListMessage(identifier, painting), player);
         }
 
-        error(null, (ServerPlayerEntity)e);
+        error(null, e, identifier);
     }
 
-    private void error(String error, ServerPlayerEntity e) {
-        NetworkHandler.sendToPlayer(new RegisterPaintingResponse(error), e);
+    private void error(String error, PlayerEntity e, Identifier i) {
+        NetworkHandler.sendToPlayer(new RegisterPaintingResponse(error, i), (ServerPlayerEntity)e);
     }
 }

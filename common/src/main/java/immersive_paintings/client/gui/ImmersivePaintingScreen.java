@@ -44,7 +44,7 @@ import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
     final int entityId;
-    private final ImmersivePaintingEntity entity;
+    public final ImmersivePaintingEntity entity;
 
     private String filteredString = "";
     private int filteredResolution = 0;
@@ -68,6 +68,7 @@ public class ImmersivePaintingScreen extends Screen {
     private int screenshotPage;
 
     private Identifier deletePainting;
+    private TranslatableText error;
 
     public ImmersivePaintingScreen(int entityId) {
         super(new LiteralText("Painting"));
@@ -139,6 +140,10 @@ public class ImmersivePaintingScreen extends Screen {
                 matrices.scale(size, size, 1.0f);
                 drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
                 matrices.pop();
+
+                if (error != null) {
+                    drawCenteredText(matrices, textRenderer, error, width / 2, height / 2, 0xFFFF0000);
+                }
             }
             case DELETE -> {
                 fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
@@ -307,6 +312,8 @@ public class ImmersivePaintingScreen extends Screen {
                                     settings.height,
                                     settings.resolution
                             )));
+
+
 
                             setPage(Page.LOADING);
                         }));
@@ -522,6 +529,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     public void setPage(Page page) {
         this.page = page;
+        this.error = null;
         rebuild();
 
         if (page == Page.SELECTION_DATAPACKS || page == Page.SELECTION_PLAYERS || page == Page.SELECTION_YOURS) {
@@ -671,6 +679,10 @@ public class ImmersivePaintingScreen extends Screen {
 
     public void refreshPage() {
         setPage(page);
+    }
+
+    public void setError(TranslatableText text) {
+        this.error = text;
     }
 
     public enum Page {
