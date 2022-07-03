@@ -5,38 +5,38 @@ import numpy as np
 
 files = []
 for i, group in enumerate(
+    (
         (
-                (
-                        "acacia",
-                        "birch",
-                        "crimson",
-                        "dark_oak",
-                        "hyphae",
-                        "jungle",
-                        "oak",
-                        "spruce",
-                ),
-                (
-                        "calcite",
-                        "coal",
-                        "copper",
-                        "crimson",
-                        "dark_oak",
-                        "diamond",
-                        "emerald",
-                        "end_stone",
-                        "glowstone",
-                        "iron",
-                        "lapis",
-                        "netherite",
-                        "netherrack",
-                        "prismarine",
-                        "red_sandstone",
-                        "sandstone",
-                        "stone",
-                        "sugar_cane",
-                ),
-        )
+            "acacia",
+            "birch",
+            "crimson",
+            "dark_oak",
+            "hyphae",
+            "jungle",
+            "oak",
+            "spruce",
+        ),
+        (
+            "calcite",
+            "coal",
+            "copper",
+            "crimson",
+            "dark_oak",
+            "diamond",
+            "emerald",
+            "end_stone",
+            "glowstone",
+            "iron",
+            "lapis",
+            "netherite",
+            "netherrack",
+            "prismarine",
+            "red_sandstone",
+            "sandstone",
+            "stone",
+            "sugar_cane",
+        ),
+    )
 ):
     for material in group:
         files.append(
@@ -61,7 +61,7 @@ for i, group in enumerate(
                 "flip": i == 0,
                 "offsetY": 5,
                 "brightness": np.asarray([0.6, 0.7, 0.8, 1.0, 1.0, 0.8, 0.7, 0.6])
-                              * 0.9,
+                * 0.9,
                 "mirroring": [(3, 0, 1), (4, 0, 1), (6, 2, 2)],
                 "edges": [(2, 3), (5, 4), (6, 7)],
                 "contrast": 1.6,
@@ -106,17 +106,17 @@ def main():
 
         # contrast
         if "contrast" in f:
-            im[15 - len(f["brightness"]):, :, 2] = np.maximum(
+            im[15 - len(f["brightness"]) :, :, 2] = np.maximum(
                 0,
                 np.minimum(
                     255,
                     np.ceil(
                         (
-                                im[15 - len(f["brightness"]):, :, 2]
-                                - im[15 - len(f["brightness"]):, :, 2].mean()
+                            im[15 - len(f["brightness"]) :, :, 2]
+                            - im[15 - len(f["brightness"]) :, :, 2].mean()
                         )
                         * f["contrast"]
-                        + im[15 - len(f["brightness"]):, :, 2].mean()
+                        + im[15 - len(f["brightness"]) :, :, 2].mean()
                     ),
                 ),
             ).astype(np.uint8)
@@ -163,17 +163,17 @@ def main():
 
         # contrast
         if "contrast" in f:
-            im[15 - len(f["brightness"]):, :, 2] = np.maximum(
+            im[15 - len(f["brightness"]) :, :, 2] = np.maximum(
                 0,
                 np.minimum(
                     255,
                     np.ceil(
                         (
-                                im[15 - len(f["brightness"]):, :, 2]
-                                - im[15 - len(f["brightness"]):, :, 2].mean()
+                            im[15 - len(f["brightness"]) :, :, 2]
+                            - im[15 - len(f["brightness"]) :, :, 2].mean()
                         )
                         * f["contrast"]
-                        + im[15 - len(f["brightness"]):, :, 2].mean()
+                        + im[15 - len(f["brightness"]) :, :, 2].mean()
                     ),
                 ),
             ).astype(np.uint8)
@@ -194,8 +194,8 @@ def main():
             mask[yy + height - 3, 1:] = 0.5
             mask[yy + height - 2, 1:] = 0.5
 
-            mask[yy: height - 3, 1] = 1.25
-            mask[yy + 2:, 62] = 0.5
+            mask[yy : height - 3, 1] = 1.25
+            mask[yy + 2 :, 62] = 0.5
 
             if yy > 0:
                 mask[yy:] = 2 - mask[yy:]
@@ -217,7 +217,7 @@ def main():
             exist_ok=True,
         )
         os.makedirs(
-            f"../common/src/main/resources/assets/immersive_paintings/textures/frames/{f['frame']}",
+            f"../common/src/main/resources/assets/immersive_paintings/textures/block/frame/{f['frame']}",
             exist_ok=True,
         )
 
@@ -228,8 +228,8 @@ def main():
 
         # files
         with open(
-                f"../common/src/main/resources/assets/immersive_paintings/frames/{f['frame']}/{f['material']}.json",
-                "w",
+            f"../common/src/main/resources/assets/immersive_paintings/frames/{f['frame']}/{f['material']}.json",
+            "w",
         ) as file:
             file.write(
                 f"""{{
