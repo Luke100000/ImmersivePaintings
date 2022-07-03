@@ -35,7 +35,7 @@ public class DatapackPaintingsGenerator {
             process("Ikran Nebula - Starkiteckt.png", 2, 1, 0, 32, res, false);
             process("Lake - Sarel Theron.jpg", 3, 2, 0.25, 12, res, false);
             process("Life In The Sky - Vladimir Kostuchek.jpg", 3, 2, 0.25, 12, res, false);
-            process("Nevermore - Josef Barton.jpg", 3, 2, 0.25, 12, res, false);
+            process("Nevermore - Josef Barton.jpg", 3, 2, 0.25, 15, res, false);
             process("Small Memory - Mikael Gustafsson.jpg", 3, 2, 0.0, 12, res, false);
             process("The Ancient Ones - Jessica Woulfe.jpg", 2, 1, 0.5, 12, res, false);
             process("The Esteemed Palace - Chris Ostrowski.png", 2, 2, 0.25, 12, res, false);
@@ -43,8 +43,11 @@ public class DatapackPaintingsGenerator {
             process("The Torch - Starkiteckt.png", 3, 3, 0, 32, res, false);
             process("Tranquil Sunday Walk - Scilex.png", 4, 4, 0.0, 0, res, true);
             process("Underwater - tox5000.png", 4, 4, 0, 0, res, true);
-            process("unnamed - Wedding-Pristine", 4, 2, 0, 32, res, false);
             process("Windmill Town - Darek Zabrocki.jpg", 5, 3, 0.25, 12, res, false);
+            process("Gothic Landscape - Soroka Alexej.jpg", 3, 2, 0.25, 12, res, false);
+            process("Gothic Landscape - Soroka Alexej.jpg", 3, 2, 0.25, 12, res, false);
+            process("Deer Landscape - Byzwa Dher.jpg", 2, 1, 0.25, 12, res, false);
+            process("Venedig - Verena.jpg", 1, 1, 0.25, 12, res, false);
         }
 
         System.exit(0);
