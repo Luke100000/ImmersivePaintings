@@ -1,13 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
-issueTrackerURL = "https://github.com/Luke100000/immersivePaintings/issues"
+issueTrackerURL = "https://github.com/Luke100000/ImmersivePaintings/issues"
 license = "GNU"
 
 [[mods]]
 modId = "immersive_paintings"
 version = "${version}"
-displayName = "Immersive Airships"
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/immersivePaintings"
+displayName = "Immersive Paintings"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/ImmersivePaintings"
 authors = "Luke100000"
 description = '''
     Use your own paintings!
