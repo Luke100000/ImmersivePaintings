@@ -22,6 +22,7 @@ public final class Painting {
     public Texture texture;
     public Texture half;
     public Texture quarter;
+    public Texture eighth;
     public Texture thumbnail;
 
     public Painting(@Nullable NativeImage image, int width, int height, int resolution) {
@@ -31,13 +32,18 @@ public final class Painting {
     public Painting(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
         this.texture = new Texture(image, hash, Type.FULL);
 
-        Type halfType = Math.max(width, height) * resolution < Config.getInstance().halfResolutionMinSize ? Type.FULL : Type.HALF;
+        int res = Math.max(width, height) * resolution;
+
+        Type halfType = res / 2 < Config.getInstance().lodResolutionMinimum ? Type.FULL : Type.HALF;
         this.half = new Texture(null, hash + "_half", halfType);
 
-        Type quarterType = Math.max(width, height) * resolution < Config.getInstance().quarterResolutionMinSize ? halfType : Type.QUARTER;
+        Type quarterType = res / 4 < Config.getInstance().lodResolutionMinimum ? halfType : Type.QUARTER;
         this.quarter = new Texture(null, hash + "_quarter", quarterType);
 
-        Type thumbnailType = Math.max(width, height) * resolution < Config.getInstance().thumbnailSize ? Type.FULL : Type.THUMBNAIL;
+        Type eighthType = res / 8 < Config.getInstance().lodResolutionMinimum ? quarterType : Type.EIGHTH;
+        this.eighth = new Texture(null, hash + "_eighth", eighthType);
+
+        Type thumbnailType = res < Config.getInstance().thumbnailSize ? Type.FULL : Type.THUMBNAIL;
         this.thumbnail = new Texture(null, hash + "_thumbnail", thumbnailType);
 
         this.width = width;
@@ -80,6 +86,7 @@ public final class Painting {
             case FULL -> texture;
             case HALF -> half;
             case QUARTER -> quarter;
+            case EIGHTH -> eighth;
             case THUMBNAIL -> thumbnail;
         };
     }
@@ -88,6 +95,7 @@ public final class Painting {
         FULL,
         HALF,
         QUARTER,
+        EIGHTH,
         THUMBNAIL
     }
 

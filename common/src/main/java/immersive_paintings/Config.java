@@ -21,11 +21,11 @@ public final class Config implements Serializable {
     public static final int VERSION = 1;
 
     public int thumbnailSize = 128;
-    public int halfResolutionMinSize = 64;
-    public int quarterResolutionMinSize = 64;
+    public int lodResolutionMinimum = 32;
 
-    public int distanceToHalf = 1024;
-    public int distanceToQuarter = 2048;
+    public float halfResolutionThreshold = 2.0f;
+    public float quarterResolutionThreshold = 4.0f;
+    public float eighthResolutionThreshold = 8.0f;
 
     public int maxPacketsPerSecond = 10;
 

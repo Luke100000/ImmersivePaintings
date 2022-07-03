@@ -107,9 +107,12 @@ public class ServerPaintingManager {
                                 } else if (type == Painting.Type.HALF) {
                                     w = image.getWidth() / 2;
                                     h = image.getHeight() / 2;
-                                } else {
+                                } else if (type == Painting.Type.QUARTER) {
                                     w = image.getWidth() / 4;
                                     h = image.getHeight() / 4;
+                                } else {
+                                    w = image.getWidth() / 8;
+                                    h = image.getHeight() / 8;
                                 }
 
                                 NativeImage target = new NativeImage(w, h, false);

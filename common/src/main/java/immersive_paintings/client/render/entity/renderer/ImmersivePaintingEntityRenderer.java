@@ -36,10 +36,20 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
     @Override
     public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        MinecraftClient client = MinecraftClient.getInstance();
+        Config config = Config.getInstance();
+
+        ClientPlayerEntity player = client.player;
+        double distance = (player == null ? 0 : player.getPos().distanceTo(paintingEntity.getPos()));
+        double blocksVisible = Math.tan(client.options.fov) * distance;
         int resolution = ClientPaintingManager.getPainting(paintingEntity.getMotive()).resolution;
-        double distance = (player == null ? 0 : player.getPos().distanceTo(paintingEntity.getPos())) * resolution;
-        Painting.Type type = distance > Config.getInstance().distanceToQuarter ? Painting.Type.QUARTER : distance > Config.getInstance().distanceToHalf ? Painting.Type.HALF : Painting.Type.FULL;
+        double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
+
+        Painting.Type type = pixelDensity > config.eighthResolutionThreshold ? Painting.Type.EIGHTH
+                : pixelDensity > config.quarterResolutionThreshold ? Painting.Type.QUARTER
+                : pixelDensity > config.halfResolutionThreshold ? Painting.Type.HALF
+                : Painting.Type.FULL;
+
         return ClientPaintingManager.getPaintingTexture(paintingEntity.getMotive(), type).textureIdentifier;
     }
 
@@ -76,7 +86,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
         //canvas
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
-        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, hasFrame ? 1.0f: 0.0f);
+        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, hasFrame ? 1.0f : 0.0f);
 
         if (hasFrame) {
             vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(entity.getMaterial()));
