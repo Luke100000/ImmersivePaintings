@@ -71,7 +71,7 @@ public class ImmersivePaintingScreen extends Screen {
     private TranslatableText error;
 
     public ImmersivePaintingScreen(int entityId) {
-        super(new LiteralText("Painting"));
+        super(new TranslatableText("item.immersive_paintings.painting"));
         this.entityId = entityId;
 
         if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getEntityById(entityId) instanceof ImmersivePaintingEntity painting) {
@@ -147,7 +147,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case DELETE -> {
                 fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Text> wrap = FlowingText.wrap(new LiteralText("Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name."), 300);
+                List<Text> wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.confirm_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
                     drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
@@ -178,11 +178,11 @@ public class ImmersivePaintingScreen extends Screen {
 
         // filters
         if (page != Page.CREATE) {
-            addDrawableChild(new ButtonWidget(width / 2 - 50 - 150, height / 2 - 90 - 22, 80, 20, new LiteralText("Yours"), sender -> setPage(Page.SELECTION_YOURS))).active = page != Page.SELECTION_YOURS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 - 70, height / 2 - 90 - 22, 80, 20, new LiteralText("Datapacks"), sender -> setPage(Page.SELECTION_DATAPACKS))).active = page != Page.SELECTION_DATAPACKS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 10, height / 2 - 90 - 22, 80, 20, new LiteralText("Players"), sender -> setPage(Page.SELECTION_PLAYERS))).active = page != Page.SELECTION_PLAYERS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 90, height / 2 - 90 - 22, 80, 20, new LiteralText("New Painting"), sender -> setPage(Page.NEW))).active = page != Page.NEW;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 170, height / 2 - 90 - 22, 80, 20, new LiteralText("Frame"), sender -> setPage(Page.FRAME))).active = page != Page.FRAME;
+            addDrawableChild(new ButtonWidget(width / 2 - 50 - 150, height / 2 - 90 - 22, 80, 20, new TranslatableText("immersive_paintings.page.yours"), sender -> setPage(Page.SELECTION_YOURS))).active = page != Page.SELECTION_YOURS;
+            addDrawableChild(new ButtonWidget(width / 2 - 50 - 70, height / 2 - 90 - 22, 80, 20, new TranslatableText("immersive_paintings.page.datapacks"), sender -> setPage(Page.SELECTION_DATAPACKS))).active = page != Page.SELECTION_DATAPACKS;
+            addDrawableChild(new ButtonWidget(width / 2 - 50 + 10, height / 2 - 90 - 22, 80, 20, new TranslatableText("immersive_paintings.page.players"), sender -> setPage(Page.SELECTION_PLAYERS))).active = page != Page.SELECTION_PLAYERS;
+            addDrawableChild(new ButtonWidget(width / 2 - 50 + 90, height / 2 - 90 - 22, 80, 20, new TranslatableText("immersive_paintings.page.new"), sender -> setPage(Page.NEW))).active = page != Page.NEW;
+            addDrawableChild(new ButtonWidget(width / 2 - 50 + 170, height / 2 - 90 - 22, 80, 20, new TranslatableText("immersive_paintings.page.frame"), sender -> setPage(Page.FRAME))).active = page != Page.FRAME;
         }
 
         switch (page) {
@@ -192,7 +192,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText("URL")));
                 textFieldWidget.setMaxLength(1024);
 
-                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 - 15, 100, 20, new TranslatableText("Load Image"), sender -> loadImage(textFieldWidget.getText())));
+                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 - 15, 100, 20, new TranslatableText("immersive_paintings.load"), sender -> loadImage(textFieldWidget.getText())));
 
                 //screenshots
                 rebuildScreenshots();
@@ -205,9 +205,9 @@ public class ImmersivePaintingScreen extends Screen {
                 setScreenshotPage(screenshotPage);
             }
             case CREATE -> {
-                //identifier
+                //name
                 TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 100, 180, 20,
-                        new LiteralText("Identifier")));
+                        new TranslatableText("immersive_paintings.name")));
                 textFieldWidget.setMaxLength(256);
                 textFieldWidget.setText(currentImageName);
                 textFieldWidget.setChangedListener((s) -> currentImageName = s);
@@ -215,14 +215,14 @@ public class ImmersivePaintingScreen extends Screen {
                 int y = height / 2 - 60;
 
                 //width
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Width: %s blocks", settings.width, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.width, 1, 16, v -> {
                     settings.width = v;
                     pixelateImage();
                 }));
                 y += 22;
 
                 //height
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "Height: %s blocks", settings.height, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.height, 1, 16, v -> {
                     settings.height = v;
                     pixelateImage();
                 }));
@@ -299,9 +299,9 @@ public class ImmersivePaintingScreen extends Screen {
                     pixelateImage();
                 })).active = !settings.pixelArt;
 
-                addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 75, 80, 20, new LiteralText("Cancel"), v -> setPage(Page.NEW)));
+                addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.cancel"), v -> setPage(Page.NEW)));
 
-                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new LiteralText("Save"),
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
                             int[] is = ImageManipulations.imageToInts(pixelatedImage);
                             int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
@@ -336,7 +336,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 //search
                 TextFieldWidget textFieldWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 - 65, height / 2 - 88, 130, 16,
-                        new LiteralText("search")));
+                        new TranslatableText("immersive_paintings.search")));
                 textFieldWidget.setMaxLength(64);
                 textFieldWidget.setSuggestion("search");
                 textFieldWidget.setChangedListener((s) -> {
@@ -366,7 +366,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 //width
                 TextFieldWidget widthWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 88, 40, 16,
-                        new LiteralText("width")));
+                        new TranslatableText("immersive_paintings.filter_width")));
                 widthWidget.setMaxLength(2);
                 widthWidget.setSuggestion("width");
                 widthWidget.setChangedListener((s) -> {
@@ -381,7 +381,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 //height
                 TextFieldWidget heightWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80 + 40, height / 2 - 88, 40, 16,
-                        new LiteralText("height")));
+                        new TranslatableText("immersive_paintings.filter_height")));
                 heightWidget.setMaxLength(2);
                 heightWidget.setSuggestion("height");
                 heightWidget.setChangedListener((s) -> {
@@ -399,7 +399,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int y = height / 2 - 80;
                 List<Identifier> frames = FrameLoader.frames.values().stream().map(Frame::frame).distinct().sorted(Identifier::compareTo).toList();
                 for (Identifier frame : frames) {
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new LiteralText(identifierToTranslation(frame)), v -> {
+                    ButtonWidget widget = addDrawableChild(new ButtonWidget(width / 2 - 200, y, 100, 20, new TranslatableText("immersive_paintings.frame." + identifierToTranslation(frame)), v -> {
                         entity.setFrame(frame);
                         entity.setMaterial(getMaterialsList().get(0));
                         NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
@@ -432,7 +432,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 materialList.forEach(b -> b.active = true);
                                 v.active = false;
                             },
-                            (ButtonWidget b, MatrixStack matrixStack, int mx, int my) -> renderTooltip(matrixStack, new LiteralText(identifierToTranslation(material)), mx, my)));
+                            (ButtonWidget b, MatrixStack matrixStack, int mx, int my) -> renderTooltip(matrixStack, new TranslatableText("immersive_paintings.material." + identifierToTranslation(material)), mx, my)));
                     widget.active = !material.equals(entity.getMaterial());
                     materialList.add(widget);
 
@@ -443,12 +443,12 @@ public class ImmersivePaintingScreen extends Screen {
                     }
                 }
 
-                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 70, 100, 20, new LiteralText("Done"), v -> close()));
+                addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 70, 100, 20, new TranslatableText("immersive_paintings.done"), v -> close()));
             }
             case DELETE -> {
-                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2 + 20, 100, 20, new LiteralText("Cancel"), v -> setPage(Page.SELECTION_YOURS)));
+                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2 + 20, 100, 20, new TranslatableText("immersive_paintings.cancel"), v -> setPage(Page.SELECTION_YOURS)));
 
-                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 20, 100, 20, new LiteralText("Delete"), v -> {
+                addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 20, 100, 20, new TranslatableText("immersive_paintings.delete"), v -> {
                     NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
                     setPage(Page.SELECTION_YOURS);
                 }));
@@ -473,11 +473,11 @@ public class ImmersivePaintingScreen extends Screen {
                     //tooltip
                     List<Text> tooltip = new LinkedList<>();
                     tooltip.add(new LiteralText(painting.name));
-                    tooltip.add(new LiteralText("by " + painting.author).formatted(Formatting.ITALIC));
-                    tooltip.add(new LiteralText(painting.width + "x" + painting.height + " at " + painting.resolution + "px").formatted(Formatting.ITALIC));
+                    tooltip.add(new TranslatableText("immersive_paintings.by_author", painting.author).formatted(Formatting.ITALIC));
+                    tooltip.add(new TranslatableText("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
                     if (page == Page.SELECTION_YOURS) {
-                        tooltip.add(new LiteralText("right click to delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+                        tooltip.add(new TranslatableText("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
                     paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int)(width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
