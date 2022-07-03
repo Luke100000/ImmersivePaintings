@@ -2,7 +2,6 @@ package immersive_paintings.resources;
 
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.c2s.ImageRequest;
-import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -37,6 +36,17 @@ public class ClientPaintingManager {
                         .ifPresentOrElse((image) -> loadImage(texture, image),
                                 () -> NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link)));
             }
+
+            //fall back to the highest resolution if image does not exist yet
+            if (texture.image == null) {
+                for (Painting.Type t : Painting.Type.values()) {
+                    Painting.Texture temporaryTexture = painting.getTexture(t);
+                    if (temporaryTexture.image != null) {
+                        return temporaryTexture;
+                    }
+                }
+            }
+
             return texture;
         } else {
             return DEFAULT.texture;
