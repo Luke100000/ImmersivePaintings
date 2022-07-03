@@ -8,7 +8,6 @@ import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -37,7 +36,7 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
             try {
                 Identifier jsonIdentifier = new Identifier(identifier.getNamespace(), string.replace(".png", ".json"));
 
-                String hash = DigestUtils.sha1Hex(identifier.toString());
+                String hash = identifier.toString().replaceAll("[^a-zA-Z\\d]", "");
 
                 Painting painting;
                 if (manager.containsResource(jsonIdentifier)) {

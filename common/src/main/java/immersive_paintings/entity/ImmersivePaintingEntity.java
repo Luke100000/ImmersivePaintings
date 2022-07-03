@@ -3,10 +3,10 @@ package immersive_paintings.entity;
 import immersive_paintings.Entities;
 import immersive_paintings.Items;
 import immersive_paintings.Main;
-import immersive_paintings.client.gui.ImmersivePaintingScreen;
+import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
+import immersive_paintings.network.s2c.OpenGuiRequest;
 import immersive_paintings.resources.ClientPaintingManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -115,8 +116,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (player.world.isClient) {
-            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(getId()));
+        if (!player.world.isClient) {
+            NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
             return ActionResult.CONSUME;
         } else {
             return ActionResult.PASS;
