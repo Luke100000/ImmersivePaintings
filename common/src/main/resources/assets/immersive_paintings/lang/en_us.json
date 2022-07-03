@@ -5,5 +5,11 @@
   "immersive_paintings.upload": "Uploading, %s seconds left",
 
   "immersive_paintings.error.too_large": "Image is too large!",
-  "immersive_paintings.error.limit_reached": "You reached your maximum amount of uploaded paintings!"
+  "immersive_paintings.error.limit_reached": "You reached your maximum amount of uploaded paintings!",
+
+  "immersive_paintings.filter.all": "All",
+  "immersive_paintings.pixelart": "Pixelart",
+  "immersive_paintings.pixelart.tooltip": "Preserves pixels and disables post processing",
+  "immersive_paintings.tooltip.filter_resolution": "Filter by resolution",
+  "immersive_paintings.tooltip.resolution": "Pixels per block"
 }

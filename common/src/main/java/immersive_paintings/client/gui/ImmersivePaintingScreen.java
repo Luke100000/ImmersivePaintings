@@ -233,16 +233,19 @@ public class ImmersivePaintingScreen extends Screen {
                 int x = width / 2 - 200;
                 List<ButtonWidget> list = new LinkedList<>();
                 for (int res : resolutions) {
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(x, y, 25, 20, new LiteralText(String.valueOf(res)), v -> {
-                        settings.resolution = res;
-                        if (settings.pixelArt) {
-                            adaptToPixelArt();
-                            refreshPage();
-                        }
-                        pixelateImage();
-                        list.forEach(b -> b.active = true);
-                        v.active = false;
-                    }));
+                    ButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
+                            new LiteralText(String.valueOf(res)),
+                            new TranslatableText("immersive_paintings.tooltip.resolution"),
+                            v -> {
+                                settings.resolution = res;
+                                if (settings.pixelArt) {
+                                    adaptToPixelArt();
+                                    refreshPage();
+                                }
+                                pixelateImage();
+                                list.forEach(b -> b.active = true);
+                                v.active = false;
+                            }));
                     widget.active = settings.resolution != res;
                     list.add(widget);
                     x += 25;
@@ -265,7 +268,10 @@ public class ImmersivePaintingScreen extends Screen {
 
                 //pixelArt
                 y = height / 2 - 40;
-                addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 20, 20, new LiteralText("Pixelart"), settings.pixelArt, true, (b) -> {
+                addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 20, 20,
+                        new TranslatableText("immersive_paintings.pixelart"),
+                        new TranslatableText("immersive_paintings.pixelart.tooltip"),
+                        settings.pixelArt, true, (b) -> {
                     settings.pixelArt = b;
                     adaptToPixelArt();
                     refreshPage();
@@ -344,15 +350,15 @@ public class ImmersivePaintingScreen extends Screen {
                 int x = width / 2 - 200;
                 List<ButtonWidget> list = new LinkedList<>();
                 for (int res : resolutions) {
-                    LiteralText text = new LiteralText(res == 0 ? "all" : String.valueOf(res));
-                    ButtonWidget widget = addDrawableChild(new ButtonWidget(x, height / 2 - 90, 25, 20, text, v -> {
-                        filteredResolution = res;
-                        updateSearch();
-                        list.forEach(b -> b.active = true);
-                        v.active = false;
-                    },
-                            (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, new LiteralText("resolution in pixel"), mx, my)
-                    ));
+                    ButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x, height / 2 - 90, 25, 20,
+                            res == 0 ? new TranslatableText("immersive_paintings.filter.all") : new LiteralText(String.valueOf(res)),
+                            new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
+                            v -> {
+                                filteredResolution = res;
+                                updateSearch();
+                                list.forEach(b -> b.active = true);
+                                v.active = false;
+                            }));
                     widget.active = res != filteredResolution;
                     list.add(widget);
                     x += 25;
@@ -368,6 +374,7 @@ public class ImmersivePaintingScreen extends Screen {
                         filteredWidth = Integer.parseInt(s);
                         updateSearch();
                     } catch (NumberFormatException ignored) {
+                        filteredWidth = 0;
                     }
                     widthWidget.setSuggestion(null);
                 });
@@ -382,6 +389,7 @@ public class ImmersivePaintingScreen extends Screen {
                         filteredHeight = Integer.parseInt(s);
                         updateSearch();
                     } catch (NumberFormatException ignored) {
+                        filteredHeight = 0;
                     }
                     heightWidget.setSuggestion(null);
                 });
@@ -530,6 +538,13 @@ public class ImmersivePaintingScreen extends Screen {
     public void setPage(Page page) {
         this.page = page;
         this.error = null;
+
+        if (page == Page.SELECTION_DATAPACKS) {
+            filteredResolution = 32;
+        } else {
+            filteredResolution = 0;
+        }
+
         rebuild();
 
         if (page == Page.SELECTION_DATAPACKS || page == Page.SELECTION_PLAYERS || page == Page.SELECTION_YOURS) {
