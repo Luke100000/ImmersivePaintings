@@ -94,8 +94,8 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
                         v.v.x * (width - margin * 2),
                         v.v.y * (height - margin * 2),
                         v.v.z * 16.0f,
-                        v.t.u * (height - margin * 2) / height + margin / height,
-                        (1.0f - v.t.v) * (width - margin * 2) / width + margin / width,
+                        v.t.u * (width - margin * 2) / width + margin / width,
+                        (1.0f - v.t.v) * (height - margin * 2) / height + margin / height,
                         v.n.x,
                         v.n.y,
                         v.n.z,
@@ -116,7 +116,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     private void renderFrame(Identifier frame, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height) {
         List<Face> faces = getFaces(frame, "bottom");
         for (int x = 0; x < width / 16; x++) {
-            float u = x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f;
+            float u = width == 16 ? 0.75f : (x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f);
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
                     vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y - (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);
@@ -125,7 +125,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         }
         faces = getFaces(frame, "top");
         for (int x = 0; x < width / 16; x++) {
-            float u = x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f;
+            float u = width == 16 ? 0.75f : (x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f);
             for (Face face : faces) {
                 for (FaceVertex v : face.vertices) {
                     vertex(posMat, normMat, vertexConsumer, v.v.x + x * 16 - (width - 16) / 2, v.v.y + (height - 16) / 2, v.v.z, v.t.u * 0.25f + u, (1.0f - v.t.v), v.n.x, v.n.y, v.n.z, light);

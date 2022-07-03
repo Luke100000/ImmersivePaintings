@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 files = []
-for i, group in enumerate(
+for flip, group in enumerate(
     (
         (
             "acacia",
@@ -44,7 +44,7 @@ for i, group in enumerate(
                 "frame": "simple",
                 "material": material,
                 "texture": f"textures/{material}.png",
-                "flip": i == 0,
+                "flip": flip == 0,
                 "offsetY": 6,
                 "brightness": [0.6, 0.8, 1.0, 1.0, 0.8],
                 "mirroring": [(2, 0, 1), (3, 0, 1)],
@@ -58,7 +58,7 @@ for i, group in enumerate(
                 "frame": "vintage",
                 "material": material,
                 "texture": f"textures/{material}.png",
-                "flip": i == 0,
+                "flip": flip == 0,
                 "offsetY": 5,
                 "brightness": np.asarray([0.6, 0.7, 0.8, 1.0, 1.0, 0.8, 0.7, 0.6])
                 * 0.9,
@@ -135,6 +135,8 @@ def main():
             for x in range(fx, tx + 1):
                 im[15 - y, x, 3] = 0
                 im[15 - y, 15 - x + 32] = 0
+                im[15 - y, x + 48] = 0
+                im[15 - y, 15 - x + 48] = 0
 
         cv2.imwrite(
             f"../common/src/main/resources/assets/immersive_paintings/textures/block/frame/{f['frame']}/{f['material']}.png",
