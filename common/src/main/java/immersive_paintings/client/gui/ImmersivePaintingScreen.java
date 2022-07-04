@@ -40,6 +40,7 @@ import static immersive_paintings.util.ImageManipulations.scanForPixelArtMultipl
 import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
+    private static final int SCREENSHOTS_PER_PAGE = 3;
     final int entityId;
     public final ImmersivePaintingEntity entity;
 
@@ -509,15 +510,17 @@ public class ImmersivePaintingScreen extends Screen {
         paintingWidgetList.clear();
 
         // screenshots
-        for (int x = 0; x < 6; x++) {
-            int i = x + screenshotPage * 6;
+        for (int x = 0; x < SCREENSHOTS_PER_PAGE; x++) {
+            int i = x + screenshotPage * SCREENSHOTS_PER_PAGE;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
                 ByteImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
                     Painting painting = new Painting(image, 16);
+                    painting.thumbnail.image = image;
                     painting.thumbnail.textureIdentifier = Main.locate("screenshot_" + x);
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (int)(width / 2 + (x - 2.5) * 68) - 32, height / 2 + 15, 64, 48,
+                    int h = (int)(64.0f / image.getWidth() * image.getHeight());
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15 + (64 - h) / 2, 64, h,
                             (b) -> {
                                 currentImage = image;
                                 currentImagePixelZoomCache = -1;
