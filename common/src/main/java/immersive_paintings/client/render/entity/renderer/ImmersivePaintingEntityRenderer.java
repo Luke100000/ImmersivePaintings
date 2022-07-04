@@ -27,7 +27,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     @Override
     public void render(ImmersivePaintingEntity entity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-f));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(matrixStack, vertexConsumerProvider, entity);
         matrixStack.pop();
