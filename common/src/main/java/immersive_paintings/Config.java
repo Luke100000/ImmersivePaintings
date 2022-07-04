@@ -27,8 +27,8 @@ public final class Config implements Serializable {
     public float quarterResolutionThreshold = 4.0f;
     public float eighthResolutionThreshold = 8.0f;
 
-    public int maxPacketsPerSecond = 20;
-    public int packetSize = 64 * 1024;
+    public int maxPacketsPerSecond = 40;
+    public int packetSize = 16 * 1024;
 
     public boolean testIfSpaceEmpty = false;
 
@@ -62,7 +62,7 @@ public final class Config implements Serializable {
             config.save();
             return config;
         } catch (IOException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         Config config = new Config();
         config.save();

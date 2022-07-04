@@ -127,11 +127,6 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
-    }
-
-    @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (!player.world.isClient) {
             NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
