@@ -1,5 +1,6 @@
 package immersive_paintings.resources;
 
+import immersive_paintings.client.ClientUtils;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.c2s.ImageRequest;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientPaintingManager {
-    static final Painting DEFAULT = new Painting(new NativeImage(2, 2, false), 2);
+    static final Painting DEFAULT = new Painting(new ByteImage(2, 2), 2);
 
     static Map<Identifier, Painting> paintings = new HashMap<>();
 
@@ -53,17 +54,18 @@ public class ClientPaintingManager {
         }
     }
 
-    public static void loadImage(Identifier i, Painting.Type type, NativeImage image) {
+    public static void loadImage(Identifier i, Painting.Type type, ByteImage image) {
         Painting painting = ClientPaintingManager.getPaintings().get(i);
         Painting.Texture texture = painting.getTexture(type);
         loadImage(texture, image);
         Cache.set(texture);
     }
 
-    public static void loadImage(Painting.Texture texture, @NotNull NativeImage image) {
+    public static void loadImage(Painting.Texture texture, @NotNull ByteImage image) {
         texture.image = image;
+        NativeImage nativeImage = ClientUtils.byteImageToNativeImage(texture.image);
         texture.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
-                .registerDynamicTexture("immersive_painting/" + texture.hash, new NativeImageBackedTexture(texture.image));
-        texture.image.upload(0, 0, 0, false);
+                .registerDynamicTexture("immersive_painting/" + texture.hash, new NativeImageBackedTexture(nativeImage));
+        nativeImage.upload(0, 0, 0, false);
     }
 }

@@ -4,8 +4,8 @@ import immersive_paintings.Entities;
 import immersive_paintings.Items;
 import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.NetworkHandler;
-import immersive_paintings.network.s2c.ImmersivePaintingSpawnMessage;
 import immersive_paintings.network.s2c.OpenGuiRequest;
+import immersive_paintings.network.s2c.PaintingModifyMessage;
 import immersive_paintings.resources.ClientPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -101,7 +101,24 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-        return new ImmersivePaintingSpawnMessage(this);
+        BlockPos pos = getDecorationBlockPos();
+        return new EntitySpawnS2CPacket(
+                getId(),
+                getUuid(),
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                getPitch(),
+                getYaw(),
+                getType(),
+                0,
+                getVelocity());
+    }
+
+    @Override
+    public void onStartedTrackingBy(ServerPlayerEntity player) {
+        NetworkHandler.sendToPlayer(new PaintingModifyMessage(this), player);
+        super.onStartedTrackingBy(player);
     }
 
     @Override

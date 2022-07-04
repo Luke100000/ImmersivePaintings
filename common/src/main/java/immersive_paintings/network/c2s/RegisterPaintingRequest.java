@@ -6,10 +6,10 @@ import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.network.s2c.RegisterPaintingResponse;
+import immersive_paintings.resources.ByteImage;
 import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,7 +33,7 @@ public class RegisterPaintingRequest implements Message {
 
     @Override
     public void receive(PlayerEntity e) {
-        NativeImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
+        ByteImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
 
         if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
             error("too_large", e, null);

@@ -1,15 +1,15 @@
 package immersive_paintings.network.c2s;
 
 import immersive_paintings.network.SegmentedPaintingMessage;
-import net.minecraft.client.texture.NativeImage;
+import immersive_paintings.resources.ByteImage;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
 
 public class UploadPaintingRequest extends SegmentedPaintingMessage {
-    public static final HashMap<String, NativeImage> uploadedImages = new HashMap<>();
+    public static final HashMap<String, ByteImage> uploadedImages = new HashMap<>();
 
-    public UploadPaintingRequest(int width, int height, int[] data, int segment, int totalSegments) {
+    public UploadPaintingRequest(int width, int height, byte[] data, int segment, int totalSegments) {
         super(width, height, data, segment, totalSegments);
     }
 
@@ -19,7 +19,7 @@ public class UploadPaintingRequest extends SegmentedPaintingMessage {
     }
 
     @Override
-    protected void process(PlayerEntity e, NativeImage image) {
+    protected void process(PlayerEntity e, ByteImage image) {
         uploadedImages.put(getIdentifier(e), image);
     }
 }

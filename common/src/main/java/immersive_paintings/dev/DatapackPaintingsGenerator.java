@@ -1,8 +1,8 @@
 package immersive_paintings.dev;
 
 import immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
+import immersive_paintings.resources.ByteImage;
 import immersive_paintings.util.ImageManipulations;
-import net.minecraft.client.texture.NativeImage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,7 +54,7 @@ public class DatapackPaintingsGenerator {
     }
 
     private static void process(String name, int width, int height, double dither, int colors, int resolution, boolean pixelArt) throws IOException {
-        NativeImage image = loadImage(name);
+        ByteImage image = loadImage(name);
 
         int zoom = ImageManipulations.scanForPixelArtMultiple(image);
 
@@ -78,16 +78,17 @@ public class DatapackPaintingsGenerator {
 
         PixelatorSettings settings = new PixelatorSettings(dither / 2, colors, resolution, width, height, 0.5, 0.5, 1.0, pixelArt);
 
-        pixelateImage(image, settings).writeTo(name + ".png");
+        File file = new File(name + ".png");
+        pixelateImage(image, settings).write(file);
     }
 
-    private static NativeImage loadImage(String path) throws IOException {
+    private static ByteImage loadImage(String path) throws IOException {
         return loadImage(Path.of(base, path));
     }
 
-    private static NativeImage loadImage(Path path) throws IOException {
+    private static ByteImage loadImage(Path path) throws IOException {
         FileInputStream stream = new FileInputStream(path.toFile());
-        NativeImage nativeImage = NativeImage.read(stream);
+        ByteImage nativeImage = ByteImage.read(stream);
         stream.close();
         return nativeImage;
     }

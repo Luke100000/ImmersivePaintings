@@ -7,7 +7,6 @@ import immersive_paintings.network.s2c.*;
 
 public class Messages {
     public static void bootstrap() {
-        NetworkHandler.registerMessage(ImmersivePaintingSpawnMessage.class);
         NetworkHandler.registerMessage(ImageRequest.class);
         NetworkHandler.registerMessage(PaintingListMessage.class);
         NetworkHandler.registerMessage(ImageResponse.class);
@@ -17,5 +16,6 @@ public class Messages {
         NetworkHandler.registerMessage(PaintingDeleteRequest.class);
         NetworkHandler.registerMessage(UploadPaintingRequest.class);
         NetworkHandler.registerMessage(RegisterPaintingResponse.class);
+        NetworkHandler.registerMessage(OpenGuiRequest.class);
     }
 }

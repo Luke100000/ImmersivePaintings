@@ -2,7 +2,6 @@ package immersive_paintings.resources;
 
 import immersive_paintings.Config;
 import immersive_paintings.util.ImageManipulations;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
@@ -37,20 +36,16 @@ public class ServerPaintingManager {
     }
 
     public static void registerPainting(Identifier identifier, Painting painting) {
-        try {
-            Painting.Texture texture = painting.getTexture(Painting.Type.FULL);
-            if (texture.image != null) {
-                Path path = getPaintingPath(identifier);
-                //noinspection ResultOfMethodCallIgnored
-                new File(path.getParent().toString()).mkdirs();
-                texture.image.writeTo(path);
-            }
-
-            get().getCustomServerPaintings().put(identifier, painting);
-            get().setDirty(true);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Painting.Texture texture = painting.getTexture(Painting.Type.FULL);
+        if (texture.image != null) {
+            Path path = getPaintingPath(identifier);
+            //noinspection ResultOfMethodCallIgnored
+            new File(path.getParent().toString()).mkdirs();
+            texture.image.write(path.toFile());
         }
+
+        get().getCustomServerPaintings().put(identifier, painting);
+        get().setDirty(true);
     }
 
     public static void deregisterPainting(Identifier identifier) {
@@ -66,7 +61,7 @@ public class ServerPaintingManager {
         } else {return get().customServerPaintings.getOrDefault(i, null);}
     }
 
-    public static NativeImage getImage(Identifier i, Painting.Type type) {
+    public static ByteImage getImage(Identifier i, Painting.Type type) {
         Painting painting = getPainting(i);
         Painting.Texture texture = painting.getTexture(type);
 
@@ -75,10 +70,10 @@ public class ServerPaintingManager {
             if (texture.image == null) {
                 try {
                     if (texture.resource != null) {
-                        return texture.image = NativeImage.read(texture.resource.getInputStream());
+                        return texture.image = ByteImage.read(texture.resource.getInputStream());
                     } else if (get().customServerPaintings.containsKey(i)) {
                         FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
-                        texture.image = NativeImage.read(stream);
+                        texture.image = ByteImage.read(stream);
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -88,7 +83,7 @@ public class ServerPaintingManager {
             Cache.get(texture)
                     .ifPresentOrElse((image) -> texture.image = image,
                             () -> {
-                                NativeImage image = getImage(i, Painting.Type.FULL);
+                                ByteImage image = getImage(i, Painting.Type.FULL);
 
                                 int w, h;
                                 if (type == Painting.Type.THUMBNAIL) {
@@ -115,7 +110,7 @@ public class ServerPaintingManager {
                                     h = image.getHeight() / 8;
                                 }
 
-                                NativeImage target = new NativeImage(w, h, false);
+                                ByteImage target = new ByteImage(w, h);
                                 ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
 
                                 texture.image = target;

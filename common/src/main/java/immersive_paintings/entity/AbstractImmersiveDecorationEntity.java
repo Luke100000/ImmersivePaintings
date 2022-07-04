@@ -37,7 +37,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     protected void initDataTracker() {
     }
 
-    protected void setFacing(Direction facing) {
+    public void setFacing(Direction facing) {
         Validate.notNull(facing);
         Validate.isTrue(facing.getAxis().isHorizontal());
         this.facing = facing;

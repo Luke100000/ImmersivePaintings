@@ -2,6 +2,7 @@ package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.Main;
+import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
@@ -10,10 +11,7 @@ import immersive_paintings.network.c2s.PaintingDeleteRequest;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
 import immersive_paintings.network.c2s.RegisterPaintingRequest;
 import immersive_paintings.network.c2s.UploadPaintingRequest;
-import immersive_paintings.resources.ClientPaintingManager;
-import immersive_paintings.resources.Frame;
-import immersive_paintings.resources.FrameLoader;
-import immersive_paintings.resources.Painting;
+import immersive_paintings.resources.*;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +19,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -58,11 +55,11 @@ public class ImmersivePaintingScreen extends Screen {
     private ButtonWidget pageWidget;
 
     private final List<PaintingWidget> paintingWidgetList = new LinkedList<>();
-    private NativeImage currentImage;
+    private ByteImage currentImage;
     private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
     private PixelatorSettings settings;
-    private NativeImage pixelatedImage;
+    private ByteImage pixelatedImage;
 
     private List<File> screenshots = List.of();
     private int screenshotPage;
@@ -303,11 +300,11 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
-                            int[] is = ImageManipulations.imageToInts(pixelatedImage);
+                            byte[] is = pixelatedImage.getBytes();
                             int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
                             int split = 0;
                             for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
-                                int[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
+                                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
                                 LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits));
                                 split++;
                             }
@@ -511,7 +508,7 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * 6;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                NativeImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
+                ByteImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
                 if (image != null) {
                     Painting painting = new Painting(image, 16);
                     painting.thumbnail.textureIdentifier = Main.locate("screenshot_" + x);
@@ -607,7 +604,7 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private NativeImage loadImage(String path, Identifier identifier) {
+    private ByteImage loadImage(String path, Identifier identifier) {
         InputStream stream = null;
         try {
             stream = new URL(path).openStream();
@@ -621,8 +618,8 @@ public class ImmersivePaintingScreen extends Screen {
 
         if (stream != null) {
             try {
-                NativeImage nativeImage = NativeImage.read(stream);
-                MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(nativeImage));
+                ByteImage nativeImage = ByteImage.read(stream);
+                MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(nativeImage)));
                 stream.close();
                 return nativeImage;
             } catch (IOException e) {
@@ -633,7 +630,7 @@ public class ImmersivePaintingScreen extends Screen {
         return null;
     }
 
-    private static int getCurrentImagePixelZoomCache(NativeImage currentImage) {
+    private static int getCurrentImagePixelZoomCache(ByteImage currentImage) {
         if (currentImagePixelZoomCache < 0) {
             currentImagePixelZoomCache = scanForPixelArtMultiple(currentImage);
         }
@@ -642,7 +639,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void pixelateImage() {
         pixelatedImage = pixelateImage(currentImage, settings);
-        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(pixelatedImage));
+        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(pixelatedImage)));
     }
 
     private void adaptToPixelArt() {
@@ -651,8 +648,8 @@ public class ImmersivePaintingScreen extends Screen {
         settings.height = Math.min(16, (int)(currentImage.getHeight() / zoom / settings.resolution));
     }
 
-    public static NativeImage pixelateImage(NativeImage currentImage, PixelatorSettings settings) {
-        NativeImage pixelatedImage = new NativeImage(settings.resolution * settings.width, settings.resolution * settings.height, false);
+    public static ByteImage pixelateImage(ByteImage currentImage, PixelatorSettings settings) {
+        ByteImage pixelatedImage = new ByteImage(settings.resolution * settings.width, settings.resolution * settings.height);
 
         //zoom
         double zoom;
@@ -734,7 +731,7 @@ public class ImmersivePaintingScreen extends Screen {
             this.pixelArt = pixelArt;
         }
 
-        PixelatorSettings(NativeImage currentImage) {
+        PixelatorSettings(ByteImage currentImage) {
             this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
 
             double target = currentImage.getWidth() / (double)currentImage.getHeight();

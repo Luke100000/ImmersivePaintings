@@ -4,40 +4,20 @@ import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.c2s.PaintingModifyRequest;
-import immersive_paintings.network.s2c.*;
+import immersive_paintings.network.s2c.OpenGuiRequest;
+import immersive_paintings.network.s2c.PaintingListMessage;
+import immersive_paintings.network.s2c.PaintingModifyMessage;
+import immersive_paintings.network.s2c.RegisterPaintingResponse;
 import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.OffThreadException;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
 
 public class ClientNetworkManager implements NetworkManager {
-    @Override
-    public void handleImmersivePaintingSpawnMessage(ImmersivePaintingSpawnMessage message) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (!client.isOnThread()) {
-            client.executeSync(() -> handleImmersivePaintingSpawnMessage(message));
-            throw OffThreadException.INSTANCE;
-        } else {
-            ClientWorld world = client.world;
-            assert world != null;
-
-            ImmersivePaintingEntity painting = new ImmersivePaintingEntity(world, message.pos(), message.facing());
-            painting.setId(message.getEntityId());
-            painting.setUuid(message.uuid());
-            painting.setMotive(message.getMotive());
-            painting.setFrame(message.getFrame());
-            painting.setMaterial(message.getMaterial());
-
-            world.addEntity(message.getEntityId(), painting);
-        }
-    }
-
     @Override
     public void handleOpenGuiRequest(OpenGuiRequest request) {
         if (request.gui == OpenGuiRequest.Type.EDITOR) {
@@ -70,6 +50,7 @@ public class ClientNetworkManager implements NetworkManager {
             painting.setMotive(message.getMotive());
             painting.setFrame(message.getFrame());
             painting.setMaterial(message.getMaterial());
+            painting.setFacing(message.getFacing());
         }
     }
 

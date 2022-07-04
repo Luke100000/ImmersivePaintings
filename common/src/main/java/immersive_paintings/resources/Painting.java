@@ -2,7 +2,6 @@ package immersive_paintings.resources;
 
 import immersive_paintings.Config;
 import immersive_paintings.Main;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
@@ -25,11 +24,11 @@ public final class Painting {
     public Texture eighth;
     public Texture thumbnail;
 
-    public Painting(@Nullable NativeImage image, int width, int height, int resolution) {
+    public Painting(@Nullable ByteImage image, int width, int height, int resolution) {
         this(image, width, height, resolution, "", "", false, UUID.randomUUID().toString());
     }
 
-    public Painting(@Nullable NativeImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
+    public Painting(@Nullable ByteImage image, int width, int height, int resolution, String name, String author, boolean datapack, String hash) {
         this.texture = new Texture(image, hash, Type.FULL);
 
         int res = Math.max(width, height) * resolution;
@@ -54,7 +53,7 @@ public final class Painting {
         this.datapack = datapack;
     }
 
-    public Painting(NativeImage image, int resolution) {
+    public Painting(ByteImage image, int resolution) {
         this(image, image.getWidth() / resolution, image.getHeight() / resolution, resolution, "", "", false, UUID.randomUUID().toString());
     }
 
@@ -100,14 +99,14 @@ public final class Painting {
     }
 
     public static class Texture {
-        public NativeImage image;
+        public ByteImage image;
         public boolean requested = false;
         public Identifier textureIdentifier = Main.locate("textures/block/frame/canvas.png");
         public Resource resource;
         public final String hash;
         public final Type link;
 
-        public Texture(NativeImage image, String hash, Type link) {
+        public Texture(ByteImage image, String hash, Type link) {
             this.image = image;
             this.hash = hash;
             this.link = link;
