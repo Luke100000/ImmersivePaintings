@@ -27,7 +27,8 @@ public final class Config implements Serializable {
     public float quarterResolutionThreshold = 4.0f;
     public float eighthResolutionThreshold = 8.0f;
 
-    public int maxPacketsPerSecond = 10;
+    public int maxPacketsPerSecond = 20;
+    public int packetSize = 64 * 1024;
 
     public boolean testIfSpaceEmpty = false;
 

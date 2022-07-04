@@ -1,6 +1,7 @@
 package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
@@ -35,7 +36,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 
-import static immersive_paintings.network.c2s.ImageRequest.BYTES_PER_MESSAGE;
 import static immersive_paintings.util.ImageManipulations.scanForPixelArtMultiple;
 import static immersive_paintings.util.Utils.identifierToTranslation;
 
@@ -66,6 +66,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private Identifier deletePainting;
     private TranslatableText error;
+    private boolean shouldReProcess;
 
     public ImmersivePaintingScreen(int entityId) {
         super(new TranslatableText("item.immersive_paintings.painting"));
@@ -91,8 +92,8 @@ public class ImmersivePaintingScreen extends Screen {
     protected void init() {
         super.init();
 
-        setPage(Page.SELECTION_DATAPACKS);
         clearSearch();
+        setPage(Page.SELECTION_DATAPACKS);
         updateSearch();
 
         File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
@@ -122,6 +123,10 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case CREATE -> {
+                if (shouldReProcess) {
+                    pixelateImage();
+                }
+
                 int maxWidth = 190;
                 int maxHeight = 135;
                 int tw = settings.resolution * settings.width;
@@ -214,14 +219,14 @@ public class ImmersivePaintingScreen extends Screen {
                 //width
                 addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.width, 1, 16, v -> {
                     settings.width = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 }));
                 y += 22;
 
                 //height
                 addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.height, 1, 16, v -> {
                     settings.height = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 }));
                 y += 22;
 
@@ -239,7 +244,7 @@ public class ImmersivePaintingScreen extends Screen {
                                     adaptToPixelArt();
                                     refreshPage();
                                 }
-                                pixelateImage();
+                                shouldReProcess = true;
                                 list.forEach(b -> b.active = true);
                                 v.active = false;
                             }));
@@ -253,14 +258,14 @@ public class ImmersivePaintingScreen extends Screen {
                 //color reduction
                 addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 12, 1, 25, v -> {
                     settings.colors = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
                 //dither
                 addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "%s%% dither", 0.25, v -> {
                     settings.dither = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 })).active = !settings.pixelArt;
 
                 //pixelArt
@@ -272,28 +277,28 @@ public class ImmersivePaintingScreen extends Screen {
                     settings.pixelArt = b;
                     adaptToPixelArt();
                     refreshPage();
-                    pixelateImage();
+                    shouldReProcess = true;
                 }));
                 y += 22;
 
                 //offset X
                 addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% X offset", 0.5, v -> {
                     settings.offsetX = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 }));
                 y += 22;
 
                 //offset Y
                 addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% Y offset", 0.5, v -> {
                     settings.offsetY = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 }));
                 y += 22;
 
                 //offset
                 addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% zoom", 1, 1, 3, v -> {
                     settings.zoom = v;
-                    pixelateImage();
+                    shouldReProcess = true;
                 })).active = !settings.pixelArt;
 
                 addDrawableChild(new ButtonWidget(width / 2 - 85, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.cancel"), v -> setPage(Page.NEW)));
@@ -301,10 +306,10 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
                             byte[] is = pixelatedImage.getBytes();
-                            int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
+                            int splits = (int)Math.ceil((double)is.length / Config.getInstance().packetSize);
                             int split = 0;
-                            for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
-                                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
+                            for (int i = 0; i < is.length; i += Config.getInstance().packetSize) {
+                                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + Config.getInstance().packetSize));
                                 LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits));
                                 split++;
                             }

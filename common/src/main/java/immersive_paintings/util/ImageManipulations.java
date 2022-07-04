@@ -87,7 +87,7 @@ public class ImageManipulations {
         final int EXCLUDE_HUE = 1;
 
         // base
-        int base = image.getWidth() * image.getHeight() / 255 * 8;
+        int base = image.getWidth() * image.getHeight() / 255;
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
             for (int x = 0; x < 256; x++) {
                 hist[channel][x] = base;

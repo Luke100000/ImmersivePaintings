@@ -1,5 +1,6 @@
 package immersive_paintings.network.c2s;
 
+import immersive_paintings.Config;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.s2c.ImageResponse;
@@ -13,8 +14,6 @@ import net.minecraft.util.Identifier;
 import java.util.Arrays;
 
 public class ImageRequest implements Message {
-    public static final int BYTES_PER_MESSAGE = 16 * 1024;
-
     private final String identifier;
     private final Painting.Type type;
 
@@ -30,10 +29,10 @@ public class ImageRequest implements Message {
 
         if (image != null) {
             byte[] is = image.getBytes();
-            int splits = (int)Math.ceil((double)is.length / BYTES_PER_MESSAGE);
+            int splits = (int)Math.ceil((double)is.length / Config.getInstance().packetSize);
             int split = 0;
-            for (int i = 0; i < is.length; i += BYTES_PER_MESSAGE) {
-                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + BYTES_PER_MESSAGE));
+            for (int i = 0; i < is.length; i += Config.getInstance().packetSize) {
+                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + Config.getInstance().packetSize));
                 LazyNetworkManager.sendClient(new ImageResponse(identifier, type, image.getWidth(), image.getHeight(), ints, split, splits), (ServerPlayerEntity)e);
                 split++;
             }
