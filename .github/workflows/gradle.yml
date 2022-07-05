@@ -47,7 +47,7 @@ jobs:
           token: "${{ secrets.CF_API_TOKEN }}"
           changelog_type: "markdown"
           changelog: "Full changelog can be found in the [GitHub Repo](https://github.com/Luke100000/immersivePaintings/blob/1.18.2/changelog.md)"
-          release_type: "release"
+          release_type: "beta"
       - name: "Upload Forge to CurseForge"
         uses: itsmeow/curseforge-upload@v3
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
@@ -60,4 +60,4 @@ jobs:
           token: "${{ secrets.CF_API_TOKEN }}"
           changelog_type: "markdown"
           changelog: "Full changelog can be found in the [GitHub Repo](https://github.com/Luke100000/immersivePaintings/blob/1.18.2/changelog.md)"
-          release_type: "release"
+          release_type: "beta"
