@@ -124,7 +124,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case CREATE -> {
-                if (shouldReProcess) {
+                if (shouldReProcess && currentImage != null) {
                     pixelateImage();
                 }
 

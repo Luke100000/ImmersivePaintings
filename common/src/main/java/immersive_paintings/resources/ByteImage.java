@@ -2,7 +2,6 @@ package immersive_paintings.resources;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +10,7 @@ import static java.awt.Color.RGBtoHSB;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class ByteImage {
-    private final static int BANDS = 4;
+    private final static int BANDS = 3;
     private final byte[] bytes;
     private final int width, height;
 
@@ -27,22 +26,24 @@ public class ByteImage {
         this.height = height;
     }
 
-    public static ByteImage read(InputStream stream) {
-        BufferedImage image;
-        try {
-            image = ImageIO.read(stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public static ByteImage read(InputStream stream) throws IOException {
+        BufferedImage image = ImageIO.read(stream);
+
+        if (image == null) {
+            throw new IOException("Invalid file");
         }
 
         ByteImage byteImage = new ByteImage(image.getWidth(), image.getHeight());
 
-        Raster data = image.getData();
-        int[] pixel = {255, 255, 255, 255};
+        int[] data = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                data.getPixel(x, y, pixel);
-                byteImage.setPixel(x, y, pixel[0], pixel[1], pixel[2], pixel[3]);
+                int d = data[y * image.getWidth() + x];
+                byteImage.setPixel(x, y,
+                        (d >> 16) & 0xFF,
+                        (d >> 8) & 0xFF,
+                        d & 0xFF
+                );
             }
         }
 
@@ -65,16 +66,15 @@ public class ByteImage {
         }
     }
 
-    public void setPixel(int x, int y, int r, int g, int b, int a) {
-        setPixel(x, y, (byte)r, (byte)g, (byte)b, (byte)a);
+    public void setPixel(int x, int y, int r, int g, int b) {
+        setPixel(x, y, (byte)r, (byte)g, (byte)b);
     }
 
-    public void setPixel(int x, int y, byte r, byte g, byte b, byte a) {
+    public void setPixel(int x, int y, byte r, byte g, byte b) {
         int i = getIndex(x, y);
         bytes[i] = r;
         bytes[i + 1] = g;
         bytes[i + 2] = b;
-        bytes[i + 3] = a;
     }
 
     public int getIndex(int x, int y) {
