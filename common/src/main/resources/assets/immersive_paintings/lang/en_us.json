@@ -1,6 +1,8 @@
 {
   "itemGroup.immersive_paintings.immersive_paintings_tab": "Immersive Paintings",
+
   "item.immersive_paintings.painting": "Painting",
+  "entity.immersive_paintings.painting": "Painting",
 
   "immersive_paintings.upload": "Uploading, %s seconds left",
 

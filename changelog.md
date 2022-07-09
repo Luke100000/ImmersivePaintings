@@ -2,6 +2,8 @@
 
 * Fixed crash when supplying invalid images
 * Fixed GIFs and some PNGs
+* Offloaded screenshot loading and image processing to a thread
+* Fixed missing translation
 
 # 0.1.1
 
