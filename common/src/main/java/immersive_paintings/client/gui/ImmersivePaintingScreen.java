@@ -35,12 +35,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static immersive_paintings.util.ImageManipulations.scanForPixelArtMultiple;
 import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
-    private static final int SCREENSHOTS_PER_PAGE = 3;
+    private static final int SCREENSHOTS_PER_PAGE = 5;
     final int entityId;
     public final ImmersivePaintingEntity entity;
 
@@ -68,6 +70,9 @@ public class ImmersivePaintingScreen extends Screen {
     private Identifier deletePainting;
     private TranslatableText error;
     private boolean shouldReProcess;
+    private static volatile boolean shouldUpload;
+
+    ExecutorService service = Executors.newFixedThreadPool(1);
 
     public ImmersivePaintingScreen(int entityId) {
         super(new TranslatableText("item.immersive_paintings.painting"));
@@ -125,7 +130,15 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 if (shouldReProcess && currentImage != null) {
-                    pixelateImage();
+                    Runnable task = () -> {
+                        pixelatedImage = pixelateImage(currentImage, settings);
+                        shouldUpload = true;
+                    };
+                    service.submit(task);
+                }
+
+                if (shouldUpload && pixelatedImage != null) {
+                    MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(pixelatedImage)));
                 }
 
                 int maxWidth = 190;
@@ -514,28 +527,34 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * SCREENSHOTS_PER_PAGE;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                ByteImage image = loadImage(file.getPath(), Main.locate("screenshot_" + x));
-                if (image != null) {
-                    Painting painting = new Painting(image, 16);
-                    painting.thumbnail.image = image;
-                    painting.thumbnail.textureIdentifier = Main.locate("screenshot_" + x);
-                    int h = (int)(64.0f / image.getWidth() * image.getHeight());
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15 + (64 - h) / 2, 64, h,
-                            (b) -> {
-                                currentImage = image;
-                                currentImagePixelZoomCache = -1;
-                                currentImageName = file.getName();
-                                settings = new PixelatorSettings(currentImage);
-                                setPage(Page.CREATE);
-                                pixelateImage();
-                            },
-                            (b) -> {
+                Painting painting = new Painting(null, 16, 16, 16);
+                paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
+                        (b) -> {
+                            currentImage = ((PaintingWidget)b).thumbnail.image;
+                            currentImagePixelZoomCache = -1;
+                            currentImageName = file.getName();
+                            settings = new PixelatorSettings(currentImage);
+                            setPage(Page.CREATE);
+                            pixelateImage();
+                        },
+                        (b) -> {
 
-                            },
-                            (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, new LiteralText(file.getName()), mx, my))));
-                } else {
-                    break;
-                }
+                        },
+                        (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, new LiteralText(file.getName()), mx, my))));
+
+                Identifier identifier = Main.locate("screenshot_" + x);
+                Runnable task = () -> {
+                    ByteImage image = loadImage(file.getPath(), identifier);
+                    if (image != null) {
+                        painting.width = image.getWidth();
+                        painting.height = image.getHeight();
+                        painting.thumbnail.image = image;
+                        painting.thumbnail.textureIdentifier = identifier;
+                    }
+                };
+                service.submit(task);
+            } else {
+                break;
             }
         }
     }
@@ -586,8 +605,11 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private void setScreenshotPage(int p) {
+        int oldPage = screenshotPage;
         screenshotPage = Math.min(getScreenshotMaxPages() - 1, Math.max(0, p));
-        rebuildScreenshots();
+        if (oldPage != screenshotPage) {
+            rebuildScreenshots();
+        }
         pageWidget.setMessage(new LiteralText((screenshotPage + 1) + " / " + getScreenshotMaxPages()));
     }
 
@@ -647,7 +669,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void pixelateImage() {
         pixelatedImage = pixelateImage(currentImage, settings);
-        MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(pixelatedImage)));
+        shouldUpload = true;
     }
 
     private void adaptToPixelArt() {

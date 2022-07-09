@@ -8,7 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class PaintingWidget extends ButtonWidget {
-    private final Painting.Texture thumbnail;
+    public final Painting.Texture thumbnail;
     private final PressAction onPressRight;
     private int button;
 

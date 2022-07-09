@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public final class Painting {
-    public final int width;
-    public final int height;
+    public int width;
+    public int height;
     public final int resolution;
 
     public final String name;
