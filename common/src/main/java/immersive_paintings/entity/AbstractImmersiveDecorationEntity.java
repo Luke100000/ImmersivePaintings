@@ -41,8 +41,8 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         Validate.notNull(facing);
         Validate.isTrue(facing.getAxis().isHorizontal());
         this.facing = facing;
-        this.setYaw(this.facing.getHorizontal() * 90);
-        this.prevYaw = this.getYaw();
+        this.yaw = (float)(this.facing.getHorizontal() * 90);
+        this.prevYaw = this.yaw;
         this.updateAttachmentPosition();
     }
 
@@ -77,11 +77,14 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     @Override
     public void tick() {
         if (!this.world.isClient) {
-            this.attemptTickInVoid();
+            if (this.getY() < -64.0) {
+                this.tickInVoid();
+            }
+
             if (this.obstructionCheckCounter++ == 100) {
                 this.obstructionCheckCounter = 0;
-                if (!this.isRemoved() && !this.canStayAttached()) {
-                    this.discard();
+                if (!this.removed && !this.canStayAttached()) {
+                    this.remove();
                     this.onBreak(null);
                 }
             }
@@ -127,18 +130,20 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     public boolean damage(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
+        } else {
+            if (!this.removed && !this.world.isClient) {
+                this.remove();
+                this.scheduleVelocityUpdate();
+                this.onBreak(source.getAttacker());
+            }
+
+            return true;
         }
-        if (!this.isRemoved() && !this.world.isClient) {
-            this.kill();
-            this.scheduleVelocityUpdate();
-            this.onBreak(source.getAttacker());
-        }
-        return true;
     }
 
     @Override
     public void move(MovementType movementType, Vec3d movement) {
-        if (!this.world.isClient && !this.isRemoved() && movement.lengthSquared() > 0.0) {
+        if (!this.world.isClient && !this.removed && movement.lengthSquared() > 0.0) {
             this.kill();
             this.onBreak(null);
         }
@@ -146,7 +151,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void addVelocity(double deltaX, double deltaY, double deltaZ) {
-        if (!this.world.isClient && !this.isRemoved() && deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ > 0.0) {
+        if (!this.world.isClient && !this.removed && deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ > 0.0) {
             this.kill();
             this.onBreak(null);
         }
@@ -206,19 +211,14 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
                 case CLOCKWISE_90 -> this.facing = this.facing.rotateYClockwise();
             }
         }
-        float f = MathHelper.wrapDegrees(this.getYaw());
-        switch (rotation) {
-            case CLOCKWISE_180 -> {
-                return f + 180.0f;
-            }
-            case COUNTERCLOCKWISE_90 -> {
-                return f + 90.0f;
-            }
-            case CLOCKWISE_90 -> {
-                return f + 270.0f;
-            }
-        }
-        return f;
+
+        float f = MathHelper.wrapDegrees(this.yaw);
+        return switch (rotation) {
+            case CLOCKWISE_180 -> f + 180.0F;
+            case COUNTERCLOCKWISE_90 -> f + 90.0F;
+            case CLOCKWISE_90 -> f + 270.0F;
+            default -> f;
+        };
     }
 
     @Override

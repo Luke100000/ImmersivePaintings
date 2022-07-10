@@ -2,8 +2,8 @@ package immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.resources.Painting;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
@@ -36,9 +36,8 @@ public class PaintingWidget extends ButtonWidget {
 
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, thumbnail.textureIdentifier);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(thumbnail.textureIdentifier);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -56,7 +55,7 @@ public class PaintingWidget extends ButtonWidget {
         matrices.pop();
 
         if (isHovered()) {
-            renderTooltip(matrices, mouseX, mouseY);
+            renderToolTip(matrices, mouseX, mouseY);
         }
     }
 }

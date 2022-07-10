@@ -9,8 +9,8 @@ import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -20,8 +20,8 @@ import owens.oobjloader.FaceVertex;
 import java.util.List;
 
 public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePaintingEntity> {
-    public ImmersivePaintingEntityRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx);
+    public ImmersivePaintingEntityRenderer(EntityRenderDispatcher dispatcher) {
+        super(dispatcher);
     }
 
     @Override
@@ -64,9 +64,9 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         float top = bottom + height;
 
         //light
-        int centerX = entity.getBlockX();
+        int centerX = entity.getBlockPos().getX();
         int centerY = MathHelper.floor(entity.getY() + (double)((top + bottom) / 2.0f / 16.0f));
-        int centerZ = entity.getBlockZ();
+        int centerZ = entity.getBlockPos().getZ();
         Direction direction = entity.getHorizontalFacing();
         switch (direction) {
             case NORTH -> centerX = MathHelper.floor(entity.getX() + (double)((right + left) / 2.0f / 16.0f));
@@ -77,8 +77,8 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         int light = WorldRenderer.getLightmapCoordinates(entity.world, new BlockPos(centerX, centerY, centerZ));
 
         MatrixStack.Entry entry = matrices.peek();
-        Matrix4f posMat = entry.getPositionMatrix();
-        Matrix3f normMat = entry.getNormalMatrix();
+        Matrix4f posMat = entry.getModel();
+        Matrix3f normMat = entry.getNormal();
 
         VertexConsumer vertexConsumer;
 

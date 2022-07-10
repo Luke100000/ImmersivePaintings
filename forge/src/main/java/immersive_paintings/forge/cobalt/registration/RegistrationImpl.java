@@ -1,22 +1,11 @@
 package immersive_paintings.forge.cobalt.registration;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-
 import immersive_paintings.cobalt.registration.Registration;
 import immersive_paintings.cobalt.registration.Registration.ProfessionFactory;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.EntityRenderers;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -31,19 +20,22 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryManager;
 
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * Contains all the crob required to interface with forge's code
  */
 public class RegistrationImpl extends Registration.Impl {
-    public static final RegistrationImpl IMPL = new RegistrationImpl();
-
     public static final Map<EntityType<? extends LivingEntity>, Supplier<Builder>> ENTITY_ATTRIBUTES = new HashMap<>();
 
     private final Map<String, RegistryRepo> repos = new HashMap<>();
@@ -55,13 +47,13 @@ public class RegistrationImpl extends Registration.Impl {
     }
 
     @Override
-    public <T extends Entity> void registerEntityRenderer(EntityType<T> type, EntityRendererFactory<T> constructor) {
-        EntityRenderers.register(type, constructor);
+    public <T extends Entity> void registerEntityRenderer(EntityType<T> type, Function<EntityRenderDispatcher, EntityRenderer<T>> constructor) {
+        RenderingRegistry.registerEntityRenderingHandler(type, constructor::apply);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public <T> T registerEntityRenderer(Registry<? super T> registry, Identifier id, T obj) {
+    public <T> T register(Registry<? super T> registry, Identifier id, T obj) {
         DeferredRegister reg = getRepo(id.getNamespace()).get(registry);
         if (reg != null) {
             reg.register(id.getPath(), () -> obj);
@@ -92,19 +84,19 @@ public class RegistrationImpl extends Registration.Impl {
     @SuppressWarnings("deprecation")
     @Override
     public Function<Identifier, Activity> activity() {
-        return id -> registerEntityRenderer(Registry.ACTIVITY, id, new Activity(id.toString()));
+        return id -> register(Registry.ACTIVITY, id, new Activity(id.toString()));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public <T extends Sensor<?>> BiFunction<Identifier, Supplier<T>, SensorType<T>> sensor() {
-        return (id, factory) -> registerEntityRenderer(Registry.SENSOR_TYPE, id, new SensorType<>(factory));
+        return (id, factory) -> register(Registry.SENSOR_TYPE, id, new SensorType<>(factory));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public <U> BiFunction<Identifier, Optional<Codec<U>>, MemoryModuleType<U>> memoryModule() {
-        return (id, codec) -> registerEntityRenderer(Registry.MEMORY_MODULE_TYPE, id, new MemoryModuleType<>(codec));
+        return (id, codec) -> register(Registry.MEMORY_MODULE_TYPE, id, new MemoryModuleType<>(codec));
     }
 
     @Override
@@ -118,7 +110,7 @@ public class RegistrationImpl extends Registration.Impl {
     @SuppressWarnings("deprecation")
     @Override
     public ProfessionFactory<VillagerProfession> profession() {
-        return (id, poi, sound, items, sites) -> registerEntityRenderer(Registry.VILLAGER_PROFESSION, id, new VillagerProfession(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items),  ImmutableSet.copyOf(sites), sound));
+        return (id, poi, sound, items, sites) -> register(Registry.VILLAGER_PROFESSION, id, new VillagerProfession(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items),  ImmutableSet.copyOf(sites), sound));
     }
 
     static class RegistryRepo {
@@ -149,10 +141,6 @@ public class RegistrationImpl extends Registration.Impl {
             }
 
             return registries.get(id);
-        }
-
-        void apply(IEventBus bus) {
-            registries.values().forEach(bus::register);
         }
     }
 }

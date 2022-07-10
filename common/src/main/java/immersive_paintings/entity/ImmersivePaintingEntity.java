@@ -10,7 +10,6 @@ import immersive_paintings.resources.ClientPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -23,7 +22,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     private Identifier motive = Main.locate("none");
@@ -36,7 +36,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         setFacing(direction);
     }
 
-    public ImmersivePaintingEntity(EntityType<Entity> type, World world) {
+    public ImmersivePaintingEntity(EntityType<ImmersivePaintingEntity> type, World world) {
         super(type, world);
     }
 
@@ -71,16 +71,16 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public void onBreak(@Nullable Entity entity) {
-        if (!world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+        if (!this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
             return;
         }
-        playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0f, 1.0f);
-        if (entity instanceof PlayerEntity playerEntity) {
-            if (playerEntity.getAbilities().creativeMode) {
+        this.playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0f, 1.0f);
+        if (entity instanceof PlayerEntity lv) {
+            if (lv.abilities.creativeMode) {
                 return;
             }
         }
-        dropItem(Items.PAINTING);
+        this.dropItem(Items.PAINTING);
     }
 
     @Override
@@ -103,13 +103,13 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     public Packet<?> createSpawnPacket() {
         BlockPos pos = getDecorationBlockPos();
         return new EntitySpawnS2CPacket(
-                getId(),
+                getEntityId(),
                 getUuid(),
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
-                getPitch(),
-                getYaw(),
+                pitch,
+                yaw,
                 getType(),
                 0,
                 getVelocity());
@@ -122,14 +122,9 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     @Override
-    public ItemStack getPickBlockStack() {
-        return new ItemStack(Items.PAINTING);
-    }
-
-    @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (!player.world.isClient) {
-            NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
+            NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getEntityId()), (ServerPlayerEntity)player);
             return ActionResult.CONSUME;
         } else {
             return ActionResult.PASS;

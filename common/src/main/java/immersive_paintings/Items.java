@@ -9,7 +9,7 @@ public interface Items {
     Item PAINTING = register("painting", new ImmersivePaintingItem(baseProps()));
 
     static Item register(String name, Item item) {
-        return Registration.registerEntityRenderer(Registry.ITEM, Main.locate(name), item);
+        return Registration.register(Registry.ITEM, Main.locate(name), item);
     }
 
     static void bootstrap() {

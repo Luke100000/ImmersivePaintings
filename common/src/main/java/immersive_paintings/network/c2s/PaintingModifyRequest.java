@@ -20,7 +20,7 @@ public class PaintingModifyRequest extends PaintingDataMessage {
             painting.setMotive(getMotive());
             painting.setFrame(getFrame());
             painting.setMaterial(getMaterial());
-            e.getWorld().getPlayers().forEach(p -> NetworkHandler.sendToPlayer(new PaintingModifyMessage(painting), (ServerPlayerEntity)p));
+            e.world.getPlayers().forEach(p -> NetworkHandler.sendToPlayer(new PaintingModifyMessage(painting), (ServerPlayerEntity)p));
         }
     }
 }

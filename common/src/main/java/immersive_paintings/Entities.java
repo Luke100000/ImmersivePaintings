@@ -11,8 +11,8 @@ import net.minecraft.util.registry.Registry;
 
 
 public interface Entities {
-    EntityType<Entity> PAINTING = register("painting", EntityType.Builder
-            .create(ImmersivePaintingEntity::new, SpawnGroup.MISC)
+    EntityType<ImmersivePaintingEntity> PAINTING = register("painting", EntityType.Builder
+            .<ImmersivePaintingEntity>create(ImmersivePaintingEntity::new, SpawnGroup.MISC)
             .setDimensions(0.5f, 0.5f)
             .maxTrackingRange(10)
             .trackingTickInterval(Integer.MAX_VALUE)
@@ -25,6 +25,6 @@ public interface Entities {
 
     static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         Identifier id = new Identifier(Main.MOD_ID, name);
-        return Registration.registerEntityRenderer(Registry.ENTITY_TYPE, id, builder.build(id.toString()));
+        return Registration.register(Registry.ENTITY_TYPE, id, builder.build(id.toString()));
     }
 }

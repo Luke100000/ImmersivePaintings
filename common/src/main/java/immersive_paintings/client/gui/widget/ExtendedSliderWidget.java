@@ -25,8 +25,12 @@ public abstract class ExtendedSliderWidget<T> extends SliderWidget {
 
     @Override
     protected void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(WIDGETS_TEXTURE);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        
         int i = (this.isHovered() ? 2 : 1) * 20;
         this.drawTexture(matrices, this.x + (int)(getOpticalValue() * (double)(this.width - 8)), this.y, 0, 46 + i, 4, 20);
         this.drawTexture(matrices, this.x + (int)(getOpticalValue() * (double)(this.width - 8)) + 4, this.y, 196, 46 + i, 4, 20);

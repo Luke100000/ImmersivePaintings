@@ -20,7 +20,7 @@ public class ServerPaintingManager {
 
     public static CustomServerPaintings get() {
         return server.getOverworld().getPersistentStateManager()
-                .getOrCreate(CustomServerPaintings::fromNbt, CustomServerPaintings::new, "immersive_paintings");
+                .getOrCreate(() -> new CustomServerPaintings("immersive_paintings"), "immersive_paintings");
     }
 
     public static Map<Identifier, Painting> getDatapackPaintings() {
@@ -123,12 +123,14 @@ public class ServerPaintingManager {
     public static class CustomServerPaintings extends PersistentState {
         final Map<Identifier, Painting> customServerPaintings = new HashMap<>();
 
-        public static CustomServerPaintings fromNbt(NbtCompound nbt) {
-            CustomServerPaintings c = new CustomServerPaintings();
+        public CustomServerPaintings(String key) {
+            super(key);
+        }
+
+        public void fromTag(NbtCompound nbt) {
             for (String key : nbt.getKeys()) {
-                c.customServerPaintings.put(new Identifier(key), Painting.fromNbt(nbt.getCompound(key)));
+                customServerPaintings.put(new Identifier(key), Painting.fromNbt(nbt.getCompound(key)));
             }
-            return c;
         }
 
         @Override

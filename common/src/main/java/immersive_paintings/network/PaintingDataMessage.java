@@ -13,7 +13,7 @@ public abstract class PaintingDataMessage implements Message {
     private final Direction facing;
 
     public PaintingDataMessage(ImmersivePaintingEntity painting) {
-        entityId = painting.getId();
+        entityId = painting.getEntityId();
         this.motive = painting.getMotive().toString();
         this.frame = painting.getFrame().toString();
         this.material = painting.getMaterial().toString();

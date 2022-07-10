@@ -8,6 +8,7 @@ import immersive_paintings.util.SerializableNbt;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 

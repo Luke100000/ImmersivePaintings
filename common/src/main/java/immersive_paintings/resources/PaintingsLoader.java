@@ -2,13 +2,13 @@ package immersive_paintings.resources;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;
-import com.mojang.logging.LogUtils;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Identifier, Painting>> {
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final int FILE_SUFFIX_LENGTH = ".json".length();
     private final Gson gson = new GsonBuilder().create();
     String dataType = "paintings";
@@ -39,7 +39,7 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                 String hash = identifier.toString().replaceAll("[^a-zA-Z\\d]", "");
 
                 Painting painting;
-                if (manager.containsResource(jsonIdentifier)) {
+                try {
                     InputStream inputStream = manager.getResource(jsonIdentifier).getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
@@ -51,7 +51,7 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
 
                     painting = new Painting(null, width, height, resolution, name, author, true, hash);
-                } else {
+                } catch (IOException ignored) {
                     painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, hash);
                 }
 

@@ -12,13 +12,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 
 public class ImmersivePaintingItem extends Item {
     public ImmersivePaintingItem(Settings settings) {
         super(settings);
     }
 
+     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getSide();
@@ -31,7 +31,7 @@ public class ImmersivePaintingItem extends Item {
             World world = context.getWorld();
             ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, blockPos2, direction);
 
-            NbtCompound nbtCompound = itemStack.getNbt();
+            NbtCompound nbtCompound = itemStack.getOrCreateTag();
             if (nbtCompound != null) {
                 EntityType.loadFromEntityNbt(world, playerEntity, paintingEntity, nbtCompound);
             }
@@ -39,7 +39,6 @@ public class ImmersivePaintingItem extends Item {
             if (paintingEntity.canStayAttached()) {
                 if (!world.isClient) {
                     ((AbstractImmersiveDecorationEntity)paintingEntity).onPlace();
-                    world.emitGameEvent(playerEntity, GameEvent.ENTITY_PLACE, blockPos);
                     world.spawnEntity(paintingEntity);
                 }
 

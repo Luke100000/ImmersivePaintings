@@ -11,9 +11,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 
 @Mod.EventBusSubscriber(modid = Main.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventBus {
@@ -35,7 +35,7 @@ public class EventBus {
     }
 
     @SubscribeEvent
-    public static void onServerStart(ServerStartingEvent event) {
+    public static void onServerStart(FMLServerAboutToStartEvent event) {
         ServerPaintingManager.server = event.getServer();
     }
 
