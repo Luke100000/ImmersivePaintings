@@ -6,11 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: jungwinter/split@v2
-        id: split
-        with:
-          separator: "+"
-          msg: ${{steps.tag.outputs.tag}}
       - name: Checkout Commit
         uses: actions/checkout@v2
       - name: Fetch Tags
@@ -39,6 +34,11 @@ jobs:
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         id: tag
         uses: dawidd6/action-get-tag@v1
+      - uses: jungwinter/split@v2
+        id: split
+        with:
+          separator: "+"
+          msg: ${{steps.tag.outputs.tag}}
       - name: "Upload Fabric to CurseForge"
         uses: itsmeow/curseforge-upload@v3
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
