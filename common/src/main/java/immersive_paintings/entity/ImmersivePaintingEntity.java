@@ -75,8 +75,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
             return;
         }
         this.playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0f, 1.0f);
-        if (entity instanceof PlayerEntity lv) {
-            if (lv.abilities.creativeMode) {
+        if (entity instanceof PlayerEntity) {
+            if (((PlayerEntity)entity).abilities.creativeMode) {
                 return;
             }
         }

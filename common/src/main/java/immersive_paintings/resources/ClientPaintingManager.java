@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ClientPaintingManager {
     static final Painting DEFAULT = new Painting(new ByteImage(2, 2), 2);
@@ -33,9 +34,12 @@ public class ClientPaintingManager {
             if (texture.image == null && !texture.requested) {
                 texture.requested = true;
 
-                Cache.get(texture)
-                        .ifPresentOrElse((image) -> loadImage(texture, image),
-                                () -> NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link)));
+                Optional<ByteImage> img = Cache.get(texture);
+                if (img.isPresent()) {
+                    loadImage(texture, img.get());
+                } else {
+                    NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link));
+                }
             }
 
             //fall back to the highest resolution if image does not exist yet

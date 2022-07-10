@@ -116,36 +116,36 @@ public class ByteImage {
             float q = hsv[2] * (1.0f - hsv[1] * f);
             float t = hsv[2] * (1.0f - (hsv[1] * (1.0f - f)));
             switch ((int)h) {
-                case 0 -> {
+                case 0:
                     r = (byte)(hsv[2] * 255.0f + 0.5f);
                     g = (byte)(t * 255.0f + 0.5f);
                     b = (byte)(p * 255.0f + 0.5f);
-                }
-                case 1 -> {
+                    break;
+                case 1:
                     r = (byte)(q * 255.0f + 0.5f);
                     g = (byte)(hsv[2] * 255.0f + 0.5f);
                     b = (byte)(p * 255.0f + 0.5f);
-                }
-                case 2 -> {
+                    break;
+                case 2:
                     r = (byte)(p * 255.0f + 0.5f);
                     g = (byte)(hsv[2] * 255.0f + 0.5f);
                     b = (byte)(t * 255.0f + 0.5f);
-                }
-                case 3 -> {
+                    break;
+                case 3:
                     r = (byte)(p * 255.0f + 0.5f);
                     g = (byte)(q * 255.0f + 0.5f);
                     b = (byte)(hsv[2] * 255.0f + 0.5f);
-                }
-                case 4 -> {
+                    break;
+                case 4:
                     r = (byte)(t * 255.0f + 0.5f);
                     g = (byte)(p * 255.0f + 0.5f);
                     b = (byte)(hsv[2] * 255.0f + 0.5f);
-                }
-                case 5 -> {
+                    break;
+                case 5:
                     r = (byte)(hsv[2] * 255.0f + 0.5f);
                     g = (byte)(p * 255.0f + 0.5f);
                     b = (byte)(q * 255.0f + 0.5f);
-                }
+                    break;
             }
         }
 

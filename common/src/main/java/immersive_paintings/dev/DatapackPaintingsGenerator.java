@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 import static immersive_paintings.client.gui.ImmersivePaintingScreen.pixelateImage;
@@ -83,7 +84,7 @@ public class DatapackPaintingsGenerator {
     }
 
     private static ByteImage loadImage(String path) throws IOException {
-        return loadImage(Path.of(base, path));
+        return loadImage(Paths.get(base, path));
     }
 
     private static ByteImage loadImage(Path path) throws IOException {

@@ -5,10 +5,7 @@ import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
-import java.io.Serial;
-
 public abstract class PaintingDataMessage implements Message {
-    @Serial
     private static final long serialVersionUID = -6510034100878125474L;
 
     final String motive;

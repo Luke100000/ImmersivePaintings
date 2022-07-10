@@ -8,10 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.io.Serial;
-
 public class PaintingModifyRequest extends PaintingDataMessage {
-    @Serial
     private static final long serialVersionUID = -374441776584672414L;
 
     public PaintingModifyRequest(ImmersivePaintingEntity painting) {
@@ -21,7 +18,8 @@ public class PaintingModifyRequest extends PaintingDataMessage {
     @Override
     public void receive(PlayerEntity e) {
         Entity entity = e.world.getEntityById(getEntityId());
-        if (entity instanceof ImmersivePaintingEntity painting) {
+        if (entity instanceof ImmersivePaintingEntity) {
+            ImmersivePaintingEntity painting = (ImmersivePaintingEntity)entity;
             painting.setMotive(getMotive());
             painting.setFrame(getFrame());
             painting.setMaterial(getMaterial());

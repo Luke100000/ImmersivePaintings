@@ -45,6 +45,13 @@ public class LazyNetworkManager {
         return (float)serverQueue.size() / Config.getInstance().maxPacketsPerSecond;
     }
 
-    record LazyPacket(Message message, ServerPlayerEntity player) {
+    static class LazyPacket {
+        final Message message;
+        final ServerPlayerEntity player;
+
+        LazyPacket(Message message, ServerPlayerEntity player) {
+            this.message = message;
+            this.player = player;
+        }
     }
 }

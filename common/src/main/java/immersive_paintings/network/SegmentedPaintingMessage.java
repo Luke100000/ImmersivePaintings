@@ -6,14 +6,12 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serial;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class SegmentedPaintingMessage implements Message {
-    @Serial
     private static final long serialVersionUID = -6584975870115489847L;
 
     private final int width;

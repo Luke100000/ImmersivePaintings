@@ -112,11 +112,11 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public boolean handleAttack(Entity attacker) {
-        if (attacker instanceof PlayerEntity playerEntity) {
-            if (!this.world.canPlayerModifyAt(playerEntity, this.attachmentPos)) {
+        if (attacker instanceof PlayerEntity) {
+            if (!this.world.canPlayerModifyAt((PlayerEntity)attacker, this.attachmentPos)) {
                 return true;
             }
-            return this.damage(DamageSource.player(playerEntity), 0.0f);
+            return this.damage(DamageSource.player((PlayerEntity)attacker), 0.0f);
         }
         return false;
     }
@@ -206,19 +206,29 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     public float applyRotation(BlockRotation rotation) {
         if (this.facing.getAxis() != Direction.Axis.Y) {
             switch (rotation) {
-                case CLOCKWISE_180 -> this.facing = this.facing.getOpposite();
-                case COUNTERCLOCKWISE_90 -> this.facing = this.facing.rotateYCounterclockwise();
-                case CLOCKWISE_90 -> this.facing = this.facing.rotateYClockwise();
+                case CLOCKWISE_180:
+                    this.facing = this.facing.getOpposite();
+                    break;
+                case COUNTERCLOCKWISE_90:
+                    this.facing = this.facing.rotateYCounterclockwise();
+                    break;
+                case CLOCKWISE_90:
+                    this.facing = this.facing.rotateYClockwise();
+                    break;
             }
         }
 
         float f = MathHelper.wrapDegrees(this.yaw);
-        return switch (rotation) {
-            case CLOCKWISE_180 -> f + 180.0F;
-            case COUNTERCLOCKWISE_90 -> f + 90.0F;
-            case CLOCKWISE_90 -> f + 270.0F;
-            default -> f;
-        };
+        switch (rotation) {
+            case CLOCKWISE_180:
+                return f + 180.0F;
+            case COUNTERCLOCKWISE_90:
+                return f + 90.0F;
+            case CLOCKWISE_90:
+                return f + 270.0F;
+            default:
+                return f;
+        }
     }
 
     @Override

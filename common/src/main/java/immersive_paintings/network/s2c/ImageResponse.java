@@ -7,10 +7,7 @@ import immersive_paintings.resources.Painting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.io.Serial;
-
 public class ImageResponse extends SegmentedPaintingMessage {
-    @Serial
     private static final long serialVersionUID = -2404615222596628414L;
 
     private final String identifier;

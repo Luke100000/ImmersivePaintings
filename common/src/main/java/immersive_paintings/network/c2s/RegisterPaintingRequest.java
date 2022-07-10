@@ -15,12 +15,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.io.Serial;
 import java.util.Locale;
 import java.util.Objects;
 
 public class RegisterPaintingRequest implements Message {
-    @Serial
     private static final long serialVersionUID = -8024453179740575548L;
 
     private final String name;

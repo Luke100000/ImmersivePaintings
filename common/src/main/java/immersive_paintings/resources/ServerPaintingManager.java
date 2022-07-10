@@ -11,8 +11,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ServerPaintingManager {
     public static MinecraftServer server;
@@ -32,7 +34,7 @@ public class ServerPaintingManager {
     }
 
     public static Path getPaintingPath(Identifier identifier) {
-        return Path.of("immersive_paintings", identifier.toString().replace(":", "_") + ".png");
+        return Paths.get("immersive_paintings", identifier.toString().replace(":", "_") + ".png");
     }
 
     public static void registerPainting(Identifier identifier, Painting painting) {
@@ -80,41 +82,44 @@ public class ServerPaintingManager {
                 }
             }
         } else {
-            Cache.get(texture)
-                    .ifPresentOrElse((image) -> texture.image = image,
-                            () -> {
-                                ByteImage image = getImage(i, Painting.Type.FULL);
+            Optional<ByteImage> img = Cache.get(texture);
+            if (img.isPresent()) {
+                texture.image = img.get();
+            } else {
+                ByteImage image = getImage(i, Painting.Type.FULL);
+                texture.image = null;
 
-                                int w, h;
-                                if (type == Painting.Type.THUMBNAIL) {
-                                    float zoom = Math.min(
-                                            (float)Config.getInstance().thumbnailSize / image.getWidth(),
-                                            (float)Config.getInstance().thumbnailSize / image.getHeight()
-                                    );
+                int w, h;
+                if (type == Painting.Type.THUMBNAIL) {
+                    float zoom = Math.min(
+                            (float)Config.getInstance().thumbnailSize / image.getWidth(),
+                            (float)Config.getInstance().thumbnailSize / image.getHeight()
+                    );
 
-                                    if (zoom >= 1.0f) {
-                                        texture.image = painting.texture.image;
-                                        return;
-                                    }
+                    if (zoom >= 1.0f) {
+                        texture.image = painting.texture.image;
+                    }
 
-                                    w = (int)(image.getWidth() * zoom);
-                                    h = (int)(image.getHeight() * zoom);
-                                } else if (type == Painting.Type.HALF) {
-                                    w = image.getWidth() / 2;
-                                    h = image.getHeight() / 2;
-                                } else if (type == Painting.Type.QUARTER) {
-                                    w = image.getWidth() / 4;
-                                    h = image.getHeight() / 4;
-                                } else {
-                                    w = image.getWidth() / 8;
-                                    h = image.getHeight() / 8;
-                                }
+                    w = (int)(image.getWidth() * zoom);
+                    h = (int)(image.getHeight() * zoom);
+                } else if (type == Painting.Type.HALF) {
+                    w = image.getWidth() / 2;
+                    h = image.getHeight() / 2;
+                } else if (type == Painting.Type.QUARTER) {
+                    w = image.getWidth() / 4;
+                    h = image.getHeight() / 4;
+                } else {
+                    w = image.getWidth() / 8;
+                    h = image.getHeight() / 8;
+                }
 
-                                ByteImage target = new ByteImage(w, h);
-                                ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
+                if (texture.image == null) {
+                    ByteImage target = new ByteImage(w, h);
+                    ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
 
-                                texture.image = target;
-                            });
+                    texture.image = target;
+                }
+            }
         }
 
         return texture.image;

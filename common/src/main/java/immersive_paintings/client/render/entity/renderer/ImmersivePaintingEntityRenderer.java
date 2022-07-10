@@ -17,6 +17,7 @@ import net.minecraft.util.math.*;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePaintingEntity> {
@@ -69,10 +70,18 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         int centerZ = entity.getBlockPos().getZ();
         Direction direction = entity.getHorizontalFacing();
         switch (direction) {
-            case NORTH -> centerX = MathHelper.floor(entity.getX() + (double)((right + left) / 2.0f / 16.0f));
-            case WEST -> centerZ = MathHelper.floor(entity.getZ() - (double)((right + left) / 2.0f / 16.0f));
-            case SOUTH -> centerX = MathHelper.floor(entity.getX() - (double)((right + left) / 2.0f / 16.0f));
-            case EAST -> centerZ = MathHelper.floor(entity.getZ() + (double)((right + left) / 2.0f / 16.0f));
+            case NORTH:
+                centerX = MathHelper.floor(entity.getX() + (double)((right + left) / 2.0f / 16.0f));
+                break;
+            case WEST:
+                centerZ = MathHelper.floor(entity.getZ() - (double)((right + left) / 2.0f / 16.0f));
+                break;
+            case SOUTH:
+                centerX = MathHelper.floor(entity.getX() - (double)((right + left) / 2.0f / 16.0f));
+                break;
+            case EAST:
+                centerZ = MathHelper.floor(entity.getZ() + (double)((right + left) / 2.0f / 16.0f));
+                break;
         }
         int light = WorldRenderer.getLightmapCoordinates(entity.world, new BlockPos(centerX, centerY, centerZ));
 
@@ -119,7 +128,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         if (ObjectLoader.objects.containsKey(id)) {
             return ObjectLoader.objects.get(id);
         } else {
-            return List.of();
+            return new LinkedList<>();
         }
     }
 

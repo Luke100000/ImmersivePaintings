@@ -4,11 +4,9 @@ import immersive_paintings.network.SegmentedPaintingMessage;
 import immersive_paintings.resources.ByteImage;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.io.Serial;
 import java.util.HashMap;
 
 public class UploadPaintingRequest extends SegmentedPaintingMessage {
-    @Serial
     private static final long serialVersionUID = -8172991552002686333L;
 
     public static final HashMap<String, ByteImage> uploadedImages = new HashMap<>();

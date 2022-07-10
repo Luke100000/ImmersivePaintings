@@ -24,7 +24,7 @@ public class ObjectLoader extends SinglePreparationResourceReloader<List<Identif
 
     @Override
     protected List<Identifier> prepare(ResourceManager manager, Profiler profiler) {
-        return manager.findResources("objects", n -> n.endsWith(".obj")).stream().toList();
+        return new ArrayList<>(manager.findResources("objects", n -> n.endsWith(".obj")));
     }
 
     @Override

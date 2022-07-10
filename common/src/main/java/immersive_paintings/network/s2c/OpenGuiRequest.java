@@ -4,10 +4,7 @@ import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.io.Serial;
-
 public class OpenGuiRequest implements Message {
-    @Serial
     private static final long serialVersionUID = -2371116419166251497L;
 
     public final Type gui;

@@ -12,6 +12,7 @@ import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -38,25 +39,30 @@ public class ClientNetworkManager implements NetworkManager {
             }
         }
 
-        if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
-            screen.refreshPage();
+        if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen) {
+            ((ImmersivePaintingScreen) MinecraftClient.getInstance().currentScreen).refreshPage();
         }
     }
 
     @Override
     public void handlePaintingModifyMessage(PaintingModifyMessage message) {
         ClientPlayerEntity e = MinecraftClient.getInstance().player;
-        if (e != null && e.world.getEntityById(message.getEntityId()) instanceof ImmersivePaintingEntity painting) {
+        if (e != null) {
+        Entity entity = e.world.getEntityById(message.getEntityId());
+        if (entity instanceof ImmersivePaintingEntity) {
+            ImmersivePaintingEntity painting = (ImmersivePaintingEntity)entity;
             painting.setMotive(message.getMotive());
             painting.setFrame(message.getFrame());
             painting.setMaterial(message.getMaterial());
             painting.setFacing(message.getFacing());
         }
+        }
     }
 
     @Override
     public void handleRegisterPaintingResponse(RegisterPaintingResponse response) {
-        if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
+        if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen) {
+            ImmersivePaintingScreen screen = (ImmersivePaintingScreen)MinecraftClient.getInstance().currentScreen;
             if (response.error == null) {
 
                 if (screen.entity != null) {

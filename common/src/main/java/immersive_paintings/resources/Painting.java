@@ -81,13 +81,19 @@ public final class Painting {
     }
 
     public Texture getTexture(Type type) {
-        return switch (type) {
-            case FULL -> texture;
-            case HALF -> half;
-            case QUARTER -> quarter;
-            case EIGHTH -> eighth;
-            case THUMBNAIL -> thumbnail;
-        };
+        switch (type) {
+            case FULL:
+                return texture;
+            case HALF:
+                return half;
+            case QUARTER:
+                return quarter;
+            case EIGHTH:
+                return eighth;
+            case THUMBNAIL:
+                return thumbnail;
+        }
+        return thumbnail;
     }
 
     public enum Type {
