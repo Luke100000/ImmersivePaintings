@@ -1,3 +1,8 @@
+# 0.1.3
+
+* Ported to 1.16.5
+* Fixed missing config on some servers
+
 # 0.1.2
 
 * Fixed crash when supplying invalid images
