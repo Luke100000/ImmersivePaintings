@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PaintingListMessage implements Message {
+    @Serial
+    private static final long serialVersionUID = 2240894186943896681L;
+
     private final Map<String, SerializableNbt> paintings = new HashMap<>();
     private final boolean clear;
 

@@ -8,7 +8,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.io.Serial;
+
 public class PaintingModifyRequest extends PaintingDataMessage {
+    @Serial
+    private static final long serialVersionUID = -374441776584672414L;
+
     public PaintingModifyRequest(ImmersivePaintingEntity painting) {
         super(painting);
     }
