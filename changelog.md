@@ -1,5 +1,6 @@
 # 0.1.3
 
+* Ported to 1.19
 * Ported to 1.16.5
 * Fixed missing config on some servers
 

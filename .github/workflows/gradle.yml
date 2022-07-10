@@ -34,12 +34,17 @@ jobs:
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         id: tag
         uses: dawidd6/action-get-tag@v1
+      - uses: jungwinter/split@v2
+        id: split
+        with:
+          separator: "+"
+          msg: ${{steps.tag.outputs.tag}}
       - name: "Upload Fabric to CurseForge"
         uses: itsmeow/curseforge-upload@v3
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         with:
           file_path: "fabric/build/libs/immersive_paintings-${{steps.tag.outputs.tag}}.jar"
-          display_name: "[Fabric 1.18.2] Immersive Paintings - ${{steps.tag.outputs.tag}}"
+          display_name: "[Fabric 1.18.2] Immersive Paintings - ${{ steps.split.outputs._0 }}"
           game_endpoint: "minecraft"
           relations: ""
           game_versions: "Minecraft 1.18:1.18.2,Java 17,Fabric"
@@ -53,7 +58,7 @@ jobs:
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         with:
           file_path: "forge/build/libs/immersive_paintings-${{steps.tag.outputs.tag}}.jar"
-          display_name: "[Forge 1.18.2] Immersive Paintings - ${{steps.tag.outputs.tag}}"
+          display_name: "[Forge 1.18.2] Immersive Paintings - ${{ steps.split.outputs._0 }}"
           game_endpoint: "minecraft"
           game_versions: "Minecraft 1.18:1.18.2,Java 17,Forge"
           project_id: "639584"
