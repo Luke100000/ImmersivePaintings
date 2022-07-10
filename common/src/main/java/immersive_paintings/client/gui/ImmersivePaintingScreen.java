@@ -474,6 +474,7 @@ public class ImmersivePaintingScreen extends Screen {
     private void rebuildPaintings() {
         for (PaintingWidget w : paintingWidgetList) {
             children.remove(w);
+            buttons.remove(w);
         }
         paintingWidgetList.clear();
 
@@ -518,6 +519,7 @@ public class ImmersivePaintingScreen extends Screen {
     private void rebuildScreenshots() {
         for (PaintingWidget w : paintingWidgetList) {
             children.remove(w);
+            buttons.remove(w);
         }
         paintingWidgetList.clear();
 
