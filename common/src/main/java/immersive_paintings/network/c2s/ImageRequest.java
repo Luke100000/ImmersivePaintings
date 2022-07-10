@@ -11,9 +11,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.io.Serial;
 import java.util.Arrays;
 
 public class ImageRequest implements Message {
+    @Serial
+    private static final long serialVersionUID = 3086732481904956437L;
+
     private final String identifier;
     private final Painting.Type type;
 
