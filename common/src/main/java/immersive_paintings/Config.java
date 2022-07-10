@@ -43,6 +43,9 @@ public final class Config implements Serializable {
     }
 
     public void save() {
+        //noinspection ResultOfMethodCallIgnored
+        new File("./config").mkdirs();
+
         try (FileWriter writer = new FileWriter(getConfigFile())) {
             version = VERSION;
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
