@@ -9,9 +9,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.io.Serial;
 import java.util.Objects;
 
 public class PaintingDeleteRequest implements Message {
+    @Serial
+    private static final long serialVersionUID = -4122382267250199065L;
+
     private final String identifier;
 
     public PaintingDeleteRequest(Identifier identifier) {

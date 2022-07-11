@@ -3,6 +3,7 @@
 * Ported to 1.19
 * Ported to 1.16.5
 * Fixed missing config on some servers
+* Fixed issue when using different Java versions for server and client
 
 # 0.1.2
 

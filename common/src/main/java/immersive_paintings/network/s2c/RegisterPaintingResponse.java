@@ -5,7 +5,12 @@ import immersive_paintings.cobalt.network.Message;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.io.Serial;
+
 public class RegisterPaintingResponse implements Message {
+    @Serial
+    private static final long serialVersionUID = -5560323045809539454L;
+
     public final String error;
     public final String identifier;
 
