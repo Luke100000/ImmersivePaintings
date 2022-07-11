@@ -37,7 +37,7 @@ public class RegistrationImpl extends Registration.Impl {
     }
 
     @Override
-    public <T> T registerEntityRenderer(Registry<? super T> registry, Identifier id, T obj) {
+    public <T> T register(Registry<? super T> registry, Identifier id, T obj) {
         return Registry.register(registry, id, obj);
     }
 
@@ -77,6 +77,6 @@ public class RegistrationImpl extends Registration.Impl {
 
     @Override
     public ProfessionFactory<VillagerProfession> profession() {
-        return (id, poi, sound, items, sites) -> registerEntityRenderer(Registry.VILLAGER_PROFESSION, id, VillagerProfessionAccessor.create(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items), ImmutableSet.copyOf(sites), sound));
+        return (id, poi, sound, items, sites) -> register(Registry.VILLAGER_PROFESSION, id, VillagerProfessionAccessor.create(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items), ImmutableSet.copyOf(sites), sound));
     }
 }

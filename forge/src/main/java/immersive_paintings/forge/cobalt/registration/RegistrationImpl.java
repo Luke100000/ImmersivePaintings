@@ -61,7 +61,7 @@ public class RegistrationImpl extends Registration.Impl {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public <T> T registerEntityRenderer(Registry<? super T> registry, Identifier id, T obj) {
+    public <T> T register(Registry<? super T> registry, Identifier id, T obj) {
         DeferredRegister reg = getRepo(id.getNamespace()).get(registry);
         if (reg != null) {
             reg.register(id.getPath(), () -> obj);
@@ -92,19 +92,19 @@ public class RegistrationImpl extends Registration.Impl {
     @SuppressWarnings("deprecation")
     @Override
     public Function<Identifier, Activity> activity() {
-        return id -> registerEntityRenderer(Registry.ACTIVITY, id, new Activity(id.toString()));
+        return id -> register(Registry.ACTIVITY, id, new Activity(id.toString()));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public <T extends Sensor<?>> BiFunction<Identifier, Supplier<T>, SensorType<T>> sensor() {
-        return (id, factory) -> registerEntityRenderer(Registry.SENSOR_TYPE, id, new SensorType<>(factory));
+        return (id, factory) -> register(Registry.SENSOR_TYPE, id, new SensorType<>(factory));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public <U> BiFunction<Identifier, Optional<Codec<U>>, MemoryModuleType<U>> memoryModule() {
-        return (id, codec) -> registerEntityRenderer(Registry.MEMORY_MODULE_TYPE, id, new MemoryModuleType<>(codec));
+        return (id, codec) -> register(Registry.MEMORY_MODULE_TYPE, id, new MemoryModuleType<>(codec));
     }
 
     @Override
@@ -118,7 +118,7 @@ public class RegistrationImpl extends Registration.Impl {
     @SuppressWarnings("deprecation")
     @Override
     public ProfessionFactory<VillagerProfession> profession() {
-        return (id, poi, sound, items, sites) -> registerEntityRenderer(Registry.VILLAGER_PROFESSION, id, new VillagerProfession(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items),  ImmutableSet.copyOf(sites), sound));
+        return (id, poi, sound, items, sites) -> register(Registry.VILLAGER_PROFESSION, id, new VillagerProfession(id.toString().replace(':', '.'), poi, ImmutableSet.copyOf(items),  ImmutableSet.copyOf(sites), sound));
     }
 
     static class RegistryRepo {
