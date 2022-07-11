@@ -3,6 +3,7 @@ package immersive_paintings.resources;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
+import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Identifier, Painting>> {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -29,18 +31,20 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
         Map<Identifier, Painting> map = Maps.newHashMap();
         int dataTypeLength = dataType.length() + 1;
 
-        for (Identifier identifier : manager.findResources(dataType, (path) -> path.endsWith(".png"))) {
-            String string = identifier.getPath();
-            Identifier imageIdentifier = new Identifier(identifier.getNamespace(), string.substring(dataTypeLength, string.length() - FILE_SUFFIX_LENGTH));
+        Map<Identifier, Resource> resources = manager.findResources(dataType, (path) -> path.getPath().endsWith(".png"));
+        for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
+            String string = entry.getKey().getPath();
+            Identifier imageIdentifier = new Identifier(entry.getKey().getNamespace(), string.substring(dataTypeLength, string.length() - FILE_SUFFIX_LENGTH));
 
             try {
-                Identifier jsonIdentifier = new Identifier(identifier.getNamespace(), string.replace(".png", ".json"));
+                Identifier jsonIdentifier = new Identifier(entry.getKey().getNamespace(), string.replace(".png", ".json"));
 
-                String hash = identifier.toString().replaceAll("[^a-zA-Z\\d]", "");
+                String hash = entry.getKey().toString().replaceAll("[^a-zA-Z\\d]", "");
 
                 Painting painting;
-                if (manager.containsResource(jsonIdentifier)) {
-                    InputStream inputStream = manager.getResource(jsonIdentifier).getInputStream();
+                Optional<Resource> resource = manager.getResource(jsonIdentifier);
+                if (resource.isPresent()) {
+                    InputStream inputStream = resource.get().getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     JsonObject jsonElement = Objects.requireNonNull(JsonHelper.deserialize(gson, reader, JsonElement.class)).getAsJsonObject();
 
@@ -55,11 +59,11 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                     painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, hash);
                 }
 
-                painting.texture.resource = manager.getResource(identifier);
+                painting.texture.resource = entry.getValue();
 
-                map.put(identifier, painting);
+                map.put(entry.getKey(), painting);
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {
-                LOGGER.error("Couldn't load painting {} from {} ({})", imageIdentifier, identifier, exception);
+                LOGGER.error("Couldn't load painting {} from {} ({})", imageIdentifier, entry.getKey(), exception);
             }
         }
 

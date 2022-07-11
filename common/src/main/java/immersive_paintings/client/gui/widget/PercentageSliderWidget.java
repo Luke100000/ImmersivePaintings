@@ -1,6 +1,6 @@
 package immersive_paintings.client.gui.widget;
 
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
@@ -16,7 +16,7 @@ public class PercentageSliderWidget extends DoubleSliderWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new TranslatableText(text, (int)(getValue() * 100)));
+        setMessage(Text.translatable(text, (int)(getValue() * 100)));
     }
 
     @Override

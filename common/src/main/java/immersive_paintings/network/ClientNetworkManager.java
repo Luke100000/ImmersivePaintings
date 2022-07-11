@@ -12,7 +12,7 @@ import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -66,7 +66,7 @@ public class ClientNetworkManager implements NetworkManager {
                 }
             } else {
                 screen.setPage(ImmersivePaintingScreen.Page.CREATE);
-                screen.setError(new TranslatableText("immersive_paintings.error." + response.error));
+                screen.setError(Text.translatable("immersive_paintings.error." + response.error));
             }
         }
     }

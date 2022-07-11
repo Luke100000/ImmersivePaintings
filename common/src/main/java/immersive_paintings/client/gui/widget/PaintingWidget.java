@@ -5,7 +5,7 @@ import immersive_paintings.resources.Painting;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class PaintingWidget extends ButtonWidget {
     public final Painting.Texture thumbnail;
@@ -13,7 +13,7 @@ public class PaintingWidget extends ButtonWidget {
     private int button;
 
     public PaintingWidget(Painting.Texture thumbnail, int x, int y, int width, int height, PressAction onPress, PressAction onPressRight, TooltipSupplier tooltipSupplier) {
-        super(x, y, width, height, new LiteralText("Painting"), onPress, tooltipSupplier);
+        super(x, y, width, height, Text.literal("Painting"), onPress, tooltipSupplier);
         this.onPressRight = onPressRight;
         this.thumbnail = thumbnail;
     }

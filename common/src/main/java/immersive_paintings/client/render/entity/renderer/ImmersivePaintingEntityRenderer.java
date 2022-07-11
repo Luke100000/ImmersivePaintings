@@ -41,7 +41,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
         ClientPlayerEntity player = client.player;
         double distance = (player == null ? 0 : player.getPos().distanceTo(paintingEntity.getPos()));
-        double blocksVisible = Math.tan(client.options.fov) * distance;
+        double blocksVisible = Math.tan(client.options.getFov().getValue() / 180.0 * Math.PI) * distance;
         int resolution = ClientPaintingManager.getPainting(paintingEntity.getMotive()).resolution;
         double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
 

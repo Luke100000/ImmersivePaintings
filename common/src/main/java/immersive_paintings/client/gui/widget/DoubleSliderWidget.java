@@ -1,7 +1,6 @@
 package immersive_paintings.client.gui.widget;
 
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
@@ -11,7 +10,7 @@ public class DoubleSliderWidget extends ExtendedSliderWidget<Double> {
     final String text;
 
     public DoubleSliderWidget(int x, int y, int width, int height, String text, double value, double min, double max, Consumer<Double> onApplyValue) {
-        super(x, y, width, height, new LiteralText(""), (value - min) / (max - min), onApplyValue);
+        super(x, y, width, height, Text.literal(""), (value - min) / (max - min), onApplyValue);
         this.min = min;
         this.max = max;
         this.text = text;
@@ -20,7 +19,7 @@ public class DoubleSliderWidget extends ExtendedSliderWidget<Double> {
 
     @Override
     protected void updateMessage() {
-        setMessage(new TranslatableText(text, String.format("%.2f", getValue())));
+        setMessage(Text.translatable(text, String.format("%.2f", getValue())));
     }
 
     @Override

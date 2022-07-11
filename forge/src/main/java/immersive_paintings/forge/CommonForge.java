@@ -1,18 +1,16 @@
 package immersive_paintings.forge;
 
-import immersive_paintings.*;
+import immersive_paintings.Entities;
+import immersive_paintings.Items;
+import immersive_paintings.Main;
+import immersive_paintings.Messages;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
-import immersive_paintings.resources.PaintingsLoader;
-import immersive_paintings.resources.ServerPaintingManager;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(Main.MOD_ID)
 @Mod.EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.MOD)
@@ -23,7 +21,7 @@ public final class CommonForge {
     }
 
     @SubscribeEvent
-    public static void onRegistryEvent(RegistryEvent<?> event) {
+    public static void onRegistryEvent(RegisterEvent event) {
         Items.bootstrap();
         Entities.bootstrap();
         Messages.bootstrap();
