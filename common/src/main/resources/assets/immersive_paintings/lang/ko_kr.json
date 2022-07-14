@@ -2,7 +2,7 @@
   "itemGroup.immersive_paintings.immersive_paintings_tab": "Immersive Paintings",
 
   "item.immersive_paintings.painting": "그림",
-  "entity.immersive_paintings.painting": "Painting",
+  "entity.immersive_paintings.painting": "그림",
 
   "immersive_paintings.upload": "업로드 중, %s초 남음",
 
