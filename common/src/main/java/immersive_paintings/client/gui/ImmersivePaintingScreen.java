@@ -30,7 +30,6 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -650,7 +649,7 @@ public class ImmersivePaintingScreen extends Screen {
         } catch (Exception exception) {
             try {
                 stream = Files.newInputStream(Paths.get(path));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
