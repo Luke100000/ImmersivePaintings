@@ -27,6 +27,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +35,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -634,7 +634,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = Paths.get(path).getFileName().toString().replaceFirst("[.][^.]+$", "");
+            currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
             settings = new PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
