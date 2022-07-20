@@ -1,3 +1,7 @@
+# 0.1.5
+
+* Fixed crash on URLs (this time for real)
+
 # 0.1.4
 
 * Fixed crash on URLs
