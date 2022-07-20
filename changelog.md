@@ -1,3 +1,9 @@
+# 0.1.4
+
+* Fixed crash on URLs
+* Added Simplified Chinese translation
+* Added Korean translation
+
 # 0.1.3
 
 * Ported to 1.19
