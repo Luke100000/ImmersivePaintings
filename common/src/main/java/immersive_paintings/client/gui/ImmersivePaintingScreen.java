@@ -275,14 +275,14 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 10;
 
                 //color reduction
-                addButton(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "%s colors", 12, 1, 25, v -> {
+                addButton(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", 12, 1, 25, v -> {
                     settings.colors = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
                 //dither
-                addButton(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "%s%% dither", 0.25, v -> {
+                addButton(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", 0.25, v -> {
                     settings.dither = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -301,21 +301,21 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 //offset X
-                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% X offset", 0.5, v -> {
+                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", 0.5, v -> {
                     settings.offsetX = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 //offset Y
-                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% Y offset", 0.5, v -> {
+                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", 0.5, v -> {
                     settings.offsetY = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 //offset
-                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "%s%% zoom", 1, 1, 3, v -> {
+                addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", 1, 1, 3, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
