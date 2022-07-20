@@ -642,7 +642,7 @@ public class ImmersivePaintingScreen extends Screen {
         } catch (Exception exception) {
             try {
                 stream = new FileInputStream(path);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
