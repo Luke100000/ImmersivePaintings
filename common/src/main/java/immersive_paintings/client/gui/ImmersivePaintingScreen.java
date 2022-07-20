@@ -779,7 +779,7 @@ public class ImmersivePaintingScreen extends Screen {
             double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
             double dw = currentImage.getWidth() / d;
             double dh = currentImage.getHeight() / d;
-            for (float diagonal = 3.0f; diagonal < 8.0; diagonal += target) {
+            for (float diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
                 int pw = (int)(dw * diagonal + 0.5);
                 int ph = (int)(dh * diagonal + 0.5);
                 double e = Math.abs(pw / (double)ph - target) * Math.sqrt(5 + width + height);
