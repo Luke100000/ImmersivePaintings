@@ -29,8 +29,8 @@ public class EventBus {
 
     @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().world.isClient) {
-            NetworkHandler.sendToPlayer(new PaintingListMessage(), (ServerPlayerEntity)event.getPlayer());
+        if (!event.getEntity().world.isClient) {
+            NetworkHandler.sendToPlayer(new PaintingListMessage(), (ServerPlayerEntity)event.getEntity());
         }
     }
 
