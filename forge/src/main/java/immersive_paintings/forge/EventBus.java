@@ -2,9 +2,8 @@ package immersive_paintings.forge;
 
 import immersive_paintings.ClientMain;
 import immersive_paintings.Main;
-import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.ServerDataManager;
 import immersive_paintings.network.LazyNetworkManager;
-import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.resources.PaintingsLoader;
 import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,9 +27,9 @@ public class EventBus {
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().world.isClient) {
-            NetworkHandler.sendToPlayer(new PaintingListMessage(), (ServerPlayerEntity)event.getEntity());
+            ServerDataManager.playerLoggedOff((ServerPlayerEntity)event.getEntity());
         }
     }
 
