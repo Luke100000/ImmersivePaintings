@@ -103,7 +103,12 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     }
 
     @Override
-    public boolean collides() {
+    public boolean isCollidable() {
+        return true;
+    }
+
+    @Override
+    public boolean canHit() {
         return true;
     }
 

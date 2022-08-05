@@ -32,7 +32,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     private Identifier motive = Main.locate("none");
     private Identifier frame = Main.locate("none");
     private Identifier material = Main.locate("none");
-    private int width, height;
+    private int width = 1;
+    private int height = 1;
 
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
         super(Entities.PAINTING, world, pos);
