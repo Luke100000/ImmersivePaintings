@@ -3,12 +3,11 @@ package immersive_paintings.fabric;
 import immersive_paintings.Entities;
 import immersive_paintings.Items;
 import immersive_paintings.Messages;
-import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.ServerDataManager;
 import immersive_paintings.fabric.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.fabric.cobalt.registration.RegistrationImpl;
 import immersive_paintings.fabric.resources.FabricPaintings;
 import immersive_paintings.network.LazyNetworkManager;
-import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.resources.ServerPaintingManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -29,8 +28,8 @@ public final class CommonFabric implements ModInitializer {
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new FabricPaintings());
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                NetworkHandler.sendToPlayer(new PaintingListMessage(), handler.player)
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+                ServerDataManager.playerLoggedOff(handler.player)
         );
 
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> ServerPaintingManager.server = server);
