@@ -8,6 +8,7 @@ import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.OpenGuiRequest;
 import immersive_paintings.network.s2c.PaintingModifyMessage;
 import immersive_paintings.resources.ClientPaintingManager;
+import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -141,12 +142,15 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     public void updateMotiveDimensions() {
+        Painting painting;
         if (world.isClient) {
-            this.width = ClientPaintingManager.getPainting(motive).width;
-            this.height = ClientPaintingManager.getPainting(motive).height;
+            painting = ClientPaintingManager.getPainting(motive);
         } else {
-            this.width = ServerPaintingManager.getPainting(motive).width;
-            this.height = ServerPaintingManager.getPainting(motive).height;
+            painting = ServerPaintingManager.getPainting(motive);
+        }
+        if (painting != null) {
+            this.width = painting.width;
+            this.height = painting.height;
         }
     }
 
