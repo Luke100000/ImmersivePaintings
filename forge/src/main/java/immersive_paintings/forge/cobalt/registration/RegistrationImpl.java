@@ -94,8 +94,5 @@ public class RegistrationImpl extends Registration.Impl {
             return registries.get(id);
         }
 
-        void apply(IEventBus bus) {
-            registries.values().forEach(bus::register);
-        }
     }
 }

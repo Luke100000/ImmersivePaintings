@@ -71,7 +71,7 @@ public class ImmersivePaintingScreen extends Screen {
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
 
-    ExecutorService service = Executors.newFixedThreadPool(1);
+    final ExecutorService service = Executors.newFixedThreadPool(1);
 
     public ImmersivePaintingScreen(int entityId) {
         super(Text.translatable("item.immersive_paintings.painting"));
