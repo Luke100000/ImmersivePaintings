@@ -1,3 +1,8 @@
+# 0.1.6
+
+* Fixed wrong location for paintings on Forge
+* Fixed a crash in editor
+
 # 0.1.5
 
 * Fixed crash on URLs (this time for real)
