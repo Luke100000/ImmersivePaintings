@@ -53,8 +53,8 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         double x = (double)this.attachmentPos.getX() + 0.5;
         double y = (double)this.attachmentPos.getY() + 0.5;
         double z = (double)this.attachmentPos.getZ() + 0.5;
-        double oz = this.method_6893(this.getWidthPixels());
-        double oy = this.method_6893(this.getHeightPixels());
+        double oz = this.isEven(this.getWidthPixels());
+        double oy = this.isEven(this.getHeightPixels());
         x -= (double)this.facing.getOffsetX() * 7.5 / 16.0;
         z -= (double)this.facing.getOffsetZ() * 7.5 / 16.0;
         Direction direction = this.facing.rotateYCounterclockwise();
@@ -70,7 +70,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         this.setBoundingBox(new Box(x - (offsetX /= 32.0), y - (offsetY /= 32.0), z - (offsetZ /= 32.0), x + offsetX, y + offsetY, z + offsetZ));
     }
 
-    private double method_6893(int i) {
+    private double isEven(int i) {
         return i % 32 == 0 ? 0.5 : 0.0;
     }
 
