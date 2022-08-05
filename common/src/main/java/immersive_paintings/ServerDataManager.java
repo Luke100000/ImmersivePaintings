@@ -11,13 +11,13 @@ public class ServerDataManager {
     public static Set<Integer> sent = new HashSet<>();
 
     public static void playerLoggedOff(ServerPlayerEntity player) {
-        sent.remove(player.getId());
+        sent.remove(player.getEntityId());
     }
 
     public static void playerRequestedImages(ServerPlayerEntity player) {
-        if (!sent.contains(player.getId())) {
+        if (!sent.contains(player.getEntityId())) {
             NetworkHandler.sendToPlayer(new PaintingListMessage(), player);
-            sent.add(player.getId());
+            sent.add(player.getEntityId());
         }
     }
 }
