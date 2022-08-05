@@ -15,7 +15,7 @@ import java.util.Map;
 public class ClientPaintingManager {
     static final Painting DEFAULT = new Painting(new ByteImage(2, 2), 2);
 
-    static Map<Identifier, Painting> paintings = new HashMap<>();
+    static final Map<Identifier, Painting> paintings = new HashMap<>();
 
     public static Map<Identifier, Painting> getPaintings() {
         return paintings;

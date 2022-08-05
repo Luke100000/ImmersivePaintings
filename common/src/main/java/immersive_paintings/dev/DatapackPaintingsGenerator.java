@@ -14,8 +14,8 @@ import java.util.Locale;
 import static immersive_paintings.client.gui.ImmersivePaintingScreen.pixelateImage;
 
 public class DatapackPaintingsGenerator {
-    static String base = "../paintings/";
-    static String output = "../common/src/main/resources/data/immersive_paintings/paintings/";
+    static final String base = "../paintings/";
+    static final String output = "../common/src/main/resources/data/immersive_paintings/paintings/";
 
     public static void run() throws IOException {
         //noinspection ResultOfMethodCallIgnored
