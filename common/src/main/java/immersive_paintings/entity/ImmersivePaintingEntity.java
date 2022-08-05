@@ -3,10 +3,12 @@ package immersive_paintings.entity;
 import immersive_paintings.Entities;
 import immersive_paintings.Items;
 import immersive_paintings.Main;
+import immersive_paintings.ServerDataManager;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.OpenGuiRequest;
 import immersive_paintings.network.s2c.PaintingModifyMessage;
 import immersive_paintings.resources.ClientPaintingManager;
+import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +31,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     private Identifier motive = Main.locate("none");
     private Identifier frame = Main.locate("none");
     private Identifier material = Main.locate("none");
+    private int width, height;
 
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
         super(Entities.PAINTING, world, pos);
@@ -42,12 +45,12 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public int getWidthPixels() {
-        return ClientPaintingManager.getPainting(motive).width * 16;
+        return width * 16;
     }
 
     @Override
     public int getHeightPixels() {
-        return ClientPaintingManager.getPainting(motive).height * 16;
+        return height * 16;
     }
 
     @Override
@@ -66,6 +69,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         this.material = new Identifier(nbt.getString("Material"));
         this.facing = Direction.fromHorizontal(nbt.getByte("Facing"));
         super.readCustomDataFromNbt(nbt);
+        this.updateMotiveDimensions();
         this.setFacing(this.facing);
     }
 
@@ -117,6 +121,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public void onStartedTrackingBy(ServerPlayerEntity player) {
+        ServerDataManager.playerRequestedImages(player);
         NetworkHandler.sendToPlayer(new PaintingModifyMessage(this), player);
         super.onStartedTrackingBy(player);
     }
@@ -137,7 +142,18 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     public void setMotive(Identifier motive) {
         this.motive = motive;
+        updateMotiveDimensions();
         updateAttachmentPosition();
+    }
+
+    public void updateMotiveDimensions() {
+        if (world.isClient) {
+            this.width = ClientPaintingManager.getPainting(motive).width;
+            this.height = ClientPaintingManager.getPainting(motive).height;
+        } else {
+            this.width = ServerPaintingManager.getPainting(motive).width;
+            this.height = ServerPaintingManager.getPainting(motive).height;
+        }
     }
 
     public Identifier getFrame() {

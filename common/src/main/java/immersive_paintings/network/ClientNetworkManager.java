@@ -31,6 +31,7 @@ public class ClientNetworkManager implements NetworkManager {
         if (response.shouldClear()) {
             ClientPaintingManager.getPaintings().clear();
         }
+
         for (Map.Entry<Identifier, Painting> entry : response.getPaintings().entrySet()) {
             if (entry.getValue() == null) {
                 ClientPaintingManager.getPaintings().remove(entry.getKey());
