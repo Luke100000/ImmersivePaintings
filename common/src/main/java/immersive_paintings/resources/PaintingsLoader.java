@@ -22,7 +22,7 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FILE_SUFFIX_LENGTH = ".json".length();
     private final Gson gson = new GsonBuilder().create();
-    String dataType = "paintings";
+    final String dataType = "paintings";
 
     @Override
     protected Map<Identifier, Painting> prepare(ResourceManager manager, Profiler profiler) {

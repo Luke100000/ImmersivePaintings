@@ -16,13 +16,13 @@ public final class Painting {
 
     public final String name;
     public final String author;
-    public boolean datapack;
+    public final boolean datapack;
 
-    public Texture texture;
-    public Texture half;
-    public Texture quarter;
-    public Texture eighth;
-    public Texture thumbnail;
+    public final Texture texture;
+    public final Texture half;
+    public final Texture quarter;
+    public final Texture eighth;
+    public final Texture thumbnail;
 
     public Painting(@Nullable ByteImage image, int width, int height, int resolution) {
         this(image, width, height, resolution, "", "", false, UUID.randomUUID().toString());

@@ -11,9 +11,9 @@ package owens.oobjloader;
 
 public class VertexPosition {
 
-    public float x;
-    public float y;
-    public float z;
+    public final float x;
+    public final float y;
+    public final float z;
 
     public VertexPosition(float x, float y, float z) {
         this.x = x;
