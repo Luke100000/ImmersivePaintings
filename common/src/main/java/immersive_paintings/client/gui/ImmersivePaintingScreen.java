@@ -682,8 +682,8 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void adaptToPixelArt() {
         double zoom = getCurrentImagePixelZoomCache(currentImage);
-        settings.width = Math.min(16, (int)(currentImage.getWidth() / zoom / settings.resolution));
-        settings.height = Math.min(16, (int)(currentImage.getHeight() / zoom / settings.resolution));
+        settings.width = Math.max(1, Math.min(16, (int)(currentImage.getWidth() / zoom / settings.resolution)));
+        settings.height = Math.max(1, Math.min(16, (int)(currentImage.getHeight() / zoom / settings.resolution)));
     }
 
     public static ByteImage pixelateImage(ByteImage currentImage, PixelatorSettings settings) {
@@ -779,8 +779,8 @@ public class ImmersivePaintingScreen extends Screen {
             double dw = currentImage.getWidth() / d;
             double dh = currentImage.getHeight() / d;
             for (float diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
-                int pw = (int)(dw * diagonal + 0.5);
-                int ph = (int)(dh * diagonal + 0.5);
+                int pw = (int)Math.ceil(dw * diagonal);
+                int ph = (int)Math.ceil(dh * diagonal);
                 double e = Math.abs(pw / (double)ph - target) * Math.sqrt(5 + width + height);
                 if (e < bestScore) {
                     width = pw;
