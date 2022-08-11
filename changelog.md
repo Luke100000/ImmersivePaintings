@@ -34,7 +34,3 @@
 * # 0.1.0
 
 * Initial release
-
-# TODO
-
-* Forge sends painting data after first entity track events
