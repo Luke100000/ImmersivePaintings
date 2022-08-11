@@ -1,6 +1,7 @@
 # 0.1.7
 
 * Fixed image moving by a block
+* Fixed resolution issue on certain FOVs
 
 # 0.1.6
 
