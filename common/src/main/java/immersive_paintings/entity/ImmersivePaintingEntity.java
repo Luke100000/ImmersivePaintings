@@ -105,7 +105,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-        BlockPos pos = getDecorationBlockPos();
+        BlockPos pos = getAttachmentPos();
         return new EntitySpawnS2CPacket(
                 getId(),
                 getUuid(),

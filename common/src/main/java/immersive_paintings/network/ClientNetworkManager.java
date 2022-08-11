@@ -52,6 +52,7 @@ public class ClientNetworkManager implements NetworkManager {
             painting.setFrame(message.getFrame());
             painting.setMaterial(message.getMaterial());
             painting.setFacing(message.getFacing());
+            painting.setAttachmentPos(message.getPos());
         }
     }
 
@@ -59,7 +60,6 @@ public class ClientNetworkManager implements NetworkManager {
     public void handleRegisterPaintingResponse(RegisterPaintingResponse response) {
         if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
             if (response.error == null) {
-
                 if (screen.entity != null) {
                     screen.entity.setMotive(new Identifier(response.identifier));
                     NetworkHandler.sendToServer(new PaintingModifyRequest(screen.entity));
