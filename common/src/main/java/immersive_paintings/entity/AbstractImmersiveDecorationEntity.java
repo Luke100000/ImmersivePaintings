@@ -159,10 +159,9 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        BlockPos blockPos = this.getDecorationBlockPos();
-        nbt.putInt("TileX", blockPos.getX());
-        nbt.putInt("TileY", blockPos.getY());
-        nbt.putInt("TileZ", blockPos.getZ());
+        nbt.putInt("TileX", attachmentPos.getX());
+        nbt.putInt("TileY", attachmentPos.getY());
+        nbt.putInt("TileZ", attachmentPos.getZ());
     }
 
     @Override
@@ -196,10 +195,6 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         this.attachmentPos = new BlockPos(x, y, z);
         this.updateAttachmentPosition();
         this.velocityDirty = true;
-    }
-
-    public BlockPos getDecorationBlockPos() {
-        return this.attachmentPos;
     }
 
     @Override
@@ -242,6 +237,15 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void calculateDimensions() {
+    }
+
+    public BlockPos getAttachmentPos() {
+        return attachmentPos;
+    }
+
+    public void setAttachmentPos(BlockPos pos) {
+        attachmentPos = pos;
+        updateAttachmentPosition();
     }
 }
 

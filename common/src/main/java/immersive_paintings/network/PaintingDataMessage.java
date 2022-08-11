@@ -3,6 +3,7 @@ package immersive_paintings.network;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public abstract class PaintingDataMessage implements Message {
@@ -13,6 +14,7 @@ public abstract class PaintingDataMessage implements Message {
     final String material;
     final int entityId;
     private final Direction facing;
+    private final int x, y, z;
 
     public PaintingDataMessage(ImmersivePaintingEntity painting) {
         entityId = painting.getEntityId();
@@ -20,6 +22,9 @@ public abstract class PaintingDataMessage implements Message {
         this.frame = painting.getFrame().toString();
         this.material = painting.getMaterial().toString();
         this.facing = painting.getHorizontalFacing();
+        this.x = painting.getAttachmentPos().getX();
+        this.y = painting.getAttachmentPos().getY();
+        this.z = painting.getAttachmentPos().getZ();
     }
 
     public Identifier getMotive() {
@@ -40,5 +45,9 @@ public abstract class PaintingDataMessage implements Message {
 
     public Direction getFacing() {
         return facing;
+    }
+
+    public BlockPos getPos() {
+        return new BlockPos(x, y, z);
     }
 }

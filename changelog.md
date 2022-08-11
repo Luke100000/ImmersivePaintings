@@ -1,3 +1,7 @@
+# 0.1.7
+
+* Fixed image moving by a block
+
 # 0.1.6
 
 * Fixed wrong location for paintings on Forge
