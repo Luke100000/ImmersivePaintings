@@ -32,7 +32,7 @@ public final class CommonFabric implements ModInitializer {
                 ServerDataManager.playerLoggedOff(handler.player)
         );
 
-        ServerLifecycleEvents.SERVER_STARTED.register((server) -> ServerPaintingManager.server = server);
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> ServerPaintingManager.server = server);
 
         ServerTickEvents.START_SERVER_TICK.register((server) -> LazyNetworkManager.tickServer());
     }

@@ -24,6 +24,8 @@ public final class Painting {
     public final Texture eighth;
     public final Texture thumbnail;
 
+    public final static Painting DEFAULT = new Painting(new ByteImage(16, 16), 16);
+
     public Painting(@Nullable ByteImage image, int width, int height, int resolution) {
         this(image, width, height, resolution, "", "", false, UUID.randomUUID().toString());
     }
