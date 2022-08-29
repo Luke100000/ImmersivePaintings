@@ -124,8 +124,8 @@ public class ImmersivePaintingScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         switch (page) {
             case NEW:
-                fill(matrices, width / 2 - 100, height / 2 - 60, width / 2 + 100, height / 2 - 40, 0x10000000);
-                List<Text> wrap = FlowingText.wrap(new TranslatableText("Drop an image here, enter a file path or URL or select a screenshot to start."), 220);
+                fill(matrices, width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
+                List<Text> wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.drop"), 220);
                 int y = height / 2 - 40 - wrap.size() * 12;
                 for (Text text : wrap) {
                     drawCenteredText(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
