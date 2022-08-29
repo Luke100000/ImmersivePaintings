@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import static immersive_paintings.resources.Painting.DEFAULT;
+
 public class ServerPaintingManager {
     public static MinecraftServer server;
     private static Map<Identifier, Painting> datapackPaintings = new HashMap<>();
@@ -59,7 +61,7 @@ public class ServerPaintingManager {
         if (datapackPaintings.containsKey(i)) {
             return datapackPaintings.get(i);
         } else {
-            return get().customServerPaintings.getOrDefault(i, null);
+            return get().customServerPaintings.getOrDefault(i, DEFAULT);
         }
     }
 

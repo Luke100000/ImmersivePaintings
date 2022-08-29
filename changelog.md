@@ -1,3 +1,7 @@
+# 0.1.8
+
+* Fixed server crashes
+
 # 0.1.7
 
 * Fixed image moving by a block
