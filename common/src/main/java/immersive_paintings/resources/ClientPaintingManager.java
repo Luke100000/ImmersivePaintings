@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientPaintingManager {
-    static final Painting DEFAULT = new Painting(new ByteImage(2, 2), 2);
+import static immersive_paintings.resources.Painting.DEFAULT;
 
+public class ClientPaintingManager {
     static final Map<Identifier, Painting> paintings = new HashMap<>();
 
     public static Map<Identifier, Painting> getPaintings() {
