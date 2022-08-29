@@ -1,7 +1,6 @@
 package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
@@ -15,6 +14,7 @@ import immersive_paintings.network.c2s.UploadPaintingRequest;
 import immersive_paintings.resources.*;
 import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
+import immersive_paintings.util.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -320,14 +320,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
-                            byte[] is = pixelatedImage.getBytes();
-                            int splits = (int)Math.ceil((double)is.length / Config.getInstance().packetSize);
-                            int split = 0;
-                            for (int i = 0; i < is.length; i += Config.getInstance().packetSize) {
-                                byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + Config.getInstance().packetSize));
-                                LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits));
-                                split++;
-                            }
+                            Utils.processByteArrayInChunks(pixelatedImage.getBytes(), (ints, split, splits) -> LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits)));
 
                             LazyNetworkManager.sendServer(new RegisterPaintingRequest(currentImageName, new Painting(
                                     pixelatedImage,
@@ -335,8 +328,6 @@ public class ImmersivePaintingScreen extends Screen {
                                     settings.height,
                                     settings.resolution
                             )));
-
-
 
                             setPage(Page.LOADING);
                         }));
