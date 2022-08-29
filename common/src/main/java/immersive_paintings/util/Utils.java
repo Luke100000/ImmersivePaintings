@@ -1,6 +1,10 @@
 package immersive_paintings.util;
 
+import immersive_paintings.Config;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.util.TriConsumer;
+
+import java.util.Arrays;
 
 public class Utils {
     public static double cosNoise(double time) {
@@ -31,5 +35,15 @@ public class Utils {
 
     public static String identifierToTranslation(Identifier identifier) {
         return firstSplit(lastSplit(identifier.getPath(), "/"), ".");
+    }
+
+    public static void processByteArrayInChunks(byte[] is, TriConsumer<byte[], Integer, Integer> consumer) {
+        int splits = (int)Math.ceil((double)is.length / Config.getInstance().packetSize);
+        int split = 0;
+        for (int i = 0; i < is.length; i += Config.getInstance().packetSize) {
+            byte[] ints = Arrays.copyOfRange(is, i, Math.min(is.length, i + Config.getInstance().packetSize));
+            consumer.accept(ints, split, splits);
+            split++;
+        }
     }
 }
