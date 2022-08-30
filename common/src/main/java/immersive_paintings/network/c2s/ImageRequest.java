@@ -27,7 +27,7 @@ public class ImageRequest implements Message {
         Identifier identifier = new Identifier(this.identifier);
         ByteImage image = ServerPaintingManager.getImage(identifier, type);
         if (image != null) {
-            Utils.processByteArrayInChunks(image.getBytes(), (ints, split, splits) -> LazyNetworkManager.sendClient(new ImageResponse(identifier, type, image.getWidth(), image.getHeight(), ints, split, splits), (ServerPlayerEntity)e));
+            Utils.processByteArrayInChunks(image.getBytes(), (ints, split, splits) -> LazyNetworkManager.sendToClient(new ImageResponse(identifier, type, image.getWidth(), image.getHeight(), ints, split, splits), (ServerPlayerEntity)e));
         }
     }
 }

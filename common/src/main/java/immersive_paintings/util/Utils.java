@@ -5,6 +5,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 public class Utils {
     public static double cosNoise(double time) {
@@ -45,5 +46,9 @@ public class Utils {
             consumer.accept(ints, split, splits);
             split++;
         }
+    }
+
+    public static String escapeString(String string) {
+        return string.toLowerCase(Locale.ROOT).replaceAll("[^a-z\\d_.-]", "");
     }
 }

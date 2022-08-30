@@ -10,6 +10,7 @@ import immersive_paintings.resources.ByteImage;
 import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.SerializableNbt;
+import immersive_paintings.util.Utils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,10 +30,6 @@ public class RegisterPaintingRequest implements Message {
         this.painting = new SerializableNbt(painting.toNbt());
     }
 
-    private String escapeString(String string) {
-        return string.toLowerCase(Locale.ROOT).replaceAll("[^a-z\\d_.-]", "");
-    }
-
     @Override
     public void receive(PlayerEntity e) {
         ByteImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
@@ -48,7 +45,7 @@ public class RegisterPaintingRequest implements Message {
             return;
         }
 
-        String id = escapeString(e.getGameProfile().getName()) + "/" + escapeString(name);
+        String id = Utils.escapeString(e.getGameProfile().getName()) + "/" + Utils.escapeString(name);
         Identifier identifier = Main.locate(id);
 
         NbtCompound nbt = this.painting.getNbt();
