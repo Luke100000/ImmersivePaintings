@@ -320,9 +320,9 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
-                            Utils.processByteArrayInChunks(pixelatedImage.getBytes(), (ints, split, splits) -> LazyNetworkManager.sendServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits)));
+                            Utils.processByteArrayInChunks(pixelatedImage.getBytes(), (ints, split, splits) -> LazyNetworkManager.sendToServer(new UploadPaintingRequest(pixelatedImage.getWidth(), pixelatedImage.getHeight(), ints, split, splits)));
 
-                            LazyNetworkManager.sendServer(new RegisterPaintingRequest(currentImageName, new Painting(
+                            LazyNetworkManager.sendToServer(new RegisterPaintingRequest(currentImageName, new Painting(
                                     pixelatedImage,
                                     settings.width,
                                     settings.height,

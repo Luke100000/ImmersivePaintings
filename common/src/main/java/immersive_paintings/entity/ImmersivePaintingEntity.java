@@ -5,6 +5,7 @@ import immersive_paintings.Items;
 import immersive_paintings.Main;
 import immersive_paintings.ServerDataManager;
 import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.compat.XercaPaintCompat;
 import immersive_paintings.network.s2c.OpenGuiRequest;
 import immersive_paintings.network.s2c.PaintingModifyMessage;
 import immersive_paintings.resources.ClientPaintingManager;
@@ -134,7 +135,9 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (!player.world.isClient) {
-            NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
+            if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
+                NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
+            }
             return ActionResult.CONSUME;
         } else {
             return ActionResult.PASS;
