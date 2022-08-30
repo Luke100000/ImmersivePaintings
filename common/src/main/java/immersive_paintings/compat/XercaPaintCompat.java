@@ -35,7 +35,7 @@ public class XercaPaintCompat {
                 h = 32;
             }
 
-            NbtCompound nbt = stack.getNbt();
+            NbtCompound nbt = stack.getTag();
             if (w > 0 && nbt != null && nbt.contains("pixels")) {
                 // convert
                 int[] pixels = nbt.getIntArray("pixels");
