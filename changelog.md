@@ -1,6 +1,7 @@
-# 0.1.8
+# 0.2.0
 
 * Fixed server crashes
+* Added compatibility for Joy of Painting
 
 # 0.1.7
 
