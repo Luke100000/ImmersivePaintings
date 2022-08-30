@@ -15,11 +15,11 @@ public class LazyNetworkManager {
     private static double cooldownClient = 0.0;
     private static double cooldownServer = 0.0;
 
-    public static void sendServer(Message message) {
+    public static void sendToServer(Message message) {
         serverQueue.add(new LazyPacket(message, null));
     }
 
-    public static void sendClient(Message message, ServerPlayerEntity e) {
+    public static void sendToClient(Message message, ServerPlayerEntity e) {
         clientQueue.add(new LazyPacket(message, e));
     }
 
