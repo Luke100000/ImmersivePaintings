@@ -1,3 +1,7 @@
+# 0.3.0
+
+* Added Vietnamese (thanks baooduy)
+
 # 0.2.0
 
 * Fixed server crashes
