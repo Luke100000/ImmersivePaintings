@@ -1,5 +1,6 @@
 # 0.3.0
 
+* Floors can now be put on the floor and ceiling
 * Added Vietnamese (thanks baooduy)
 * Added German
 * Fixed crashes when joining a Paper/Bukkit server using Fabric

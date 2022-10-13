@@ -55,7 +55,7 @@ public class ClientNetworkManager implements NetworkManager {
             painting.setMotive(message.getMotive());
             painting.setFrame(message.getFrame());
             painting.setMaterial(message.getMaterial());
-            painting.setFacing(message.getFacing());
+            painting.setFacing(message.getFacing(), message.getRotation());
             painting.setAttachmentPos(message.getPos());
         }
         }
