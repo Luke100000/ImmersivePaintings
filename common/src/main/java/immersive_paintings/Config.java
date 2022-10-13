@@ -30,6 +30,7 @@ public final class Config implements Serializable {
     public int packetSize = 16 * 1024;
 
     public boolean testIfSpaceEmpty = false;
+    public boolean paintingsHaveCollision = false;
 
     public int maxUserImageWidth = 4096;
     public int maxUserImageHeight = 4096;
