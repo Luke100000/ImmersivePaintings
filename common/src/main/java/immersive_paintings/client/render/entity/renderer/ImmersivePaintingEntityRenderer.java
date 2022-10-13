@@ -13,7 +13,9 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Matrix3f;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
@@ -25,13 +27,14 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     }
 
     @Override
-    public void render(ImmersivePaintingEntity entity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(ImmersivePaintingEntity entity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-f));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-yaw));
+        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-entity.getPitch(tickDelta)));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(matrixStack, vertexConsumerProvider, entity);
         matrixStack.pop();
-        super.render(entity, f, g, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
@@ -54,27 +57,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, ImmersivePaintingEntity entity) {
-        int width = entity.getWidthPixels();
-        int height = entity.getHeightPixels();
-
-        //dimensions
-        float left = (-width) / 2.0f;
-        float right = left + width;
-        float bottom = (-height) / 2.0f;
-        float top = bottom + height;
-
-        //light
-        int centerX = entity.getBlockX();
-        int centerY = MathHelper.floor(entity.getY() + (double)((top + bottom) / 2.0f / 16.0f));
-        int centerZ = entity.getBlockZ();
-        Direction direction = entity.getHorizontalFacing();
-        switch (direction) {
-            case NORTH -> centerX = MathHelper.floor(entity.getX() + (double)((right + left) / 2.0f / 16.0f));
-            case WEST -> centerZ = MathHelper.floor(entity.getZ() - (double)((right + left) / 2.0f / 16.0f));
-            case SOUTH -> centerX = MathHelper.floor(entity.getX() - (double)((right + left) / 2.0f / 16.0f));
-            case EAST -> centerZ = MathHelper.floor(entity.getZ() + (double)((right + left) / 2.0f / 16.0f));
-        }
-        int light = WorldRenderer.getLightmapCoordinates(entity.world, new BlockPos(centerX, centerY, centerZ));
+        int light = WorldRenderer.getLightmapCoordinates(entity.world, entity.getBlockPos());
 
         MatrixStack.Entry entry = matrices.peek();
         Matrix4f posMat = entry.getPositionMatrix();
@@ -83,6 +66,9 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         VertexConsumer vertexConsumer;
 
         boolean hasFrame = !entity.getFrame().getPath().equals("none");
+
+        int width = entity.getWidthPixels();
+        int height = entity.getHeightPixels();
 
         //canvas
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
