@@ -1,6 +1,7 @@
 # 0.3.0
 
 * Added Vietnamese (thanks baooduy)
+* Fixed crashes when joining a Paper/Bukkit server using Fabric
 
 # 0.2.0
 
