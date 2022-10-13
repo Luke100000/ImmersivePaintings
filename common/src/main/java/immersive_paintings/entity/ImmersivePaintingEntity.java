@@ -36,10 +36,10 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     private int width = 1;
     private int height = 1;
 
-    public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction) {
+    public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction, int rotation) {
         super(Entities.PAINTING, world, pos);
 
-        setFacing(direction);
+        setFacing(direction, rotation);
     }
 
     public ImmersivePaintingEntity(EntityType<Entity> type, World world) {
@@ -61,7 +61,6 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         nbt.putString("Motive", motive.toString());
         nbt.putString("Frame", frame.toString());
         nbt.putString("Material", material.toString());
-        nbt.putByte("Facing", (byte)this.facing.getHorizontal());
         super.writeCustomDataToNbt(nbt);
     }
 
@@ -70,10 +69,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         this.motive = new Identifier(nbt.getString("Motive"));
         this.frame = new Identifier(nbt.getString("Frame"));
         this.material = new Identifier(nbt.getString("Material"));
-        this.facing = Direction.fromHorizontal(nbt.getByte("Facing"));
-        super.readCustomDataFromNbt(nbt);
         this.updateMotiveDimensions();
-        this.setFacing(this.facing);
+        super.readCustomDataFromNbt(nbt);
     }
 
     @Override

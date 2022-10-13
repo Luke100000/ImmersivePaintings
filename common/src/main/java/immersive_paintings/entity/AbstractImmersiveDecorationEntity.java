@@ -13,9 +13,9 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 public abstract class AbstractImmersiveDecorationEntity extends Entity {
@@ -23,6 +23,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     private int obstructionCheckCounter;
     protected BlockPos attachmentPos;
     protected Direction facing = Direction.SOUTH;
+    protected int rotation = 0;
 
     protected AbstractImmersiveDecorationEntity(EntityType<? extends Entity> entityType, World world) {
         super(entityType, world);
@@ -37,12 +38,20 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     protected void initDataTracker() {
     }
 
-    public void setFacing(Direction facing) {
-        Validate.notNull(facing);
-        Validate.isTrue(facing.getAxis().isHorizontal());
+    public void setFacing(Direction facing, int rotation) {
         this.facing = facing;
-        this.setYaw(this.facing.getHorizontal() * 90);
+        this.rotation = rotation;
+
+        if (this.facing.getAxis().isHorizontal()) {
+            this.setYaw(this.facing.getHorizontal() * 90);
+            this.setPitch(0);
+        } else {
+            this.setYaw(rotation);
+            this.setPitch(this.facing == Direction.UP ? 90.0f : -90.0f);
+        }
         this.prevYaw = this.getYaw();
+        this.prevPitch = this.getPitch();
+
         this.updateAttachmentPosition();
     }
 
@@ -53,21 +62,38 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         double x = (double)this.attachmentPos.getX() + 0.5;
         double y = (double)this.attachmentPos.getY() + 0.5;
         double z = (double)this.attachmentPos.getZ() + 0.5;
-        double oz = this.isEven(this.getWidthPixels());
+        double ox = this.isEven(this.getWidthPixels());
         double oy = this.isEven(this.getHeightPixels());
-        x -= (double)this.facing.getOffsetX() * 7.5 / 16.0;
-        z -= (double)this.facing.getOffsetZ() * 7.5 / 16.0;
-        Direction direction = this.facing.rotateYCounterclockwise();
-        this.setPos(x += oz * (double)direction.getOffsetX(), y += oy, z += oz * (double)direction.getOffsetZ());
-        double offsetX = this.getWidthPixels();
-        double offsetY = this.getHeightPixels();
-        double offsetZ = this.getWidthPixels();
-        if (this.facing.getAxis() == Direction.Axis.Z) {
-            offsetZ = 1.0;
-        } else {
-            offsetX = 1.0;
+
+        Vec3i front = this.facing.getVector();
+        Vec3i up = this.facing.getAxis().isVertical() ? new Vec3i(0, 0, 1) : new Vec3i(0, 1, 0);
+        Vec3i side = up.crossProduct(front);
+
+        if (rotation != 0) {
+            double cos = Math.cos(rotation / 180.0 * Math.PI);
+            double sin = Math.sin(rotation / 180.0 * Math.PI);
+            up = new Vec3i(Math.round(up.getX() * cos - up.getZ() * sin), up.getY(), Math.round(up.getX() * sin + up.getZ() * cos));
+            side = new Vec3i(Math.round(side.getX() * cos - side.getZ() * sin), side.getY(), Math.round(side.getX() * sin + side.getZ() * cos));
         }
-        this.setBoundingBox(new Box(x - (offsetX /= 32.0), y - (offsetY /= 32.0), z - (offsetZ /= 32.0), x + offsetX, y + offsetY, z + offsetZ));
+
+        double w = getWidthPixels() / 32.0;
+        double h = getHeightPixels() / 32.0;
+        double d = 1.0 / 32.0;
+
+        //move to the side of the respective wall
+        x -= (double)this.facing.getOffsetX() * 7.5 / 16.0 - up.getX() * oy - side.getX() * ox;
+        y -= (double)this.facing.getOffsetY() * 7.5 / 16.0 - up.getY() * oy - side.getY() * ox;
+        z -= (double)this.facing.getOffsetZ() * 7.5 / 16.0 - up.getZ() * oy - side.getZ() * ox;
+        this.setPos(x, y, z);
+
+        this.setBoundingBox(new Box(
+                x - up.getX() * h - side.getX() * w - front.getX() * d,
+                y - up.getY() * h - side.getY() * w - front.getY() * d,
+                z - up.getZ() * h - side.getZ() * w - front.getZ() * d,
+                x + up.getX() * h + side.getX() * w + front.getX() * d,
+                y + up.getY() * h + side.getY() * w + front.getY() * d,
+                z + up.getZ() * h + side.getZ() * w + front.getZ() * d
+        ));
     }
 
     private double isEven(int i) {
@@ -100,6 +126,10 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         }
 
         return this.world.getOtherEntities(this, this.getBoundingBox(), PREDICATE).isEmpty();
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     @Override
@@ -157,16 +187,39 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         }
     }
 
+    private static final Map<Direction, Byte> DIRECTION_TO_ID = Map.of(
+            Direction.DOWN, (byte)5,
+            Direction.UP, (byte)4,
+            Direction.NORTH, (byte)2,
+            Direction.SOUTH, (byte)0,
+            Direction.WEST, (byte)1,
+            Direction.EAST, (byte)3
+    );
+
+    private static final Map<Byte, Direction> ID_TO_DIRECTION = Map.of(
+            (byte)5, Direction.DOWN,
+            (byte)4, Direction.UP,
+            (byte)2, Direction.NORTH,
+            (byte)0, Direction.SOUTH,
+            (byte)1, Direction.WEST,
+            (byte)3, Direction.EAST
+    );
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putInt("TileX", attachmentPos.getX());
         nbt.putInt("TileY", attachmentPos.getY());
         nbt.putInt("TileZ", attachmentPos.getZ());
+        nbt.putByte("Facing", DIRECTION_TO_ID.get(this.facing));
+        nbt.putInt("Rotation", this.rotation);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         this.attachmentPos = new BlockPos(nbt.getInt("TileX"), nbt.getInt("TileY"), nbt.getInt("TileZ"));
+        this.facing = ID_TO_DIRECTION.get(nbt.getByte("Facing"));
+        this.rotation = nbt.getInt("Rotation");
+        this.setFacing(this.facing, this.rotation);
     }
 
     public abstract int getWidthPixels();

@@ -17,6 +17,7 @@ public abstract class PaintingDataMessage implements Message {
     final String material;
     final int entityId;
     private final int facing;
+    private final int rotation;
     private final int x, y, z;
 
     public PaintingDataMessage(ImmersivePaintingEntity painting) {
@@ -25,6 +26,7 @@ public abstract class PaintingDataMessage implements Message {
         this.frame = painting.getFrame().toString();
         this.material = painting.getMaterial().toString();
         this.facing = painting.getHorizontalFacing().ordinal();
+        this.rotation = painting.getRotation();
         this.x = painting.getAttachmentPos().getX();
         this.y = painting.getAttachmentPos().getY();
         this.z = painting.getAttachmentPos().getZ();
@@ -36,6 +38,10 @@ public abstract class PaintingDataMessage implements Message {
 
     public Identifier getFrame() {
         return new Identifier(frame);
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     public Identifier getMaterial() {

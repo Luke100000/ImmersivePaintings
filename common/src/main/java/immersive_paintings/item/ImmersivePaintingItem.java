@@ -22,14 +22,18 @@ public class ImmersivePaintingItem extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getSide();
-        BlockPos blockPos2 = blockPos.offset(direction);
+        BlockPos attachmentPosition = blockPos.offset(direction);
         PlayerEntity playerEntity = context.getPlayer();
         ItemStack itemStack = context.getStack();
-        if (playerEntity != null && !this.canPlaceOn(playerEntity, direction, itemStack, blockPos2)) {
+        if (playerEntity != null && !this.canPlaceOn(playerEntity, direction, itemStack, attachmentPosition)) {
             return ActionResult.FAIL;
         } else {
+            int rotation = 0;
+            if (playerEntity != null && direction.getAxis().isVertical()) {
+                rotation = (int)(playerEntity.getYaw() / 90 + (direction == Direction.UP ? 2.5 : 0.5)) * 90;
+            }
             World world = context.getWorld();
-            ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, blockPos2, direction);
+            ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, attachmentPosition, direction, rotation);
 
             NbtCompound nbtCompound = itemStack.getNbt();
             if (nbtCompound != null) {
@@ -52,6 +56,6 @@ public class ImmersivePaintingItem extends Item {
     }
 
     protected boolean canPlaceOn(PlayerEntity player, Direction side, ItemStack stack, BlockPos pos) {
-        return !side.getAxis().isVertical() && player.canPlaceOn(pos, side, stack);
+        return player.canPlaceOn(pos, side, stack);
     }
 }
