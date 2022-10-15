@@ -2,9 +2,7 @@ package immersive_paintings.resources;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import static java.awt.Color.RGBtoHSB;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
@@ -50,7 +48,11 @@ public class ByteImage {
         return byteImage;
     }
 
-    public void write(File file) {
+    public static ByteImage read(byte[] bytes) throws IOException {
+        return read(new ByteArrayInputStream(bytes));
+    }
+
+    public BufferedImage toBufferedImage() {
         BufferedImage bufferedImage = new BufferedImage(width, height, TYPE_INT_RGB);
 
         for (int x = 0; x < getWidth(); x++) {
@@ -59,11 +61,25 @@ public class ByteImage {
             }
         }
 
+        return bufferedImage;
+    }
+
+    public void write(File file) {
         try {
-            ImageIO.write(bufferedImage, "png", file);
+            ImageIO.write(toBufferedImage(), "png", file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public byte[] encode() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(toBufferedImage(), "png", stream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return stream.toByteArray();
     }
 
     public void setPixel(int x, int y, int r, int g, int b) {

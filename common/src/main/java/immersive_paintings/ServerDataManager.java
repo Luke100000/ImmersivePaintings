@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ServerDataManager {
-    public static Set<Integer> sent = new HashSet<>();
+    public static final Set<Integer> sent = new HashSet<>();
 
     public static void playerLoggedOff(ServerPlayerEntity player) {
         sent.remove(player.getId());
