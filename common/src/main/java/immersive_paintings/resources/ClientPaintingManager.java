@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +33,11 @@ public class ClientPaintingManager {
             if (texture.image == null && !texture.requested) {
                 texture.requested = true;
 
-                Optional<ByteImage> img = Cache.get(texture);
-                if (img.isPresent()) {
-                    loadImage(texture, img.get());
-                } else {
-                    NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link));
-                }
+                Cache.get(texture).ifPresentOrElse((image) -> {
+                            texture.image = image;
+                            registerImage(texture);
+                        },
+                        () -> NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link)));
             }
 
             //fall back to the highest resolution if image does not exist yet
@@ -58,15 +56,8 @@ public class ClientPaintingManager {
         }
     }
 
-    public static void loadImage(Identifier i, Painting.Type type, ByteImage image) {
-        Painting painting = ClientPaintingManager.getPaintings().get(i);
-        Painting.Texture texture = painting.getTexture(type);
-        loadImage(texture, image);
-        Cache.set(texture);
-    }
-
-    public static void loadImage(Painting.Texture texture, @NotNull ByteImage image) {
-        texture.image = image;
+    // registers this textures and make it readable
+    public static void registerImage(Painting.Texture texture) {
         NativeImage nativeImage = ClientUtils.byteImageToNativeImage(texture.image);
         texture.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
                 .registerDynamicTexture("immersive_painting/" + texture.hash, new NativeImageBackedTexture(nativeImage));

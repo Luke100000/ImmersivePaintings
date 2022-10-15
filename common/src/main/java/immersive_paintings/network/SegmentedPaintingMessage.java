@@ -14,23 +14,20 @@ import java.util.Map;
 public abstract class SegmentedPaintingMessage implements Message {
     private static final long serialVersionUID = -6584975870115489847L;
 
-    private final int width;
-    private final int height;
     private final byte[] data;
     private final int segment;
     private final int totalSegments;
 
     private static final Map<String, List<byte[]>> buffer = new HashMap<>();
 
-    public SegmentedPaintingMessage(int width, int height, byte[] data, int segment, int totalSegments) {
-        this.width = width;
-        this.height = height;
+    public SegmentedPaintingMessage(byte[] data, int segment, int totalSegments) {
         this.data = data;
         this.segment = segment;
         this.totalSegments = totalSegments;
     }
 
     abstract protected String getIdentifier(PlayerEntity e);
+
     abstract protected void process(PlayerEntity e, ByteImage image);
 
     @Override
@@ -41,7 +38,7 @@ public abstract class SegmentedPaintingMessage implements Message {
         byteBuffer.add(data);
 
         if (segment + 1 == totalSegments) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             for (byte[] b : byteBuffer) {
                 try {
                     outputStream.write(b);
@@ -49,9 +46,12 @@ public abstract class SegmentedPaintingMessage implements Message {
                     throw new RuntimeException(ex);
                 }
             }
-            byte[] bytes = outputStream.toByteArray();
-            ByteImage image = new ByteImage(bytes, width, height);
-            process(e, image);
+            try {
+                ByteImage image = ByteImage.read(outputStream.toByteArray());
+                process(e, image);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             buffer.remove(i);
         }
     }

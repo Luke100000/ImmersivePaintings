@@ -15,6 +15,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+
 public class XercaPaintCompat {
     public static boolean interactWithPainting(ImmersivePaintingEntity painting, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
@@ -39,13 +46,10 @@ public class XercaPaintCompat {
             if (w > 0 && nbt != null && nbt.contains("pixels")) {
                 // convert
                 int[] pixels = nbt.getIntArray("pixels");
-                byte[] bytes = new byte[w * h * 3];
+                BufferedImage bufferedImage = new BufferedImage(w, h, TYPE_INT_RGB);
                 int x = 0, y = 0;
                 for (int n : pixels) {
-                    int index = x * h + y;
-                    bytes[index * 3] = (byte)((n >> 16) & 0xFF);
-                    bytes[index * 3 + 1] = (byte)((n >> 8) & 0xFF);
-                    bytes[index * 3 + 2] = (byte)(n & 0xFF);
+                    bufferedImage.setRGB(x, y, n);
                     x++;
                     if (x >= w) {
                         x = 0;
@@ -58,10 +62,14 @@ public class XercaPaintCompat {
                 nbt.putString("ip_title", title);
 
                 // upload
-                int finalW = w;
-                int finalH = h;
-                Utils.processByteArrayInChunks(bytes, (ints, split, splits) -> LazyNetworkManager.sendToServer(new UploadPaintingRequest(finalW, finalH, ints, split, splits)));
-                LazyNetworkManager.sendToServer(new RegisterPaintingRequest(title, new Painting(null, w / 16, h / 16, 16)));
+                try {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    ImageIO.write(bufferedImage, "png", stream);
+                    Utils.processByteArrayInChunks(stream.toByteArray(), (ints, split, splits) -> LazyNetworkManager.sendToServer(new UploadPaintingRequest(ints, split, splits)));
+                    LazyNetworkManager.sendToServer(new RegisterPaintingRequest(title, new Painting(null, w / 16, h / 16, 16)));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 // apply
                 String name = Utils.escapeString(player.getGameProfile().getName()) + "/" + Utils.escapeString(title);

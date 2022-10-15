@@ -11,8 +11,8 @@ public class UploadPaintingRequest extends SegmentedPaintingMessage {
 
     public static final HashMap<String, ByteImage> uploadedImages = new HashMap<>();
 
-    public UploadPaintingRequest(int width, int height, byte[] data, int segment, int totalSegments) {
-        super(width, height, data, segment, totalSegments);
+    public UploadPaintingRequest(byte[] data, int segment, int totalSegments) {
+        super(data, segment, totalSegments);
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.world.PersistentState;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -65,41 +66,59 @@ public class ServerPaintingManager {
         } else {return get().customServerPaintings.getOrDefault(i, DEFAULT);}
     }
 
-    public static ByteImage getImage(Identifier i, Painting.Type type) {
+    public static Optional<ByteImage> getImage(Identifier i, Painting.Type type) {
+        Optional<byte[]> data = getImageData(i, type);
+        if (data.isPresent()) {
+            try {
+                return Optional.of(ByteImage.read(data.get()));
+            } catch (IOException ignored) {}
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<byte[]> getImageData(Identifier i, Painting.Type type) {
         Painting painting = getPainting(i);
         Painting.Texture texture = painting.getTexture(type);
+
+        byte[] data = null;
 
         if (type == Painting.Type.FULL) {
             if (texture.image == null) {
                 try {
                     if (texture.resource != null) {
-                        return texture.image = ByteImage.read(texture.resource.getInputStream());
+                        InputStream stream = texture.resource.getInputStream();
+                        data = stream.readAllBytes();
+                        stream.close();
                     } else if (get().customServerPaintings.containsKey(i)) {
                         FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
-                        texture.image = ByteImage.read(stream);
+                        data = stream.readAllBytes();
+                        stream.close();
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                data = texture.image.encode();
             }
         } else {
-            Optional<ByteImage> img = Cache.get(texture);
-            if (img.isPresent()) {
-                texture.image = img.get();
+            Optional<byte[]> imageData = Cache.getData(texture);
+            if (imageData.isPresent()) {
+                data = imageData.get();
             } else {
-                ByteImage image = getImage(i, Painting.Type.FULL);
-                texture.image = null;
+                Optional<ByteImage> optionalByteImage = getImage(i, Painting.Type.FULL);
 
-                int w, h;
+                if (optionalByteImage.isPresent()) {
+                    ByteImage image = optionalByteImage.get();int w, h;
                 if (type == Painting.Type.THUMBNAIL) {
                     float zoom = Math.min(
                             (float)Config.getInstance().thumbnailSize / image.getWidth(),
                             (float)Config.getInstance().thumbnailSize / image.getHeight()
                     );
 
-                    if (zoom >= 1.0f) {
-                        texture.image = painting.texture.image;
-                    }
+                        // The thumbnail would not be smaller than the actual painting
+                        if (zoom >= 1.0f) {
+                            return getImageData(i, Painting.Type.FULL);
+                        }
 
                     w = (int)(image.getWidth() * zoom);
                     h = (int)(image.getHeight() * zoom);
@@ -114,21 +133,21 @@ public class ServerPaintingManager {
                     h = image.getHeight() / 8;
                 }
 
-                if (texture.image == null) {
+                    // resize it
                     ByteImage target = new ByteImage(w, h);
                     ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
-
                     texture.image = target;
+
+                    // encode it for networking
+                    data = texture.image.encode();
+
+                    // cache it
+                    Cache.set(texture, data);
                 }
             }
         }
 
-        ByteImage image = texture.image;
-        if (!Config.getInstance().keepImagesInRAM) {
-            texture.image = null;
-        }
-
-        return image;
+        return Optional.ofNullable(data);
     }
 
     public static class CustomServerPaintings extends PersistentState {
