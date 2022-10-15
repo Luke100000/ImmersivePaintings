@@ -1,12 +1,13 @@
 # 0.3.0
 
 * Improved networking performance, images up- and download now faster
-* Floors can now be put on the floor and ceiling
+* Paintings can now be put on the floor and ceiling
 * Added Vietnamese (thanks baooduy)
 * Added German
 * Fixed crashes when joining a Paper/Bukkit server using Fabric
 * Max resolution has been increased to 256, configurable
 * Removed two broken images
+* Fixed various issues
 
 # 0.2.0
 
