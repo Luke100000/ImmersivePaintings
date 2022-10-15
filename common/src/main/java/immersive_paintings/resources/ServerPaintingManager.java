@@ -70,7 +70,6 @@ public class ServerPaintingManager {
         Painting.Texture texture = painting.getTexture(type);
 
         if (type == Painting.Type.FULL) {
-            //todo think about caching
             if (texture.image == null) {
                 try {
                     if (texture.resource != null) {
@@ -84,44 +83,48 @@ public class ServerPaintingManager {
                 }
             }
         } else {
-            Cache.get(texture)
-                    .ifPresentOrElse((image) -> texture.image = image,
-                            () -> {
-                                ByteImage image = getImage(i, Painting.Type.FULL);
+            Cache.get(texture).ifPresentOrElse((image) -> texture.image = image,
+                    () -> {
+                        ByteImage image = getImage(i, Painting.Type.FULL);
 
-                                int w, h;
-                                if (type == Painting.Type.THUMBNAIL) {
-                                    float zoom = Math.min(
-                                            (float)Config.getInstance().thumbnailSize / image.getWidth(),
-                                            (float)Config.getInstance().thumbnailSize / image.getHeight()
-                                    );
+                        int w, h;
+                        if (type == Painting.Type.THUMBNAIL) {
+                            float zoom = Math.min(
+                                    (float)Config.getInstance().thumbnailSize / image.getWidth(),
+                                    (float)Config.getInstance().thumbnailSize / image.getHeight()
+                            );
 
-                                    if (zoom >= 1.0f) {
-                                        texture.image = painting.texture.image;
-                                        return;
-                                    }
+                            if (zoom >= 1.0f) {
+                                texture.image = painting.texture.image;
+                                return;
+                            }
 
-                                    w = (int)(image.getWidth() * zoom);
-                                    h = (int)(image.getHeight() * zoom);
-                                } else if (type == Painting.Type.HALF) {
-                                    w = image.getWidth() / 2;
-                                    h = image.getHeight() / 2;
-                                } else if (type == Painting.Type.QUARTER) {
-                                    w = image.getWidth() / 4;
-                                    h = image.getHeight() / 4;
-                                } else {
-                                    w = image.getWidth() / 8;
-                                    h = image.getHeight() / 8;
-                                }
+                            w = (int)(image.getWidth() * zoom);
+                            h = (int)(image.getHeight() * zoom);
+                        } else if (type == Painting.Type.HALF) {
+                            w = image.getWidth() / 2;
+                            h = image.getHeight() / 2;
+                        } else if (type == Painting.Type.QUARTER) {
+                            w = image.getWidth() / 4;
+                            h = image.getHeight() / 4;
+                        } else {
+                            w = image.getWidth() / 8;
+                            h = image.getHeight() / 8;
+                        }
 
-                                ByteImage target = new ByteImage(w, h);
-                                ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
+                        ByteImage target = new ByteImage(w, h);
+                        ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
 
-                                texture.image = target;
-                            });
+                        texture.image = target;
+                    });
         }
 
-        return texture.image;
+        ByteImage image = texture.image;
+        if (!Config.getInstance().keepImagesInRAM) {
+            texture.image = null;
+        }
+
+        return image;
     }
 
     public static class CustomServerPaintings extends PersistentState {
