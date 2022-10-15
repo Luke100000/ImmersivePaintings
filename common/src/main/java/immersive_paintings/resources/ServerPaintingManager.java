@@ -10,7 +10,6 @@ import net.minecraft.world.PersistentState;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,13 +84,11 @@ public class ServerPaintingManager {
             if (texture.image == null) {
                 try {
                     if (texture.resource != null) {
-                        InputStream stream = texture.resource.getInputStream();
-                        data = stream.readAllBytes();
-                        stream.close();
+                        data = texture.getResource();
                     } else if (get().customServerPaintings.containsKey(i)) {
-                        FileInputStream stream = new FileInputStream(getPaintingPath(i).toString());
-                        data = stream.readAllBytes();
-                        stream.close();
+                        try (FileInputStream stream = new FileInputStream(getPaintingPath(i).toString())) {
+                            data = stream.readAllBytes();
+                        }
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
