@@ -7,6 +7,8 @@ import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public final class Painting {
@@ -112,6 +114,18 @@ public final class Painting {
             this.image = image;
             this.hash = hash;
             this.link = link;
+        }
+
+        private byte[] cache;
+        public byte[] getResource() {
+            if (cache == null) {
+                try (InputStream stream = resource.getInputStream()) {
+                    cache = stream.readAllBytes();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return cache;
         }
     }
 }
