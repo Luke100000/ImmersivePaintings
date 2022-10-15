@@ -1,5 +1,7 @@
 package immersive_paintings.resources;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,7 +31,7 @@ public class Cache {
         }
 
         try (FileInputStream stream = new FileInputStream(file.getPath())) {
-            return Optional.of(stream.readAllBytes());
+            return Optional.of(IOUtils.toByteArray(stream));
         } catch (IOException e) {
             e.printStackTrace();
         }

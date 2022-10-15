@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.PersistentState;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,7 +89,7 @@ public class ServerPaintingManager {
                         data = texture.getResource();
                     } else if (get().customServerPaintings.containsKey(i)) {
                         try (FileInputStream stream = new FileInputStream(getPaintingPath(i).toString())) {
-                            data = stream.readAllBytes();
+                            data = IOUtils.toByteArray(stream);
                         }
                     }
                 } catch (IOException e) {

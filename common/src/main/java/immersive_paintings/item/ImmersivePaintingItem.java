@@ -30,7 +30,7 @@ public class ImmersivePaintingItem extends Item {
         } else {
             int rotation = 0;
             if (playerEntity != null && direction.getAxis().isVertical()) {
-                rotation = (int)(playerEntity.getYaw() / 90 + (direction == Direction.UP ? 2.5 : 0.5)) * 90;
+                rotation = (int)(playerEntity.getYaw(1.0f) / 90 + (direction == Direction.UP ? 2.5 : 0.5)) * 90;
             }
             World world = context.getWorld();
             ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, attachmentPosition, direction, rotation);

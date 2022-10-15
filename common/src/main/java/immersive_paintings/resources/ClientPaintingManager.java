@@ -33,11 +33,13 @@ public class ClientPaintingManager {
             if (texture.image == null && !texture.requested) {
                 texture.requested = true;
 
-                Cache.get(texture).ifPresentOrElse((image) -> {
-                            texture.image = image;
-                            registerImage(texture);
-                        },
-                        () -> NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link)));
+                Optional<ByteImage> image = Cache.get(texture);
+                if (image.isPresent()) {
+                    texture.image = image.get();
+                    registerImage(texture);
+                } else {
+                    NetworkHandler.sendToServer(new ImageRequest(identifier, textureOriginal.link));
+                }
             }
 
             //fall back to the highest resolution if image does not exist yet

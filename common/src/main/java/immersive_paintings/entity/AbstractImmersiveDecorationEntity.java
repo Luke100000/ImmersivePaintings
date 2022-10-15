@@ -15,6 +15,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -44,13 +45,13 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
         if (this.facing.getAxis().isHorizontal()) {
             this.yaw = (float)(this.facing.getHorizontal() * 90);
-            this.setPitch(0);
+            this.pitch = 0;
         } else {
-            this.setYaw(rotation);
-            this.setPitch(this.facing == Direction.UP ? 90.0f : -90.0f);
+            this.setBodyYaw(rotation);
+            this.pitch = this.facing == Direction.UP ? 90.0f : -90.0f;
         }
         this.prevYaw = this.yaw;
-        this.prevPitch = this.getPitch();
+        this.prevPitch = this.getPitch(1.0f);
         this.updateAttachmentPosition();
     }
 
@@ -186,23 +187,23 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         }
     }
 
-    private static final Map<Direction, Byte> DIRECTION_TO_ID = Map.of(
-            Direction.DOWN, (byte)5,
-            Direction.UP, (byte)4,
-            Direction.NORTH, (byte)2,
-            Direction.SOUTH, (byte)0,
-            Direction.WEST, (byte)1,
-            Direction.EAST, (byte)3
-    );
+    private static final Map<Direction, Byte> DIRECTION_TO_ID = new HashMap<Direction, Byte>() {{
+        put(Direction.DOWN, (byte)5);
+        put(Direction.UP, (byte)4);
+        put(Direction.NORTH, (byte)2);
+        put(Direction.SOUTH, (byte)0);
+        put(Direction.WEST, (byte)1);
+        put(Direction.EAST, (byte)3);
+    }};
 
-    private static final Map<Byte, Direction> ID_TO_DIRECTION = Map.of(
-            (byte)5, Direction.DOWN,
-            (byte)4, Direction.UP,
-            (byte)2, Direction.NORTH,
-            (byte)0, Direction.SOUTH,
-            (byte)1, Direction.WEST,
-            (byte)3, Direction.EAST
-    );
+    private static final Map<Byte, Direction> ID_TO_DIRECTION = new HashMap<Byte, Direction>() {{
+        put((byte)5, Direction.DOWN);
+        put((byte)4, Direction.UP);
+        put((byte)2, Direction.NORTH);
+        put((byte)0, Direction.SOUTH);
+        put((byte)1, Direction.WEST);
+        put((byte)3, Direction.EAST);
+    }};
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {

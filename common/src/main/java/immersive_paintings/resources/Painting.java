@@ -5,6 +5,7 @@ import immersive_paintings.Main;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -126,7 +127,7 @@ public final class Painting {
         public byte[] getResource() {
             if (cache == null) {
                 try (InputStream stream = resource.getInputStream()) {
-                    cache = stream.readAllBytes();
+                    cache = IOUtils.toByteArray(stream);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
