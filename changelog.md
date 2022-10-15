@@ -6,6 +6,7 @@
 * Added German
 * Fixed crashes when joining a Paper/Bukkit server using Fabric
 * Max resolution has been increased to 256, configurable
+* Removed two broken images
 
 # 0.2.0
 
