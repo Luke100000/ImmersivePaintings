@@ -42,13 +42,14 @@ public class DatapackPaintingsGenerator {
             process("The Lost Legend - Xu Tianhua.jpg", 3, 2, 0.25, 12, res, false);
             process("The Torch - Starkiteckt.png", 3, 3, 0, 32, res, false);
             process("Tranquil Sunday Walk - Scilex.png", 4, 4, 0.0, 0, res, true);
-            process("Underwater - tox5000.png", 4, 4, 0, 0, res, true);
             process("Windmill Town - Darek Zabrocki.jpg", 5, 3, 0.25, 12, res, false);
             process("Gothic Landscape - Soroka Alexej.jpg", 3, 2, 0.25, 12, res, false);
             process("Gothic Landscape - Soroka Alexej.jpg", 3, 2, 0.25, 12, res, false);
             process("Deer Landscape - Byzwa Dher.jpg", 2, 1, 0.25, 12, res, false);
             process("Venedig - Verena.jpg", 1, 1, 0.25, 12, res, false);
         }
+
+        process("Underwater - tox5000.png", 4, 4, 0, 0, 32, true);
 
         System.exit(0);
     }
