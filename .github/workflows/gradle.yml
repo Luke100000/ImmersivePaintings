@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Fetch Tags
         run: git fetch --unshallow --tags
-      - name: Set up JDK 17
+      - name: Set up JDK 8
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 8
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle - Forge
@@ -60,7 +60,7 @@ jobs:
           game-versions: |
             ${{steps.split.outputs._1}}
           java: |
-            Java 17
+            Java 8
           dependencies: |
             fabric-api | recommends | *
 
@@ -83,6 +83,6 @@ jobs:
           game-versions: |
             ${{steps.split.outputs._1}}
           java: |
-            Java 17
+            Java 8
 
           fail-mode: skip
