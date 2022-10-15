@@ -255,11 +255,11 @@ public class ImmersivePaintingScreen extends Screen {
                         v -> {
                         }));
 
-                addDrawableChild(new TooltipButtonWidget(x + 75, y, 25, 20,
-                        new LiteralText(">"),
+                addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
+                        new LiteralText("<"),
                         new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
-                            settings.resolution = Math.min(Config.getInstance().maxPaintingResolution, settings.resolution * 2);
+                            settings.resolution = Math.max(Config.getInstance().minPaintingResolution, settings.resolution / 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -268,11 +268,11 @@ public class ImmersivePaintingScreen extends Screen {
                             widget.setMessage(new LiteralText(String.valueOf(settings.resolution)));
                         }));
 
-                addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
-                        new LiteralText("<"),
+                addDrawableChild(new TooltipButtonWidget(x + 75, y, 25, 20,
+                        new LiteralText(">"),
                         new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
-                            settings.resolution = Math.max(Config.getInstance().minPaintingResolution, settings.resolution / 2);
+                            settings.resolution = Math.min(Config.getInstance().maxPaintingResolution, settings.resolution * 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -366,24 +366,43 @@ public class ImmersivePaintingScreen extends Screen {
                     textFieldWidget.setSuggestion(null);
                 });
 
-                //filter resolution
-                int[] resolutions = new int[] {0, 32, 64, 128, 256};
-                int x = width / 2 - 200;
-                List<ButtonWidget> list = new LinkedList<>();
-                for (int res : resolutions) {
-                    ButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x, height / 2 - 90, 25, 20,
-                            res == 0 ? new TranslatableText("immersive_paintings.filter.all") : new LiteralText(String.valueOf(res)),
-                            new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
-                            v -> {
-                                filteredResolution = res;
-                                updateSearch();
-                                list.forEach(b -> b.active = true);
-                                v.active = false;
-                            }));
-                    widget.active = res != filteredResolution;
-                    list.add(widget);
-                    x += 25;
-                }
+                int x = width / 2 - 200 + 12;
+
+                ButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x + 50 + 8, height / 2 - 90, 25, 20,
+                        new LiteralText(String.valueOf(filteredResolution)),
+                        new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
+                        v -> {
+                        }));
+
+                TooltipButtonWidget allWidget = addDrawableChild(new TooltipButtonWidget(x, height / 2 - 90, 25, 20,
+                        new TranslatableText("immersive_paintings.filter.all"),
+                        new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
+                        v -> {
+                            filteredResolution = 0;
+                            updateSearch();
+                            widget.setMessage(new LiteralText(String.valueOf(filteredResolution)));
+                            v.active = false;
+                        }));
+
+                addDrawableChild(new TooltipButtonWidget(x + 25 + 8, height / 2 - 90, 25, 20,
+                        new LiteralText("<"),
+                        new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
+                        v -> {
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(Config.getInstance().minPaintingResolution, filteredResolution / 2);
+                            updateSearch();
+                            widget.setMessage(new LiteralText(String.valueOf(filteredResolution)));
+                            allWidget.active = true;
+                        }));
+
+                addDrawableChild(new TooltipButtonWidget(x + 75 + 8, height / 2 - 90, 25, 20,
+                        new LiteralText(">"),
+                        new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
+                        v -> {
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(Config.getInstance().maxPaintingResolution, filteredResolution * 2);
+                            updateSearch();
+                            widget.setMessage(new LiteralText(String.valueOf(filteredResolution)));
+                            allWidget.active = true;
+                        }));
 
                 //width
                 TextFieldWidget widthWidget = addDrawableChild(new TextFieldWidget(this.textRenderer, width / 2 + 80, height / 2 - 88, 40, 16,
@@ -393,10 +412,10 @@ public class ImmersivePaintingScreen extends Screen {
                 widthWidget.setChangedListener((s) -> {
                     try {
                         filteredWidth = Integer.parseInt(s);
-                        updateSearch();
                     } catch (NumberFormatException ignored) {
                         filteredWidth = 0;
                     }
+                    updateSearch();
                     widthWidget.setSuggestion(null);
                 });
 
@@ -408,10 +427,10 @@ public class ImmersivePaintingScreen extends Screen {
                 heightWidget.setChangedListener((s) -> {
                     try {
                         filteredHeight = Integer.parseInt(s);
-                        updateSearch();
                     } catch (NumberFormatException ignored) {
                         filteredHeight = 0;
                     }
+                    updateSearch();
                     heightWidget.setSuggestion(null);
                 });
             }
