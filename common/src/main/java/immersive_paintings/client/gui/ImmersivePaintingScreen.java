@@ -1,6 +1,7 @@
 package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
@@ -246,27 +247,39 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 //resolution
-                int[] resolutions = new int[] {16, 32, 64, 128};
                 int x = width / 2 - 200;
-                List<ButtonWidget> list = new LinkedList<>();
-                for (int res : resolutions) {
-                    ButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
-                            new LiteralText(String.valueOf(res)),
-                            new TranslatableText("immersive_paintings.tooltip.resolution"),
-                            v -> {
-                                settings.resolution = res;
-                                if (settings.pixelArt) {
-                                    adaptToPixelArt();
-                                    refreshPage();
-                                }
-                                shouldReProcess = true;
-                                list.forEach(b -> b.active = true);
-                                v.active = false;
-                            }));
-                    widget.active = settings.resolution != res;
-                    list.add(widget);
-                    x += 25;
-                }
+
+                TooltipButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x + 25, y, 50, 20,
+                        Text.literal(String.valueOf(settings.resolution)),
+                        Text.translatable("immersive_paintings.tooltip.resolution"),
+                        v -> {
+                        }));
+
+                addDrawableChild(new TooltipButtonWidget(x + 75, y, 25, 20,
+                        new LiteralText(">"),
+                        new TranslatableText("immersive_paintings.tooltip.resolution"),
+                        v -> {
+                            settings.resolution = Math.min(Config.getInstance().maxPaintingResolution, settings.resolution * 2);
+                            if (settings.pixelArt) {
+                                adaptToPixelArt();
+                                refreshPage();
+                            }
+                            shouldReProcess = true;
+                            widget.setMessage(Text.literal(String.valueOf(settings.resolution)));
+                        }));
+
+                addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
+                        Text.literal("<"),
+                        Text.translatable("immersive_paintings.tooltip.resolution"),
+                        v -> {
+                            settings.resolution = Math.max(Config.getInstance().minPaintingResolution, settings.resolution / 2);
+                            if (settings.pixelArt) {
+                                adaptToPixelArt();
+                                refreshPage();
+                            }
+                            shouldReProcess = true;
+                            widget.setMessage(Text.literal(String.valueOf(settings.resolution)));
+                        }));
                 y += 22;
                 y += 10;
 
@@ -354,7 +367,7 @@ public class ImmersivePaintingScreen extends Screen {
                 });
 
                 //filter resolution
-                int[] resolutions = new int[] {0, 16, 32, 64, 128};
+                int[] resolutions = new int[] {0, 32, 64, 128, 256};
                 int x = width / 2 - 200;
                 List<ButtonWidget> list = new LinkedList<>();
                 for (int res : resolutions) {
