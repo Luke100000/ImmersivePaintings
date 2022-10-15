@@ -70,7 +70,6 @@ public class ServerPaintingManager {
         Painting.Texture texture = painting.getTexture(type);
 
         if (type == Painting.Type.FULL) {
-            //todo think about caching
             if (texture.image == null) {
                 try {
                     if (texture.resource != null) {
@@ -124,7 +123,12 @@ public class ServerPaintingManager {
             }
         }
 
-        return texture.image;
+        ByteImage image = texture.image;
+        if (!Config.getInstance().keepImagesInRAM) {
+            texture.image = null;
+        }
+
+        return image;
     }
 
     public static class CustomServerPaintings extends PersistentState {

@@ -39,6 +39,8 @@ public final class Config implements Serializable {
     public int minPaintingResolution = 8;
     public int maxPaintingResolution = 256;
 
+    public boolean keepImagesInRAM = true;
+
     public int version = 0;
 
     public static File getConfigFile() {
