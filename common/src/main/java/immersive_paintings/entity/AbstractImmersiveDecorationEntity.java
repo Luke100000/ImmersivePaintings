@@ -134,11 +134,6 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public boolean collides() {
-        return Config.getInstance().paintingsHaveCollision;
-    }
-
-    @Override
-    public boolean canHit() {
         return true;
     }
 

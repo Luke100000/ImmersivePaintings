@@ -250,8 +250,8 @@ public class ImmersivePaintingScreen extends Screen {
                 int x = width / 2 - 200;
 
                 TooltipButtonWidget widget = addDrawableChild(new TooltipButtonWidget(x + 25, y, 50, 20,
-                        Text.literal(String.valueOf(settings.resolution)),
-                        Text.translatable("immersive_paintings.tooltip.resolution"),
+                        new LiteralText(String.valueOf(settings.resolution)),
+                        new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
                         }));
 
@@ -265,12 +265,12 @@ public class ImmersivePaintingScreen extends Screen {
                                 refreshPage();
                             }
                             shouldReProcess = true;
-                            widget.setMessage(Text.literal(String.valueOf(settings.resolution)));
+                            widget.setMessage(new LiteralText(String.valueOf(settings.resolution)));
                         }));
 
                 addDrawableChild(new TooltipButtonWidget(x, y, 25, 20,
-                        Text.literal("<"),
-                        Text.translatable("immersive_paintings.tooltip.resolution"),
+                        new LiteralText("<"),
+                        new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
                             settings.resolution = Math.max(Config.getInstance().minPaintingResolution, settings.resolution / 2);
                             if (settings.pixelArt) {
@@ -278,7 +278,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 refreshPage();
                             }
                             shouldReProcess = true;
-                            widget.setMessage(Text.literal(String.valueOf(settings.resolution)));
+                            widget.setMessage(new LiteralText(String.valueOf(settings.resolution)));
                         }));
                 y += 22;
                 y += 10;
