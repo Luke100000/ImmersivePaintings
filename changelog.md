@@ -1,5 +1,6 @@
 # 0.3.0
 
+* Improved networking performance, images up- and download now faster
 * Floors can now be put on the floor and ceiling
 * Added Vietnamese (thanks baooduy)
 * Added German

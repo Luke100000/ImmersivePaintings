@@ -17,7 +17,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.Serial;
-import java.util.Locale;
 import java.util.Objects;
 
 public class RegisterPaintingRequest implements Message {

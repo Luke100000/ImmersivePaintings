@@ -2,6 +2,7 @@ package immersive_paintings.network.s2c;
 
 import immersive_paintings.network.SegmentedPaintingMessage;
 import immersive_paintings.resources.ByteImage;
+import immersive_paintings.resources.Cache;
 import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,8 +17,8 @@ public class ImageResponse extends SegmentedPaintingMessage {
     private final String identifier;
     private final Painting.Type type;
 
-    public ImageResponse(Identifier identifier, Painting.Type type, int width, int height, byte[] data, int segment, int totalSegments) {
-        super(width, height, data, segment, totalSegments);
+    public ImageResponse(Identifier identifier, Painting.Type type, byte[] data, int segment, int totalSegments) {
+        super(data, segment, totalSegments);
         this.identifier = identifier.toString();
         this.type = type;
     }
@@ -29,6 +30,10 @@ public class ImageResponse extends SegmentedPaintingMessage {
 
     @Override
     protected void process(PlayerEntity e, ByteImage image) {
-        ClientPaintingManager.loadImage(new Identifier(identifier), type, image);
+        Painting painting = ClientPaintingManager.getPaintings().get(new Identifier(identifier));
+        Painting.Texture texture = painting.getTexture(type);
+        texture.image = image;
+        ClientPaintingManager.registerImage(texture);
+        Cache.set(texture);
     }
 }
