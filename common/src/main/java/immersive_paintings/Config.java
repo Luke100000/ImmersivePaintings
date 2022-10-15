@@ -36,6 +36,9 @@ public final class Config implements Serializable {
     public int maxUserImageHeight = 4096;
     public int maxUserImages = 1000;
 
+    public int minPaintingResolution = 8;
+    public int maxPaintingResolution = 256;
+
     public int version = 0;
 
     public static File getConfigFile() {
