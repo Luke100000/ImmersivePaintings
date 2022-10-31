@@ -60,6 +60,5 @@ public class ClientPaintingManager {
         NativeImage nativeImage = ClientUtils.byteImageToNativeImage(texture.image);
         texture.textureIdentifier = MinecraftClient.getInstance().getTextureManager()
                 .registerDynamicTexture("immersive_painting/" + texture.hash, new NativeImageBackedTexture(nativeImage));
-        nativeImage.upload(0, 0, 0, false);
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
@@ -23,7 +24,7 @@ public class NetworkHandlerImpl extends NetworkHandler.Impl {
     }
 
     private <T> Identifier getMessageIdentifier(Class<T> msg) {
-        return new Identifier(Main.MOD_ID, msg.getSimpleName().toLowerCase());
+        return new Identifier(Main.MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT));
     }
 
     @Override

@@ -71,7 +71,7 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         int height = entity.getHeightPixels();
 
         //canvas
-        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
+        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
         renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, hasFrame ? 1.0f : 0.0f);
 
         if (hasFrame) {

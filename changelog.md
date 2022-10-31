@@ -1,3 +1,7 @@
+# 0.3.1
+
+* Fixed crash on Turkish system locale
+
 # 0.3.0
 
 * Improved networking performance, images up- and download now faster
