@@ -16,12 +16,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 @Mod.EventBusSubscriber(modid = Main.MOD_ID, value = Dist.CLIENT, bus = Bus.MOD)
 public final class ClientForge {
-
     @SubscribeEvent
     public static void data(FMLConstructModEvent event) {
         ((ReloadableResourceManagerImpl) MinecraftClient.getInstance().getResourceManager()).registerReloader(new ObjectLoader());
         ((ReloadableResourceManagerImpl) MinecraftClient.getInstance().getResourceManager()).registerReloader(new FrameLoader());
     }
+
     @SubscribeEvent
     public static void setup(FMLClientSetupEvent event) {
         RegistrationImpl.bootstrap();
