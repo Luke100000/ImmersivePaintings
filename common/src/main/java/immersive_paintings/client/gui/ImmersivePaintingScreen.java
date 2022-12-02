@@ -173,7 +173,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case ADMIN_DELETE -> {
                 fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Text> wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.confirm_admin_deletion"), 300);
+                List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.confirm_admin_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
                     drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
@@ -216,7 +216,7 @@ public class ImmersivePaintingScreen extends Screen {
             int x = width / 2 - 200;
             int w = 400 / b.size();
             for (Page page : b) {
-                addDrawableChild(new ButtonWidget(x, height / 2 - 90 - 22, w, 20, new TranslatableText("immersive_paintings.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))).active = page != this.page;
+                addDrawableChild(new ButtonWidget(x, height / 2 - 90 - 22, w, 20, Text.translatable("immersive_paintings.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))).active = page != this.page;
                 x += w;
             }
         }
@@ -330,8 +330,8 @@ public class ImmersivePaintingScreen extends Screen {
 
                 // Hide
                 addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
-                        new TranslatableText(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
-                        new TranslatableText("immersive_paintings.visibility"),
+                        Text.translatable(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
+                        Text.translatable("immersive_paintings.visibility"),
                         settings.hidden, true,
                         v -> settings.hidden = !settings.hidden));
                 y += 22;
@@ -547,7 +547,7 @@ public class ImmersivePaintingScreen extends Screen {
                     tooltip.add(Text.translatable("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
                     if (page == Page.YOURS || painting.hidden) {
-                        tooltip.add(new TranslatableText("immersive_paintings.hidden").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+                        tooltip.add(Text.translatable("immersive_paintings.hidden").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
                     if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
