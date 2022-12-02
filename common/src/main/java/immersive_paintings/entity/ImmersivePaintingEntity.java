@@ -14,7 +14,6 @@ import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -46,6 +45,10 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         super(type, world);
     }
 
+    public ImmersivePaintingEntity(EntityType<?> painting, World world, BlockPos pos) {
+        super(painting, world, pos);
+    }
+
     @Override
     public int getWidthPixels() {
         return width * 16;
@@ -73,6 +76,10 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         super.readCustomDataFromNbt(nbt);
     }
 
+    public Item getDrop() {
+        return Items.PAINTING;
+    }
+
     @Override
     public void onBreak(@Nullable Entity entity) {
         if (!world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
@@ -84,7 +91,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
                 return;
             }
         }
-        dropItem(Items.PAINTING);
+        dropItem(getDrop());
     }
 
     @Override

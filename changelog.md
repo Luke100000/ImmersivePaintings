@@ -1,5 +1,6 @@
 # 0.4.0
 
+* Added glowing paintings
 * Added config to hide other players paintings
 * Added permissions for server ops to delete other paintings
 * Added option to hide a specific image from other players

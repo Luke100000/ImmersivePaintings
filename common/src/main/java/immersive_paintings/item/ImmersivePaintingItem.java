@@ -19,6 +19,11 @@ public class ImmersivePaintingItem extends Item {
         super(settings);
     }
 
+    protected ImmersivePaintingEntity newPainting(World world, BlockPos attachmentPosition, Direction direction, int rotation) {
+        return new ImmersivePaintingEntity(world, attachmentPosition, direction, rotation);
+    }
+
+     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getSide();
@@ -33,7 +38,7 @@ public class ImmersivePaintingItem extends Item {
                 rotation = (int)(playerEntity.getYaw() / 90 + (direction == Direction.UP ? 2.5 : 0.5)) * 90;
             }
             World world = context.getWorld();
-            ImmersivePaintingEntity paintingEntity = new ImmersivePaintingEntity(world, attachmentPosition, direction, rotation);
+            ImmersivePaintingEntity paintingEntity = newPainting(world, attachmentPosition, direction, rotation);
 
             NbtCompound nbtCompound = itemStack.getNbt();
             if (nbtCompound != null) {
