@@ -246,7 +246,7 @@ public class ImmersivePaintingScreen extends Screen {
                 setScreenshotPage(screenshotPage);
                 break;
             case CREATE:
-                //name
+                // Name
                 TextFieldWidget nameWidget = addButton(new TextFieldWidget(this.textRenderer, width / 2 - 90, height / 2 - 100, 180, 20,
                         new TranslatableText("immersive_paintings.name")));
                 nameWidget.setMaxLength(256);
@@ -255,21 +255,21 @@ public class ImmersivePaintingScreen extends Screen {
 
                 int y = height / 2 - 60;
 
-                //width
+                // Width
                 addButton(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.width, 1, 16, v -> {
                     settings.width = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
-                //height
+                // Height
                 addButton(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.height, 1, 16, v -> {
                     settings.height = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
-                //resolution
+                // Resolution
                 int x = width / 2 - 200;
 
                 TooltipButtonWidget widget = addButton(new TooltipButtonWidget(x + 25, y, 50, 20,
@@ -306,21 +306,21 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
                 y += 10;
 
-                //color reduction
+                // Color reduction
                 addButton(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", 12, 1, 25, v -> {
                     settings.colors = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
-                //dither
+                // Dither
                 addButton(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", 0.25, v -> {
                     settings.dither = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
 
-                //pixelArt
-                y = height / 2 - 40;
+                // PixelArt
+                y = height / 2 - 50;
                 addButton(new CallbackCheckboxWidget(width / 2 + 100, y, 20, 20,
                         new TranslatableText("immersive_paintings.pixelart"),
                         new TranslatableText("immersive_paintings.pixelart.tooltip"),
@@ -332,28 +332,38 @@ public class ImmersivePaintingScreen extends Screen {
                 }));
                 y += 22;
 
-                //offset X
+                // Hide
+                addButton(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
+                        new TranslatableText(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
+                        new TranslatableText("immersive_paintings.visibility"),
+                        settings.hidden, true,
+                        v -> settings.hidden = !settings.hidden));
+                y += 22;
+
+                // Offset X
                 addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", 0.5, v -> {
                     settings.offsetX = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
-                //offset Y
+                // Offset Y
                 addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", 0.5, v -> {
                     settings.offsetY = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
-                //offset
+                // Offset
                 addButton(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", 1, 1, 3, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
 
+                // Cancel
                 addButton(new ButtonWidget(width / 2 - 85, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.cancel"), v -> setPage(Page.NEW)));
 
+                // Save
                 addButton(new ButtonWidget(width / 2 + 5, height / 2 + 75, 80, 20, new TranslatableText("immersive_paintings.save"),
                         v -> {
                             Utils.processByteArrayInChunks(pixelatedImage.encode(), (ints, split, splits) -> LazyNetworkManager.sendToServer(new UploadPaintingRequest(ints, split, splits)));
@@ -362,7 +372,8 @@ public class ImmersivePaintingScreen extends Screen {
                                     pixelatedImage,
                                     settings.width,
                                     settings.height,
-                                    settings.resolution
+                                    settings.resolution,
+                                    settings.hidden
                             )));
 
                             setPage(Page.LOADING);
@@ -559,6 +570,10 @@ public class ImmersivePaintingScreen extends Screen {
                     tooltip.add(new TranslatableText("immersive_paintings.by_author", painting.author).formatted(Formatting.ITALIC));
                     tooltip.add(new TranslatableText("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
+                    if (page == Page.YOURS || painting.hidden) {
+                        tooltip.add(new TranslatableText("immersive_paintings.hidden").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+                    }
+
                     if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
                         tooltip.add(new TranslatableText("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
@@ -598,7 +613,7 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * SCREENSHOTS_PER_PAGE;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                Painting painting = new Painting(null, 16, 16, 16);
+                Painting painting = new Painting(null, 16, 16, 16, false);
                 paintingWidgetList.add(addButton(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
                         (b) -> {
                             currentImage = ((PaintingWidget)b).thumbnail.image;
@@ -653,7 +668,7 @@ public class ImmersivePaintingScreen extends Screen {
         String playerName = getPlayerName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
+                .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack && !v.getValue().hidden)
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
@@ -828,6 +843,7 @@ public class ImmersivePaintingScreen extends Screen {
         public double offsetY;
         public double zoom;
         public boolean pixelArt;
+        public boolean hidden;
 
         public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
             this.dither = dither;

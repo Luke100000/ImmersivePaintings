@@ -50,9 +50,9 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                     String name = JsonHelper.getString(jsonElement, "name", "unknown");
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
 
-                    painting = new Painting(null, width, height, resolution, name, author, true, hash);
+                    painting = new Painting(null, width, height, resolution, name, author, true, false, hash);
                 } catch (IOException ignored) {
-                    painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, hash);
+                    painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, false, hash);
                 }
 
                 painting.texture.resource = manager.getResource(identifier);
