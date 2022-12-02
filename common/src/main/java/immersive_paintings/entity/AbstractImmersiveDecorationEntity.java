@@ -125,7 +125,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
             return false;
         }
 
-        return this.world.getOtherEntities(this, this.getBoundingBox(), PREDICATE).isEmpty();
+        return this.world.getOtherEntities(this, this.getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((AbstractImmersiveDecorationEntity)v).facing == this.facing);
     }
 
     public int getRotation() {
