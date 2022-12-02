@@ -71,5 +71,12 @@
   "immersive_paintings.material.sandstone": "Sandstein",
   "immersive_paintings.material.spruce": "Fichte",
   "immersive_paintings.material.stone": "Stein",
-  "immersive_paintings.material.sugar_cane": "Zuckerrohr"
+  "immersive_paintings.material.sugar_cane": "Zuckerrohr",
+
+  "immersive_paintings.delete_all": "Alle löschen",
+  "immersive_paintings.hide": "Verstecken",
+  "immersive_paintings.show": "Öffentlich",
+  "immersive_paintings.visibility": "Versteckte Gemälde werden anderen Spielern in der Gemäldeauswahl nicht angezeigt.",
+  "immersive_paintings.hidden": "Versteckt",
+  "immersive_paintings.confirm_admin_deletion": "Lösche nur dieses, oder alle Gemälde von diesem Künstler?"
 }
