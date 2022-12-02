@@ -43,6 +43,7 @@ import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
     private static final int SCREENSHOTS_PER_PAGE = 5;
+    public static boolean showOtherPlayersPaintings;
     final int entityId;
     public final ImmersivePaintingEntity entity;
 
@@ -99,7 +100,7 @@ public class ImmersivePaintingScreen extends Screen {
         super.init();
 
         clearSearch();
-        setPage(Page.SELECTION_DATAPACKS);
+        setPage(Page.DATAPACKS);
         updateSearch();
 
         File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
@@ -194,11 +195,21 @@ public class ImmersivePaintingScreen extends Screen {
 
         // filters
         if (page != Page.CREATE) {
-            addDrawableChild(new ButtonWidget(width / 2 - 50 - 150, height / 2 - 90 - 22, 80, 20, Text.translatable("immersive_paintings.page.yours"), sender -> setPage(Page.SELECTION_YOURS))).active = page != Page.SELECTION_YOURS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 - 70, height / 2 - 90 - 22, 80, 20, Text.translatable("immersive_paintings.page.datapacks"), sender -> setPage(Page.SELECTION_DATAPACKS))).active = page != Page.SELECTION_DATAPACKS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 10, height / 2 - 90 - 22, 80, 20, Text.translatable("immersive_paintings.page.players"), sender -> setPage(Page.SELECTION_PLAYERS))).active = page != Page.SELECTION_PLAYERS;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 90, height / 2 - 90 - 22, 80, 20, Text.translatable("immersive_paintings.page.new"), sender -> setPage(Page.NEW))).active = page != Page.NEW;
-            addDrawableChild(new ButtonWidget(width / 2 - 50 + 170, height / 2 - 90 - 22, 80, 20, Text.translatable("immersive_paintings.page.frame"), sender -> setPage(Page.FRAME))).active = page != Page.FRAME;
+            List<Page> b = new LinkedList<>();
+            b.add(Page.YOURS);
+            b.add(Page.DATAPACKS);
+            if (showOtherPlayersPaintings) {
+                b.add(Page.PLAYERS);
+            }
+            b.add(Page.NEW);
+            b.add(Page.FRAME);
+
+            int x = width / 2 - 200;
+            int w = 400 / b.size();
+            for (Page page : b) {
+                addDrawableChild(new ButtonWidget(x, height / 2 - 90 - 22, w, 20, new TranslatableText("immersive_paintings.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))).active = page != this.page;
+                x += w;
+            }
         }
 
         switch (page) {
@@ -343,8 +354,10 @@ public class ImmersivePaintingScreen extends Screen {
 
                             setPage(Page.LOADING);
                         }));
-            }
-            case SELECTION_YOURS, SELECTION_DATAPACKS, SELECTION_PLAYERS -> {
+                break;
+            case YOURS:
+            case DATAPACKS:
+            case PLAYERS:
                 rebuildPaintings();
 
                 // page
@@ -485,11 +498,11 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 70, 100, 20, Text.translatable("immersive_paintings.done"), v -> close()));
             }
             case DELETE -> {
-                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2 + 20, 100, 20, Text.translatable("immersive_paintings.cancel"), v -> setPage(Page.SELECTION_YOURS)));
+                addDrawableChild(new ButtonWidget(width / 2 - 100 - 5, height / 2 + 20, 100, 20, Text.translatable("immersive_paintings.cancel"), v -> setPage(Page.YOURS)));
 
                 addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 20, 100, 20, Text.translatable("immersive_paintings.delete"), v -> {
                     NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
-                    setPage(Page.SELECTION_YOURS);
+                    setPage(Page.YOURS);
                 }));
             }
         }
@@ -515,7 +528,7 @@ public class ImmersivePaintingScreen extends Screen {
                     tooltip.add(Text.translatable("immersive_paintings.by_author", painting.author).formatted(Formatting.ITALIC));
                     tooltip.add(Text.translatable("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
-                    if (page == Page.SELECTION_YOURS) {
+                    if (page == Page.YOURS) {
                         tooltip.add(Text.translatable("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
@@ -526,7 +539,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 setPage(Page.FRAME);
                             },
                             (b) -> {
-                                if (page == Page.SELECTION_YOURS) {
+                                if (page == Page.YOURS) {
                                     deletePainting = identifier;
                                     setPage(Page.DELETE);
                                 }
@@ -586,7 +599,7 @@ public class ImmersivePaintingScreen extends Screen {
         this.page = page;
         this.error = null;
 
-        if (page == Page.SELECTION_DATAPACKS) {
+        if (page == Page.DATAPACKS) {
             filteredResolution = 32;
         } else {
             filteredResolution = 0;
@@ -594,7 +607,7 @@ public class ImmersivePaintingScreen extends Screen {
 
         rebuild();
 
-        if (page == Page.SELECTION_DATAPACKS || page == Page.SELECTION_PLAYERS || page == Page.SELECTION_YOURS) {
+        if (page == Page.DATAPACKS || page == Page.PLAYERS || page == Page.YOURS) {
             updateSearch();
         }
     }
@@ -602,11 +615,11 @@ public class ImmersivePaintingScreen extends Screen {
     private void updateSearch() {
         filteredPaintings.clear();
 
-        String playerName = MinecraftClient.getInstance().player == null ? "" : MinecraftClient.getInstance().player.getGameProfile().getName();
+        String playerName = getPlayerName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
-                .filter(v -> page != Page.SELECTION_YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.SELECTION_PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.SELECTION_DATAPACKS || v.getValue().datapack)
+                .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
+                .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
+                .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
                 .filter(v -> filteredWidth == 0 || v.getValue().width == filteredWidth)
@@ -615,6 +628,10 @@ public class ImmersivePaintingScreen extends Screen {
                 .toList());
 
         setSelectionPage(selectionPage);
+    }
+
+    private String getPlayerName() {
+        return MinecraftClient.getInstance().player == null ? "" : MinecraftClient.getInstance().player.getGameProfile().getName();
     }
 
     private void setSelectionPage(int p) {
@@ -751,9 +768,9 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public enum Page {
-        SELECTION_YOURS,
-        SELECTION_DATAPACKS,
-        SELECTION_PLAYERS,
+        YOURS,
+        DATAPACKS,
+        PLAYERS,
         NEW,
         CREATE,
         FRAME,
