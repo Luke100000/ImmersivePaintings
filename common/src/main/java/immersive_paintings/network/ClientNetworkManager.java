@@ -1,5 +1,6 @@
 package immersive_paintings.network;
 
+import immersive_paintings.Config;
 import immersive_paintings.client.gui.ImmersivePaintingScreen;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.entity.ImmersivePaintingEntity;
@@ -31,6 +32,8 @@ public class ClientNetworkManager implements NetworkManager {
         if (response.shouldClear()) {
             ClientPaintingManager.getPaintings().clear();
         }
+
+        ImmersivePaintingScreen.showOtherPlayersPaintings = response.shouldShowOtherPlayersPaintings();
 
         for (Map.Entry<Identifier, Painting> entry : response.getPaintings().entrySet()) {
             if (entry.getValue() == null) {

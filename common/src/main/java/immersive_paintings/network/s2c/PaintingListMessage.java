@@ -1,5 +1,6 @@
 package immersive_paintings.network.s2c;
 
+import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.resources.Painting;
@@ -16,8 +17,9 @@ public class PaintingListMessage implements Message {
 
     private final Map<String, SerializableNbt> paintings = new HashMap<>();
     private final boolean clear;
+    private final boolean showOtherPlayersPaintings;
 
-    public PaintingListMessage() {
+    public PaintingListMessage(String playerName) {
         //datapack paintings
         for (Map.Entry<Identifier, Painting> entry : ServerPaintingManager.getDatapackPaintings().entrySet()) {
             this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
@@ -25,14 +27,18 @@ public class PaintingListMessage implements Message {
 
         //custom paintings
         for (Map.Entry<Identifier, Painting> entry : ServerPaintingManager.get().getCustomServerPaintings().entrySet()) {
-            this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
+            if (Config.getInstance().showOtherPlayersPaintings || entry.getValue().author.equals(playerName)) {
+                this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
+            }
         }
 
+        showOtherPlayersPaintings = Config.getInstance().showOtherPlayersPaintings;
         clear = true;
     }
 
     public PaintingListMessage(Identifier identifier, Painting painting) {
         this.paintings.put(identifier.toString(), painting == null ? null : new SerializableNbt(painting.toNbt()));
+        showOtherPlayersPaintings = Config.getInstance().showOtherPlayersPaintings;
         clear = false;
     }
 
@@ -56,5 +62,9 @@ public class PaintingListMessage implements Message {
 
     public boolean shouldClear() {
         return clear;
+    }
+
+    public boolean shouldShowOtherPlayersPaintings() {
+        return showOtherPlayersPaintings;
     }
 }
