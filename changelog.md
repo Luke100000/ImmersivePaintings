@@ -1,3 +1,7 @@
+# 0.4.0
+
+* Added config to hide other players paintings
+
 # 0.3.1
 
 * Fixed crash on Turkish system locale

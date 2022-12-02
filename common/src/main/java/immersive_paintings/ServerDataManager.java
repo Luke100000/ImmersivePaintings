@@ -15,8 +15,9 @@ public class ServerDataManager {
     }
 
     public static void playerRequestedImages(ServerPlayerEntity player) {
+        String playerName = player.getGameProfile().getName();
         if (!sent.contains(player.getId())) {
-            NetworkHandler.sendToPlayer(new PaintingListMessage(), player);
+            NetworkHandler.sendToPlayer(new PaintingListMessage(playerName), player);
             sent.add(player.getId());
         }
     }
