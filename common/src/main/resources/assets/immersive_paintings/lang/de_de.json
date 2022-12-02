@@ -78,5 +78,8 @@
   "immersive_paintings.show": "Öffentlich",
   "immersive_paintings.visibility": "Versteckte Gemälde werden anderen Spielern in der Gemäldeauswahl nicht angezeigt.",
   "immersive_paintings.hidden": "Versteckt",
-  "immersive_paintings.confirm_admin_deletion": "Lösche nur dieses, oder alle Gemälde von diesem Künstler?"
+  "immersive_paintings.confirm_admin_deletion": "Lösche nur dieses, oder alle Gemälde von diesem Künstler?",
+
+  "item.immersive_paintings.glow_painting": "Leuchtendes Gemälde",
+  "entity.immersive_paintings.glow_painting": "Leuchtendes Gemälde"
 }
