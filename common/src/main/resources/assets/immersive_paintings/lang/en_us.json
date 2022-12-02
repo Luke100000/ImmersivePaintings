@@ -26,6 +26,7 @@
   "immersive_paintings.zoom": "%s%% zoom",
   "immersive_paintings.cancel": "Cancel",
   "immersive_paintings.delete": "Delete",
+  "immersive_paintings.delete_all": "Delete All",
   "immersive_paintings.save": "Save",
   "immersive_paintings.done": "Done",
   "immersive_paintings.search": "Search",
@@ -46,7 +47,7 @@
   "immersive_paintings.page.frame": "Frame",
 
   "immersive_paintings.confirm_deletion": "Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name.",
-
+  "immersive_paintings.confirm_admin_deletion": "Delete this specific painting, or all paintings of that author?",
   "immersive_paintings.material.none": "None",
   "immersive_paintings.material.acacia": "Acacia",
   "immersive_paintings.material.birch": "Birch",
