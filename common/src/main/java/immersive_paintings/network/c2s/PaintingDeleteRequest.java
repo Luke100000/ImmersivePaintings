@@ -26,7 +26,9 @@ public class PaintingDeleteRequest implements Message {
     public void receive(PlayerEntity e) {
         Identifier identifier = new Identifier(this.identifier);
 
-        if (!ServerPaintingManager.get().getCustomServerPaintings().get(identifier).author.equals(e.getGameProfile().getName())) {
+        if (ServerPaintingManager.get().getCustomServerPaintings().get(identifier).author.equals(e.getGameProfile().getName()) || e.hasPermissionLevel(4)) {
+            Main.LOGGER.info(String.format("Player %s deleted painting %s.", e, identifier));
+        } else {
             Main.LOGGER.warn(String.format("Player %s tried to delete an image they does not own.", e));
             return;
         }

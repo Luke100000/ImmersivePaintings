@@ -173,6 +173,15 @@ public class ImmersivePaintingScreen extends Screen {
                     y += 15;
                 }
             }
+            case ADMIN_DELETE -> {
+                fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+                wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.confirm_admin_deletion"), 300);
+                y = height / 2 - 35;
+                for (Text t : wrap) {
+                    drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    y += 15;
+                }
+            }
             case LOADING -> {
                 TranslatableText text = new TranslatableText("immersive_paintings.upload", (int)Math.ceil(LazyNetworkManager.getRemainingTime()));
                 drawCenteredText(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
@@ -505,7 +514,7 @@ public class ImmersivePaintingScreen extends Screen {
                     NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
                     setPage(Page.YOURS);
                 }));
-            }
+                break;
         }
     }
 
@@ -529,7 +538,7 @@ public class ImmersivePaintingScreen extends Screen {
                     tooltip.add(new TranslatableText("immersive_paintings.by_author", painting.author).formatted(Formatting.ITALIC));
                     tooltip.add(new TranslatableText("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
-                    if (page == Page.YOURS) {
+                    if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
                         tooltip.add(new TranslatableText("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
@@ -543,6 +552,9 @@ public class ImmersivePaintingScreen extends Screen {
                                 if (page == Page.YOURS) {
                                     deletePainting = identifier;
                                     setPage(Page.DELETE);
+                                } else if (page == Page.PLAYERS && isOp()) {
+                                    deletePainting = identifier;
+                                    setPage(Page.ADMIN_DELETE);
                                 }
                             },
                             (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, tooltip, mx, my))));
@@ -633,6 +645,10 @@ public class ImmersivePaintingScreen extends Screen {
 
     private String getPlayerName() {
         return MinecraftClient.getInstance().player == null ? "" : MinecraftClient.getInstance().player.getGameProfile().getName();
+    }
+
+    private boolean isOp() {
+        return MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().player.hasPermissionLevel(4);
     }
 
     private void setSelectionPage(int p) {
@@ -776,6 +792,7 @@ public class ImmersivePaintingScreen extends Screen {
         CREATE,
         FRAME,
         DELETE,
+        ADMIN_DELETE,
         LOADING
     }
 
