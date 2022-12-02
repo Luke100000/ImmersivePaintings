@@ -2,11 +2,11 @@ package immersive_paintings.client.render.entity.renderer;
 
 import immersive_paintings.entity.ImmersiveGlowPaintingEntity;
 import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 
 public class ImmersiveGlowPaintingEntityRenderer extends ImmersivePaintingEntityRenderer<ImmersiveGlowPaintingEntity> {
-    public ImmersiveGlowPaintingEntityRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public ImmersiveGlowPaintingEntityRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx);
     }
 
     @Override
