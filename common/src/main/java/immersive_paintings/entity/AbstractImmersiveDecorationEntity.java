@@ -47,7 +47,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
             this.yaw = (float)(this.facing.getHorizontal() * 90);
             this.pitch = 0;
         } else {
-            this.setBodyYaw(rotation);
+            this.yaw = rotation;
             this.pitch = this.facing == Direction.UP ? 90.0f : -90.0f;
         }
         this.prevYaw = this.yaw;
