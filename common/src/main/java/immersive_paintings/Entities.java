@@ -20,8 +20,8 @@ public interface Entities {
             .makeFireImmune()
     );
 
-    EntityType<ImmersiveGlowPaintingEntity> GLOW_PAINTING = register("glow_painting", EntityType.Builder
-            .<ImmersiveGlowPaintingEntity>create(ImmersiveGlowPaintingEntity::new, SpawnGroup.MISC)
+    EntityType<Entity> GLOW_PAINTING = register("glow_painting", EntityType.Builder
+            .create(ImmersiveGlowPaintingEntity::new, SpawnGroup.MISC)
             .setDimensions(0.5f, 0.5f)
             .maxTrackingRange(10)
             .trackingTickInterval(Integer.MAX_VALUE)

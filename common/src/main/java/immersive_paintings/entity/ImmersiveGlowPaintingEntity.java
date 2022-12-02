@@ -2,6 +2,7 @@ package immersive_paintings.entity;
 
 import immersive_paintings.Entities;
 import immersive_paintings.Items;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ public class ImmersiveGlowPaintingEntity extends ImmersivePaintingEntity {
         setFacing(direction, rotation);
     }
 
-    public ImmersiveGlowPaintingEntity(EntityType<ImmersiveGlowPaintingEntity> type, World world) {
+    public ImmersiveGlowPaintingEntity(EntityType<Entity> type, World world) {
         super(type, world);
     }
 

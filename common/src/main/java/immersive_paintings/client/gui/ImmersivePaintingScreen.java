@@ -175,8 +175,8 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case ADMIN_DELETE -> {
                 fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.confirm_admin_deletion"), 300);
-                y = height / 2 - 35;
+                List<Text> wrap = FlowingText.wrap(new TranslatableText("immersive_paintings.confirm_admin_deletion"), 300);
+                int y = height / 2 - 35;
                 for (Text t : wrap) {
                     drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
                     y += 15;
@@ -330,7 +330,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 // Hide
-                addButton(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
+                addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
                         new TranslatableText(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
                         new TranslatableText("immersive_paintings.visibility"),
                         settings.hidden, true,
@@ -375,10 +375,8 @@ public class ImmersivePaintingScreen extends Screen {
 
                             setPage(Page.LOADING);
                         }));
-                break;
-            case YOURS:
-            case DATAPACKS:
-            case PLAYERS:
+            }
+            case YOURS, DATAPACKS, PLAYERS -> {
                 rebuildPaintings();
 
                 // page
@@ -525,7 +523,7 @@ public class ImmersivePaintingScreen extends Screen {
                     NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
                     setPage(Page.YOURS);
                 }));
-                break;
+        }
         }
     }
 
