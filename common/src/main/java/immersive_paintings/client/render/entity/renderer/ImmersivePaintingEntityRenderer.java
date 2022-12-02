@@ -22,24 +22,24 @@ import owens.oobjloader.FaceVertex;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePaintingEntity> {
+public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T> {
     public ImmersivePaintingEntityRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher);
     }
 
     @Override
-    public void render(ImmersivePaintingEntity entity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(T entity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
         matrixStack.push();
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-yaw));
         matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-entity.getPitch(tickDelta)));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(matrixStack, vertexConsumerProvider, entity);
         matrixStack.pop();
-        super.render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
     }
 
     @Override
-    public Identifier getTexture(ImmersivePaintingEntity paintingEntity) {
+    public Identifier getTexture(T paintingEntity) {
         MinecraftClient client = MinecraftClient.getInstance();
         Config config = Config.getInstance();
 
@@ -57,7 +57,15 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
         return ClientPaintingManager.getPaintingTexture(paintingEntity.getMotive(), type).textureIdentifier;
     }
 
-    private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, ImmersivePaintingEntity entity) {
+    protected int getLight(int light) {
+        return light;
+    }
+
+    protected int getFrameLight(int light) {
+        return light;
+    }
+
+    private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, T entity) {
         int light = WorldRenderer.getLightmapCoordinates(entity.world, entity.getBlockPos());
 
         MatrixStack.Entry entry = matrices.peek();
@@ -73,11 +81,12 @@ public class ImmersivePaintingEntityRenderer extends EntityRenderer<ImmersivePai
 
         //canvas
         vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, light, width, height, hasFrame ? 1.0f : 0.0f);
+        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, getLight(light), width, height, hasFrame ? 1.0f : 0.0f);
 
+        int frameLight = getFrameLight(light);
         if (hasFrame) {
             vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(entity.getMaterial()));
-            renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, light, width, height);
+            renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, frameLight, width, height);
         }
     }
 

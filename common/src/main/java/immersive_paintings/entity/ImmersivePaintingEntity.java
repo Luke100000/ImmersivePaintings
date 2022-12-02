@@ -13,6 +13,7 @@ import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -40,8 +41,12 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         setFacing(direction, rotation);
     }
 
-    public ImmersivePaintingEntity(EntityType<ImmersivePaintingEntity> type, World world) {
+    public ImmersivePaintingEntity(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    public ImmersivePaintingEntity(EntityType<?> painting, World world, BlockPos pos) {
+        super(painting, world, pos);
     }
 
     @Override
@@ -71,6 +76,10 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         super.readCustomDataFromNbt(nbt);
     }
 
+    public Item getDrop() {
+        return Items.PAINTING;
+    }
+
     @Override
     public void onBreak(@Nullable Entity entity) {
         if (!this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
@@ -82,7 +91,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
                 return;
             }
         }
-        this.dropItem(Items.PAINTING);
+        this.dropItem(getDrop());
     }
 
     @Override

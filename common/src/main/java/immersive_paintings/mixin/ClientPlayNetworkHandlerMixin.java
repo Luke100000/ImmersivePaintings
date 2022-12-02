@@ -1,6 +1,7 @@
 package immersive_paintings.mixin;
 
 import immersive_paintings.Entities;
+import immersive_paintings.entity.ImmersiveGlowPaintingEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -19,8 +20,13 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onEntitySpawn(Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;)V", at = @At("TAIL"))
     private void onEntitySpawnInject(EntitySpawnS2CPacket packet, CallbackInfo ci) {
-        if (packet.getEntityTypeId() == Entities.PAINTING) {
-            ImmersivePaintingEntity entity = new ImmersivePaintingEntity(Entities.PAINTING, getWorld());
+        if (packet.getEntityTypeId() == Entities.PAINTING || packet.getEntityTypeId() == Entities.GLOW_PAINTING) {
+            ImmersivePaintingEntity entity;
+            if (packet.getEntityTypeId() == Entities.PAINTING) {
+                entity = new ImmersivePaintingEntity(Entities.PAINTING, getWorld());
+            } else {
+                entity = new ImmersiveGlowPaintingEntity(Entities.GLOW_PAINTING, getWorld());
+            }
             int i = packet.getId();
 
             entity.updateTrackedPosition(packet.getX(), packet.getY(), packet.getZ());
