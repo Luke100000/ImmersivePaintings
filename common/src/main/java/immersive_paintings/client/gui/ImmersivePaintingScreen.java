@@ -617,13 +617,13 @@ public class ImmersivePaintingScreen extends Screen {
                 paintingWidgetList.add(addButton(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
                         (b) -> {
                             currentImage = ((PaintingWidget)b).thumbnail.image;
-							if (currentImage != null) {
-								currentImagePixelZoomCache = -1;
-								currentImageName = file.getName();
-								settings = new PixelatorSettings(currentImage);
-								setPage(Page.CREATE);
-								pixelateImage();
-							}
+                            if (currentImage != null) {
+                                currentImagePixelZoomCache = -1;
+                                currentImageName = file.getName();
+                                settings = new PixelatorSettings(currentImage);
+                                setPage(Page.CREATE);
+                                pixelateImage();
+                            }
                         },
                         (b) -> {
 
