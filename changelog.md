@@ -1,3 +1,8 @@
+# 0.4.1
+
+* Fixed a crash (thanks Thaums!)
+* In 1.18.2 and 1.19.2 now uses Glow Ink Sac instead of Glowstone Dust for glowing paintings
+
 # 0.4.0
 
 * Added glowing paintings
