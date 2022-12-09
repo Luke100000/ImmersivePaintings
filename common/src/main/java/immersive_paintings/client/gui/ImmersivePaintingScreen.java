@@ -207,7 +207,7 @@ public class ImmersivePaintingScreen extends Screen {
             List<Page> b = new LinkedList<>();
             b.add(Page.YOURS);
             b.add(Page.DATAPACKS);
-            if (showOtherPlayersPaintings) {
+            if (showOtherPlayersPaintings || isOp()) {
                 b.add(Page.PLAYERS);
             }
             b.add(Page.NEW);
@@ -522,7 +522,7 @@ public class ImmersivePaintingScreen extends Screen {
                     NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
                     setPage(Page.YOURS);
                 }));
-        }
+            }
         }
     }
 
