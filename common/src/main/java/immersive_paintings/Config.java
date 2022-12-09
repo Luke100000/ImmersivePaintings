@@ -39,7 +39,7 @@ public final class Config implements Serializable {
     public int minPaintingResolution = 8;
     public int maxPaintingResolution = 256;
 
-    public boolean showOtherPlayersPaintings = false;
+    public boolean showOtherPlayersPaintings = true;
 
     public int version = 0;
 

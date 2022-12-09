@@ -21,7 +21,7 @@ public class PaintingListMessage implements Message {
     private final boolean clear;
     private final boolean showOtherPlayersPaintings;
 
-    public PaintingListMessage(String playerName) {
+    public PaintingListMessage() {
         //datapack paintings
         for (Map.Entry<Identifier, Painting> entry : ServerPaintingManager.getDatapackPaintings().entrySet()) {
             this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
@@ -29,9 +29,7 @@ public class PaintingListMessage implements Message {
 
         //custom paintings
         for (Map.Entry<Identifier, Painting> entry : ServerPaintingManager.get().getCustomServerPaintings().entrySet()) {
-            if (Config.getInstance().showOtherPlayersPaintings || entry.getValue().author.equals(playerName)) {
-                this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
-            }
+            this.paintings.put(entry.getKey().toString(), new SerializableNbt(entry.getValue().toNbt()));
         }
 
         showOtherPlayersPaintings = Config.getInstance().showOtherPlayersPaintings;
