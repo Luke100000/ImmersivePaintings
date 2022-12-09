@@ -524,6 +524,23 @@ public class ImmersivePaintingScreen extends Screen {
                     setPage(Page.YOURS);
                 }));
             }
+            case ADMIN_DELETE -> {
+                addDrawableChild(new ButtonWidget(width / 2 - 115, height / 2 + 10, 70, 20, Text.translatable("immersive_paintings.cancel"), v -> setPage(Page.PLAYERS)));
+
+                addDrawableChild(new ButtonWidget(width / 2 - 40, height / 2 + 10, 70, 20, Text.translatable("immersive_paintings.delete"), v -> {
+                    NetworkHandler.sendToServer(new PaintingDeleteRequest(deletePainting));
+                    setPage(Page.PLAYERS);
+                }));
+
+                addDrawableChild(new ButtonWidget(width / 2 + 35, height / 2 + 10, 70, 20, Text.translatable("immersive_paintings.delete_all"), v -> {
+                    String author = ClientPaintingManager.getPainting(deletePainting).author;
+                    ClientPaintingManager.getPaintings().entrySet().stream()
+                            .filter(p -> Objects.equals(p.getValue().author, author) && !p.getValue().datapack)
+                            .map(Map.Entry::getKey)
+                            .forEach(p -> NetworkHandler.sendToServer(new PaintingDeleteRequest(p)));
+                    setPage(Page.PLAYERS);
+                }));
+            }
         }
     }
 
