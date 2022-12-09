@@ -1,3 +1,8 @@
+# 0.4.2
+
+* Fixed bugs introduced by 4.4.1 causing play paintings to not being synced
+* OPs can always see player paintings
+
 # 0.4.1
 
 * Fixed a crash (thanks Thaums!)
