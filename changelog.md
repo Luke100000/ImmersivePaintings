@@ -2,6 +2,7 @@
 
 * Fixed bugs introduced by 4.4.1 causing play paintings to not being synced
 * OPs can always see player paintings
+* Fixed admin delete gui being empty on 1.18.2 and 1.19.2
 
 # 0.4.1
 
