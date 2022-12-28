@@ -1,13 +1,18 @@
 {
   "itemGroup.immersive_paintings.immersive_paintings_tab": "Immersive Paintings",
+
   "item.immersive_paintings.painting": "Painting",
   "entity.immersive_paintings.painting": "Painting",
+
   "item.immersive_paintings.glow_painting": "Glow Painting",
   "entity.immersive_paintings.glow_painting": "Glow Painting",
+
   "immersive_paintings.upload": "Uploading, %s seconds left",
   "immersive_paintings.drop": "Drop an image here, enter a file path or URL or select a screenshot to start.",
+
   "immersive_paintings.error.too_large": "Image is too large!",
   "immersive_paintings.error.limit_reached": "You reached your maximum amount of uploaded paintings!",
+
   "immersive_paintings.filter.all": "All",
   "immersive_paintings.pixelart": "Pixelart",
   "immersive_paintings.pixelart.tooltip": "Preserves pixels and disables post processing",
@@ -37,14 +42,17 @@
   "immersive_paintings.by_author": "By %s",
   "immersive_paintings.resolution": "%sx%s at %s px",
   "immersive_paintings.right_click_to_delete": "Right click to delete",
+
   "immersive_paintings.frame.none": "None",
   "immersive_paintings.frame.simple": "Simple",
   "immersive_paintings.frame.vintage": "Vintage",
+
   "immersive_paintings.page.yours": "Yours",
   "immersive_paintings.page.datapacks": "Datapacks",
   "immersive_paintings.page.players": "Players",
   "immersive_paintings.page.new": "New Painting",
   "immersive_paintings.page.frame": "Frame",
+
   "immersive_paintings.confirm_deletion": "Are you sure? Deleting a painting will also make all existing paintings blank. You can then replace them by reusing the same name.",
   "immersive_paintings.confirm_admin_deletion": "Delete this specific painting, or all paintings of that author?",
   "immersive_paintings.material.none": "None",
