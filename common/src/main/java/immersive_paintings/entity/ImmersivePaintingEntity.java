@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
@@ -38,7 +39,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     private int height = 1;
 
     public ImmersivePaintingEntity(World world, BlockPos pos, Direction direction, int rotation) {
-        super(Entities.PAINTING, world, pos);
+        super(Entities.PAINTING.get(), world, pos);
 
         setFacing(direction, rotation);
     }
@@ -79,7 +80,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     public Item getDrop() {
-        return Items.PAINTING;
+        return Items.PAINTING.get();
     }
 
     @Override
@@ -113,7 +114,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
         return new EntitySpawnS2CPacket(this);
     }
 
@@ -126,7 +127,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ItemStack getPickBlockStack() {
-        return new ItemStack(Items.PAINTING);
+        return new ItemStack(Items.PAINTING.get());
     }
 
     @Override

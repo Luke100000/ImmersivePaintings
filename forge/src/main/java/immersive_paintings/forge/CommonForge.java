@@ -1,12 +1,9 @@
 package immersive_paintings.forge;
 
-import immersive_paintings.Entities;
-import immersive_paintings.Items;
-import immersive_paintings.Main;
-import immersive_paintings.Messages;
+import immersive_paintings.*;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -28,7 +25,11 @@ public final class CommonForge {
     }
 
     @SubscribeEvent
-    public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
-        RegistrationImpl.ENTITY_ATTRIBUTES.forEach((type, attributes) -> event.put(type, attributes.get().build()));
+    public static void register(CreativeModeTabEvent.Register event) {
+        ItemGroups.PAINTINGS = event.registerCreativeModeTab(ItemGroups.getIdentifier(), builder -> builder
+                .displayName(ItemGroups.getDisplayName())
+                .icon(ItemGroups::getIcon)
+                .entries((featureFlags, output, hasOp) -> output.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
+        );
     }
 }

@@ -28,8 +28,8 @@ public abstract class ExtendedSliderWidget<T> extends SliderWidget {
         RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         int i = (this.isHovered() ? 2 : 1) * 20;
-        this.drawTexture(matrices, this.x + (int)(getOpticalValue() * (double)(this.width - 8)), this.y, 0, 46 + i, 4, 20);
-        this.drawTexture(matrices, this.x + (int)(getOpticalValue() * (double)(this.width - 8)) + 4, this.y, 196, 46 + i, 4, 20);
+        this.drawTexture(matrices, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)), this.getY(), 0, 46 + i, 4, 20);
+        this.drawTexture(matrices, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)) + 4, this.getY(), 196, 46 + i, 4, 20);
     }
 
     @Override

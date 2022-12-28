@@ -13,9 +13,9 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
@@ -29,8 +29,8 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
     @Override
     public void render(T entity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-yaw));
-        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-entity.getPitch(tickDelta)));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-yaw));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-entity.getPitch(tickDelta)));
         matrixStack.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(matrixStack, vertexConsumerProvider, entity);
         matrixStack.pop();

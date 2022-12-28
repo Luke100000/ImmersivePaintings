@@ -11,9 +11,9 @@ import immersive_paintings.util.Utils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,7 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 public class XercaPaintCompat {
     public static boolean interactWithPainting(ImmersivePaintingEntity painting, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        Identifier id = Registry.ITEM.getId(stack.getItem());
+        Identifier id = Registries.ITEM.getId(stack.getItem());
         if (id.getNamespace().equals("xercapaint")) {
             int w = 0, h = 0;
             if (id.getPath().equals("item_canvas")) {

@@ -27,18 +27,12 @@ public class CallbackCheckboxWidget extends CheckboxWidget {
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrices, int mx, int my) {
-        if (tooltip != null) {
-            assert MinecraftClient.getInstance().currentScreen != null;
-            MinecraftClient.getInstance().currentScreen.renderTooltip(matrices, FlowingText.wrap(tooltip, 160), mx, my);
-        }
-    }
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
 
-    @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderButton(matrices, mouseX, mouseY, delta);
-        if (this.isHovered()) {
-            this.renderTooltip(matrices, mouseX, mouseY);
+        if (isHovered() && tooltip != null) {
+            assert MinecraftClient.getInstance().currentScreen != null;
+            MinecraftClient.getInstance().currentScreen.renderTooltip(matrices, FlowingText.wrap(tooltip, 160), mouseX, mouseY);
         }
     }
 }

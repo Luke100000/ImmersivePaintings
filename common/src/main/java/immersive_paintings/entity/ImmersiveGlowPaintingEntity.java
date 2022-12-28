@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class ImmersiveGlowPaintingEntity extends ImmersivePaintingEntity {
     public ImmersiveGlowPaintingEntity(World world, BlockPos pos, Direction direction, int rotation) {
-        super(Entities.GLOW_PAINTING, world, pos);
+        super(Entities.GLOW_PAINTING.get(), world, pos);
 
         setFacing(direction, rotation);
     }
@@ -22,6 +22,6 @@ public class ImmersiveGlowPaintingEntity extends ImmersivePaintingEntity {
 
     @Override
     public Item getDrop() {
-        return Items.GLOW_PAINTING;
+        return Items.GLOW_PAINTING.get();
     }
 }
