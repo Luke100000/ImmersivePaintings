@@ -1,3 +1,7 @@
+# 0.4.4
+
+* Fixed translations
+
 # 0.4.3
 
 * Ported to stupid 1.19.3
