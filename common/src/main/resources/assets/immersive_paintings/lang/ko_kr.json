@@ -1,14 +1,13 @@
 {
   "itemGroup.immersive_paintings.immersive_paintings_tab": "Immersive Paintings",
-
   "item.immersive_paintings.painting": "그림",
   "entity.immersive_paintings.painting": "그림",
-
+  "item.immersive_paintings.glow_painting": "Glow Painting",
+  "entity.immersive_paintings.glow_painting": "Glow Painting",
   "immersive_paintings.upload": "업로드 중, %s초 남음",
-
+  "immersive_paintings.drop": "Drop an image here, enter a file path or URL or select a screenshot to start.",
   "immersive_paintings.error.too_large": "이미지가 너무 큽니다!",
   "immersive_paintings.error.limit_reached": "업로드 할 수 있는 그림의 최대 개수에 도달했습니다!",
-
   "immersive_paintings.filter.all": "전체",
   "immersive_paintings.pixelart": "픽셀 아트",
   "immersive_paintings.pixelart.tooltip": "픽셀을 보존하고 후처리를 비활성화합니다.",
@@ -25,27 +24,29 @@
   "immersive_paintings.zoom": "%s%% 줌",
   "immersive_paintings.cancel": "취소",
   "immersive_paintings.delete": "삭제",
+  "immersive_paintings.delete_all": "Delete All",
   "immersive_paintings.save": "저장",
   "immersive_paintings.done": "완료",
+  "immersive_paintings.hide": "Hide",
+  "immersive_paintings.show": "Show",
+  "immersive_paintings.visibility": "Hidden paintings are not visible in the selection screen to other players.",
+  "immersive_paintings.hidden": "Hidden",
   "immersive_paintings.search": "검색",
   "immersive_paintings.filter_width": "너비",
   "immersive_paintings.filter_height": "높이",
   "immersive_paintings.by_author": "제작: %s",
   "immersive_paintings.resolution": "%sx%s크기 %s픽셀",
   "immersive_paintings.right_click_to_delete": "삭제하려면 마우스 오른쪽 클릭",
-
   "immersive_paintings.frame.none": "없음",
   "immersive_paintings.frame.simple": "심플",
   "immersive_paintings.frame.vintage": "빈티지",
-
   "immersive_paintings.page.yours": "사용자",
   "immersive_paintings.page.datapacks": "데이터팩",
   "immersive_paintings.page.players": "플레이어",
   "immersive_paintings.page.new": "새 그림",
   "immersive_paintings.page.frame": "액자",
-
   "immersive_paintings.confirm_deletion": "계속 진행하시겠습니까? 그림을 삭제하면 기존의 모든 그림도 공백으로 바뀝니다. 기존 그림의 이름과 같은 이름을 사용하여 그림을 교체할 수 있습니다.",
-
+  "immersive_paintings.confirm_admin_deletion": "Delete this specific painting, or all paintings of that author?",
   "immersive_paintings.material.none": "없음",
   "immersive_paintings.material.acacia": "아카시아나무",
   "immersive_paintings.material.birch": "자작나무",
