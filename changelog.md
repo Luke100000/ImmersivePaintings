@@ -1,3 +1,8 @@
+# 0.4.3
+
+* Ported to stupid 1.19.3
+* Synced translations from Crowdin
+
 # 0.4.2
 
 * Fixed bugs introduced by 4.4.1 causing play paintings to not being synced
