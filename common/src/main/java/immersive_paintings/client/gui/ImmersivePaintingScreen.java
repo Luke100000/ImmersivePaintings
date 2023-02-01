@@ -260,7 +260,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 // Height
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.height, 1, 16, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.height", settings.height, 1, 16, v -> {
                     settings.height = v;
                     shouldReProcess = true;
                 }));
