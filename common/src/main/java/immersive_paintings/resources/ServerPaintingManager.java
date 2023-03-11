@@ -61,9 +61,7 @@ public class ServerPaintingManager {
     public static Painting getPainting(Identifier i) {
         if (datapackPaintings.containsKey(i)) {
             return datapackPaintings.get(i);
-        } else {
-            return get().customServerPaintings.getOrDefault(i, DEFAULT);
-        }
+        } else {return get().customServerPaintings.getOrDefault(i, DEFAULT);}
     }
 
     public static Optional<ByteImage> getImage(Identifier i, Painting.Type type) {

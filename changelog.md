@@ -1,3 +1,14 @@
+# 0.5.0
+
+* Added graffiti, transparent paintings without canvas
+* Fixed typos
+* Resizing the window no longer resets the editor screen
+* Fixed networking issues
+* Fixed exception spam
+* Fixed excessive CPU usage in editor
+* Fixed black line
+* Fixed some editor pixelator artifacts
+
 # 0.4.4
 
 * Fixed translations

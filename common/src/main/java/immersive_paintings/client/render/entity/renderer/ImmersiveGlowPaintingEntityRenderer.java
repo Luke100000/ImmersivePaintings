@@ -14,7 +14,6 @@ public class ImmersiveGlowPaintingEntityRenderer extends ImmersivePaintingEntity
         return LightmapTextureManager.pack(
                 (int)(LightmapTextureManager.getBlockLightCoordinates(light) * 0.25 + 15 * 0.75),
                 LightmapTextureManager.getSkyLightCoordinates(light)
-
         );
     }
 
@@ -23,7 +22,6 @@ public class ImmersiveGlowPaintingEntityRenderer extends ImmersivePaintingEntity
         return LightmapTextureManager.pack(
                 (int)(LightmapTextureManager.getBlockLightCoordinates(light) * 0.875 + 2),
                 LightmapTextureManager.getSkyLightCoordinates(light)
-
         );
     }
 }

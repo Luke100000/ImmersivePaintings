@@ -65,7 +65,12 @@ public class ClientNetworkManager implements NetworkManager {
                 if (screen.entity != null) {
                     screen.entity.setMotive(new Identifier(response.identifier));
                     NetworkHandler.sendToServer(new PaintingModifyRequest(screen.entity));
-                    screen.setPage(ImmersivePaintingScreen.Page.FRAME);
+
+                    if (screen.isGraffiti()) {
+                        MinecraftClient.getInstance().setScreen(null);
+                    } else {
+                        screen.setPage(ImmersivePaintingScreen.Page.FRAME);
+                    }
                 }
             } else {
                 screen.setPage(ImmersivePaintingScreen.Page.CREATE);

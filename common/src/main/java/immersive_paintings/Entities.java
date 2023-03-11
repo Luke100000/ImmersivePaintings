@@ -2,6 +2,7 @@ package immersive_paintings;
 
 import immersive_paintings.cobalt.registration.Registration;
 import immersive_paintings.entity.ImmersiveGlowPaintingEntity;
+import immersive_paintings.entity.ImmersiveGraffitiEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -28,12 +29,20 @@ public interface Entities {
             .makeFireImmune()
     );
 
+    EntityType<Entity> GRAFFITI = register("graffiti", EntityType.Builder
+            .create(ImmersiveGraffitiEntity::new, SpawnGroup.MISC)
+            .setDimensions(0.5f, 0.5f)
+            .maxTrackingRange(10)
+            .trackingTickInterval(Integer.MAX_VALUE)
+            .makeFireImmune()
+    );
+
     static void bootstrap() {
 
     }
 
     static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         Identifier id = new Identifier(Main.MOD_ID, name);
-        return Registration.registerEntityRenderer(Registry.ENTITY_TYPE, id, builder.build(id.toString()));
+        return Registration.register(Registry.ENTITY_TYPE, id, builder.build(id.toString()));
     }
 }
