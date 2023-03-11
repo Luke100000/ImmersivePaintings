@@ -49,10 +49,11 @@ public class PaintingsLoader extends SinglePreparationResourceReloader<Map<Ident
                     int resolution = JsonHelper.getInt(jsonElement, "resolution", 32);
                     String name = JsonHelper.getString(jsonElement, "name", "unknown");
                     String author = JsonHelper.getString(jsonElement, "author", "unknown");
+                    boolean graffiti = JsonHelper.getBoolean(jsonElement, "graffiti", false);
 
-                    painting = new Painting(null, width, height, resolution, name, author, true, false, hash);
+                    painting = new Painting(null, width, height, resolution, name, author, true, false, graffiti, hash);
                 } else {
-                    painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, false, hash);
+                    painting = new Painting(null, 1, 1, 32, "unknown", "unknown", true, false, false, hash);
                 }
 
                 painting.texture.resource = manager.getResource(identifier);
