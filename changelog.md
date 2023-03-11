@@ -1,5 +1,6 @@
 # 0.5.0
 
+* Added graffiti, transparent paintings without canvas
 * Fixed typos
 * Resizing the window no longer resets the editor screen
 * Fixed networking issues

@@ -6,6 +6,7 @@ import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.entity.ImmersiveGraffitiEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
@@ -217,7 +218,9 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
             b.add(Page.NEW);
-            b.add(Page.FRAME);
+            if (!(entity instanceof ImmersiveGraffitiEntity)) {
+                b.add(Page.FRAME);
+            }
 
             int x = width / 2 - 200;
             int w = 400 / b.size();

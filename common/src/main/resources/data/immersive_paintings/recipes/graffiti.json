@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DGD",
+    "DBD"
+  ],
+  "key": {
+    "B": [
+      {
+        "item": "minecraft:bucket"
+      }
+    ],
+    "G": [
+      {
+        "item": "minecraft:gunpowder"
+      }
+    ],
+    "D": [
+      {
+        "tag": "immersive_paintings:dye"
+      }
+    ]
+  },
+  "result": {
+    "item": "immersive_paintings:graffiti",
+    "count": 8
+  }
+}
