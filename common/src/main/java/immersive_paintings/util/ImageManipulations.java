@@ -37,7 +37,7 @@ public class ImageManipulations {
     public static void resize(ByteImage image, ByteImage source, double zoom, int ox, int oy) {
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                int red = 0, green = 0, blue = 0;
+                int red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
                 for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
                     for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
@@ -46,6 +46,7 @@ public class ImageManipulations {
                         red += (bytes[index] & 0xFF);
                         green += (bytes[index + 1] & 0xFF);
                         blue += (bytes[index + 2] & 0xFF);
+                        alpha += (bytes[index + 3] & 0xFF);
                         samples++;
                     }
                 }
@@ -53,8 +54,9 @@ public class ImageManipulations {
                     red /= samples;
                     green /= samples;
                     blue /= samples;
+                    alpha /= samples;
                 }
-                image.setPixel(x, y, red, green, blue);
+                image.setPixel(x, y, red, green, blue, alpha);
             }
         }
     }
