@@ -5,6 +5,7 @@
 * Fixed networking issues
 * Fixed exception spam
 * Fixed excessive CPU usage in editor
+* Fixed black line
 
 # 0.4.4
 

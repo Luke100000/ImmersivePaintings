@@ -39,8 +39,8 @@ public class ImageManipulations {
             for (int y = 0; y < image.getHeight(); y++) {
                 int red = 0, green = 0, blue = 0;
                 int samples = 0;
-                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth() - 1, ox + zoom * (x + 1)); px++) {
-                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight() - 1, oy + zoom * (y + 1)); py++) {
+                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
+                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
                         int index = source.getIndex(px, py);
                         byte[] bytes = source.getBytes();
                         red += (bytes[index] & 0xFF);
