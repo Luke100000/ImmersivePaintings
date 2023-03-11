@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class Registration {
     private static Impl INSTANCE;
 
-    public static <T> T registerEntityRenderer(Registry<? super T> registry, Identifier id, T obj) {
+    public static <T> T register(Registry<? super T> registry, Identifier id, T obj) {
         return INSTANCE.register(registry, id, obj);
     }
 
