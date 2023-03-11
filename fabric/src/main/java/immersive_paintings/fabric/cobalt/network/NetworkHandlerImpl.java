@@ -15,31 +15,33 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
-    private final Map<Class<?>, Identifier> cache = new HashMap<>();
-
-    private Identifier getMessageIdentifier(Message msg) {
-        return cache.computeIfAbsent(msg.getClass(), this::getMessageIdentifier);
-    }
+    private final Map<Class<?>, Identifier> identifiers = new HashMap<>();
 
     private int id = 0;
 
-    private <T> Identifier getMessageIdentifier(Class<T> msg) {
+    private <T> Identifier createMessageIdentifier(Class<T> msg) {
         return new Identifier(Main.SHORT_MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT).substring(0, 8) + id++);
+    }
+
+    private Identifier getMessageIdentifier(Message msg) {
+        return Objects.requireNonNull(identifiers.get(msg.getClass()), "Used unregistered message!");
     }
 
     @Override
     public <T extends Message> void registerMessage(Class<T> msg) {
-        Identifier id = getMessageIdentifier(msg);
+        Identifier identifier = createMessageIdentifier(msg);
+        identifiers.put(msg, identifier);
 
-        ServerPlayNetworking.registerGlobalReceiver(id, (server, player, handler, buffer, responder) -> {
+        ServerPlayNetworking.registerGlobalReceiver(identifier, (server, player, handler, buffer, responder) -> {
             Message m = Message.decode(buffer);
             server.execute(() -> m.receive(player));
         });
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ClientProxy.register(id);
+            ClientProxy.register(identifier);
         }
     }
 
