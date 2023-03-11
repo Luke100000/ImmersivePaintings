@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class Cache {
     private static File getFile(String key) {
+        //noinspection ResultOfMethodCallIgnored
+        new File("./immersive_paintings_cache/").getParentFile().mkdirs();
+        
         return new File("./immersive_paintings_cache/" + key + ".png");
     }
 
@@ -40,8 +43,6 @@ public class Cache {
     public static void set(Painting.Texture texture) {
         if (texture.image != null) {
             File file = getFile(texture.hash);
-            //noinspection ResultOfMethodCallIgnored
-            file.getParentFile().mkdirs();
             texture.image.write(file);
         }
     }
