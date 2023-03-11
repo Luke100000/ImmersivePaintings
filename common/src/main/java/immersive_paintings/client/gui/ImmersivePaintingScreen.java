@@ -216,7 +216,7 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
             b.add(Page.NEW);
-            if (!(entity instanceof ImmersiveGraffitiEntity)) {
+            if (!isGraffiti()) {
                 b.add(Page.FRAME);
             }
 
