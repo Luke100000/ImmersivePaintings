@@ -1,3 +1,8 @@
+# 0.5.0
+
+* Fixed typos
+* Resizing the window no longer resets the editor screen
+
 # 0.4.4
 
 * Fixed translations

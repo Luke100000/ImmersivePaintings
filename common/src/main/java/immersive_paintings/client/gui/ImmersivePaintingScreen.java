@@ -101,10 +101,13 @@ public class ImmersivePaintingScreen extends Screen {
     protected void init() {
         super.init();
 
-        clearSearch();
-        setPage(Page.DATAPACKS);
-        updateSearch();
+        if (page == null) {
+            setPage(Page.DATAPACKS);
+        } else {
+            refreshPage();
+        }
 
+        //reload screenshots
         File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
         File[] files = file.listFiles(v -> v.getName().endsWith(".png"));
         if (files != null) {
@@ -304,14 +307,14 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 10;
 
                 // Color reduction
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", 12, 1, 25, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", settings.colors, 1, 25, v -> {
                     settings.colors = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
                 // Dither
-                addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", 0.25, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", settings.dither, v -> {
                     settings.dither = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -331,28 +334,28 @@ public class ImmersivePaintingScreen extends Screen {
 
                 // Hide
                 addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
-                        new TranslatableText(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
+                        new TranslatableText("immersive_paintings.hide"),
                         new TranslatableText("immersive_paintings.visibility"),
                         settings.hidden, true,
                         v -> settings.hidden = !settings.hidden));
                 y += 22;
 
                 // Offset X
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", 0.5, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", settings.offsetX, v -> {
                     settings.offsetX = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset Y
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", 0.5, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", settings.offsetY, v -> {
                     settings.offsetY = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", 1, 1, 3, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, 1, 3, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -641,6 +644,10 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public void setPage(Page page) {
+        if (page != this.page) {
+            clearSearch();
+        }
+
         this.page = page;
         this.error = null;
 
