@@ -359,7 +359,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 // Offset
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, 1, 3, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, entity instanceof ImmersiveGraffitiEntity ? 0.5 : 1.0, 3, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
