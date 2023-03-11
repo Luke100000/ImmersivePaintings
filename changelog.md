@@ -6,6 +6,7 @@
 * Fixed exception spam
 * Fixed excessive CPU usage in editor
 * Fixed black line
+* Fixed some editor pixelator artifacts
 
 # 0.4.4
 

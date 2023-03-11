@@ -85,10 +85,10 @@ public class ImageManipulations {
         final int EXCLUDE_HUE = 1;
 
         // base
-        int base = image.getWidth() * image.getHeight() / 255;
+        int base = image.getWidth() * image.getHeight();
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
             for (int x = 0; x < 256; x++) {
-                hist[channel][x] = base;
+                hist[channel][x] = base / 255.0f;
             }
         }
 
@@ -104,29 +104,26 @@ public class ImageManipulations {
         }
 
         // find bin boundaries and calculate centers
-        int binSize = image.getWidth() * image.getHeight() / bins + base * 255 / bins;
+        int binSize = (image.getWidth() * image.getHeight() + base) / bins;
         float[][] lookup = new float[3][256];
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
             int start = 0;
-            int sum = 0;
             for (int bin = 0; bin < bins; bin++) {
                 int end = start;
-                int avg = 0;
-                while ((bin == bins - 1 || sum <= binSize) && end < 255) {
+                int sum = 0;
+                int pixels = 0;
+                while (pixels <= binSize && end < 256) {
                     float v = hist[channel][end];
-                    sum += v;
-                    avg += end * v;
+                    pixels += v;
+                    sum += end * v;
                     end++;
                 }
 
-                if (start != end) {
-                    for (int b = start; b < end + 1; b++) {
-                        lookup[channel][b] = (float)avg / sum / 255.0f;
-                    }
+                for (int b = start; b < end; b++) {
+                    lookup[channel][b] = (float)sum / pixels / 255.0f;
                 }
 
                 start = end;
-                sum -= binSize;
             }
         }
 
