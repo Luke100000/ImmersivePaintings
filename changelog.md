@@ -4,6 +4,7 @@
 * Resizing the window no longer resets the editor screen
 * Fixed networking issues
 * Fixed exception spam
+* Fixed excessive CPU usage in editor
 
 # 0.4.4
 

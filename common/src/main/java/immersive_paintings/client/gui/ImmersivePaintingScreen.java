@@ -141,6 +141,7 @@ public class ImmersivePaintingScreen extends Screen {
                         shouldUpload = true;
                     };
                     service.submit(task);
+                    shouldReProcess = false;
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
