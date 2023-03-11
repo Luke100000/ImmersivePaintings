@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 public final class Main {
+    public static final String SHORT_MOD_ID = "ic_ip";
     public static final String MOD_ID = "immersive_paintings";
     public static final Logger LOGGER = LogManager.getLogger();
     public static NetworkManager networkManager;

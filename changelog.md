@@ -2,6 +2,7 @@
 
 * Fixed typos
 * Resizing the window no longer resets the editor screen
+* Fixed networking issues
 
 # 0.4.4
 

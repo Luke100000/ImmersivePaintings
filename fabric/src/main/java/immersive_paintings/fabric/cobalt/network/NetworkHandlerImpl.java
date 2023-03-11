@@ -17,14 +17,16 @@ import java.util.Locale;
 import java.util.Map;
 
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
-    private final Map<Message, Identifier> cache = new HashMap<>();
+    private final Map<Class<?>, Identifier> cache = new HashMap<>();
 
     private Identifier getMessageIdentifier(Message msg) {
-        return cache.computeIfAbsent(msg, m -> getMessageIdentifier(m.getClass()));
+        return cache.computeIfAbsent(msg.getClass(), this::getMessageIdentifier);
     }
 
+    private int id = 0;
+
     private <T> Identifier getMessageIdentifier(Class<T> msg) {
-        return new Identifier(Main.MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT));
+        return new Identifier(Main.SHORT_MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT).substring(0, 8) + id++);
     }
 
     @Override
