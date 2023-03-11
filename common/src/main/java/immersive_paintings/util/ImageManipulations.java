@@ -37,15 +37,16 @@ public class ImageManipulations {
     public static void resize(ByteImage image, ByteImage source, double zoom, int ox, int oy) {
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                int red = 0, green = 0, blue = 0;
+                int red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
-                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth() - 1, ox + zoom * (x + 1)); px++) {
-                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight() - 1, oy + zoom * (y + 1)); py++) {
+                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
+                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
                         int index = source.getIndex(px, py);
                         byte[] bytes = source.getBytes();
                         red += (bytes[index] & 0xFF);
                         green += (bytes[index + 1] & 0xFF);
                         blue += (bytes[index + 2] & 0xFF);
+                        alpha += (bytes[index + 3] & 0xFF);
                         samples++;
                     }
                 }
@@ -53,8 +54,9 @@ public class ImageManipulations {
                     red /= samples;
                     green /= samples;
                     blue /= samples;
+                    alpha /= samples;
                 }
-                image.setPixel(x, y, red, green, blue);
+                image.setPixel(x, y, red, green, blue, alpha);
             }
         }
     }
@@ -85,10 +87,10 @@ public class ImageManipulations {
         final int EXCLUDE_HUE = 1;
 
         // base
-        int base = image.getWidth() * image.getHeight() / 255;
+        int base = image.getWidth() * image.getHeight();
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
             for (int x = 0; x < 256; x++) {
-                hist[channel][x] = base;
+                hist[channel][x] = base / 255.0f;
             }
         }
 
@@ -104,29 +106,26 @@ public class ImageManipulations {
         }
 
         // find bin boundaries and calculate centers
-        int binSize = image.getWidth() * image.getHeight() / bins + base * 255 / bins;
+        int binSize = (image.getWidth() * image.getHeight() + base) / bins;
         float[][] lookup = new float[3][256];
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
             int start = 0;
-            int sum = 0;
             for (int bin = 0; bin < bins; bin++) {
                 int end = start;
-                int avg = 0;
-                while ((bin == bins - 1 || sum <= binSize) && end < 255) {
+                int sum = 0;
+                int pixels = 0;
+                while (pixels <= binSize && end < 256) {
                     float v = hist[channel][end];
-                    sum += v;
-                    avg += end * v;
+                    pixels += v;
+                    sum += end * v;
                     end++;
                 }
 
-                if (start != end) {
-                    for (int b = start; b < end + 1; b++) {
-                        lookup[channel][b] = (float)avg / sum / 255.0f;
-                    }
+                for (int b = start; b < end; b++) {
+                    lookup[channel][b] = (float)sum / pixels / 255.0f;
                 }
 
                 start = end;
-                sum -= binSize;
             }
         }
 

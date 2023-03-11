@@ -5,10 +5,10 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 import static java.awt.Color.RGBtoHSB;
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class ByteImage {
-    private final static int BANDS = 3;
+    private final static int BANDS = 4;
     private final byte[] bytes;
     private final int width, height;
 
@@ -40,7 +40,8 @@ public class ByteImage {
                 byteImage.setPixel(x, y,
                         (d >> 16) & 0xFF,
                         (d >> 8) & 0xFF,
-                        d & 0xFF
+                        d & 0xFF,
+                        (d >> 24) & 0xFF
                 );
             }
         }
@@ -53,7 +54,7 @@ public class ByteImage {
     }
 
     public BufferedImage toBufferedImage() {
-        BufferedImage bufferedImage = new BufferedImage(width, height, TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(width, height, TYPE_INT_ARGB);
 
         for (int x = 0; x < getWidth(); x++) {
             for (int y = 0; y < getHeight(); y++) {
@@ -82,15 +83,16 @@ public class ByteImage {
         return stream.toByteArray();
     }
 
-    public void setPixel(int x, int y, int r, int g, int b) {
-        setPixel(x, y, (byte)r, (byte)g, (byte)b);
+    public void setPixel(int x, int y, int r, int g, int b, int a) {
+        setPixel(x, y, (byte)r, (byte)g, (byte)b, (byte)a);
     }
 
-    public void setPixel(int x, int y, byte r, byte g, byte b) {
+    public void setPixel(int x, int y, byte r, byte g, byte b, byte a) {
         int i = getIndex(x, y);
         bytes[i] = r;
         bytes[i + 1] = g;
         bytes[i + 2] = b;
+        bytes[i + 3] = a;
     }
 
     public int getIndex(int x, int y) {
@@ -172,11 +174,11 @@ public class ByteImage {
 
     public int getARGB(int x, int y) {
         int index = getIndex(x, y);
-        return 0xff000000 | (bytes[index + 2] & 0xFF) | ((bytes[index + 1] & 0xFF) << 8) | ((bytes[index] & 0xFF) << 16);
+        return (bytes[index + 2] & 0xFF) | ((bytes[index + 1] & 0xFF) << 8) | ((bytes[index] & 0xFF) << 16) | ((bytes[index + 3] & 0xFF) << 24);
     }
 
     public int getABGR(int x, int y) {
         int index = getIndex(x, y);
-        return 0xff000000 | (bytes[index] & 0xFF) | ((bytes[index + 1] & 0xFF) << 8) | ((bytes[index + 2] & 0xFF) << 16);
+        return (bytes[index] & 0xFF) | ((bytes[index + 1] & 0xFF) << 8) | ((bytes[index + 2] & 0xFF) << 16) | ((bytes[index + 3] & 0xFF) << 24);
     }
 }

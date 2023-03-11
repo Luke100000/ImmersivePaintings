@@ -79,14 +79,19 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         int height = entity.getHeightPixels();
 
         //canvas
-        vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-        renderFaces("objects/canvas.obj", posMat, normMat, vertexConsumer, getLight(light), width, height, hasFrame ? 1.0f : 0.0f);
+        vertexConsumer = vertexConsumerProvider.getBuffer(isTranslucent() ? RenderLayer.getEntityTranslucent(getTexture(entity)) : RenderLayer.getEntitySolid(getTexture(entity)));
+        renderFaces(isTranslucent() ? "objects/graffiti.obj" : "objects/canvas.obj", posMat, normMat, vertexConsumer, getLight(light), width, height, hasFrame ? 1.0f : 0.0f);
 
+        //frame
         int frameLight = getFrameLight(light);
         if (hasFrame) {
             vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(entity.getMaterial()));
             renderFrame(entity.getFrame(), posMat, normMat, vertexConsumer, frameLight, width, height);
         }
+    }
+
+    protected boolean isTranslucent() {
+        return false;
     }
 
     private void renderFaces(String name, Matrix4f posMat, Matrix3f normMat, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {

@@ -66,7 +66,7 @@ public class XercaPaintCompat {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     ImageIO.write(bufferedImage, "png", stream);
                     Utils.processByteArrayInChunks(stream.toByteArray(), (ints, split, splits) -> LazyNetworkManager.sendToServer(new UploadPaintingRequest(ints, split, splits)));
-                    LazyNetworkManager.sendToServer(new RegisterPaintingRequest(title, new Painting(null, w / 16, h / 16, 16, false)));
+                    LazyNetworkManager.sendToServer(new RegisterPaintingRequest(title, new Painting(null, w / 16, h / 16, 16, false, false)));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

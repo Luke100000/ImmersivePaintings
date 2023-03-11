@@ -20,6 +20,7 @@ public final class Painting {
     public final String author;
     public final boolean datapack;
     public final boolean hidden;
+    public final boolean graffiti;
 
     public final Texture texture;
     public final Texture half;
@@ -29,11 +30,12 @@ public final class Painting {
 
     public final static Painting DEFAULT = new Painting(new ByteImage(16, 16), 16);
 
-    public Painting(@Nullable ByteImage image, int width, int height, int resolution, boolean hidden) {
-        this(image, width, height, resolution, "", "", false, hidden, UUID.randomUUID().toString());
+    public Painting(@Nullable ByteImage image, int width, int height, int resolution, boolean hidden, boolean graffiti) {
+        this(image, width, height, resolution, "", "", false, hidden, graffiti, UUID.randomUUID().toString());
     }
 
-    public Painting(@Nullable ByteImage image, int width, int height, int resolution, String name, String author, boolean datapack, boolean hidden, String hash) {
+    public Painting(@Nullable ByteImage image, int width, int height, int resolution, String name, String author, boolean datapack, boolean hidden, boolean graffiti, String hash) {
+        this.graffiti = graffiti;
         this.texture = new Texture(image, hash, Type.FULL);
 
         int res = Math.max(width, height) * resolution;
@@ -60,7 +62,7 @@ public final class Painting {
     }
 
     public Painting(ByteImage image, int resolution) {
-        this(image, image.getWidth() / resolution, image.getHeight() / resolution, resolution, "", "", false, false, UUID.randomUUID().toString());
+        this(image, image.getWidth() / resolution, image.getHeight() / resolution, resolution, "", "", false, false, false, UUID.randomUUID().toString());
     }
 
     public NbtCompound toNbt() {
@@ -72,6 +74,7 @@ public final class Painting {
         nbt.putString("author", author);
         nbt.putBoolean("datapack", datapack);
         nbt.putBoolean("hidden", hidden);
+        nbt.putBoolean("graffiti", graffiti);
         nbt.putString("hash", texture.hash);
         return nbt;
     }
@@ -84,8 +87,9 @@ public final class Painting {
         String author = nbt.getString("author");
         boolean datapack = nbt.getBoolean("datapack");
         boolean hidden = nbt.getBoolean("hidden");
+        boolean graffiti = nbt.getBoolean("graffiti");
         String hash = nbt.getString("hash");
-        return new Painting(null, width, height, resolution, name, author, datapack, hidden, hash);
+        return new Painting(null, width, height, resolution, name, author, datapack, hidden, graffiti, hash);
     }
 
     public Texture getTexture(Type type) {

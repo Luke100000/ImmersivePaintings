@@ -6,6 +6,7 @@ import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
+import immersive_paintings.entity.ImmersiveGraffitiEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
@@ -100,10 +101,13 @@ public class ImmersivePaintingScreen extends Screen {
     protected void init() {
         super.init();
 
-        clearSearch();
-        setPage(Page.DATAPACKS);
-        updateSearch();
+        if (page == null) {
+            setPage(Page.DATAPACKS);
+        } else {
+            refreshPage();
+        }
 
+        //reload screenshots
         File file = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
         File[] files = file.listFiles(v -> v.getName().endsWith(".png"));
         if (files != null) {
@@ -137,6 +141,7 @@ public class ImmersivePaintingScreen extends Screen {
                         shouldUpload = true;
                     };
                     service.submit(task);
+                    shouldReProcess = false;
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
@@ -212,7 +217,9 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
             b.add(Page.NEW);
-            b.add(Page.FRAME);
+            if (!isGraffiti()) {
+                b.add(Page.FRAME);
+            }
 
             int x = width / 2 - 200;
             int w = 400 / b.size();
@@ -299,19 +306,18 @@ public class ImmersivePaintingScreen extends Screen {
                             shouldReProcess = true;
                             widget.setMessage(Text.literal(String.valueOf(settings.resolution)));
                         }));
-
                 y += 22;
                 y += 10;
 
                 // Color reduction
-                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", 12, 1, 25, v -> {
+                addDrawableChild(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", settings.colors, 1, 25, v -> {
                     settings.colors = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
                 // Dither
-                addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", 0.25, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", settings.dither, v -> {
                     settings.dither = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -331,28 +337,28 @@ public class ImmersivePaintingScreen extends Screen {
 
                 // Hide
                 addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 100, 20,
-                        Text.translatable(settings.hidden ? "immersive_paintings.show" : "immersive_paintings.hide"),
+                        Text.translatable("immersive_paintings.hide"),
                         Text.translatable("immersive_paintings.visibility"),
                         settings.hidden, true,
                         v -> settings.hidden = !settings.hidden));
                 y += 22;
 
                 // Offset X
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", 0.5, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", settings.offsetX, v -> {
                     settings.offsetX = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset Y
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", 0.5, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", settings.offsetY, v -> {
                     settings.offsetY = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", 1, 1, 3, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, isGraffiti() ? 0.5 : 1.0, isGraffiti() ? 1.5 : 3.0, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -370,7 +376,8 @@ public class ImmersivePaintingScreen extends Screen {
                                     settings.width,
                                     settings.height,
                                     settings.resolution,
-                                    settings.hidden
+                                    settings.hidden,
+                                    isGraffiti()
                             )));
 
                             setPage(Page.LOADING);
@@ -544,6 +551,10 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
+    public boolean isGraffiti() {
+        return entity instanceof ImmersiveGraffitiEntity;
+    }
+
     private void rebuildPaintings() {
         for (PaintingWidget w : paintingWidgetList) {
             remove(w);
@@ -576,7 +587,11 @@ public class ImmersivePaintingScreen extends Screen {
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
-                                setPage(Page.FRAME);
+                                if (isGraffiti()) {
+                                    close();
+                                } else {
+                                    setPage(Page.FRAME);
+                                }
                             },
                             (b) -> {
                                 if (page == Page.YOURS) {
@@ -606,7 +621,7 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * SCREENSHOTS_PER_PAGE;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                Painting painting = new Painting(null, 16, 16, 16, false);
+                Painting painting = new Painting(null, 16, 16, 16, false, isGraffiti());
                 paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
                         (b) -> {
                             currentImage = ((PaintingWidget)b).thumbnail.image;
@@ -641,8 +656,11 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public void setPage(Page page) {
+        if (page != this.page) {
+            clearSearch();
+        }
+
         this.page = page;
-        this.error = null;
 
         if (page == Page.DATAPACKS) {
             filteredResolution = 32;
@@ -662,6 +680,7 @@ public class ImmersivePaintingScreen extends Screen {
 
         String playerName = getPlayerName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
+                .filter(v -> v.getValue().graffiti == isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
                 .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack && !v.getValue().hidden)
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
@@ -738,6 +757,7 @@ public class ImmersivePaintingScreen extends Screen {
         if (stream != null) {
             try {
                 ByteImage nativeImage = ByteImage.read(stream);
+                preprocessImage(nativeImage);
                 MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(nativeImage)));
                 stream.close();
                 return nativeImage;
@@ -747,6 +767,22 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         return null;
+    }
+
+    // Only a graffiti properly supports alpha
+    private void preprocessImage(ByteImage image) {
+        clearError();
+        if (!isGraffiti()) {
+            byte[] bytes = image.getBytes();
+            for (int i = 3; i < bytes.length; i += 4) {
+                if (bytes[i] != ((byte)255)) {
+                    if (error == null) {
+                        setError(Text.translatable("immersive_paintings.graffiti_warning"));
+                    }
+                    bytes[i] = ((byte)255);
+                }
+            }
+        }
     }
 
     private static int getCurrentImagePixelZoomCache(ByteImage currentImage) {
@@ -810,6 +846,10 @@ public class ImmersivePaintingScreen extends Screen {
 
     public void refreshPage() {
         setPage(page);
+    }
+
+    public void clearError() {
+        this.error = null;
     }
 
     public void setError(Text text) {
