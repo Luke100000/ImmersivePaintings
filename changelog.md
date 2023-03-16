@@ -1,3 +1,7 @@
+# 0.5.1
+
+* Fixed issue with the cache and exception spam
+
 # 0.5.0
 
 * Added graffiti, transparent paintings without canvas
