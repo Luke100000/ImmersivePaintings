@@ -9,7 +9,7 @@ import java.util.Optional;
 public class Cache {
     private static File getFile(String key) {
         //noinspection ResultOfMethodCallIgnored
-        new File("./immersive_paintings_cache/").getParentFile().mkdirs();
+        new File("./immersive_paintings_cache/").mkdirs();
         
         return new File("./immersive_paintings_cache/" + key + ".png");
     }
