@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Zářící malba",
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+  "item.immersive_paintings.glow_graffiti": "Svítící graffiti",
+  "entity.immersive_paintings.glow_graffiti": "Svítící graffiti",
   "immersive_paintings.upload": "Nahrávání, zbývá %s sekund",
   "immersive_paintings.drop": "Vložte sem obrázek, zadejte cestu k souboru nebo adresu URL nebo vyberte snímek obrazovky a začněte.",
   "immersive_paintings.graffiti_warning": "Obrázek obsahuje průhlednost, použijte místo něj graffiti!",
