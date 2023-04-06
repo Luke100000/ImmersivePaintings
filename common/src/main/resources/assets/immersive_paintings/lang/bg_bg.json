@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Светеща живопис",
   "item.immersive_paintings.graffiti": "Графити",
   "entity.immersive_paintings.graffiti": "Графити",
+  "item.immersive_paintings.glow_graffiti": "Светещи графити",
+  "entity.immersive_paintings.glow_graffiti": "Светещи графити",
   "immersive_paintings.upload": "Качване, остават %s секунди",
   "immersive_paintings.drop": "Пуснете тук изображение, въведете път до файл или URL адрес или изберете снимка на екрана, за да започнете.",
   "immersive_paintings.graffiti_warning": "Изображението съдържа прозрачност, вместо това използвайте графити!",

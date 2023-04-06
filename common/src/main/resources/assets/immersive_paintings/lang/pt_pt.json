@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Pintura brilhante",
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+  "item.immersive_paintings.glow_graffiti": "Grafite Brilhante",
+  "entity.immersive_paintings.glow_graffiti": "Grafite Brilhante",
   "immersive_paintings.upload": "Uploading, %s segundos restantes",
   "immersive_paintings.drop": "Largue uma imagem aqui, introduza um caminho de ficheiro ou URL ou seleccione uma imagem para começar.",
   "immersive_paintings.graffiti_warning": "A imagem contém transparência, use antes um graffiti!",

@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Hõõguv maalimine",
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+  "item.immersive_paintings.glow_graffiti": "Hõõguv graffiti",
+  "entity.immersive_paintings.glow_graffiti": "Hõõguv graffiti",
   "immersive_paintings.upload": "Üleslaadimine, %s sekundit jäänud",
   "immersive_paintings.drop": "Visake siia pilt, sisestage faili tee või URL või valige alustamiseks ekraanipilt.",
   "immersive_paintings.graffiti_warning": "Pilt sisaldab läbipaistvust, kasuta selle asemel graffiti!",
