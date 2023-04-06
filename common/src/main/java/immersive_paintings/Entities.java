@@ -1,6 +1,7 @@
 package immersive_paintings;
 
 import immersive_paintings.cobalt.registration.Registration;
+import immersive_paintings.entity.ImmersiveGlowGraffitiEntity;
 import immersive_paintings.entity.ImmersiveGlowPaintingEntity;
 import immersive_paintings.entity.ImmersiveGraffitiEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
@@ -31,6 +32,14 @@ public interface Entities {
 
     Supplier<EntityType<Entity>> GRAFFITI = register("graffiti", EntityType.Builder
             .create(ImmersiveGraffitiEntity::new, SpawnGroup.MISC)
+            .setDimensions(0.5f, 0.5f)
+            .maxTrackingRange(10)
+            .trackingTickInterval(Integer.MAX_VALUE)
+            .makeFireImmune()
+    );
+
+    Supplier<EntityType<Entity>> GLOW_GRAFFITI = register("glow_graffiti", EntityType.Builder
+            .create(ImmersiveGlowGraffitiEntity::new, SpawnGroup.MISC)
             .setDimensions(0.5f, 0.5f)
             .maxTrackingRange(10)
             .trackingTickInterval(Integer.MAX_VALUE)

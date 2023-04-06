@@ -180,4 +180,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     public void setMaterial(Identifier material) {
         this.material = material;
     }
+
+    public boolean isGraffiti() {
+        return false;
+    }
 }
