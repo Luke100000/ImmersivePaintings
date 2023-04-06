@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Glødende maleri",
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+  "item.immersive_paintings.glow_graffiti": "Glødende graffiti",
+  "entity.immersive_paintings.glow_graffiti": "Glødende graffiti",
   "immersive_paintings.upload": "Laster opp, %s sekunder igjen",
   "immersive_paintings.drop": "Slipp et bilde her, skriv inn en filsti eller nettadresse eller velg et skjermbilde for å starte.",
   "immersive_paintings.graffiti_warning": "Bildet inneholder gjennomsiktighet, bruk en graffiti i stedet!",
