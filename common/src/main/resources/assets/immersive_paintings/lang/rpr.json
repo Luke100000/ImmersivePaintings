@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Светящаяся картина",
   "item.immersive_paintings.graffiti": "Граффити",
   "entity.immersive_paintings.graffiti": "Граффити",
+  "item.immersive_paintings.glow_graffiti": "Светящееся граффити",
+  "entity.immersive_paintings.glow_graffiti": "Светящееся граффити",
   "immersive_paintings.upload": "Загрузка, осталось %s секунд",
   "immersive_paintings.drop": "Брось сюда изображение, введи путь к файлу или URL или выбери скриншот, чтобы начать.",
   "immersive_paintings.graffiti_warning": "Изображение содержит прозрачность, используй вместо него граффити!",
