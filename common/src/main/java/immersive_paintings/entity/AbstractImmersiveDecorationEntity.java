@@ -72,8 +72,8 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         if (rotation != 0) {
             double cos = Math.cos(rotation / 180.0 * Math.PI);
             double sin = Math.sin(rotation / 180.0 * Math.PI);
-            up = new Vec3i(Math.round(up.getX() * cos - up.getZ() * sin), up.getY(), Math.round(up.getX() * sin + up.getZ() * cos));
-            side = new Vec3i(Math.round(side.getX() * cos - side.getZ() * sin), side.getY(), Math.round(side.getX() * sin + side.getZ() * cos));
+            up = new Vec3i((int)Math.round(up.getX() * cos - up.getZ() * sin), up.getY(), (int)Math.round(up.getX() * sin + up.getZ() * cos));
+            side = new Vec3i((int)Math.round(side.getX() * cos - side.getZ() * sin), side.getY(), (int)Math.round(side.getX() * sin + side.getZ() * cos));
         }
 
         double w = getWidthPixels() / 32.0;
@@ -148,7 +148,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
             if (!this.world.canPlayerModifyAt(playerEntity, this.attachmentPos)) {
                 return true;
             }
-            return this.damage(DamageSource.player(playerEntity), 0.0f);
+            return this.damage(attacker.world.getDamageSources().playerAttack(playerEntity), 0.0f);
         }
         return false;
     }
@@ -245,7 +245,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void setPosition(double x, double y, double z) {
-        this.attachmentPos = new BlockPos(x, y, z);
+        this.attachmentPos = BlockPos.ofFloored(x, y, z);
         this.updateAttachmentPosition();
         this.velocityDirty = true;
     }

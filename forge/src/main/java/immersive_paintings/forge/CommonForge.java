@@ -29,7 +29,7 @@ public final class CommonForge {
         ItemGroups.PAINTINGS = event.registerCreativeModeTab(ItemGroups.getIdentifier(), builder -> builder
                 .displayName(ItemGroups.getDisplayName())
                 .icon(ItemGroups::getIcon)
-                .entries((featureFlags, output, hasOp) -> output.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
+                .entries((featureFlags, output) -> output.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
         );
     }
 }

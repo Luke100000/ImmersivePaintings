@@ -129,7 +129,7 @@ public class ImmersivePaintingScreen extends Screen {
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.drop"), 220);
                 int y = height / 2 - 40 - wrap.size() * 12;
                 for (Text text : wrap) {
-                    drawCenteredText(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
+                    drawCenteredTextWithShadow(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
                     y += 12;
                 }
             }
@@ -164,7 +164,7 @@ public class ImmersivePaintingScreen extends Screen {
                 matrices.pop();
 
                 if (error != null) {
-                    drawCenteredText(matrices, textRenderer, error, width / 2, height / 2, 0xFFFF0000);
+                    drawCenteredTextWithShadow(matrices, textRenderer, error, width / 2, height / 2, 0xFFFF0000);
                 }
             }
             case DELETE -> {
@@ -172,7 +172,7 @@ public class ImmersivePaintingScreen extends Screen {
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.confirm_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
-                    drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    drawCenteredTextWithShadow(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
                     y += 15;
                 }
             }
@@ -181,13 +181,13 @@ public class ImmersivePaintingScreen extends Screen {
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.confirm_admin_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
-                    drawCenteredText(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    drawCenteredTextWithShadow(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
                     y += 15;
                 }
             }
             case LOADING -> {
                 Text text = Text.translatable("immersive_paintings.upload", (int)Math.ceil(LazyNetworkManager.getRemainingTime()));
-                drawCenteredText(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
+                drawCenteredTextWithShadow(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
 

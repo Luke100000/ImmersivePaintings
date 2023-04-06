@@ -37,7 +37,7 @@ public final class CommonFabric implements ModInitializer {
         ItemGroups.PAINTINGS = FabricItemGroup.builder(ItemGroups.getIdentifier())
                 .displayName(ItemGroups.getDisplayName())
                 .icon(ItemGroups::getIcon)
-                .entries((enabledFeatures, entries, operatorEnabled) -> entries.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
+                .entries((enabledFeatures, entries) -> entries.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
                 .build();
     }
 }

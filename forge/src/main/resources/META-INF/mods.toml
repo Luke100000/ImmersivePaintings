@@ -23,6 +23,6 @@ side = "BOTH"
 [[dependencies.immersive_paintings]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.3]"
+versionRange = "[1.19.4]"
 ordering = "NONE"
 side = "BOTH"
