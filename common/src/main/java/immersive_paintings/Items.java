@@ -1,6 +1,7 @@
 package immersive_paintings;
 
 import immersive_paintings.cobalt.registration.Registration;
+import immersive_paintings.item.ImmersiveGlowGraffitiItem;
 import immersive_paintings.item.ImmersiveGlowPaintingItem;
 import immersive_paintings.item.ImmersiveGraffitiItem;
 import immersive_paintings.item.ImmersivePaintingItem;
@@ -11,6 +12,7 @@ public interface Items {
     Item PAINTING = register("painting", new ImmersivePaintingItem(baseProps()));
     Item GLOW_PAINTING = register("glow_painting", new ImmersiveGlowPaintingItem(baseProps()));
     Item GRAFFITI = register("graffiti", new ImmersiveGraffitiItem(baseProps()));
+    Item GLOW_GRAFFITI = register("glow_graffiti", new ImmersiveGlowGraffitiItem(baseProps()));
 
     static Item register(String name, Item item) {
         return Registration.register(Registry.ITEM, Main.locate(name), item);

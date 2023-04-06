@@ -1,5 +1,6 @@
 package immersive_paintings;
 
+import immersive_paintings.client.render.entity.renderer.ImmersiveGlowGraffitiRenderer;
 import immersive_paintings.client.render.entity.renderer.ImmersiveGlowPaintingEntityRenderer;
 import immersive_paintings.client.render.entity.renderer.ImmersiveGraffitiEntityRenderer;
 import immersive_paintings.client.render.entity.renderer.ImmersivePaintingEntityRenderer;
@@ -10,5 +11,6 @@ public class Renderer {
         Registration.registerEntityRenderer(Entities.PAINTING, ImmersivePaintingEntityRenderer::new);
         Registration.registerEntityRenderer(Entities.GLOW_PAINTING, ImmersiveGlowPaintingEntityRenderer::new);
         Registration.registerEntityRenderer(Entities.GRAFFITI, ImmersiveGraffitiEntityRenderer::new);
+        Registration.registerEntityRenderer(Entities.GLOW_GRAFFITI, ImmersiveGlowGraffitiRenderer::new);
     }
 }

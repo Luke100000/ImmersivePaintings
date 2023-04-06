@@ -6,7 +6,6 @@ import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
-import immersive_paintings.entity.ImmersiveGraffitiEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.LazyNetworkManager;
 import immersive_paintings.network.c2s.PaintingDeleteRequest;
@@ -216,7 +215,7 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
             b.add(Page.NEW);
-            if (!isGraffiti()) {
+            if (!entity.isGraffiti()) {
                 b.add(Page.FRAME);
             }
 
@@ -357,7 +356,7 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 22;
 
                 // Offset
-                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, isGraffiti() ? 0.5 : 1.0, isGraffiti() ? 1.5 : 3.0, v -> {
+                addDrawableChild(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, entity.isGraffiti() ? 0.5 : 1.0, entity.isGraffiti() ? 1.5 : 3.0, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -376,7 +375,7 @@ public class ImmersivePaintingScreen extends Screen {
                                     settings.height,
                                     settings.resolution,
                                     settings.hidden,
-                                    isGraffiti()
+                                    entity.isGraffiti()
                             )));
 
                             setPage(Page.LOADING);
@@ -550,10 +549,6 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    public boolean isGraffiti() {
-        return entity instanceof ImmersiveGraffitiEntity;
-    }
-
     private void rebuildPaintings() {
         for (PaintingWidget w : paintingWidgetList) {
             remove(w);
@@ -586,7 +581,7 @@ public class ImmersivePaintingScreen extends Screen {
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
-                                if (isGraffiti()) {
+                                if (entity.isGraffiti()) {
                                     close();
                                 } else {
                                     setPage(Page.FRAME);
@@ -620,7 +615,7 @@ public class ImmersivePaintingScreen extends Screen {
             int i = x + screenshotPage * SCREENSHOTS_PER_PAGE;
             if (i >= 0 && i < screenshots.size()) {
                 File file = screenshots.get(i);
-                Painting painting = new Painting(null, 16, 16, 16, false, isGraffiti());
+                Painting painting = new Painting(null, 16, 16, 16, false, entity.isGraffiti());
                 paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
                         (b) -> {
                             currentImage = ((PaintingWidget)b).thumbnail.image;
@@ -679,7 +674,7 @@ public class ImmersivePaintingScreen extends Screen {
 
         String playerName = getPlayerName();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
-                .filter(v -> v.getValue().graffiti == isGraffiti())
+                .filter(v -> v.getValue().graffiti == entity.isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
                 .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack && !v.getValue().hidden)
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
@@ -771,7 +766,7 @@ public class ImmersivePaintingScreen extends Screen {
     // Only a graffiti properly supports alpha
     private void preprocessImage(ByteImage image) {
         clearError();
-        if (!isGraffiti()) {
+        if (!entity.isGraffiti()) {
             byte[] bytes = image.getBytes();
             for (int i = 3; i < bytes.length; i += 4) {
                 if (bytes[i] != ((byte)255)) {
