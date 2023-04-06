@@ -1,3 +1,7 @@
+# 0.6.0
+
+* Added glow graffiti
+
 # 0.5.1
 
 * Fixed issue with the cache and exception spam

@@ -4,11 +4,14 @@
   "item.immersive_paintings.painting": "Painting",
   "entity.immersive_paintings.painting": "Painting",
 
-  "item.immersive_paintings.glow_painting": "Glow Painting",
-  "entity.immersive_paintings.glow_painting": "Glow Painting",
+  "item.immersive_paintings.glow_painting": "Glowing Painting",
+  "entity.immersive_paintings.glow_painting": "Glowing Painting",
 
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+
+  "item.immersive_paintings.glow_graffiti": "Glowing Graffiti",
+  "entity.immersive_paintings.glow_graffiti": "Glowing Graffiti",
 
   "immersive_paintings.upload": "Uploading, %s seconds left",
   "immersive_paintings.drop": "Drop an image here, enter a file path or URL or select a screenshot to start.",
