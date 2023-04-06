@@ -6,6 +6,8 @@
   "entity.immersive_paintings.glow_painting": "Žiarivé maľovanie",
   "item.immersive_paintings.graffiti": "Graffiti",
   "entity.immersive_paintings.graffiti": "Graffiti",
+  "item.immersive_paintings.glow_graffiti": "Svietiace graffiti",
+  "entity.immersive_paintings.glow_graffiti": "Svietiace graffiti",
   "immersive_paintings.upload": "Nahrávanie, %s sekúnd",
   "immersive_paintings.drop": "Vložte sem obrázok, zadajte cestu k súboru alebo adresu URL alebo vyberte snímku obrazovky a začnite.",
   "immersive_paintings.graffiti_warning": "Obrázok obsahuje priehľadnosť, namiesto nej použite graffiti!",
