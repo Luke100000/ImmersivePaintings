@@ -1,3 +1,7 @@
+# 0.6.1
+
+* Block picking now gives the correct item
+
 # 0.6.0
 
 * Added glow graffiti
