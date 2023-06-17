@@ -49,7 +49,7 @@ public class ClientNetworkManager implements NetworkManager {
     @Override
     public void handlePaintingModifyMessage(PaintingModifyMessage message) {
         ClientPlayerEntity e = MinecraftClient.getInstance().player;
-        if (e != null && e.world.getEntityById(message.getEntityId()) instanceof ImmersivePaintingEntity painting) {
+        if (e != null && e.getWorld().getEntityById(message.getEntityId()) instanceof ImmersivePaintingEntity painting) {
             painting.setMotive(message.getMotive());
             painting.setFrame(message.getFrame());
             painting.setMaterial(message.getMaterial());

@@ -28,7 +28,7 @@ public class EventBus {
 
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (!event.getEntity().world.isClient) {
+        if (!event.getEntity().getWorld().isClient) {
             ServerDataManager.playerLoggedOff((ServerPlayerEntity)event.getEntity());
         }
     }

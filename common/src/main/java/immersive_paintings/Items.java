@@ -6,8 +6,10 @@ import immersive_paintings.item.ImmersiveGlowPaintingItem;
 import immersive_paintings.item.ImmersiveGraffitiItem;
 import immersive_paintings.item.ImmersivePaintingItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -31,5 +33,9 @@ public interface Items {
 
     static Item.Settings baseProps() {
         return new Item.Settings();
+    }
+
+    static Collection<ItemStack> getSortedItems() {
+        return items.stream().map(i -> i.get().getDefaultStack()).toList();
     }
 }

@@ -20,7 +20,7 @@ public class PaintingModifyRequest extends PaintingDataMessage {
 
     @Override
     public void receive(PlayerEntity e) {
-        Entity entity = e.world.getEntityById(getEntityId());
+        Entity entity = e.getWorld().getEntityById(getEntityId());
         if (entity instanceof ImmersivePaintingEntity painting) {
             painting.setMotive(getMotive());
             painting.setFrame(getFrame());

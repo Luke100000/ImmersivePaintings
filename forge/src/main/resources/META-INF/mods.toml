@@ -17,12 +17,13 @@ logoFile = "logoFile.png"
 [[dependencies.immersive_paintings]]
 modId = "forge"
 mandatory = true
-versionRange = "[36,)"
+versionRange = "[46,)"
 ordering = "NONE"
 side = "BOTH"
+
 [[dependencies.immersive_paintings]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4]"
+versionRange = "[1.20]"
 ordering = "NONE"
 side = "BOTH"

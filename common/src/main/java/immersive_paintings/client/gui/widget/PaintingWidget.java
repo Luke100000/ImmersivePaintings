@@ -1,8 +1,7 @@
 package immersive_paintings.client.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.resources.Painting;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -38,14 +37,8 @@ public class PaintingWidget extends DefaultButtonWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderTexture(0, thumbnail.textureIdentifier);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = context.getMatrices();
         matrices.push();
         int tw = thumbnail.image == null ? 32 : thumbnail.image.getWidth();
         int th = thumbnail.image == null ? 32 : thumbnail.image.getHeight();
@@ -55,7 +48,7 @@ public class PaintingWidget extends DefaultButtonWidget {
         }
         matrices.translate(getX() + (this.width - tw * scale) / 2, getY() + (this.height - th * scale) / 2, 0.0f);
         matrices.scale(scale, scale, 1.0f);
-        drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
+        context.drawTexture(thumbnail.textureIdentifier, 0, 0, 0, 0, tw, th, tw, th);
         matrices.pop();
     }
 }

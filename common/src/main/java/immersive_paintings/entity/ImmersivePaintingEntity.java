@@ -85,7 +85,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public void onBreak(@Nullable Entity entity) {
-        if (!world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+        if (!getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
             return;
         }
         playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0f, 1.0f);
@@ -132,7 +132,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient) {
+        if (!player.getWorld().isClient) {
             if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
                 NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
             }
@@ -154,7 +154,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     public void updateMotiveDimensions() {
         Painting painting;
-        if (world.isClient) {
+        if (getWorld().isClient) {
             painting = ClientPaintingManager.getPainting(motive);
         } else {
             painting = ServerPaintingManager.getPainting(motive);

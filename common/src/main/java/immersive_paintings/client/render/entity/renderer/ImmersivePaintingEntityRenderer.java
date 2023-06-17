@@ -65,7 +65,7 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
     }
 
     private void renderPainting(MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, T entity) {
-        int light = WorldRenderer.getLightmapCoordinates(entity.world, entity.getBlockPos());
+        int light = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getBlockPos());
 
         MatrixStack.Entry entry = matrices.peek();
         Matrix4f posMat = entry.getPositionMatrix();

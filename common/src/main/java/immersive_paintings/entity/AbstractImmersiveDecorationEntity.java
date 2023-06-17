@@ -102,7 +102,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void tick() {
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
             this.attemptTickInVoid();
             if (this.obstructionCheckCounter++ == 100) {
                 this.obstructionCheckCounter = 0;
@@ -115,17 +115,17 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     }
 
     public boolean canStayAttached() {
-        if (Config.getInstance().testIfSpaceEmpty && !this.world.isSpaceEmpty(this)) {
+        if (Config.getInstance().testIfSpaceEmpty && !this.getWorld().isSpaceEmpty(this)) {
             return false;
         }
 
         BlockPos blockPos = this.attachmentPos.offset(this.facing.getOpposite());
-        BlockState blockState = this.world.getBlockState(blockPos);
-        if (!blockState.getMaterial().isSolid() && !AbstractRedstoneGateBlock.isRedstoneGate(blockState)) {
+        BlockState blockState = this.getWorld().getBlockState(blockPos);
+        if (!blockState.isSolid() && !AbstractRedstoneGateBlock.isRedstoneGate(blockState)) {
             return false;
         }
 
-        return this.world.getOtherEntities(this, this.getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((AbstractImmersiveDecorationEntity)v).facing == this.facing);
+        return this.getWorld().getOtherEntities(this, this.getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((AbstractImmersiveDecorationEntity)v).facing == this.facing);
     }
 
     public int getRotation() {
@@ -145,10 +145,10 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
     @Override
     public boolean handleAttack(Entity attacker) {
         if (attacker instanceof PlayerEntity playerEntity) {
-            if (!this.world.canPlayerModifyAt(playerEntity, this.attachmentPos)) {
+            if (!this.getWorld().canPlayerModifyAt(playerEntity, this.attachmentPos)) {
                 return true;
             }
-            return this.damage(attacker.world.getDamageSources().playerAttack(playerEntity), 0.0f);
+            return this.damage(attacker.getWorld().getDamageSources().playerAttack(playerEntity), 0.0f);
         }
         return false;
     }
@@ -163,7 +163,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
         if (this.isInvulnerableTo(source)) {
             return false;
         }
-        if (!this.isRemoved() && !this.world.isClient) {
+        if (!this.isRemoved() && !this.getWorld().isClient) {
             this.kill();
             this.scheduleVelocityUpdate();
             this.onBreak(source.getAttacker());
@@ -173,7 +173,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void move(MovementType movementType, Vec3d movement) {
-        if (!this.world.isClient && !this.isRemoved() && movement.lengthSquared() > 0.0) {
+        if (!this.getWorld().isClient && !this.isRemoved() && movement.lengthSquared() > 0.0) {
             this.kill();
             this.onBreak(null);
         }
@@ -181,7 +181,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public void addVelocity(double deltaX, double deltaY, double deltaZ) {
-        if (!this.world.isClient && !this.isRemoved() && deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ > 0.0) {
+        if (!this.getWorld().isClient && !this.isRemoved() && deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ > 0.0) {
             this.kill();
             this.onBreak(null);
         }
@@ -232,9 +232,9 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public ItemEntity dropStack(ItemStack stack, float yOffset) {
-        ItemEntity itemEntity = new ItemEntity(this.world, this.getX() + ((double)this.facing.getOffsetX() * 0.3), this.getY() + ((double)this.facing.getOffsetY() * 0.3) + yOffset, this.getZ() + ((double)this.facing.getOffsetZ() * 0.3), stack);
+        ItemEntity itemEntity = new ItemEntity(this.getWorld(), this.getX() + ((double)this.facing.getOffsetX() * 0.3), this.getY() + ((double)this.facing.getOffsetY() * 0.3) + yOffset, this.getZ() + ((double)this.facing.getOffsetZ() * 0.3), stack);
         itemEntity.setToDefaultPickupDelay();
-        this.world.spawnEntity(itemEntity);
+        this.getWorld().spawnEntity(itemEntity);
         return itemEntity;
     }
 

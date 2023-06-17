@@ -2,8 +2,8 @@ package immersive_paintings.client.gui.widget;
 
 import immersive_paintings.util.FlowingText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -27,12 +27,11 @@ public class CallbackCheckboxWidget extends CheckboxWidget {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
 
         if (isHovered() && tooltip != null) {
-            assert MinecraftClient.getInstance().currentScreen != null;
-            MinecraftClient.getInstance().currentScreen.renderTooltip(matrices, FlowingText.wrap(tooltip, 160), mouseX, mouseY);
+            context.drawTooltip(MinecraftClient.getInstance().textRenderer, FlowingText.wrap(tooltip, 160), mouseX, mouseY);
         }
     }
 }

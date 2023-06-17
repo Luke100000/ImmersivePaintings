@@ -3,11 +3,16 @@ package immersive_paintings.forge;
 import immersive_paintings.*;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
+
+import static net.minecraft.registry.RegistryKeys.ITEM_GROUP;
 
 @Mod(Main.MOD_ID)
 @Mod.EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.MOD)
@@ -15,6 +20,7 @@ public final class CommonForge {
     public CommonForge() {
         RegistrationImpl.bootstrap();
         new NetworkHandlerImpl();
+        DEF_REG.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
@@ -24,12 +30,12 @@ public final class CommonForge {
         Messages.bootstrap();
     }
 
-    @SubscribeEvent
-    public static void register(CreativeModeTabEvent.Register event) {
-        ItemGroups.PAINTINGS = event.registerCreativeModeTab(ItemGroups.getIdentifier(), builder -> builder
-                .displayName(ItemGroups.getDisplayName())
-                .icon(ItemGroups::getIcon)
-                .entries((featureFlags, output) -> output.addAll(Items.items.stream().map(i -> i.get().getDefaultStack()).toList()))
-        );
-    }
+    public static final DeferredRegister<ItemGroup> DEF_REG = DeferredRegister.create(ITEM_GROUP, Main.MOD_ID);
+
+    public static final RegistryObject<ItemGroup> TAB = DEF_REG.register(Main.MOD_ID, () -> ItemGroup.builder()
+            .displayName(ItemGroups.getDisplayName())
+            .icon(ItemGroups::getIcon)
+            .entries((featureFlags, output) -> output.addAll(Items.getSortedItems()))
+            .build()
+    );
 }

@@ -1,8 +1,8 @@
 package immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -23,14 +23,13 @@ public abstract class ExtendedSliderWidget<T> extends SliderWidget {
     abstract T getValue();
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         int i = (this.isHovered() ? 2 : 1) * 20;
-        drawTexture(matrices, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)), this.getY(), 0, 46 + i, 4, 20);
-        drawTexture(matrices, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)) + 4, this.getY(), 196, 46 + i, 4, 20);
+        context.drawTexture(WIDGETS_TEXTURE, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)), this.getY(), 0, 46 + i, 4, 20);
+        context.drawTexture(WIDGETS_TEXTURE, this.getX() + (int)(getOpticalValue() * (double)(this.width - 8)) + 4, this.getY(), 196, 46 + i, 4, 20);
 
-        super.renderButton(matrices, mouseX, mouseY, delta);
+        super.renderButton(context, mouseX, mouseY, delta);
     }
 
     @Override

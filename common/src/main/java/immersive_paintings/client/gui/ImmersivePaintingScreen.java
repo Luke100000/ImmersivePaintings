@@ -1,6 +1,5 @@
 package immersive_paintings.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
@@ -17,11 +16,11 @@ import immersive_paintings.util.FlowingText;
 import immersive_paintings.util.ImageManipulations;
 import immersive_paintings.util.Utils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -122,14 +121,14 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         switch (page) {
             case NEW -> {
-                fill(matrices, width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
+                context.fill( width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.drop"), 220);
                 int y = height / 2 - 40 - wrap.size() * 12;
                 for (Text text : wrap) {
-                    drawCenteredTextWithShadow(matrices, textRenderer, text, width / 2, y, 0xFFFFFFFF);
+                    context.drawCenteredTextWithShadow(textRenderer, text, width / 2, y, 0xFFFFFFFF);
                     y += 12;
                 }
             }
@@ -152,46 +151,42 @@ public class ImmersivePaintingScreen extends Screen {
                 int tw = settings.resolution * settings.width;
                 int th = settings.resolution * settings.height;
                 float size = Math.min((float)maxWidth / tw, (float)maxHeight / th);
-                RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-                RenderSystem.setShaderTexture(0, Main.locate("temp_pixelated"));
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.enableDepthTest();
+                MatrixStack matrices = context.getMatrices();
                 matrices.push();
                 matrices.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
                 matrices.scale(size, size, 1.0f);
-                drawTexture(matrices, 0, 0, 0, 0, tw, th, tw, th);
+                context.drawTexture(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 matrices.pop();
 
                 if (error != null) {
-                    drawCenteredTextWithShadow(matrices, textRenderer, error, width / 2, height / 2, 0xFFFF0000);
+                    context.drawCenteredTextWithShadow(textRenderer, error, width / 2, height / 2, 0xFFFF0000);
                 }
             }
             case DELETE -> {
-                fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+                context.fill( width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.confirm_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
-                    drawCenteredTextWithShadow(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    context.drawCenteredTextWithShadow(textRenderer, t, width / 2, y, 0XFFFFFF);
                     y += 15;
                 }
             }
             case ADMIN_DELETE -> {
-                fill(matrices, width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+                context.fill( width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
                 List<Text> wrap = FlowingText.wrap(Text.translatable("immersive_paintings.confirm_admin_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Text t : wrap) {
-                    drawCenteredTextWithShadow(matrices, textRenderer, t, width / 2, y, 0XFFFFFF);
+                    context.drawCenteredTextWithShadow(textRenderer, t, width / 2, y, 0XFFFFFF);
                     y += 15;
                 }
             }
             case LOADING -> {
                 Text text = Text.translatable("immersive_paintings.upload", (int)Math.ceil(LazyNetworkManager.getRemainingTime()));
-                drawCenteredTextWithShadow(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
+                context.drawCenteredTextWithShadow(textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     private List<Identifier> getMaterialsList() {
