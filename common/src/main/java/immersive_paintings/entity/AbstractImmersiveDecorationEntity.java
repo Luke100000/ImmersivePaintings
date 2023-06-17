@@ -232,7 +232,7 @@ public abstract class AbstractImmersiveDecorationEntity extends Entity {
 
     @Override
     public ItemEntity dropStack(ItemStack stack, float yOffset) {
-        ItemEntity itemEntity = new ItemEntity(this.world, this.getX() + (double)((float)this.facing.getOffsetX() * 0.15f), this.getY() + (double)yOffset, this.getZ() + (double)((float)this.facing.getOffsetZ() * 0.15f), stack);
+        ItemEntity itemEntity = new ItemEntity(this.world, this.getX() + ((double)this.facing.getOffsetX() * 0.3), this.getY() + ((double)this.facing.getOffsetY() * 0.3) + yOffset, this.getZ() + ((double)this.facing.getOffsetZ() * 0.3), stack);
         itemEntity.setToDefaultPickupDelay();
         this.world.spawnEntity(itemEntity);
         return itemEntity;
