@@ -1,6 +1,7 @@
 # 0.6.1
 
 * Block picking now gives the correct item
+* Items on ceilings no longer glitch into the block when dropped
 
 # 0.6.0
 
