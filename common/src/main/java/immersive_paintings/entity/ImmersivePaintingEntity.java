@@ -127,7 +127,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
 
     @Override
     public ItemStack getPickBlockStack() {
-        return new ItemStack(Items.PAINTING.get());
+        return new ItemStack(getDrop());
     }
 
     @Override
