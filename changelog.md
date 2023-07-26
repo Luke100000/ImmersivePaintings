@@ -1,3 +1,7 @@
+# 0.6.2
+
+* Synced translations and retired 1.18.2
+
 # 0.6.1
 
 * Block picking now gives the correct item
