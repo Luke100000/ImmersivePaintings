@@ -6,20 +6,26 @@ import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.network.s2c.PaintingListMessage;
 import immersive_paintings.resources.ServerPaintingManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.io.Serial;
 import java.util.Objects;
 
-public class PaintingDeleteRequest implements Message {
-    @Serial
-    private static final long serialVersionUID = -4122382267250199065L;
-
+public class PaintingDeleteRequest extends Message {
     private final String identifier;
 
     public PaintingDeleteRequest(Identifier identifier) {
         this.identifier = identifier.toString();
+    }
+
+    public PaintingDeleteRequest(PacketByteBuf b) {
+        this.identifier = b.readString();
+    }
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        b.writeString(identifier);
     }
 
     @Override
@@ -29,7 +35,7 @@ public class PaintingDeleteRequest implements Message {
         if (ServerPaintingManager.get().getCustomServerPaintings().get(identifier).author.equals(e.getGameProfile().getName()) || e.hasPermissionLevel(4)) {
             Main.LOGGER.info(String.format("Player %s deleted painting %s.", e, identifier));
         } else {
-            Main.LOGGER.warn(String.format("Player %s tried to delete an image they does not own.", e));
+            Main.LOGGER.warn(String.format("Player %s tried to delete an image they do not own.", e));
             return;
         }
 
