@@ -2,13 +2,12 @@ package immersive_paintings.network;
 
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.entity.ImmersivePaintingEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public abstract class PaintingDataMessage implements Message {
-    private static final long serialVersionUID = -6510034100878125474L;
-
+public abstract class PaintingDataMessage extends Message {
     final String motive;
     final String frame;
     final String material;
@@ -27,6 +26,31 @@ public abstract class PaintingDataMessage implements Message {
         this.x = painting.getAttachmentPos().getX();
         this.y = painting.getAttachmentPos().getY();
         this.z = painting.getAttachmentPos().getZ();
+    }
+
+    public PaintingDataMessage(PacketByteBuf b) {
+        this.entityId = b.readInt();
+        this.motive = b.readString();
+        this.frame = b.readString();
+        this.material = b.readString();
+        this.facing = Direction.byId(b.readInt());
+        this.rotation = b.readInt();
+        this.x = b.readInt();
+        this.y = b.readInt();
+        this.z = b.readInt();
+    }
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        b.writeInt(entityId);
+        b.writeString(motive);
+        b.writeString(frame);
+        b.writeString(material);
+        b.writeInt(facing.getId());
+        b.writeInt(rotation);
+        b.writeInt(x);
+        b.writeInt(y);
+        b.writeInt(z);
     }
 
     public Identifier getMotive() {

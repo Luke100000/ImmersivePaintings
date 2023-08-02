@@ -15,29 +15,34 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
-    private final Map<Message, Identifier> cache = new HashMap<>();
+    private final Map<Class<?>, Identifier> identifiers = new HashMap<>();
 
-    private Identifier getMessageIdentifier(Message msg) {
-        return cache.computeIfAbsent(msg, m -> getMessageIdentifier(m.getClass()));
+    private int id = 0;
+
+    private <T> Identifier createMessageIdentifier(Class<T> msg) {
+        return new Identifier(Main.SHORT_MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT).substring(0, 8) + id++);
     }
 
-    private <T> Identifier getMessageIdentifier(Class<T> msg) {
-        return new Identifier(Main.MOD_ID, msg.getSimpleName().toLowerCase(Locale.ROOT));
+    private Identifier getMessageIdentifier(Message msg) {
+        return Objects.requireNonNull(identifiers.get(msg.getClass()), "Used unregistered message!");
     }
 
     @Override
-    public <T extends Message> void registerMessage(Class<T> msg) {
-        Identifier id = getMessageIdentifier(msg);
+    public <T extends Message> void registerMessage(Class<T> msg, Function<PacketByteBuf, T> constructor) {
+        Identifier identifier = createMessageIdentifier(msg);
+        identifiers.put(msg, identifier);
 
-        ServerPlayNetworking.registerGlobalReceiver(id, (server, player, handler, buffer, responder) -> {
-            Message m = Message.decode(buffer);
+        ServerPlayNetworking.registerGlobalReceiver(identifier, (server, player, handler, buffer, responder) -> {
+            Message m = constructor.apply(buffer);
             server.execute(() -> m.receive(player));
         });
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ClientProxy.register(id);
+            ClientProxy.register(identifier, constructor);
         }
     }
 
@@ -62,11 +67,12 @@ public class NetworkHandlerImpl extends NetworkHandler.Impl {
             throw new RuntimeException("new ClientProxy()");
         }
 
-        public static void register(Identifier id) {
+        public static <T extends Message> void register(Identifier id, Function<PacketByteBuf, T> constructor) {
             ClientPlayNetworking.registerGlobalReceiver(id, (client, ignore1, buffer, ignore2) -> {
-                Message m = Message.decode(buffer);
+                Message m = constructor.apply(buffer);
                 client.execute(() -> m.receive(client.player));
             });
         }
     }
 }
+

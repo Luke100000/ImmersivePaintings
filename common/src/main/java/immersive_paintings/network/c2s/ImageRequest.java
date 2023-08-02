@@ -7,20 +7,30 @@ import immersive_paintings.resources.Painting;
 import immersive_paintings.resources.ServerPaintingManager;
 import immersive_paintings.util.Utils;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
-public class ImageRequest implements Message {
-    private static final long serialVersionUID = 3086732481904956437L;
-
+public class ImageRequest extends Message {
     private final String identifier;
     private final Painting.Type type;
 
     public ImageRequest(Identifier identifier, Painting.Type type) {
         this.identifier = identifier.toString();
         this.type = type;
+    }
+
+    public ImageRequest(PacketByteBuf b) {
+        this.identifier = b.readString();
+        this.type = b.readEnumConstant(Painting.Type.class);
+    }
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        b.writeString(identifier);
+        b.writeEnumConstant(type);
     }
 
     @Override

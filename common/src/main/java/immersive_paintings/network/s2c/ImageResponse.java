@@ -6,11 +6,10 @@ import immersive_paintings.resources.Cache;
 import immersive_paintings.resources.ClientPaintingManager;
 import immersive_paintings.resources.Painting;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class ImageResponse extends SegmentedPaintingMessage {
-    private static final long serialVersionUID = -2404615222596628414L;
-
     private final String identifier;
     private final Painting.Type type;
 
@@ -18,6 +17,13 @@ public class ImageResponse extends SegmentedPaintingMessage {
         super(data, segment, totalSegments);
         this.identifier = identifier.toString();
         this.type = type;
+    }
+
+    public ImageResponse(PacketByteBuf b) {
+        super(b);
+
+        this.identifier = b.readString();
+        this.type = b.readEnumConstant(Painting.Type.class);
     }
 
     @Override
@@ -32,5 +38,13 @@ public class ImageResponse extends SegmentedPaintingMessage {
         texture.image = image;
         ClientPaintingManager.registerImage(texture);
         Cache.set(texture);
+    }
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        super.encode(b);
+
+        b.writeString(identifier);
+        b.writeEnumConstant(type);
     }
 }

@@ -1,3 +1,7 @@
+# 0.4.3
+
+* Switched to PacketByteBuf serializer
+
 # 0.4.2
 
 * Fixed bugs introduced by 4.4.1 causing play paintings to not being synced

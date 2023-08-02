@@ -4,12 +4,15 @@ import immersive_paintings.Main;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import immersive_paintings.network.PaintingDataMessage;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 
 public class PaintingModifyMessage extends PaintingDataMessage {
-    private static final long serialVersionUID = -1508169419753605236L;
-
     public PaintingModifyMessage(ImmersivePaintingEntity painting) {
         super(painting);
+    }
+
+    public PaintingModifyMessage(PacketByteBuf b) {
+        super(b);
     }
 
     @Override
