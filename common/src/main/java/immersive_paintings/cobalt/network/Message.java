@@ -6,31 +6,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 
-import java.io.*;
+public abstract class Message {
+    protected Message() {
 
-public interface Message extends Serializable {
-    static Message decode(PacketByteBuf b) {
-        byte[] data = new byte[b.readableBytes()];
-        b.readBytes(data);
-
-        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))) {
-            return (Message)ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("SneakyThrows", e);
-        }
     }
 
-    default void encode(PacketByteBuf b) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public abstract void encode(PacketByteBuf b);
 
-        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-            oos.writeObject(this);
-        } catch (IOException e) {
-            throw new RuntimeException("SneakyThrows", e);
-        }
-
-        b.writeBytes(baos.toByteArray());
-    }
-
-    void receive(PlayerEntity e);
+    public abstract void receive(PlayerEntity e);
 }

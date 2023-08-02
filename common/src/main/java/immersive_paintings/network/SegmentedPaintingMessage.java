@@ -3,19 +3,16 @@ package immersive_paintings.network;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.resources.ByteImage;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serial;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class SegmentedPaintingMessage implements Message {
-    @Serial
-    private static final long serialVersionUID = -6584975870115489847L;
-
+public abstract class SegmentedPaintingMessage extends Message {
     private final byte[] data;
     private final int segment;
     private final int totalSegments;
@@ -28,15 +25,28 @@ public abstract class SegmentedPaintingMessage implements Message {
         this.totalSegments = totalSegments;
     }
 
-    abstract protected String getIdentifier(PlayerEntity e);
+    public SegmentedPaintingMessage(PacketByteBuf b) {
+        this.data = b.readByteArray();
+        this.segment = b.readInt();
+        this.totalSegments = b.readInt();
+    }
 
-    abstract protected void process(PlayerEntity e, ByteImage image);
+    protected abstract String getIdentifier(PlayerEntity e);
+
+    protected abstract void process(PlayerEntity e, ByteImage image);
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        b.writeByteArray(data);
+        b.writeInt(segment);
+        b.writeInt(totalSegments);
+    }
 
     @Override
     public void receive(PlayerEntity e) {
         String i = getIdentifier(e);
 
-        List<byte[]> byteBuffer = buffer.computeIfAbsent(i, (k) -> new LinkedList<>());
+        List<byte[]> byteBuffer = buffer.computeIfAbsent(i, k -> new LinkedList<>());
         byteBuffer.add(data);
 
         if (segment + 1 == totalSegments) {

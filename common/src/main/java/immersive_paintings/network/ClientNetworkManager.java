@@ -61,7 +61,7 @@ public class ClientNetworkManager implements NetworkManager {
     @Override
     public void handleRegisterPaintingResponse(RegisterPaintingResponse response) {
         if (MinecraftClient.getInstance().currentScreen instanceof ImmersivePaintingScreen screen) {
-            if (response.error == null) {
+            if (response.error.isEmpty()) {
                 if (screen.entity != null) {
                     screen.entity.setMotive(new Identifier(response.identifier));
                     NetworkHandler.sendToServer(new PaintingModifyRequest(screen.entity));
