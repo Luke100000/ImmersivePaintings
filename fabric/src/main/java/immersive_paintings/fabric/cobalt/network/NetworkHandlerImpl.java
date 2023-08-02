@@ -1,9 +1,9 @@
 package immersive_paintings.fabric.cobalt.network;
 
+import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
-import immersive_paintings.Main;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -12,18 +12,20 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Function;
+
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
     @Override
-    public <T extends Message> void registerMessage(Class<T> msg) {
-        Identifier id = new Identifier(Main.MOD_ID, msg.getName().toLowerCase());
+    public <T extends Message> void registerMessage(Class<T> msg, Function<PacketByteBuf, T> constructor) {
+        Identifier identifier = new Identifier(Main.MOD_ID, msg.getName().toLowerCase());
 
-        ServerPlayNetworking.registerGlobalReceiver(id, (server, player, handler, buffer, responder) -> {
-            Message m = Message.decode(buffer);
+        ServerPlayNetworking.registerGlobalReceiver(identifier, (server, player, handler, buffer, responder) -> {
+            Message m = constructor.apply(buffer);
             server.execute(() -> m.receive(player));
         });
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ClientProxy.register(id, msg);
+            ClientProxy.register(identifier, constructor);
         }
     }
 
@@ -48,11 +50,12 @@ public class NetworkHandlerImpl extends NetworkHandler.Impl {
             throw new RuntimeException("new ClientProxy()");
         }
 
-        public static <T extends Message> void register(Identifier id, Class<T> msg) {
+        public static <T extends Message> void register(Identifier id, Function<PacketByteBuf, T> constructor) {
             ClientPlayNetworking.registerGlobalReceiver(id, (client, ignore1, buffer, ignore2) -> {
-                Message m = Message.decode(buffer);
+                Message m = constructor.apply(buffer);
                 client.execute(() -> m.receive(client.player));
             });
         }
     }
 }
+

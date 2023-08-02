@@ -3,13 +3,9 @@ package immersive_paintings.network.s2c;
 import immersive_paintings.Main;
 import immersive_paintings.cobalt.network.Message;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 
-import java.io.Serial;
-
-public class OpenGuiRequest implements Message {
-    @Serial
-    private static final long serialVersionUID = -2371116419166251497L;
-
+public class OpenGuiRequest extends Message {
     public final Type gui;
 
     public final int entity;
@@ -17,6 +13,17 @@ public class OpenGuiRequest implements Message {
     public OpenGuiRequest(OpenGuiRequest.Type gui, int entity) {
         this.gui = gui;
         this.entity = entity;
+    }
+
+    public OpenGuiRequest(PacketByteBuf b) {
+        this.gui = b.readEnumConstant(OpenGuiRequest.Type.class);
+        this.entity = b.readInt();
+    }
+
+    @Override
+    public void encode(PacketByteBuf b) {
+        b.writeEnumConstant(gui);
+        b.writeInt(entity);
     }
 
     @Override

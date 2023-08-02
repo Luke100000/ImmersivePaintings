@@ -30,7 +30,7 @@ public class Registration {
         }
     }
 
-    public static abstract class Impl {
+    public abstract static class Impl {
         protected Impl() {
             INSTANCE = this;
         }
