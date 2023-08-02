@@ -1,3 +1,11 @@
+# 0.6.3
+
+* Switched to PacketByteBuf serializer
+
+# 0.6.2
+
+* Synced translations and retired 1.18.2
+
 # 0.6.1
 
 * Block picking now gives the correct item
@@ -30,6 +38,10 @@
 
 * Ported to stupid 1.19.3
 * Synced translations from Crowdin
+
+# 0.4.3
+
+* Switched to PacketByteBuf serializer
 
 # 0.4.2
 
