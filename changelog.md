@@ -1,3 +1,7 @@
+# 0.2.1
+
+* Switched to PacketByteBuf serializer
+
 # 0.2.0
 
 * Fixed server crashes
