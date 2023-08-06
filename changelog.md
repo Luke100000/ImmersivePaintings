@@ -1,3 +1,7 @@
+# 0.6.4
+
+* Fixed orientation of ceiling paintings being off
+
 # 0.6.3
 
 * Switched to PacketByteBuf serializer
