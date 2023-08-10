@@ -1,3 +1,7 @@
+# 0.6.4
+
+* Fixed networking related crashes
+
 # 0.6.3
 
 * Switched to PacketByteBuf serializer
