@@ -6,7 +6,6 @@ import immersive_paintings.Main;
 import immersive_paintings.Messages;
 import immersive_paintings.forge.cobalt.network.NetworkHandlerImpl;
 import immersive_paintings.forge.cobalt.registration.RegistrationImpl;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,14 +18,11 @@ public final class CommonForge {
         new RegistrationImpl();
         new NetworkHandlerImpl();
 
-        RegistrationImpl.bootstrap();
-    }
-
-    @SubscribeEvent
-    public static void onRegistryEvent(RegistryEvent<?> event) {
         Items.bootstrap();
         Entities.bootstrap();
-        Messages.bootstrap();
+        Messages.loadMessages();
+
+        RegistrationImpl.bootstrap();
     }
 
     @SubscribeEvent

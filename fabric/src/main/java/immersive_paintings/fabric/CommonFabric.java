@@ -24,7 +24,7 @@ public final class CommonFabric implements ModInitializer {
 
         Items.bootstrap();
         Entities.bootstrap();
-        Messages.bootstrap();
+        Messages.loadMessages();
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new FabricPaintings());
 
