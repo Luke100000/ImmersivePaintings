@@ -7,6 +7,10 @@ import immersive_paintings.network.s2c.*;
 
 public class Messages {
     public static void bootstrap() {
+
+    }
+
+    static {
         NetworkHandler.registerMessage(ImageRequest.class, ImageRequest::new);
         NetworkHandler.registerMessage(PaintingListMessage.class, PaintingListMessage::new);
         NetworkHandler.registerMessage(ImageResponse.class, ImageResponse::new);

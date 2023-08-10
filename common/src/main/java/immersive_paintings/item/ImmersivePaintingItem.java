@@ -23,7 +23,7 @@ public class ImmersivePaintingItem extends Item {
         return new ImmersivePaintingEntity(world, attachmentPosition, direction, rotation);
     }
 
-     @Override
+    @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getSide();
@@ -35,7 +35,7 @@ public class ImmersivePaintingItem extends Item {
         } else {
             int rotation = 0;
             if (playerEntity != null && direction.getAxis().isVertical()) {
-                rotation = (int)(playerEntity.getYaw() / 90 + (direction == Direction.UP ? 2.5 : 0.5)) * 90;
+                rotation = Math.floorMod((int) Math.floor(playerEntity.getYaw() / 90.0f + 2.5) * 90, 360);
             }
             World world = context.getWorld();
             ImmersivePaintingEntity paintingEntity = newPainting(world, attachmentPosition, direction, rotation);
@@ -47,7 +47,7 @@ public class ImmersivePaintingItem extends Item {
 
             if (paintingEntity.canStayAttached()) {
                 if (!world.isClient) {
-                    ((AbstractImmersiveDecorationEntity)paintingEntity).onPlace();
+                    ((AbstractImmersiveDecorationEntity) paintingEntity).onPlace();
                     world.emitGameEvent(playerEntity, GameEvent.ENTITY_PLACE, blockPos);
                     world.spawnEntity(paintingEntity);
                 }
