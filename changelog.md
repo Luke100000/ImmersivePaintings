@@ -1,3 +1,7 @@
+# 0.6.5
+
+* Fixed networking related crashes
+
 # 0.6.4
 
 * Fixed orientation of ceiling paintings being off
