@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Загрузка, осталось %s секунд",
   "immersive_paintings.drop": "Брось сюда изображение, введи путь к файлу или URL или выбери скриншот, чтобы начать.",
   "immersive_paintings.graffiti_warning": "Изображение содержит прозрачность, используй вместо него граффити!",
+  "immersive_paintings.error.no_permission": "Никакого разрешения!",
   "immersive_paintings.error.too_large": "Изображение слишком большое!",
   "immersive_paintings.error.limit_reached": "Ты достиг максимального количества загруженных картин!",
   "immersive_paintings.filter.all": "Все",

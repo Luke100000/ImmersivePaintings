@@ -33,11 +33,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
-
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
     }
+    inputs.property "META-INF/mods.toml", project.version
 }
 
 shadowJar {
@@ -67,5 +66,16 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
+    }
+}
+
+// Update mods.toml with the new versions automatically
+// Not using processResources because it is easier to do this manually, and see it reflected immediately
+afterEvaluate {
+    file("src/main/resources/META-INF/mods.toml").withOutputStream {
+        it << file("mods.toml").text
+                .replaceAll("@LOADER_MAJOR@", rootProject.forge_version.split("\\.")[0])
+                .replaceAll("@MINECRAFT_VERSION@", rootProject.architectury.minecraft)
+                .replaceAll("@FORGE_VERSION@", rootProject.forge_version)
     }
 }

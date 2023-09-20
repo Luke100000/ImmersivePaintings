@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[@LOADER_MAJOR@,)"
+issueTrackerURL = "https://github.com/Luke100000/ImmersivePaintings/issues"
+license = "GPL-3.0-only"
+
+[[mods]]
+modId = "immersive_paintings"
+version = "${version}"
+displayName = "Immersive Paintings"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/immersive-paintings"
+authors = "Luke100000"
+description = "Use your own paintings!"
+logoFile = "icon.png"
+itemIcon = "immersive_paintings:painting"
+
+[[dependencies.immersive_paintings]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[@MINECRAFT_VERSION@,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.immersive_paintings]]
+modId = "forge"
+mandatory = true
+versionRange = "[@LOADER_MAJOR@,)"
+ordering = "NONE"
+side = "BOTH"
