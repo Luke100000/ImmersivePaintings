@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Încărcare, %s secunde rămase",
   "immersive_paintings.drop": "Aruncați o imagine aici, introduceți o cale de fișier sau un URL sau selectați o captură de ecran pentru a începe.",
   "immersive_paintings.graffiti_warning": "Imaginea conține transparență, folosiți în schimb un graffiti!",
+  "immersive_paintings.error.no_permission": "No permission!",
   "immersive_paintings.error.too_large": "Imaginea este prea mare!",
   "immersive_paintings.error.limit_reached": "Ați atins numărul maxim de tablouri încărcate!",
   "immersive_paintings.filter.all": "Toate",
