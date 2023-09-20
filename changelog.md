@@ -2,6 +2,7 @@
 
 * Max and Low res limits are now synced to the client
 * Fixed a crash when exceeding the user limit
+* Adventure mode now prevents changing paintings
 
 # 0.6.5
 
