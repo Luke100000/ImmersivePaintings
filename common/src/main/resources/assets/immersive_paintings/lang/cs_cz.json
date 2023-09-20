@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Nahrávání, zbývá %s sekund",
   "immersive_paintings.drop": "Vložte sem obrázek, zadejte cestu k souboru nebo adresu URL nebo vyberte snímek obrazovky a začněte.",
   "immersive_paintings.graffiti_warning": "Obrázek obsahuje průhlednost, použijte místo něj graffiti!",
+  "immersive_paintings.error.no_permission": "No permission!",
   "immersive_paintings.error.too_large": "Obrázek je příliš velký!",
   "immersive_paintings.error.limit_reached": "Dosáhli jste maximálního počtu nahraných obrazů!",
   "immersive_paintings.filter.all": "Všechny",
