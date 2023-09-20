@@ -12,7 +12,7 @@ public class RegisterPaintingResponse extends Message {
 
     public RegisterPaintingResponse(String error, Identifier identifier) {
         this.error = error;
-        this.identifier = identifier == null ? null : identifier.toString();
+        this.identifier = identifier == null ? "" : identifier.toString();
     }
 
     public RegisterPaintingResponse(PacketByteBuf b) {
