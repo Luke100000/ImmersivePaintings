@@ -1,9 +1,6 @@
 package immersive_paintings.entity;
 
-import immersive_paintings.Entities;
-import immersive_paintings.Items;
-import immersive_paintings.Main;
-import immersive_paintings.ServerDataManager;
+import immersive_paintings.*;
 import immersive_paintings.cobalt.network.NetworkHandler;
 import immersive_paintings.compat.XercaPaintCompat;
 import immersive_paintings.network.s2c.OpenGuiRequest;
@@ -88,10 +85,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
             return;
         }
         playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0f, 1.0f);
-        if (entity instanceof PlayerEntity playerEntity) {
-            if (playerEntity.getAbilities().creativeMode) {
-                return;
-            }
+        if (entity instanceof PlayerEntity playerEntity && (playerEntity.getAbilities().creativeMode)) {
+            return;
         }
         dropItem(getDrop());
     }
@@ -133,7 +128,8 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (!player.world.isClient) {
             if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
-                NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId()), (ServerPlayerEntity)player);
+                Config config = Config.getInstance();
+                NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId(), config.minPaintingResolution, config.maxPaintingResolution, config.showOtherPlayersPaintings), (ServerPlayerEntity) player);
             }
             return ActionResult.CONSUME;
         } else {
