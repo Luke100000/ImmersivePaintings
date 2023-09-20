@@ -1,3 +1,9 @@
+# 0.6.6
+
+* Max and Low res limits are now synced to the client
+
+# 0.6.5 // skipped on 1.18.2
+
 # 0.6.4
 
 * Fixed networking related crashes
@@ -127,7 +133,3 @@
 * # 0.1.0
 
 * Initial release
-
-# TODO
-
-* Forge sends painting data after first entity track events

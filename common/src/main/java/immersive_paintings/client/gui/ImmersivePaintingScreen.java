@@ -1,7 +1,6 @@
 package immersive_paintings.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import immersive_paintings.Config;
 import immersive_paintings.Main;
 import immersive_paintings.client.ClientUtils;
 import immersive_paintings.client.gui.widget.*;
@@ -45,8 +44,12 @@ import static immersive_paintings.util.Utils.identifierToTranslation;
 
 public class ImmersivePaintingScreen extends Screen {
     private static final int SCREENSHOTS_PER_PAGE = 5;
-    public static boolean showOtherPlayersPaintings;
+
     final int entityId;
+    final int minResolution;
+    final int maxResolution;
+    final boolean showOtherPlayersPaintings;
+
     public final ImmersivePaintingEntity entity;
 
     private String filteredString = "";
@@ -77,9 +80,12 @@ public class ImmersivePaintingScreen extends Screen {
 
     final ExecutorService service = Executors.newFixedThreadPool(1);
 
-    public ImmersivePaintingScreen(int entityId) {
+    public ImmersivePaintingScreen(int entityId, int minResolution, int maxResolution, boolean showOtherPlayersPaintings) {
         super(new TranslatableText("item.immersive_paintings.painting"));
         this.entityId = entityId;
+        this.minResolution = minResolution;
+        this.maxResolution = maxResolution;
+        this.showOtherPlayersPaintings = showOtherPlayersPaintings;
 
         if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getEntityById(entityId) instanceof ImmersivePaintingEntity painting) {
             entity = painting;
@@ -152,7 +158,7 @@ public class ImmersivePaintingScreen extends Screen {
                 int maxHeight = 135;
                 int tw = settings.resolution * settings.width;
                 int th = settings.resolution * settings.height;
-                float size = Math.min((float)maxWidth / tw, (float)maxHeight / th);
+                float size = Math.min((float) maxWidth / tw, (float) maxHeight / th);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, Main.locate("temp_pixelated"));
                 RenderSystem.enableBlend();
@@ -187,7 +193,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case LOADING -> {
-                TranslatableText text = new TranslatableText("immersive_paintings.upload", (int)Math.ceil(LazyNetworkManager.getRemainingTime()));
+                TranslatableText text = new TranslatableText("immersive_paintings.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
                 drawCenteredText(matrices, textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
@@ -254,7 +260,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new TranslatableText("immersive_paintings.name")));
                 textFieldWidget.setMaxLength(256);
                 textFieldWidget.setText(currentImageName);
-                textFieldWidget.setChangedListener((s) -> currentImageName = s);
+                textFieldWidget.setChangedListener(s -> currentImageName = s);
 
                 int y = height / 2 - 60;
 
@@ -285,7 +291,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText("<"),
                         new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
-                            settings.resolution = Math.max(Config.getInstance().minPaintingResolution, settings.resolution / 2);
+                            settings.resolution = Math.max(minResolution, settings.resolution / 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -298,7 +304,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText(">"),
                         new TranslatableText("immersive_paintings.tooltip.resolution"),
                         v -> {
-                            settings.resolution = Math.min(Config.getInstance().maxPaintingResolution, settings.resolution * 2);
+                            settings.resolution = Math.min(maxResolution, settings.resolution * 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -327,7 +333,7 @@ public class ImmersivePaintingScreen extends Screen {
                 addDrawableChild(new CallbackCheckboxWidget(width / 2 + 100, y, 20, 20,
                         new TranslatableText("immersive_paintings.pixelart"),
                         new TranslatableText("immersive_paintings.pixelart.tooltip"),
-                        settings.pixelArt, true, (b) -> {
+                        settings.pixelArt, true, b -> {
                     settings.pixelArt = b;
                     adaptToPixelArt();
                     refreshPage();
@@ -398,7 +404,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new TranslatableText("immersive_paintings.search")));
                 textFieldWidget.setMaxLength(64);
                 textFieldWidget.setSuggestion("search");
-                textFieldWidget.setChangedListener((s) -> {
+                textFieldWidget.setChangedListener(s -> {
                     filteredString = s;
                     updateSearch();
                     textFieldWidget.setSuggestion(null);
@@ -426,7 +432,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText("<"),
                         new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
                         v -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(Config.getInstance().minPaintingResolution, filteredResolution / 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(minResolution, filteredResolution / 2);
                             updateSearch();
                             widget.setMessage(new LiteralText(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -436,7 +442,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new LiteralText(">"),
                         new TranslatableText("immersive_paintings.tooltip.filter_resolution"),
                         v -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(Config.getInstance().maxPaintingResolution, filteredResolution * 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(maxResolution, filteredResolution * 2);
                             updateSearch();
                             widget.setMessage(new LiteralText(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -447,7 +453,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new TranslatableText("immersive_paintings.filter_width")));
                 widthWidget.setMaxLength(2);
                 widthWidget.setSuggestion("width");
-                widthWidget.setChangedListener((s) -> {
+                widthWidget.setChangedListener(s -> {
                     try {
                         filteredWidth = Integer.parseInt(s);
                     } catch (NumberFormatException ignored) {
@@ -462,7 +468,7 @@ public class ImmersivePaintingScreen extends Screen {
                         new TranslatableText("immersive_paintings.filter_height")));
                 heightWidget.setMaxLength(2);
                 heightWidget.setSuggestion("height");
-                heightWidget.setChangedListener((s) -> {
+                heightWidget.setChangedListener(s -> {
                     try {
                         filteredHeight = Integer.parseInt(s);
                     } catch (NumberFormatException ignored) {
@@ -579,7 +585,7 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(new TranslatableText("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int)(width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int) (width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
@@ -589,7 +595,7 @@ public class ImmersivePaintingScreen extends Screen {
                                     setPage(Page.FRAME);
                                 }
                             },
-                            (b) -> {
+                            b -> {
                                 if (page == Page.YOURS) {
                                     deletePainting = identifier;
                                     setPage(Page.DELETE);
@@ -619,8 +625,8 @@ public class ImmersivePaintingScreen extends Screen {
                 File file = screenshots.get(i);
                 Painting painting = new Painting(null, 16, 16, 16, false, entity.isGraffiti());
                 paintingWidgetList.add(addDrawableChild(new PaintingWidget(painting.thumbnail, (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
-                        (b) -> {
-                            currentImage = ((PaintingWidget)b).thumbnail.image;
+                        b -> {
+                            currentImage = ((PaintingWidget) b).thumbnail.image;
                             if (currentImage != null) {
                                 currentImagePixelZoomCache = -1;
                                 currentImageName = file.getName();
@@ -629,7 +635,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 pixelateImage();
                             }
                         },
-                        (b) -> {
+                        b -> {
 
                         },
                         (ButtonWidget b, MatrixStack matrices, int mx, int my) -> renderTooltip(matrices, new LiteralText(file.getName()), mx, my))));
@@ -705,7 +711,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private int getMaxPages() {
-        return (int)Math.ceil(filteredPaintings.size() / 24.0);
+        return (int) Math.ceil(filteredPaintings.size() / 24.0);
     }
 
     private void setScreenshotPage(int p) {
@@ -718,7 +724,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private int getScreenshotMaxPages() {
-        return (int)Math.ceil(screenshots.size() / 8.0);
+        return (int) Math.ceil(screenshots.size() / 8.0);
     }
 
     @Override
@@ -771,11 +777,11 @@ public class ImmersivePaintingScreen extends Screen {
         if (!entity.isGraffiti()) {
             byte[] bytes = image.getBytes();
             for (int i = 3; i < bytes.length; i += 4) {
-                if (bytes[i] != ((byte)255)) {
+                if (bytes[i] != ((byte) 255)) {
                     if (error == null) {
                         setError(new TranslatableText("immersive_paintings.graffiti_warning"));
                     }
-                    bytes[i] = ((byte)255);
+                    bytes[i] = ((byte) 255);
                 }
             }
         }
@@ -795,8 +801,8 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void adaptToPixelArt() {
         double zoom = getCurrentImagePixelZoomCache(currentImage);
-        settings.width = Math.max(1, Math.min(16, (int)(currentImage.getWidth() / zoom / settings.resolution)));
-        settings.height = Math.max(1, Math.min(16, (int)(currentImage.getHeight() / zoom / settings.resolution)));
+        settings.width = Math.max(1, Math.min(16, (int) (currentImage.getWidth() / zoom / settings.resolution)));
+        settings.height = Math.max(1, Math.min(16, (int) (currentImage.getHeight() / zoom / settings.resolution)));
     }
 
     public static ByteImage pixelateImage(ByteImage currentImage, PixelatorSettings settings) {
@@ -807,17 +813,17 @@ public class ImmersivePaintingScreen extends Screen {
         if (settings.pixelArt) {
             zoom = getCurrentImagePixelZoomCache(currentImage);
         } else {
-            float fx = (float)currentImage.getWidth() / pixelatedImage.getWidth();
-            float fy = (float)currentImage.getHeight() / pixelatedImage.getHeight();
+            float fx = (float) currentImage.getWidth() / pixelatedImage.getWidth();
+            float fy = (float) currentImage.getHeight() / pixelatedImage.getHeight();
             zoom = Math.min(fx, fy) / settings.zoom;
         }
 
         //offset
-        int ox = (int)((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
-        int oy = (int)((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
+        int ox = (int) ((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
+        int oy = (int) ((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
         if (settings.pixelArt) {
-            ox = ox / ((int)zoom) * ((int)zoom);
-            oy = oy / ((int)zoom) * ((int)zoom);
+            ox = ox / ((int) zoom) * ((int) zoom);
+            oy = oy / ((int) zoom) * ((int) zoom);
         }
 
         //downscale
@@ -891,16 +897,16 @@ public class ImmersivePaintingScreen extends Screen {
         PixelatorSettings(ByteImage currentImage) {
             this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
 
-            double target = currentImage.getWidth() / (double)currentImage.getHeight();
+            double target = currentImage.getWidth() / (double) currentImage.getHeight();
             double bestScore = 100;
 
             double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
             double dw = currentImage.getWidth() / d;
             double dh = currentImage.getHeight() / d;
             for (float diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
-                int pw = (int)Math.ceil(dw * diagonal);
-                int ph = (int)Math.ceil(dh * diagonal);
-                double e = Math.abs(pw / (double)ph - target) * Math.sqrt(5 + width + height);
+                int pw = (int) Math.ceil(dw * diagonal);
+                int ph = (int) Math.ceil(dh * diagonal);
+                double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
                 if (e < bestScore) {
                     width = Math.max(1, Math.min(16, pw));
                     height = Math.max(1, Math.min(16, ph));
