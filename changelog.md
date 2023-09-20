@@ -1,6 +1,7 @@
 # 0.6.6
 
 * Max and Low res limits are now synced to the client
+* Fixed a crash when exceeding the user limit
 
 # 0.6.5 // skipped on 1.18.2
 
