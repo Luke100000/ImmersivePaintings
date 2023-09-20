@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "上傳中，剩餘%s秒",
   "immersive_paintings.drop": "在這裡投放一張圖片，輸入文件路徑或URL，或選擇一個屏幕截圖來開始。",
   "immersive_paintings.graffiti_warning": "圖片含有透明度，請用塗鴉代替!",
+  "immersive_paintings.error.no_permission": "No permission!",
   "immersive_paintings.error.too_large": "圖像過大！",
   "immersive_paintings.error.limit_reached": "你上傳的圖像數量已達上限！",
   "immersive_paintings.filter.all": "全部",
