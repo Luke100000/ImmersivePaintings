@@ -907,8 +907,8 @@ public class ImmersivePaintingScreen extends Screen {
                 int ph = (int) Math.ceil(dh * diagonal);
                 double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
                 if (e < bestScore) {
-                    width = pw;
-                    height = ph;
+                    width = Math.max(1, Math.min(16, pw));
+                    height = Math.max(1, Math.min(16, ph));
                     bestScore = e;
                 }
             }
