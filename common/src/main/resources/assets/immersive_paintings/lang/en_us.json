@@ -18,6 +18,7 @@
 
   "immersive_paintings.graffiti_warning": "Image contains transparency, use a graffiti instead!",
 
+  "immersive_paintings.error.no_permission": "No permission!",
   "immersive_paintings.error.too_large": "Image is too large!",
   "immersive_paintings.error.limit_reached": "You reached your maximum amount of uploaded paintings!",
 

@@ -21,7 +21,11 @@ public class ClientNetworkManager implements NetworkManager {
     @Override
     public void handleOpenGuiRequest(OpenGuiRequest request) {
         if (request.gui == OpenGuiRequest.Type.EDITOR) {
-            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(request.entity, request.minResolution, request.maxResolution, request.showOtherPlayersPaintings));
+            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(
+                    request.entity,
+                    request.minResolution, request.maxResolution,
+                    request.showOtherPlayersPaintings, request.uploadPermissionLevel
+            ));
         }
     }
 
