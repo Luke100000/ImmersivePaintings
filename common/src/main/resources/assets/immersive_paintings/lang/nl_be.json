@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Uploaden, %s seconden over",
   "immersive_paintings.drop": "Drop hier een afbeelding, voer een bestandspad of URL in of selecteer een screenshot om te beginnen.",
   "immersive_paintings.graffiti_warning": "Afbeelding bevat transparantie, gebruik in plaats daarvan een graffiti!",
+  "immersive_paintings.error.no_permission": "Geen toestemming!",
   "immersive_paintings.error.too_large": "Afbeelding is te groot!",
   "immersive_paintings.error.limit_reached": "Je hebt je maximale aantal geüploade schilderijen bereikt!",
   "immersive_paintings.filter.all": "Alle",

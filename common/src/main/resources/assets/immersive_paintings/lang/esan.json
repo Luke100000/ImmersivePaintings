@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Cargando, quedan %s segundos",
   "immersive_paintings.drop": "Suelta una imagen aquí, introduce una ruta de archivo o URL o selecciona una captura de pantalla para empezar.",
   "immersive_paintings.graffiti_warning": "La imagen contiene transparencia, ¡utiliza un grafiti en su lugar!",
+  "immersive_paintings.error.no_permission": "¡Sin permiso!",
   "immersive_paintings.error.too_large": "¡La imagen es demasiado grande!",
   "immersive_paintings.error.limit_reached": "¡Has alcanzado la cantidad máxima de cuadros subidos!",
   "immersive_paintings.filter.all": "Todos",

@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Laster opp, %s sekunder igjen",
   "immersive_paintings.drop": "Slipp et bilde her, skriv inn en filsti eller nettadresse eller velg et skjermbilde for å starte.",
   "immersive_paintings.graffiti_warning": "Bildet inneholder gjennomsiktighet, bruk en graffiti i stedet!",
+  "immersive_paintings.error.no_permission": "Ingen tillatelse!",
   "immersive_paintings.error.too_large": "Bildet er for stort!",
   "immersive_paintings.error.limit_reached": "Du har nådd ditt maksimale antall opplastede malerier!",
   "immersive_paintings.filter.all": "Alle",
