@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Hochladen, %s Sekunden übrig",
   "immersive_paintings.drop": "Lege hier ein Bild ab, gib einen Dateipfad oder eine URL ein oder wähle einen Screenshot aus, um zu starten.",
   "immersive_paintings.graffiti_warning": "Das Bild enthält Transparenz, verwende stattdessen ein Graffiti!",
+  "immersive_paintings.error.no_permission": "Keine Erlaubnis!",
   "immersive_paintings.error.too_large": "Das Bild ist zu groß!",
   "immersive_paintings.error.limit_reached": "Du hast die maximale Anzahl an hochgeladenen Bildern erreicht!",
   "immersive_paintings.filter.all": "Alle",

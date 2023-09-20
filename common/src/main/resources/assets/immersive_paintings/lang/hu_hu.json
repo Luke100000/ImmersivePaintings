@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Feltöltés, %s másodperc maradt",
   "immersive_paintings.drop": "Húzz ide egy képet, adj meg egy elérési útvonalat vagy URL-címet, vagy válassz ki egy képernyőképet a kezdéshez.",
   "immersive_paintings.graffiti_warning": "A kép átlátszóságot tartalmaz, használj helyette graffitit!",
+  "immersive_paintings.error.no_permission": "No permission!",
   "immersive_paintings.error.too_large": "A kép túl nagy!",
   "immersive_paintings.error.limit_reached": "Elérted a feltöltött festmények maximális számát!",
   "immersive_paintings.filter.all": "Összes",
