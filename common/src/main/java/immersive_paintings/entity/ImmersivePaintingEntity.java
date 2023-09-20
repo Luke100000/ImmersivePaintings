@@ -139,7 +139,11 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
         if (player instanceof ServerPlayerEntity serverPlayerEntity && serverPlayerEntity.interactionManager.getGameMode() != GameMode.ADVENTURE) {
             if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
                 Config config = Config.getInstance();
-                NetworkHandler.sendToPlayer(new OpenGuiRequest(OpenGuiRequest.Type.EDITOR, getId(), config.minPaintingResolution, config.maxPaintingResolution, config.showOtherPlayersPaintings), (ServerPlayerEntity) player);
+                NetworkHandler.sendToPlayer(new OpenGuiRequest(
+                        OpenGuiRequest.Type.EDITOR, getId(),
+                        config.minPaintingResolution, config.maxPaintingResolution,
+                        config.showOtherPlayersPaintings, config.uploadPermissionLevel
+                ), (ServerPlayerEntity) player);
             }
             return ActionResult.CONSUME;
         } else {

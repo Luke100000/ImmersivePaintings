@@ -30,4 +30,5 @@ public final class Config extends JsonConfig {
     public int maxPaintingResolution = 256;
 
     public boolean showOtherPlayersPaintings = true;
+    public int uploadPermissionLevel = 0;
 }

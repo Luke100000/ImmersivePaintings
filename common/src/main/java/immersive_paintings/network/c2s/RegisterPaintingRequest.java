@@ -42,6 +42,11 @@ public class RegisterPaintingRequest extends Message {
     public void receive(PlayerEntity e) {
         ByteImage image = UploadPaintingRequest.uploadedImages.get(e.getUuidAsString());
 
+        if (!e.hasPermissionLevel(Config.getInstance().uploadPermissionLevel)) {
+            error("no_permission", e, null);
+            return;
+        }
+
         if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
             error("too_large", e, null);
             return;

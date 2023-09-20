@@ -49,6 +49,7 @@ public class ImmersivePaintingScreen extends Screen {
     final int minResolution;
     final int maxResolution;
     final boolean showOtherPlayersPaintings;
+    final int uploadPermissionLevel;
 
     public final ImmersivePaintingEntity entity;
 
@@ -80,12 +81,13 @@ public class ImmersivePaintingScreen extends Screen {
 
     final ExecutorService service = Executors.newFixedThreadPool(1);
 
-    public ImmersivePaintingScreen(int entityId, int minResolution, int maxResolution, boolean showOtherPlayersPaintings) {
+    public ImmersivePaintingScreen(int entityId, int minResolution, int maxResolution, boolean showOtherPlayersPaintings, int uploadPermissionLevel) {
         super(new TranslatableText("item.immersive_paintings.painting"));
         this.entityId = entityId;
         this.minResolution = minResolution;
         this.maxResolution = maxResolution;
         this.showOtherPlayersPaintings = showOtherPlayersPaintings;
+        this.uploadPermissionLevel = uploadPermissionLevel;
 
         if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getEntityById(entityId) instanceof ImmersivePaintingEntity painting) {
             entity = painting;
@@ -222,7 +224,9 @@ public class ImmersivePaintingScreen extends Screen {
             if (showOtherPlayersPaintings || isOp()) {
                 b.add(Page.PLAYERS);
             }
-            b.add(Page.NEW);
+            if (MinecraftClient.getInstance().player == null || MinecraftClient.getInstance().player.hasPermissionLevel(uploadPermissionLevel)) {
+                b.add(Page.NEW);
+            }
             if (!entity.isGraffiti()) {
                 b.add(Page.FRAME);
             }
