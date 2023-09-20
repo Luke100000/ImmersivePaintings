@@ -11,6 +11,7 @@
   "immersive_paintings.upload": "Üleslaadimine, %s sekundit jäänud",
   "immersive_paintings.drop": "Visake siia pilt, sisestage faili tee või URL või valige alustamiseks ekraanipilt.",
   "immersive_paintings.graffiti_warning": "Pilt sisaldab läbipaistvust, kasuta selle asemel graffiti!",
+  "immersive_paintings.error.no_permission": "Ei luba!",
   "immersive_paintings.error.too_large": "Pilt on liiga suur!",
   "immersive_paintings.error.limit_reached": "Sa oled saavutanud oma maksimaalse üleslaaditud maalide arvu!",
   "immersive_paintings.filter.all": "Kõik",
