@@ -1,3 +1,7 @@
+# 0.6.6
+
+* Max and Low res limits are now synced to the client
+
 # 0.6.5
 
 * Fixed networking related crashes

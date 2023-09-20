@@ -21,7 +21,7 @@ public class ClientNetworkManager implements NetworkManager {
     @Override
     public void handleOpenGuiRequest(OpenGuiRequest request) {
         if (request.gui == OpenGuiRequest.Type.EDITOR) {
-            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(request.entity));
+            MinecraftClient.getInstance().setScreen(new ImmersivePaintingScreen(request.entity, request.minResolution, request.maxResolution, request.showOtherPlayersPaintings));
         }
     }
 
@@ -30,8 +30,6 @@ public class ClientNetworkManager implements NetworkManager {
         if (response.shouldClear()) {
             ClientPaintingManager.getPaintings().clear();
         }
-
-        ImmersivePaintingScreen.showOtherPlayersPaintings = response.shouldShowOtherPlayersPaintings();
 
         for (Map.Entry<Identifier, Painting> entry : response.getPaintings().entrySet()) {
             if (entry.getValue() == null) {
