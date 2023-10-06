@@ -11,7 +11,7 @@
   "immersive_paintings.upload": "Yükleniyor, %s saniye kaldı",
   "immersive_paintings.drop": "Buraya bir görüntü bırakın, bir dosya yolu veya URL girin veya başlamak için bir ekran görüntüsü seçin.",
   "immersive_paintings.graffiti_warning": "Resim şeffaflık içeriyor, bunun yerine bir grafiti kullanın!",
-  "immersive_paintings.error.no_permission": "No permission!",
+  "immersive_paintings.error.no_permission": "İzin yok!",
   "immersive_paintings.error.too_large": "Resim çok büyük!",
   "immersive_paintings.error.limit_reached": "Yüklediğiniz maksimum resim sayısına ulaştınız!",
   "immersive_paintings.filter.all": "Tümü",
