@@ -11,7 +11,7 @@
   "immersive_paintings.upload": "업로드 중, %s초 남음",
   "immersive_paintings.drop": "여기에 이미지를 끌어다 놓고 파일 경로 또는 URL을 입력하거나 스크린샷을 선택하여 시작하세요.",
   "immersive_paintings.graffiti_warning": "이미지에 투명도가 있는 경우, 대신 그래피티를 사용하세요!",
-  "immersive_paintings.error.no_permission": "No permission!",
+  "immersive_paintings.error.no_permission": "허가가 없습니다!",
   "immersive_paintings.error.too_large": "이미지가 너무 큽니다!",
   "immersive_paintings.error.limit_reached": "업로드 할 수 있는 그림의 최대 개수에 도달했습니다!",
   "immersive_paintings.filter.all": "전체",
