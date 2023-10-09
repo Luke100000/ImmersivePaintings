@@ -1,3 +1,7 @@
+# 0.6.7
+
+* fixed visibility of hidden paintings
+
 # 0.6.6
 
 * Max and Low res limits are now synced to the client
