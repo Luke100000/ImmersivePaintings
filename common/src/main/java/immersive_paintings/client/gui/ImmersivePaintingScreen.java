@@ -576,7 +576,7 @@ public class ImmersivePaintingScreen extends Screen {
                     tooltip.add(Text.translatable("immersive_paintings.by_author", painting.author).formatted(Formatting.ITALIC));
                     tooltip.add(Text.translatable("immersive_paintings.resolution", painting.width, painting.height, painting.resolution).formatted(Formatting.ITALIC));
 
-                    if (page == Page.YOURS || painting.hidden) {
+                    if (page == Page.YOURS && painting.hidden) {
                         tooltip.add(Text.translatable("immersive_paintings.hidden").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
@@ -683,7 +683,7 @@ public class ImmersivePaintingScreen extends Screen {
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(v -> v.getValue().graffiti == entity.isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.PLAYERS || !Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack && !v.getValue().hidden)
+                .filter(v -> page != Page.PLAYERS || !v.getValue().datapack && !v.getValue().hidden)
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)

@@ -11,7 +11,7 @@
   "immersive_paintings.upload": "Įkėlimas, liko %s sekundžių",
   "immersive_paintings.drop": "Įmeskite čia paveikslėlį, įveskite failo kelią arba URL adresą arba pasirinkite ekrano nuotrauką ir pradėkite.",
   "immersive_paintings.graffiti_warning": "Paveikslėlyje yra skaidrumo, vietoj jo naudokite graffiti!",
-  "immersive_paintings.error.no_permission": "No permission!",
+  "immersive_paintings.error.no_permission": "Jokio leidimo!",
   "immersive_paintings.error.too_large": "Vaizdas yra per didelis!",
   "immersive_paintings.error.limit_reached": "Pasiekėte maksimalų įkeltų paveikslų skaičių!",
   "immersive_paintings.filter.all": "Visi",
