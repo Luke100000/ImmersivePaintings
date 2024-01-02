@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[49,)"
 issueTrackerURL = "https://github.com/Luke100000/ImmersivePaintings/issues"
 license = "GPL-3.0-only"
 
@@ -16,13 +16,13 @@ itemIcon = "immersive_paintings:painting"
 [[dependencies.immersive_paintings]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20.1,)"
+versionRange = "[1.20.4,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.immersive_paintings]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[49,)"
 ordering = "NONE"
 side = "BOTH"

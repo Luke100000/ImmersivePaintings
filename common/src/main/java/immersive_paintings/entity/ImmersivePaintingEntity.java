@@ -104,7 +104,7 @@ public class ImmersivePaintingEntity extends AbstractImmersiveDecorationEntity {
     }
 
     @Override
-    public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+    public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
         BlockPos blockPos = this.attachmentPos.add(BlockPos.ofFloored(x - this.getX(), y - this.getY(), z - this.getZ()));
         this.setPosition(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }

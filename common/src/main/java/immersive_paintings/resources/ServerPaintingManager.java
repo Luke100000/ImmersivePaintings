@@ -2,10 +2,8 @@ package immersive_paintings.resources;
 
 import immersive_paintings.Config;
 import immersive_paintings.util.ImageManipulations;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.PersistentState;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,12 +16,13 @@ import java.util.Optional;
 import static immersive_paintings.resources.Painting.DEFAULT;
 
 public class ServerPaintingManager {
+
     public static MinecraftServer server;
     private static Map<Identifier, Painting> datapackPaintings = new HashMap<>();
 
-    public static CustomServerPaintings get() {
+    public static CustomServerPaintingsState get() {
         return server.getOverworld().getPersistentStateManager()
-                .getOrCreate(CustomServerPaintings::fromNbt, CustomServerPaintings::new, "immersive_paintings");
+                .getOrCreate(CustomServerPaintingsState.getPersistentStateType(), "immersive_paintings");
     }
 
     public static Map<Identifier, Painting> getDatapackPaintings() {
@@ -145,30 +144,5 @@ public class ServerPaintingManager {
         }
 
         return Optional.ofNullable(data);
-    }
-
-    public static class CustomServerPaintings extends PersistentState {
-        final Map<Identifier, Painting> customServerPaintings = new HashMap<>();
-
-        public static CustomServerPaintings fromNbt(NbtCompound nbt) {
-            CustomServerPaintings c = new CustomServerPaintings();
-            for (String key : nbt.getKeys()) {
-                c.customServerPaintings.put(new Identifier(key), Painting.fromNbt(nbt.getCompound(key)));
-            }
-            return c;
-        }
-
-        @Override
-        public NbtCompound writeNbt(NbtCompound nbt) {
-            NbtCompound c = new NbtCompound();
-            for (Map.Entry<Identifier, Painting> entry : customServerPaintings.entrySet()) {
-                c.put(entry.getKey().toString(), entry.getValue().toNbt());
-            }
-            return c;
-        }
-
-        public Map<Identifier, Painting> getCustomServerPaintings() {
-            return customServerPaintings;
-        }
     }
 }
