@@ -20,4 +20,24 @@ public class FlowingText {
             return compiled;
         }).collect(Collectors.toList());
     }
+
+    public static Text consolidate(List<Text> textList) {
+        if(textList == null)
+            return null;
+
+        Text base = Text.empty();
+        MutableText lastTextNode = base.copy();
+
+        if(textList.isEmpty())
+            return base;
+
+        for(int i = 0; i < textList.size() - 1; i++) {
+            Text text = textList.get(i);
+            lastTextNode = lastTextNode.append(text).append("\n");
+        }
+
+        Text finalElement = textList.get(textList.size() - 1);
+        return lastTextNode.append(finalElement);
+    }
+
 }
