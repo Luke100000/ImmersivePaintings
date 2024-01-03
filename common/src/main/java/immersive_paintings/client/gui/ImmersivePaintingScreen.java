@@ -132,6 +132,8 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+
         switch (page) {
             case NEW -> {
                 context.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
@@ -195,8 +197,6 @@ public class ImmersivePaintingScreen extends Screen {
                 context.drawCenteredTextWithShadow(textRenderer, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
-
-        super.render(context, mouseX, mouseY, delta);
     }
 
     private List<Identifier> getMaterialsList() {
