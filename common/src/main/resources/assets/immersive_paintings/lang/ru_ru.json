@@ -9,7 +9,7 @@
   "item.immersive_paintings.glow_graffiti": "Светящееся граффити",
   "entity.immersive_paintings.glow_graffiti": "Светящееся граффити",
   "immersive_paintings.upload": "Загрузка, осталось %s секунд",
-  "immersive_paintings.drop": "Перетащите изображение сюда, введите путь к файлу или URL, или выберите скриншот, чтобы начать.",
+  "immersive_paintings.drop": "Перетащите изображение сюда, введите путь к файлу или URL, или выберите снимок экрана, чтобы начать.",
   "immersive_paintings.graffiti_warning": "Изображение содержит прозрачность, вместо этого используйте граффити!",
   "immersive_paintings.error.no_permission": "Нет разрешения!",
   "immersive_paintings.error.too_large": "Изображение слишком большое!",
