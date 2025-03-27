@@ -11,7 +11,7 @@
   "immersive_paintings.upload": "अपलोड हो रहा है, %s सेकंड बाकी",
   "immersive_paintings.drop": "यहां एक छवि छोड़ें, फ़ाइल पथ या URL दर्ज करें या स्क्रीनशॉट का चयन करें।",
   "immersive_paintings.graffiti_warning": "छवि में पारदर्शिता है, इसके बजाय एक ग्रैफ़िटी का उपयोग करें!",
-  "immersive_paintings.error.no_permission": "No permission!",
+  "immersive_paintings.error.no_permission": "अनुमति नहीं है!",
   "immersive_paintings.error.too_large": "छवि बहुत बड़ी है!",
   "immersive_paintings.error.limit_reached": "आपने अपलोड की गई पेंटिंग्स की अधिकतम संख्या तक पहुंच गए हैं!",
   "immersive_paintings.filter.all": "सब",
