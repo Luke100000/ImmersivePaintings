@@ -680,7 +680,7 @@ public class ImmersivePaintingScreen extends Screen {
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(v -> v.getValue().graffiti == entity.isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.PLAYERS || !v.getValue().datapack && !v.getValue().hidden)
+                .filter(v -> page != Page.PLAYERS || !v.getValue().datapack && (!v.getValue().hidden || isOp()))
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
