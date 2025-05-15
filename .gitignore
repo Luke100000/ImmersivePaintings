@@ -20,6 +20,7 @@ build
 # other
 eclipse
 run
+runs
 backup
 
 # Files from Forge MDK
@@ -29,8 +30,6 @@ forge*changelog.txt
 /mcmodsrepo
 /local.properties
 
-# Files from architectury
-.architectury-transformer
 /logs
 /.vscode
 /curseforge

@@ -39,7 +39,7 @@ for flip, group in enumerate(
 ):
     for directory in [
         ("textures", "../common/src/main/resources"),
-        ("faithful", "../faithfulAddon"),
+        ("faithful", "../datapack/faithfulAddon"),
     ]:
         for material in group:
             files.append(

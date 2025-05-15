@@ -1,3 +1,8 @@
+# 0.7.0
+* Updated to Minecraft 1.21
+* 
+* 
+
 # 0.6.7
 
 * fixed visibility of hidden paintings
