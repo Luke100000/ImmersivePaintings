@@ -43,7 +43,10 @@ neoForge {
 dependencies {
     implementation("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}")
 
-    jarJar(api(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-webp:${webp_version}")))
+    jarJar(api(additionalRuntimeClasspath("com.twelvemonkeys.common:common-lang:${webp_version}"))) { transitive = false }
+    jarJar(api(additionalRuntimeClasspath("com.twelvemonkeys.common:common-image:${webp_version}"))) { transitive = false }
+    jarJar(api(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-core:${webp_version}"))) { transitive = false }
+    jarJar(api(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-webp:${webp_version}"))) { transitive = false }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

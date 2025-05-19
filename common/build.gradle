@@ -3,10 +3,6 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
-dependencies {
-    implementation "com.twelvemonkeys.imageio:imageio-webp:${webp_version}"
-}
-
 neoForge {
     neoFormVersion = neo_form_version
     // Automatically enable AccessTransformers if the file exists
@@ -18,6 +14,10 @@ neoForge {
         minecraftVersion = parchment_minecraft
         mappingsVersion = parchment_version
     }
+}
+
+dependencies {
+    implementation("com.twelvemonkeys.imageio:imageio-webp:${webp_version}")
 }
 
 configurations {
