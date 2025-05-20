@@ -172,7 +172,15 @@ public class ClientPaintingManager {
         } else {
             if (w == image.getWidth() && h == image.getHeight()) {
                 if (realSize == Size.NSFW) {
-                    target = ByteImage.fromBufferedImage(ImageUtil.blur(image.toBufferedImage(), (float) Math.max(w, h) / 10));
+                    double widthRatio = (double) Config.getInstance().thumbnailSize / 2 / w;
+                    double heightRatio = (double) Config.getInstance().thumbnailSize / 2 / h;
+                    double ratio = Math.min(widthRatio, heightRatio);
+
+                    target = new ByteImage((int)(w * ratio), (int)(h * ratio));
+                    double zoom = (double)image.getWidth() / (w * ratio);
+
+                    ImageManipulations.resize(target, image, zoom, 0, 0);
+                    target = ByteImage.fromBufferedImage(ImageUtil.blur(target.toBufferedImage(), (float) zoom));
                 } else {
                     target = image;
                 }

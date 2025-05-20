@@ -27,3 +27,10 @@ modId = "neoforge"
 versionRange = "[${neoforge_version},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "cloth_config"
+versionRange = "[${cloth_config_version},)"
+ordering = "AFTER"
+side = "CLIENT"
+
