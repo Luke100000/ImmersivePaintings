@@ -61,7 +61,7 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
                 //String hash = entry.getKey().toString().replaceAll("[^a-zA-Z\\d]", "");
                 String hash = (name + author + resolution + "px").replaceAll("[^a-zA-Z\\d]", "").toLowerCase();
 
-                Painting painting = new Painting(width, height, resolution, name, author, UUID.randomUUID(), Painting.Type.DATAPACK, false, graffiti, hash);
+                Painting painting = new Painting(width, height, resolution, name, author, UUID.randomUUID(), Painting.Type.DATAPACK, false, false, graffiti, hash);
 
                 map.put(painting.location(), Map.entry(painting, entry.getValue()));
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {

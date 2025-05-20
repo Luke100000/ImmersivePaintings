@@ -66,6 +66,17 @@ public class ByteImage {
         return bufferedImage;
     }
 
+    public static ByteImage fromBufferedImage(BufferedImage image) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", stream);
+            return ByteImage.read(stream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public NativeImage toNativeImage() {
         NativeImage nativeImage = new NativeImage(width, height, false);
         for (int x = 0; x < width; x++) {
@@ -95,15 +106,11 @@ public class ByteImage {
     }
 
     public void setPixel(int x, int y, int r, int g, int b, int a) {
-        setPixel(x, y, (byte)r, (byte)g, (byte)b, (byte)a);
-    }
-
-    public void setPixel(int x, int y, byte r, byte g, byte b, byte a) {
         int i = getIndex(x, y);
-        bytes[i] = r;
-        bytes[i + 1] = g;
-        bytes[i + 2] = b;
-        bytes[i + 3] = a;
+        bytes[i] = (byte)r;
+        bytes[i + 1] = (byte)g;
+        bytes[i + 2] = (byte)b;
+        bytes[i + 3] = (byte)a;
     }
 
     public int getIndex(int x, int y) {

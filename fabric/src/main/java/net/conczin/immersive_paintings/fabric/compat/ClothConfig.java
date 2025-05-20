@@ -23,6 +23,7 @@ public class ClothConfig {
 
         ConfigCategory general = builder.getOrCreateCategory(Component.translatable("cloth_config.immersive_paintings.category.general"));
         general.addEntry(makeEntry(entryBuilder, "testIfSpaceEmpty", config.testIfSpaceEmpty, newValue -> config.testIfSpaceEmpty = newValue));
+        general.addEntry(makeEntry(entryBuilder, "nsfw", config.showNSFWPaintings, newValue -> config.showNSFWPaintings = newValue));
         general.addEntry(makeEntry(entryBuilder, "paintingsHaveCollision", config.paintingsHaveCollision, newValue -> config.paintingsHaveCollision = newValue));
         general.addEntry(makeEntry(entryBuilder, "showOtherPlayersPaintings", config.showOtherPlayersPaintings, newValue -> config.showOtherPlayersPaintings = newValue));
         general.addEntry(makeEntry(entryBuilder, "uploadPermissionLevel", config.uploadPermissionLevel, newValue -> config.uploadPermissionLevel = newValue));

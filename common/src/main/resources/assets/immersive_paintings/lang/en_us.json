@@ -44,6 +44,8 @@
   "immersive_paintings.hide": "Hide",
   "immersive_paintings.visibility": "Hidden paintings are not visible in the selection screen to other players.",
   "immersive_paintings.hidden": "Hidden",
+  "immersive_paintings.nsfw": "NSFW",
+  "immersive_paintings.nsfw.tooltip": "NSFW Paintings are blurred for users who have them disabled",
   "immersive_paintings.search": "Search",
   "immersive_paintings.filter_width": "Width",
   "immersive_paintings.filter_height": "Height",
@@ -97,6 +99,8 @@
 
   "cloth_config.immersive_paintings.option.testIfSpaceEmpty": "Test If Painting Space Empty",
   "cloth_config.immersive_paintings.option.testIfSpaceEmpty.tooltip": "Enable space check for paintings every 5 seconds. Disabling this saves a lot of server compute",
+  "cloth_config.immersive_paintings.option.nsfw": "Show NSFW Paintings",
+  "cloth_config.immersive_paintings.option.nsfw.tooltip": "Whether or not to show paintings marked as NSFW",
   "cloth_config.immersive_paintings.option.paintingsHaveCollision": "Paintings Have Collisions",
   "cloth_config.immersive_paintings.option.paintingsHaveCollision.tooltip": "Can entities collide with paintings",
   "cloth_config.immersive_paintings.option.showOtherPlayersPaintings": "Show Other Player's Paintings",

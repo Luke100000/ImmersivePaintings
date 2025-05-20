@@ -21,13 +21,13 @@ public final class Config {
 
     // TODO Options:
     // - Restrict editing to painting owner
-    // - NSFW Blur
 
     // General
     public boolean testIfSpaceEmpty = false;
     public boolean paintingsHaveCollision = false;
 
     public boolean showOtherPlayersPaintings = true;
+    public boolean showNSFWPaintings = true;
     public int uploadPermissionLevel = 0;
 
     // Image

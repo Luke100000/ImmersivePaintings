@@ -1,5 +1,6 @@
 package net.conczin.immersive_paintings.painting;
 
+import com.twelvemonkeys.image.ImageUtil;
 import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.*;
 
 public class ClientPaintingManager {
     private static final Map<ResourceLocation, Painting> paintings = new HashMap<>();
@@ -28,6 +30,12 @@ public class ClientPaintingManager {
 
     private static final String texturePrefix = "immersive_painting/";
 
+    final static ExecutorService service = Executors.newFixedThreadPool(2);
+
+    public static Future<?> runService(Runnable runnable) {
+        return service.submit(runnable);
+    }
+
     public static Map<ResourceLocation, Painting> getPaintings() {
         return paintings;
     }
@@ -36,7 +44,7 @@ public class ClientPaintingManager {
         return paintings.getOrDefault(identifier, Painting.DEFAULT);
     }
 
-    private static String paintingIdentifier(ResourceLocation identifier, Size size) {
+    private static String paintingTextureIdentifier(ResourceLocation identifier, Size size) {
         if (size == Size.FULL) {
             return identifier.getPath();
         }
@@ -44,41 +52,54 @@ public class ClientPaintingManager {
     }
 
     public static ResourceLocation getImageIdentifier(ResourceLocation identifier, Size size) {
-        // Since we register all types for a single texture at the same time in registerImage
-        // this can be simplified by not having to do a check for the type
-        if (textureMap.containsKey(identifier))
-            return textureMap.get(identifier).get(size);
+        if (!paintings.containsKey(identifier)) {
+            return Painting.DEFAULT_IDENTIFIER;
+        }
 
-        if (paintings.containsKey(identifier)) {
-            // Before going to the server for the texture, first check if it's cached locally
-            Painting painting = paintings.get(identifier);
-            Optional<ByteImage> image = clientCache.get(paintingIdentifier(identifier, Size.FULL));
+        // If there's no existing identifier map, first try to load it by going to the cache.
+        // If cache does not contain the image, go to the server and return the default option
+        if (!textureMap.containsKey(identifier)) {
+            Optional<ByteImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
             if (image.isPresent()) {
-                registerImage(identifier, image.get());
-                return textureMap.get(identifier).get(size);
+                registerImage(identifier, image.get(), size == Size.NSFW);
             } else {
-                // If we can't find the image locally then get it from the server
                 if (!requested.containsKey(identifier)) {
                     requested.put(identifier, true);
                     Network.Client.sendToServer(new ImageRequestPayload(identifier));
                 }
+                return Painting.DEFAULT_IDENTIFIER;
             }
         }
 
-        return Painting.DEFAULT_IDENTIFIER;
-    }
+        Map<Size, ResourceLocation> mapping = textureMap.get(identifier);
+        Painting painting = paintings.get(identifier);
 
-    public static ByteImage getThumbnail(ResourceLocation identifier) {
-        ResourceLocation id = getImageIdentifier(identifier, Size.THUMBNAIL);
-
-        // We assume the painting is still being registered so return the default until then
-        if (id.equals(Painting.DEFAULT_IDENTIFIER)) {
-            return Painting.DEFAULT_IMAGE;
+        if (!painting.nsfw() || Config.getInstance().showNSFWPaintings) {
+            return mapping.get(size);
         }
 
-        // In theory this should always return something that exists, but to be safe we check regardless
-        Optional<ByteImage> optionalImage = clientCache.get(paintingIdentifier(identifier, Size.THUMBNAIL));
-        return optionalImage.orElse(Painting.DEFAULT_IMAGE);
+        // Attempt to create NSFW images on the fly if it's needed
+        if (mapping.containsKey(Size.NSFW)) {
+            return mapping.get(Size.NSFW);
+        }
+
+        Optional<ByteImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
+        if (image.isEmpty()) {
+            Main.LOGGER.error("somehow identifier {} had no painting, which isn't possible", identifier);
+            return Painting.DEFAULT_IDENTIFIER;
+        }
+
+        // Separate thread to avoid freezes when blurring image
+        if (!requested.containsKey(identifier)) {
+            requested.put(identifier, true);
+            runService(() -> {
+                registerImageType(identifier, image.get(), Size.NSFW, Size.NSFW, false);
+                requested.remove(identifier);
+            });
+        }
+
+        // Return the default, once the blurred image is registered it will automatically use it
+        return Painting.DEFAULT_IDENTIFIER;
     }
 
     public static void registerPainting(ResourceLocation identifier, Painting painting) {
@@ -95,10 +116,15 @@ public class ClientPaintingManager {
         // Fixes an issue where if a painting was deleted on the server and
         // the client attempts to delete the empty painting it would error
         if (map != null)
-            map.forEach((size, id) -> clientCache.delete(paintingIdentifier(identifier, size)));
+            map.forEach((size, id) -> clientCache.delete(paintingTextureIdentifier(identifier, size)));
     }
 
-    private static void registerImageType(Map<Size, ResourceLocation> mapping, ByteImage image, Size size, Size realSize, String path) {
+    private static void registerImageType(ResourceLocation identifier, ByteImage image, Size size, Size realSize, boolean alreadyCached) {
+        if (!textureMap.containsKey(identifier))
+            return;
+
+        Map<Size, ResourceLocation> mapping = textureMap.get(identifier);
+
         // Register the type if it has a unique mapping
         if (mapping.containsKey(size)) {
             mapping.put(realSize, mapping.get(size));
@@ -136,22 +162,35 @@ public class ClientPaintingManager {
             default -> {}
         }
 
+        String path = paintingTextureIdentifier(identifier, realSize);
         ByteImage target;
-        if (w == image.getWidth() && h == image.getHeight()) {
-            target = image;
+
+        Optional<ByteImage> img = clientCache.get(path);
+        if (img.isPresent()) {
+            target = img.get();
+            alreadyCached = true;
         } else {
-            target = new ByteImage(w, h);
-            ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
+            if (w == image.getWidth() && h == image.getHeight()) {
+                if (realSize == Size.NSFW) {
+                    target = ByteImage.fromBufferedImage(ImageUtil.blur(image.toBufferedImage(), (float) Math.max(w, h) / 10));
+                } else {
+                    target = image;
+                }
+            } else {
+                target = new ByteImage(w, h);
+                ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
+            }
         }
 
-        clientCache.set(path, target);
+        if (!alreadyCached)
+            clientCache.set(path, target);
 
         ResourceLocation id = Minecraft.getInstance().getTextureManager().register(texturePrefix + path, new DynamicTexture(target.toNativeImage()));
         mapping.put(realSize, id);
     }
 
     // registers this textures and make it readable
-    public static void registerImage(ResourceLocation identifier, ByteImage image) {
+    public static void registerImage(ResourceLocation identifier, ByteImage image, boolean alreadyCached) {
         if (!paintings.containsKey(identifier)) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;
@@ -161,26 +200,26 @@ public class ClientPaintingManager {
             return;
         }
 
-        Painting painting = paintings.get(identifier);
-        Map<Size, ResourceLocation> map = new HashMap<>();
+        textureMap.put(identifier, new HashMap<>());
 
-        registerImageType(map, image, Size.FULL, Size.FULL, paintingIdentifier(identifier, Size.FULL));
+        Painting painting = paintings.get(identifier);
+
+        registerImageType(identifier, image, Size.FULL, Size.FULL, alreadyCached);
 
         int res = Math.max(painting.width(), painting.height()) * painting.resolution();
 
         Size halfSize = res / 2 < Config.getInstance().lodResolutionMinimum ? Size.FULL : Size.HALF;
-        registerImageType(map, image, halfSize, Size.HALF, paintingIdentifier(identifier, Size.HALF));
+        registerImageType(identifier, image, halfSize, Size.HALF, alreadyCached);
 
         Size quarterSize = res / 4 < Config.getInstance().lodResolutionMinimum ? halfSize : Size.QUARTER;
-        registerImageType(map, image, quarterSize, Size.QUARTER, paintingIdentifier(identifier, Size.QUARTER));
+        registerImageType(identifier, image, quarterSize, Size.QUARTER, alreadyCached);
 
         Size eighthSize = res / 8 < Config.getInstance().lodResolutionMinimum ? quarterSize : Size.EIGHTH;
-        registerImageType(map, image, eighthSize, Size.EIGHTH, paintingIdentifier(identifier, Size.EIGHTH));
+        registerImageType(identifier, image, eighthSize, Size.EIGHTH, alreadyCached);
 
         Size thumbnailSize = res < Config.getInstance().thumbnailSize ? Size.FULL : Size.THUMBNAIL;
-        registerImageType(map, image, thumbnailSize, Size.THUMBNAIL, paintingIdentifier(identifier, Size.THUMBNAIL));
+        registerImageType(identifier, image, thumbnailSize, Size.THUMBNAIL, alreadyCached);
 
-        textureMap.put(identifier, map);
         requested.remove(identifier);
 
         if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {

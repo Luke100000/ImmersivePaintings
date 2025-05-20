@@ -71,20 +71,16 @@ public class XercaPaintCompat {
                 String author = map.has(CANVAS_AUTHOR) ? (String)stack.getComponents().get(CANVAS_AUTHOR) : "Unknown Author";
 
                 // upload
-                try {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    ImageIO.write(bufferedImage, "png", stream);
-                    ByteImage img = ByteImage.read(stream.toByteArray());
+                ByteImage img = ByteImage.fromBufferedImage(bufferedImage);
+                if (img == null)
+                    return false;
 
-                    // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
-                    ResourceLocation identifier = (new PaintingRegisterPayload(w / 16, h / 16, 16, title, false, false)).handle(player, img, author, Painting.Type.XERCA);
+                // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
+                ResourceLocation identifier = (new PaintingRegisterPayload(w / 16, h / 16, 16, title, false, false, false)).handle(player, img, author, Painting.Type.XERCA);
 
-                    // apply
-                    if (identifier != null)
-                        painting.setMotive(identifier);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                // apply
+                if (identifier != null)
+                    painting.setMotive(identifier);
 
                 return true;
             }

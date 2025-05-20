@@ -72,7 +72,6 @@ public class ImageManipulations {
                         hsv[i] = (float)Math.max(0.0f, hsv[i] - dither * 0.5);
                     }
                 }
-
                 image.setHSV(x, y, hsv);
             }
         }

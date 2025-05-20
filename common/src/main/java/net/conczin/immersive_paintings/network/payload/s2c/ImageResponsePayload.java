@@ -30,7 +30,7 @@ public record ImageResponsePayload(ResourceLocation identifier, byte[] data, int
         if (image.isEmpty())
             return;
 
-        ClientPaintingManager.registerImage(identifier(), image.get());
+        ClientPaintingManager.registerImage(identifier(), image.get(), false);
     }
 
     @Override

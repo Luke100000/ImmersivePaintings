@@ -37,8 +37,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ImmersivePaintingScreen extends Screen {
     private static final int SCREENSHOTS_PER_PAGE = 5;
@@ -75,8 +73,6 @@ public class ImmersivePaintingScreen extends Screen {
     private Component error;
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
-
-    final ExecutorService service = Executors.newFixedThreadPool(1);
 
     public ImmersivePaintingScreen(int entityId, int minResolution, int maxResolution, boolean showOtherPlayersPaintings, int uploadPermissionLevel) {
         super(Component.translatable("item.immersive_paintings.painting"));
@@ -143,7 +139,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 if (shouldReProcess && currentImage != null) {
-                    service.submit(() -> {
+                    ClientPaintingManager.runService(() -> {
                         pixelatedImage = pixelateImage(currentImage, settings);
                         shouldUpload = true;
                     });
@@ -382,6 +378,17 @@ public class ImmersivePaintingScreen extends Screen {
                 );
                 y += 22;
 
+                // NSFW
+                addRenderableWidget(Checkbox
+                        .builder(Component.translatable("immersive_paintings.nsfw"), font)
+                        .pos(width / 2 + 100, y)
+                        .selected(settings.nsfw)
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.nsfw.tooltip")))
+                        .onValueChange((w, v) -> settings.nsfw = !settings.nsfw)
+                        .build()
+                );
+                y += 22;
+
                 // Offset X
                 addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", settings.offsetX, v -> {
                     settings.offsetX = v;
@@ -421,6 +428,7 @@ public class ImmersivePaintingScreen extends Screen {
                                 settings.resolution,
                                 currentImageName,
                                 settings.hidden,
+                                settings.nsfw,
                                 entity.isGraffiti()
                         ));
 
@@ -648,7 +656,7 @@ public class ImmersivePaintingScreen extends Screen {
 
     public void updateWidget(ResourceLocation identifier) {
         if (paintingWidgets.containsKey(identifier)) {
-            paintingWidgets.get(identifier).update(ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL), ClientPaintingManager.getThumbnail(identifier));
+            paintingWidgets.get(identifier).update(ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL), null);
         }
     }
 
@@ -674,12 +682,15 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(Component.translatable("immersive_paintings.hidden").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
 
+                    if (page == Page.YOURS && painting.nsfw()) {
+                        tooltip.add(Component.translatable("immersive_paintings.nsfw").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                    }
+
                     if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
                         tooltip.add(Component.translatable("immersive_paintings.right_click_to_delete").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
 
                     PaintingWidget paintingWidget = addRenderableWidget(new PaintingWidget(
-                        ClientPaintingManager.getThumbnail(identifier),
                         ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL),
                         (int) (width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                         sender -> {
@@ -722,11 +733,10 @@ public class ImmersivePaintingScreen extends Screen {
                 File file = screenshots.get(i);
 
                 PaintingWidget paintingWidget = addRenderableWidget(new PaintingWidget(
-                    Painting.DEFAULT_IMAGE,
                     Painting.DEFAULT_IDENTIFIER,
                     (width / 2 + (x - SCREENSHOTS_PER_PAGE / 2) * 68) - 32, height / 2 + 15, 64, 48,
                     b -> {
-                        currentImage = ((PaintingWidget) b).image;
+                        currentImage = ((PaintingWidget) b).getImage();
                         if (currentImage != null) {
                             currentImagePixelZoomCache = -1;
                             currentImageName = file.getName();
@@ -743,7 +753,7 @@ public class ImmersivePaintingScreen extends Screen {
                 ResourceLocation identifier = Main.locate("screenshot_" + x);
                 paintingWidgets.put(identifier, paintingWidget);
 
-                service.submit(() -> {
+                ClientPaintingManager.runService(() -> {
                     ByteImage image = loadImage(file.getPath(), identifier);
                     if (image != null) {
                         paintingWidget.update(identifier, image);
@@ -778,11 +788,12 @@ public class ImmersivePaintingScreen extends Screen {
     private void updateSearch() {
         filteredPaintings.clear();
 
+        boolean showNSFW = Config.getInstance().showNSFWPaintings;
         UUID uuid = Minecraft.getInstance().player == null ? null : Minecraft.getInstance().player.getUUID();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(v -> v.getValue().graffiti() == entity.isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().authorUUID(), uuid) && !v.getValue().isDatapack())
-                .filter(v -> page != Page.PLAYERS || !v.getValue().isDatapack() && !v.getValue().hidden())
+                .filter(v -> page != Page.PLAYERS || !v.getValue().isDatapack() && !v.getValue().hidden() && (!v.getValue().nsfw() || showNSFW))
                 .filter(v -> page != Page.DATAPACKS || v.getValue().isDatapack())
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution() == filteredResolution)
@@ -968,6 +979,7 @@ public class ImmersivePaintingScreen extends Screen {
         public double zoom;
         public boolean pixelArt;
         public boolean hidden;
+        public boolean nsfw;
 
         public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
             this.dither = dither;

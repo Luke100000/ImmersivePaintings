@@ -10,7 +10,6 @@ import net.conczin.immersive_paintings.painting.Painting;
 import net.conczin.immersive_paintings.painting.ServerPaintingManager;
 import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,18 +19,34 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public record PaintingRegisterPayload(int width, int height, int resolution, String name, boolean hidden, boolean graffiti) implements ImmersivePayload {
+public record PaintingRegisterPayload(int width, int height, int resolution, String name, boolean hidden, boolean nsfw, boolean graffiti) implements ImmersivePayload {
     public static final Type<PaintingRegisterPayload> TYPE = new Type<>(Main.locate("painting_register"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRegisterPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, PaintingRegisterPayload::width,
-            ByteBufCodecs.INT, PaintingRegisterPayload::height,
-            ByteBufCodecs.INT, PaintingRegisterPayload::resolution,
-            ByteBufCodecs.STRING_UTF8, PaintingRegisterPayload::name,
-            ByteBufCodecs.BOOL, PaintingRegisterPayload::hidden,
-            ByteBufCodecs.BOOL, PaintingRegisterPayload::graffiti,
-            PaintingRegisterPayload::new
-    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRegisterPayload> STREAM_CODEC = StreamCodec.ofMember(PaintingRegisterPayload::encode, PaintingRegisterPayload::decode);
+
+    public RegistryFriendlyByteBuf encode(RegistryFriendlyByteBuf buf) {
+        buf.writeInt(width());
+        buf.writeInt(height());
+        buf.writeInt(resolution());
+        buf.writeUtf(name());
+
+        buf.writeBoolean(hidden());
+        buf.writeBoolean(nsfw());
+        buf.writeBoolean(graffiti());
+
+        return buf;
+    }
+
+    public static PaintingRegisterPayload decode(RegistryFriendlyByteBuf buf) {
+        int width = buf.readInt();
+        int height = buf.readInt();
+        int resolution = buf.readInt();
+        String name = buf.readUtf();
+        boolean hidden = buf.readBoolean();
+        boolean nsfw = buf.readBoolean();
+        boolean graffiti = buf.readBoolean();
+        return new PaintingRegisterPayload(width, height, resolution, name, hidden, nsfw, graffiti);
+    }
 
     private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
         Network.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(i, error));
@@ -42,7 +57,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             String hash = String.format("%032x", new BigInteger(1, md5.digest(image.encode())));
-            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), graffiti(), hash);
+            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), nsfw(), graffiti(), hash);
             ResourceLocation identifier = painting.location();
 
             ServerPaintingManager.registerPainting(player.getServer(), identifier, painting, image);
@@ -50,7 +65,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
             paintingRegisterError(player, "", identifier);
             return identifier;
         } catch (NoSuchAlgorithmException e) {
-            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), graffiti(), "");
+            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), nsfw(), graffiti(), "");
             paintingRegisterError(player, "", painting.location());
         }
 

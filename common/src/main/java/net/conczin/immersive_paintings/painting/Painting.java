@@ -7,14 +7,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import io.netty.buffer.ByteBuf;
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
-public record Painting(int width, int height, int resolution, String name, String author, UUID authorUUID, Type type, boolean hidden, boolean graffiti, String hash) {
+public record Painting(int width, int height, int resolution, String name, String author, UUID authorUUID, Type type, boolean hidden, boolean nsfw, boolean graffiti, String hash) {
     public static final Codec<Painting> CODEC = RecordCodecBuilder.create(i -> i.group(
         Codec.INT.fieldOf("width").forGetter(Painting::width),
         Codec.INT.fieldOf("height").forGetter(Painting::height),
@@ -24,16 +24,16 @@ public record Painting(int width, int height, int resolution, String name, Strin
         UUIDUtil.CODEC.fieldOf("authorUUID").forGetter(Painting::authorUUID),
         Type.CODEC.fieldOf("type").forGetter(Painting::type),
         Codec.BOOL.fieldOf("hidden").forGetter(Painting::hidden),
+        Codec.BOOL.fieldOf("nsfw").forGetter(Painting::nsfw),
         Codec.BOOL.fieldOf("graffiti").forGetter(Painting::graffiti),
         Codec.STRING.fieldOf("hash").forGetter(Painting::hash)
     ).apply(i, Painting::new));
 
     public static final StreamCodec<ByteBuf, Painting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public static final ByteImage DEFAULT_IMAGE = new ByteImage(16, 16);
     public static final ResourceLocation DEFAULT_IDENTIFIER = Main.locate("textures/block/frame/canvas.png");
 
-    public static final Painting DEFAULT = new Painting(1, 1, 16, "", "", UUID.randomUUID(), Type.PAINTING, false, false, "");
+    public static final Painting DEFAULT = new Painting(1, 1, 32, "", "", UUID.randomUUID(), Type.PAINTING, false, false, false,"");
 
     public boolean isDatapack() {
         return type.equals(Type.DATAPACK);
@@ -59,7 +59,7 @@ public record Painting(int width, int height, int resolution, String name, Strin
         public static final Codec<Type> CODEC = StringRepresentable.fromValues(Type::values);
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return this.name();
         }
     }
@@ -69,6 +69,7 @@ public record Painting(int width, int height, int resolution, String name, Strin
         HALF,
         QUARTER,
         EIGHTH,
-        THUMBNAIL;
+        THUMBNAIL,
+        NSFW;
     }
 }
