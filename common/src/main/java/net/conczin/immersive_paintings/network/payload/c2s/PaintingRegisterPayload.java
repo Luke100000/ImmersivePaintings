@@ -8,13 +8,14 @@ import net.conczin.immersive_paintings.network.payload.s2c.PaintingListPayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
 import net.conczin.immersive_paintings.painting.Painting;
 import net.conczin.immersive_paintings.painting.ServerPaintingManager;
-import net.conczin.immersive_paintings.util.ByteImage;
+import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import java.awt.image.BufferedImage;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -53,10 +54,10 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
     }
 
     // Separate method to allow for Xerca compatibility
-    public ResourceLocation handle(Player player, ByteImage image, String author, Painting.Type type) {
+    public ResourceLocation handle(Player player, BufferedImage image, String author, Painting.Type type) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            String hash = String.format("%032x", new BigInteger(1, md5.digest(image.encode())));
+            String hash = String.format("%032x", new BigInteger(1, md5.digest(ImageManipulations.encode(image))));
             Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), nsfw(), graffiti(), hash);
             ResourceLocation identifier = painting.location();
 
@@ -74,7 +75,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
 
     @Override
     public void handle(Player player) {
-        ByteImage image = ServerPaintingManager.uploadedImages.remove(player.getUUID());
+        BufferedImage image = ServerPaintingManager.uploadedImages.remove(player.getUUID());
 
         if (!player.hasPermissions(Config.getInstance().uploadPermissionLevel)) {
             paintingRegisterError(player, "no_permission", null);

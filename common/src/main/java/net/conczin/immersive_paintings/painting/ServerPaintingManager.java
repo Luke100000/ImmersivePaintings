@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.painting;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.util.ByteImage;
+import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.level.saveddata.SavedData;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -22,7 +23,7 @@ public class ServerPaintingManager extends SavedData {
     public static final SavedData.Factory<ServerPaintingManager> TYPE = new SavedData.Factory<>(ServerPaintingManager::new, ServerPaintingManager::fromNbt, null);
     public static final Codec<Map<ResourceLocation, Painting>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, Painting.CODEC);
 
-    public static final HashMap<UUID, ByteImage> uploadedImages = new HashMap<>();
+    public static final HashMap<UUID, BufferedImage> uploadedImages = new HashMap<>();
 
     private static Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings = new HashMap<>();
     private final Map<ResourceLocation, Painting> customServerPaintings = new HashMap<>();
@@ -69,9 +70,9 @@ public class ServerPaintingManager extends SavedData {
         }
     }
 
-    public static void registerPainting(MinecraftServer server, ResourceLocation identifier, Painting painting, ByteImage image) {
+    public static void registerPainting(MinecraftServer server, ResourceLocation identifier, Painting painting, BufferedImage image) {
         if (image != null) {
-            serverCache.set(identifier, image.encode());
+            serverCache.set(identifier, ImageManipulations.encode(image));
             getCustomPaintings(server).put(identifier, painting);
             get(server).setDirty(true);
         }

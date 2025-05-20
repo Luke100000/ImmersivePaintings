@@ -1,5 +1,6 @@
 package net.conczin.immersive_paintings.dev;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -11,8 +12,9 @@ import java.util.Locale;
 
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.conczin.immersive_paintings.util.ImageManipulations;
+
+import javax.imageio.ImageIO;
 
 public class DatapackPaintingsGenerator {
     static final String base = "../paintings/";
@@ -59,7 +61,7 @@ public class DatapackPaintingsGenerator {
     }
 
     private static void process(String name, int width, int height, double dither, int colors, int resolution, boolean pixelArt) throws IOException {
-        ByteImage image = loadImage(name);
+        BufferedImage image = loadImage(name);
 
         int zoom = ImageManipulations.scanForPixelArtMultiple(image);
 
@@ -84,13 +86,14 @@ public class DatapackPaintingsGenerator {
         PixelatorSettings settings = new PixelatorSettings(dither / 2, colors, resolution, width, height, 0.5, 0.5, 1.0, pixelArt);
 
         File file = new File(name + ".png");
-        ImmersivePaintingScreen.pixelateImage(image, settings).write(file);
+
+        ImageManipulations.write(ImmersivePaintingScreen.pixelateImage(image, settings), file);
     }
 
-    private static ByteImage loadImage(String path) throws IOException {
+    private static BufferedImage loadImage(String path) throws IOException {
         FileInputStream stream = new FileInputStream(Path.of(base, path).toFile());
-        ByteImage nativeImage = ByteImage.read(stream);
+        BufferedImage image = ImageIO.read(stream);
         stream.close();
-        return nativeImage;
+        return image;
     }
 }

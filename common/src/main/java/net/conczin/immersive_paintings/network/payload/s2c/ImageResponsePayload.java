@@ -1,12 +1,12 @@
 package net.conczin.immersive_paintings.network.payload.s2c;
 
+import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.painting.ClientPaintingManager;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,7 +26,7 @@ public record ImageResponsePayload(ResourceLocation identifier, byte[] data, int
     @Override
     public void handle(Player player) {
         // Add the player's UUID to avoid situations where multiple players are trying to load the same Identifier
-        Optional<ByteImage> image = SegmentManager.handleSegmentedPayload(player.getStringUUID() + "_" + identifier.toString(), this);
+        Optional<BufferedImage> image = SegmentManager.handleSegmentedPayload(player.getStringUUID() + "_" + identifier.toString(), this);
         if (image.isEmpty())
             return;
 

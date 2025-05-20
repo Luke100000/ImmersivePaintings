@@ -10,10 +10,7 @@ import net.conczin.immersive_paintings.network.payload.c2s.*;
 import net.conczin.immersive_paintings.painting.ClientPaintingManager;
 import net.conczin.immersive_paintings.painting.Painting;
 import net.conczin.immersive_paintings.resources.FrameLoader;
-import net.conczin.immersive_paintings.util.ByteImage;
-import net.conczin.immersive_paintings.util.FlowingText;
-import net.conczin.immersive_paintings.util.ImageManipulations;
-import net.conczin.immersive_paintings.util.Utils;
+import net.conczin.immersive_paintings.util.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,10 +27,9 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
@@ -60,11 +56,11 @@ public class ImmersivePaintingScreen extends Screen {
     private Button pageWidget;
 
     private final Map<ResourceLocation, PaintingWidget> paintingWidgets = new HashMap<>();
-    private ByteImage currentImage;
+    private BufferedImage currentImage;
     private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
     private PixelatorSettings settings;
-    private ByteImage pixelatedImage;
+    private BufferedImage pixelatedImage;
 
     private List<File> screenshots = List.of();
     private int screenshotPage;
@@ -147,7 +143,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
-                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(pixelatedImage.toNativeImage()));
+                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(ImageManipulations.bufferedToNative(pixelatedImage)));
                 }
 
                 int maxWidth = 190;
@@ -419,7 +415,7 @@ public class ImmersivePaintingScreen extends Screen {
                 // Save
                 addRenderableWidget(Button.builder(
                     Component.translatable("immersive_paintings.save"), v -> {
-                        Utils.processByteArrayInChunks(pixelatedImage.encode(), (ints, split, splits) -> LazyNetworkManager.sendToServer(new ImageUploadPayload(currentImageName, ints, split, splits)));
+                        Utils.processByteArrayInChunks(ImageManipulations.encode(pixelatedImage), (ints, split, splits) -> LazyNetworkManager.sendToServer(new ImageUploadPayload(currentImageName, ints, split, splits)));
 
                         // Using LazyNetworkManager here guarantees the register request won't arrive before the image is uploaded
                         LazyNetworkManager.sendToServer(new PaintingRegisterPayload(
@@ -754,7 +750,7 @@ public class ImmersivePaintingScreen extends Screen {
                 paintingWidgets.put(identifier, paintingWidget);
 
                 ClientPaintingManager.runService(() -> {
-                    ByteImage image = loadImage(file.getPath(), identifier);
+                    BufferedImage image = loadImage(file.getPath(), identifier);
                     if (image != null) {
                         paintingWidget.update(identifier, image);
                     }
@@ -842,25 +838,27 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private ByteImage loadImage(String path, ResourceLocation identifier) {
+    private BufferedImage loadImage(String path, ResourceLocation identifier) {
         InputStream stream = null;
         try {
             stream = URI.create(path).toURL().openStream();
         } catch (Exception exception) {
             try {
                 stream = new FileInputStream(path);
-            } catch (Exception e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
         if (stream != null) {
             try {
-                ByteImage image = ByteImage.read(stream);
-                preprocessImage(image);
-                Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(image.toNativeImage()));
-                stream.close();
-                return image;
+                BufferedImage image = ImageIO.read(stream);
+                if (image != null) {
+                    preprocessImage(image);
+                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                    stream.close();
+                    return image;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -870,22 +868,27 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     // Only a graffiti properly supports alpha
-    private void preprocessImage(ByteImage image) {
+    private void preprocessImage(BufferedImage image) {
         clearError();
         if (!entity.isGraffiti()) {
-            byte[] bytes = image.getBytes();
-            for (int i = 3; i < bytes.length; i += 4) {
-                if (bytes[i] != ((byte) 255)) {
-                    if (error == null) {
-                        setError(Component.translatable("immersive_paintings.graffiti_warning"));
+            for (int x = 0; x < image.getWidth(); x++) {
+                for (int y = 0; y < image.getHeight(); y++) {
+                    int color = image.getRGB(x, y);
+                    int alpha = (color >> 24) & 255;
+                    if (alpha != 255) {
+                        if (error == null) {
+                            setError(Component.translatable("immersive_paintings.graffiti_warning"));
+                        }
+                        //image.setRGB(x, y, color & ((0xFF << 24) | 0x00ffffff));
+                        color = (255 << 24) | (color & 0x00ffffff);
+                        image.setRGB(x, y, color);
                     }
-                    bytes[i] = ((byte) 255);
                 }
             }
         }
     }
 
-    private static int getCurrentImagePixelZoomCache(ByteImage currentImage) {
+    private static int getCurrentImagePixelZoomCache(BufferedImage currentImage) {
         if (currentImagePixelZoomCache < 0) {
             currentImagePixelZoomCache = ImageManipulations.scanForPixelArtMultiple(currentImage);
         }
@@ -903,8 +906,8 @@ public class ImmersivePaintingScreen extends Screen {
         shouldUpload = true;
     }
 
-    public static ByteImage pixelateImage(ByteImage currentImage, PixelatorSettings settings) {
-        ByteImage pixelatedImage = new ByteImage(settings.resolution * settings.width, settings.resolution * settings.height);
+    public static BufferedImage pixelateImage(BufferedImage currentImage, PixelatorSettings settings) {
+        BufferedImage pixelatedImage = new BufferedImage(settings.resolution * settings.width, settings.resolution * settings.height,BufferedImage.TYPE_INT_ARGB);
 
         //zoom
         double zoom;
@@ -993,7 +996,7 @@ public class ImmersivePaintingScreen extends Screen {
             this.pixelArt = pixelArt;
         }
 
-        PixelatorSettings(ByteImage currentImage) {
+        PixelatorSettings(BufferedImage currentImage) {
             this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
 
             double target = currentImage.getWidth() / (double) currentImage.getHeight();

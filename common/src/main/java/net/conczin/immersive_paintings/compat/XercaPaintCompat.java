@@ -1,17 +1,11 @@
 package net.conczin.immersive_paintings.compat;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.awt.image.BufferedImage;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
 
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
 import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -71,12 +65,8 @@ public class XercaPaintCompat {
                 String author = map.has(CANVAS_AUTHOR) ? (String)stack.getComponents().get(CANVAS_AUTHOR) : "Unknown Author";
 
                 // upload
-                ByteImage img = ByteImage.fromBufferedImage(bufferedImage);
-                if (img == null)
-                    return false;
-
                 // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
-                ResourceLocation identifier = (new PaintingRegisterPayload(w / 16, h / 16, 16, title, false, false, false)).handle(player, img, author, Painting.Type.XERCA);
+                ResourceLocation identifier = (new PaintingRegisterPayload(w / 16, h / 16, 16, title, false, false, false)).handle(player, bufferedImage, author, Painting.Type.XERCA);
 
                 // apply
                 if (identifier != null)

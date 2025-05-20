@@ -1,12 +1,12 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
+import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.painting.ServerPaintingManager;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,7 +24,7 @@ public record ImageUploadPayload(String name, byte[] data, int segment, int tota
 
     @Override
     public void handle(Player player) {
-        Optional<ByteImage> image = SegmentManager.handleSegmentedPayload(player.getStringUUID(), this);
+        Optional<BufferedImage> image = SegmentManager.handleSegmentedPayload(player.getStringUUID(), this);
         if (image.isEmpty())
             return;
 

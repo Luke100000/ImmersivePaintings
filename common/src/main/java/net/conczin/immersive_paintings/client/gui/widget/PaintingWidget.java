@@ -4,16 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.conczin.immersive_paintings.painting.ClientPaintingManager;
 import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.image.BufferedImage;
+
 public class PaintingWidget extends Button {
     private ResourceLocation identifier;
-    private ByteImage image;
+    private BufferedImage image;
     private int paintingWidth = 32;
     private int paintingHeight = 32;
 
@@ -27,12 +28,12 @@ public class PaintingWidget extends Button {
     }
 
     @Nullable
-    public ByteImage getImage() {
+    public BufferedImage getImage() {
         return image;
     }
 
     // Specifically for screenshots where the image needs to be stored so it can be created when clicked
-    public void update(ResourceLocation identifier, ByteImage image) {
+    public void update(ResourceLocation identifier, BufferedImage image) {
         if (identifier == null)
             return;
 

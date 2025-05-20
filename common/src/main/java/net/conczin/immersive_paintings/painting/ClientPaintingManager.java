@@ -7,13 +7,12 @@ import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.Network;
 import net.conczin.immersive_paintings.network.payload.c2s.ImageRequestPayload;
 import net.conczin.immersive_paintings.painting.Painting.Size;
-import net.conczin.immersive_paintings.util.ByteImage;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -59,7 +58,7 @@ public class ClientPaintingManager {
         // If there's no existing identifier map, first try to load it by going to the cache.
         // If cache does not contain the image, go to the server and return the default option
         if (!textureMap.containsKey(identifier)) {
-            Optional<ByteImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
+            Optional<BufferedImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
             if (image.isPresent()) {
                 registerImage(identifier, image.get(), size == Size.NSFW);
             } else {
@@ -83,7 +82,7 @@ public class ClientPaintingManager {
             return mapping.get(Size.NSFW);
         }
 
-        Optional<ByteImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
+        Optional<BufferedImage> image = clientCache.get(paintingTextureIdentifier(identifier, Size.FULL));
         if (image.isEmpty()) {
             Main.LOGGER.error("somehow identifier {} had no painting, which isn't possible", identifier);
             return Painting.DEFAULT_IDENTIFIER;
@@ -119,7 +118,7 @@ public class ClientPaintingManager {
             map.forEach((size, id) -> clientCache.delete(paintingTextureIdentifier(identifier, size)));
     }
 
-    private static void registerImageType(ResourceLocation identifier, ByteImage image, Size size, Size realSize, boolean alreadyCached) {
+    private static void registerImageType(ResourceLocation identifier, BufferedImage image, Size size, Size realSize, boolean alreadyCached) {
         if (!textureMap.containsKey(identifier))
             return;
 
@@ -163,9 +162,9 @@ public class ClientPaintingManager {
         }
 
         String path = paintingTextureIdentifier(identifier, realSize);
-        ByteImage target;
+        BufferedImage target;
 
-        Optional<ByteImage> img = clientCache.get(path);
+        Optional<BufferedImage> img = clientCache.get(path);
         if (img.isPresent()) {
             target = img.get();
             alreadyCached = true;
@@ -176,16 +175,16 @@ public class ClientPaintingManager {
                     double heightRatio = (double) Config.getInstance().thumbnailSize / 2 / h;
                     double ratio = Math.min(widthRatio, heightRatio);
 
-                    target = new ByteImage((int)(w * ratio), (int)(h * ratio));
+                    target = new BufferedImage((int)(w * ratio), (int)(h * ratio), BufferedImage.TYPE_INT_ARGB);
                     double zoom = (double)image.getWidth() / (w * ratio);
 
                     ImageManipulations.resize(target, image, zoom, 0, 0);
-                    target = ByteImage.fromBufferedImage(ImageUtil.blur(target.toBufferedImage(), (float) zoom));
+                    target = ImageUtil.blur(target, (float)zoom);
                 } else {
                     target = image;
                 }
             } else {
-                target = new ByteImage(w, h);
+                target = new BufferedImage(w, h,BufferedImage.TYPE_INT_ARGB);
                 ImageManipulations.resize(target, image, (double)image.getWidth() / w, 0, 0);
             }
         }
@@ -193,12 +192,12 @@ public class ClientPaintingManager {
         if (!alreadyCached)
             clientCache.set(path, target);
 
-        ResourceLocation id = Minecraft.getInstance().getTextureManager().register(texturePrefix + path, new DynamicTexture(target.toNativeImage()));
+        ResourceLocation id = Minecraft.getInstance().getTextureManager().register(texturePrefix + path, new DynamicTexture(ImageManipulations.bufferedToNative(target)));
         mapping.put(realSize, id);
     }
 
     // registers this textures and make it readable
-    public static void registerImage(ResourceLocation identifier, ByteImage image, boolean alreadyCached) {
+    public static void registerImage(ResourceLocation identifier, BufferedImage image, boolean alreadyCached) {
         if (!paintings.containsKey(identifier)) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;
@@ -235,20 +234,20 @@ public class ClientPaintingManager {
         }
     }
 
-    private static class ClientCache extends Cache<String, ByteImage> {
+    private static class ClientCache extends Cache<String, BufferedImage> {
         @Override
         public String getCachePath(String key) {
             return key + ".png";
         }
 
         @Override
-        public ByteImage decode(byte[] bytes) throws IOException {
-            return ByteImage.read(bytes);
+        public BufferedImage decode(byte[] bytes) {
+            return ImageManipulations.decode(bytes);
         }
 
         @Override
-        public byte[] encode(ByteImage image) {
-            return image.encode();
+        public byte[] encode(BufferedImage image) {
+            return ImageManipulations.encode(image);
         }
     }
 }
