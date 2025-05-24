@@ -93,6 +93,7 @@ public class ClientPaintingManager {
             requested.put(identifier, true);
             runService(() -> {
                 registerImageType(identifier, image.get(), Size.NSFW, Size.NSFW, false);
+                updateWidget(identifier);
                 requested.remove(identifier);
             });
         }
@@ -116,6 +117,12 @@ public class ClientPaintingManager {
         // the client attempts to delete the empty painting it would error
         if (map != null)
             map.forEach((size, id) -> clientCache.delete(paintingTextureIdentifier(identifier, size)));
+    }
+
+    private static void updateWidget(ResourceLocation identifier) {
+        if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
+            screen.updateWidget(identifier);
+        }
     }
 
     private static void registerImageType(ResourceLocation identifier, BufferedImage image, Size size, Size realSize, boolean alreadyCached) {
@@ -229,9 +236,7 @@ public class ClientPaintingManager {
 
         requested.remove(identifier);
 
-        if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
-            screen.updateWidget(identifier);
-        }
+        updateWidget(identifier);
     }
 
     private static class ClientCache extends Cache<String, BufferedImage> {

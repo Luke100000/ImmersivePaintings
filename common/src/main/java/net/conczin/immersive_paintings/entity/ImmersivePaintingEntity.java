@@ -58,6 +58,10 @@ public class ImmersivePaintingEntity extends HangingEntity {
         super(entityType, level);
     }
 
+    public ImmersivePaintingEntity(EntityType<? extends HangingEntity> entityType, Level level, BlockPos pos) {
+        super(entityType, level, pos);
+    }
+
     @Override
     protected void setDirection(Direction direction) {
         setDirection(direction, rotation);
@@ -91,12 +95,39 @@ public class ImmersivePaintingEntity extends HangingEntity {
             cross = cross.yRot(radians);
         }
 
-        Vec3 vec3d = Vec3.atCenterOf(pos).relative(side, -0.46875); // 7.5 / 16 == 15 / 32
+        // TODO: Add option to disable this offset logic and have paintings center on the block instead of the corner
+        double dx = offsetForPaintingSize(getPaintingWidth());
+        double dy = offsetForPaintingSize(getPaintingHeight());
+
+        Direction facing;
+        Direction counter;
+        if (side.getAxis().isVertical()) {
+            facing = Direction.fromYRot(rotation);
+            if (side.equals(Direction.UP)) {
+                facing = facing.getOpposite();
+                counter = facing.getClockWise();
+            } else { // Direction.DOWN
+                counter = facing.getCounterClockWise();
+            }
+        } else {
+            facing = Direction.UP;
+            counter = side.getCounterClockWise();
+        }
+
+        Vec3 vec3d = Vec3.atCenterOf(pos)
+                .relative(side, -0.46875f)
+                .relative(counter, dx)
+                .relative(facing, dy);
+
         Vec3 shift = up.scale(getPaintingHeight())
             .add(cross.scale(getPaintingWidth()))
             .add(front.scale(0.0625)); // 1 / 16
 
         return AABB.ofSize(vec3d, shift.x(), shift.y(), shift.z());
+    }
+
+    private double offsetForPaintingSize(int size) {
+        return size % 2 == 0 ? (double)0.5F : (double)0.0F;
     }
     
     @Override
@@ -153,6 +184,26 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
     }
 
+    // Three methods below are taken from Painting
+    // They are needed to avoid an issue where when updating a motive, the motive is
+    // temporarily reset to "none" and the position gets messed up.
+    // NOTE: I think trackingPosition is the only one that matters, but keep all of them just in case
+    @Override
+    public void moveTo(double x, double y, double z, float yRot, float xRot) {
+        this.setPos(x, y, z);
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        this.setPos(x, y, z);
+    }
+
+    @Override
+    public Vec3 trackingPosition() {
+        return Vec3.atLowerCornerOf(this.pos);
+    }
+
+
     @Override
     public void playPlacementSound() {
         playSound(SoundEvents.PAINTING_PLACE, 1.0f, 1.0f);
@@ -187,11 +238,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
                 getEntityData().set(WIDTH, Math.max(painting.width(), 1));
                 getEntityData().set(HEIGHT, Math.max(painting.height(), 1));
             }
-        }
 
-        // Width and height are always set at the same time
-        // To avoid double updates only check for height changes
-        if (HEIGHT.equals(data)) {
             recalculateBoundingBox();
         }
 
@@ -203,7 +250,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
      * To avoid any issues with yaw/pitch being set externally, pack the values into entityData
      * 
      * 
-     * NOTE: This wiill probably never need a change, but should direction become
+     * NOTE: This will probably never need a change, but should direction become
      * larger than a byte there will need to be a way to future-proof this
      */
     @Override
@@ -231,11 +278,15 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
-        setMotive(ResourceLocation.parse(nbt.getString("Motive")));
         setFrame(ResourceLocation.parse(nbt.getString("Frame")));
         setMaterial(ResourceLocation.parse(nbt.getString("Material")));
-        setDirection(Direction.from3DDataValue(nbt.getInt("Facing")), nbt.getInt("Rotation"));
+        this.direction = Direction.from3DDataValue(nbt.getInt("Facing"));
+        this.rotation = nbt.getInt("Rotation");
+
+        // Wait until additional data has been loaded to set motive,
+        // saving the number of times that the painting calculates its bounding box.
         super.readAdditionalSaveData(nbt);
+        setMotive(ResourceLocation.parse(nbt.getString("Motive")));
     }
 
     public Item getItem() {

@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.Vec3;
 
 public class ImmersivePaintingItem extends Item {
 
@@ -46,9 +45,14 @@ public class ImmersivePaintingItem extends Item {
             rotation = Math.floorMod((int) Math.floor(player.getYRot() / 90.0f + 2.5) * 90, 360);
         }
 
-        ImmersivePaintingEntity entity = getEntityType().create(level);
-        entity.setPos(Vec3.atLowerCornerOf(attachmentPosition));
+        ImmersivePaintingEntity entity = new ImmersivePaintingEntity(getEntityType(), level, attachmentPosition);
         entity.setDirection(direction, rotation);
+
+        // TODO: I'm not sure if this is necessary
+//        CustomData customData = itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
+//        if (!customData.isEmpty()) {
+//            EntityType.updateCustomEntityTag(level, player, entity, customData);
+//        }
 
         if (entity.survives()) {
             if (!level.isClientSide) {
