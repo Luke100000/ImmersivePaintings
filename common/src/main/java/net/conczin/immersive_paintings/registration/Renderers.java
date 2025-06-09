@@ -1,7 +1,7 @@
-package net.conczin.immersive_paintings.client.render;
+package net.conczin.immersive_paintings.registration;
 
-import net.conczin.immersive_paintings.entity.Entities;
-import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
+import net.conczin.immersive_paintings.client.render.ImmersivePaintingEntityRenderer;
+import net.conczin.immersive_paintings.entity.*;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
 

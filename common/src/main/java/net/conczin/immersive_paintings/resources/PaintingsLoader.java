@@ -4,8 +4,8 @@ import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.painting.ServerPaintingManager;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -58,10 +58,13 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
                 String name = GsonHelper.getAsString(jsonElement, "name", "unknown");
                 String author = GsonHelper.getAsString(jsonElement, "author", "unknown");
                 boolean graffiti = GsonHelper.getAsBoolean(jsonElement, "graffiti", false);
-                //String hash = entry.getKey().toString().replaceAll("[^a-zA-Z\\d]", "");
-                String hash = (name + author + resolution + "px").replaceAll("[^a-zA-Z\\d]", "").toLowerCase();
+                String hash = entry.getKey().toString().replaceAll("[^a-zA-Z\\d]", "");
 
-                Painting painting = new Painting(width, height, resolution, name, author, UUID.randomUUID(), Painting.Type.DATAPACK, false, false, graffiti, hash);
+                EnumSet<Painting.Flag> flags = EnumSet.noneOf(Painting.Flag.class);
+                if (graffiti)
+                    flags.add(Painting.Flag.GRAFFITI);
+
+                Painting painting = new Painting(width, height, resolution, name, author, UUID.randomUUID(), Painting.Type.DATAPACK, flags, hash);
 
                 map.put(painting.location(), Map.entry(painting, entry.getValue()));
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {

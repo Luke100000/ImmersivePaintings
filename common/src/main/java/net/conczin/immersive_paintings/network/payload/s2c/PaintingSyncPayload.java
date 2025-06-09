@@ -7,26 +7,26 @@ import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.painting.ClientPaintingManager;
-import net.conczin.immersive_paintings.painting.Painting;
+import net.conczin.immersive_paintings.ClientPaintingManager;
+import net.conczin.immersive_paintings.Painting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-public record PaintingListPayload(Map<ResourceLocation, Optional<Painting>> paintings, boolean clear) implements ImmersivePayload {
-    public static final Type<PaintingListPayload> TYPE = new Type<>(Main.locate("painting_list"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PaintingListPayload> STREAM_CODEC = StreamCodec.ofMember(PaintingListPayload::encode, PaintingListPayload::decode);
+public record PaintingSyncPayload(Map<ResourceLocation, Optional<Painting>> paintings, boolean clear) implements ImmersivePayload {
+    public static final Type<PaintingSyncPayload> TYPE = new Type<>(Main.locate("painting_list"));
+    public static final StreamCodec<FriendlyByteBuf, PaintingSyncPayload> STREAM_CODEC = StreamCodec.ofMember(PaintingSyncPayload::encode, PaintingSyncPayload::decode);
 
-    public PaintingListPayload(ResourceLocation identifier, Painting painting) {
+    public PaintingSyncPayload(ResourceLocation identifier, Painting painting) {
         this(Map.of(identifier, Optional.ofNullable(painting)), false);
     }
 
     // Break paintings up into smaller batches if necessary to avoid packet limits
     // The interval is chosen to be an arbitrary number that feels like a good amount to send at a time
-    public static List<PaintingListPayload> splitPaintings(Map<ResourceLocation, Optional<Painting>> paintings, boolean clearFirst) {
-        List<PaintingListPayload> paintingsList = new ArrayList<>();
+    public static List<PaintingSyncPayload> splitPaintings(Map<ResourceLocation, Optional<Painting>> paintings, boolean clearFirst) {
+        List<PaintingSyncPayload> paintingsList = new ArrayList<>();
         final int interval = Config.getInstance().packetSplitInterval;
 
         Map<ResourceLocation, Optional<Painting>> optionalPaintings = paintings
@@ -36,7 +36,7 @@ public record PaintingListPayload(Map<ResourceLocation, Optional<Painting>> pain
 
         if (paintings.size() < interval) {
             Main.LOGGER.debug("Found {} paintings, < {}", paintings.size(), interval);
-            paintingsList.add(new PaintingListPayload(optionalPaintings, true));
+            paintingsList.add(new PaintingSyncPayload(optionalPaintings, clearFirst));
             return paintingsList;
         }
 
@@ -53,7 +53,7 @@ public record PaintingListPayload(Map<ResourceLocation, Optional<Painting>> pain
                     .limit(currentSize)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-            paintingsList.add(new PaintingListPayload(p, processed == 0 && clearFirst));
+            paintingsList.add(new PaintingSyncPayload(p, processed == 0 && clearFirst));
 
             processed += currentSize;
         }
@@ -61,42 +61,45 @@ public record PaintingListPayload(Map<ResourceLocation, Optional<Painting>> pain
         return paintingsList;
     }
 
-    public RegistryFriendlyByteBuf encode(RegistryFriendlyByteBuf buf) {
-        buf.writeMap(paintings, ResourceLocation.STREAM_CODEC, (b, painting) -> {
-            b.writeOptional(painting, Painting.STREAM_CODEC);
-        });
+    public FriendlyByteBuf encode(FriendlyByteBuf buf) {
+        buf.writeMap(paintings, ResourceLocation.STREAM_CODEC, (b, painting) -> b.writeOptional(painting, Painting.STREAM_CODEC));
         buf.writeBoolean(clear);
         return buf;
     }
 
-    public static PaintingListPayload decode(RegistryFriendlyByteBuf buf) {
+    public static PaintingSyncPayload decode(FriendlyByteBuf buf) {
         Map<ResourceLocation, Optional<Painting>> paintings = buf.readMap(ResourceLocation.STREAM_CODEC, (b) -> b.readOptional(Painting.STREAM_CODEC));
         boolean clear = buf.readBoolean();
-        return new PaintingListPayload(paintings, clear);
+        return new PaintingSyncPayload(paintings, clear);
     }
 
     @Override
-    public void handle(Player player) {
-        if (clear()) {
-            ClientPaintingManager.getPaintings().clear();
-        }
+    public void handle(Player player, Runner runner) {
+        Map<ResourceLocation, Optional<Painting>> paintings = paintings();
+        boolean cleared = clear();
 
-        paintings().forEach((id, painting) -> {
-            if (painting.isEmpty()) {
-                ClientPaintingManager.deregisterPainting(id);
-            } else {
-                ClientPaintingManager.registerPainting(id, painting.get());
+        runner.run(() -> {
+            if (cleared) {
+                ClientPaintingManager.getPaintings().clear();
+            }
+
+            paintings.forEach((id, painting) -> {
+                if (painting.isEmpty()) {
+                    ClientPaintingManager.deregisterPainting(id);
+                } else {
+                    ClientPaintingManager.registerPainting(id, painting.get());
+                }
+            });
+
+            if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
+                screen.refreshPage();
             }
         });
-
-        if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
-            screen.refreshPage();
-        }
     }
 
 
     @Override
-    public Type<PaintingListPayload> type() {
+    public Type<PaintingSyncPayload> type() {
         return TYPE;
     }
 }

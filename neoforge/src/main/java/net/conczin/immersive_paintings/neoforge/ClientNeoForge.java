@@ -1,9 +1,9 @@
 package net.conczin.immersive_paintings.neoforge;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.client.render.Renderers;
+import net.conczin.immersive_paintings.registration.Renderers;
 import net.conczin.immersive_paintings.neoforge.compat.ClothConfig;
-import net.conczin.immersive_paintings.network.Network;
+import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.resources.FrameLoader;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public final class ClientNeoForge {
 
     @SubscribeEvent
     public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
-        Network.Client.registerSender(PacketDistributor::sendToServer);
+        NetworkHandler.Client.registerSender(PacketDistributor::sendToServer);
     }
 
     @SubscribeEvent

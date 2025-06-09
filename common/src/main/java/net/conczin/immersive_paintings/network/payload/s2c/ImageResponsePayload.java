@@ -1,36 +1,46 @@
 package net.conczin.immersive_paintings.network.payload.s2c;
 
-import java.awt.image.BufferedImage;
-import java.util.Optional;
-
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.painting.ClientPaintingManager;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.conczin.immersive_paintings.ClientPaintingManager;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-public record ImageResponsePayload(ResourceLocation identifier, byte[] data, int segment, int totalSegments) implements ImmersivePayload, SegmentManager.SegmentedPayload {
+public record ImageResponsePayload(ResourceLocation identifier, boolean thumbnail, byte[] data, int segment, int totalSegments) implements ImmersivePayload, SegmentManager.SegmentedPayload {
     public static final Type<ImageResponsePayload> TYPE = new Type<>(Main.locate("image_response"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ImageResponsePayload> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ImageResponsePayload> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC, ImageResponsePayload::identifier,
+        ByteBufCodecs.BOOL, ImageResponsePayload::thumbnail,
         ByteBufCodecs.BYTE_ARRAY, ImageResponsePayload::data,
         ByteBufCodecs.INT, ImageResponsePayload::segment,
         ByteBufCodecs.INT, ImageResponsePayload::totalSegments,
         ImageResponsePayload::new
     );
 
-    @Override
-    public void handle(Player player) {
-        // Add the player's UUID to avoid situations where multiple players are trying to load the same Identifier
-        Optional<BufferedImage> image = SegmentManager.handleSegmentedPayload(player.getStringUUID() + "_" + identifier.toString(), this);
-        if (image.isEmpty())
-            return;
+    private static final SegmentManager manager = new SegmentManager();
 
-        ClientPaintingManager.registerImage(identifier(), image.get(), false);
+    @Override
+    public void handle(Player player, Runner runner) {
+        String key = identifier.toString();
+        if (thumbnail)
+            key += "_thumbnail"; // Allows Thumbnail and FULL to download together
+
+        ResourceLocation id = identifier();
+        boolean thumbnail = thumbnail();
+
+        manager.handleSegmentedPayload(key, this).ifPresent(image -> {
+            runner.run(() -> {
+                if (thumbnail) {
+                    ClientPaintingManager.registerThumbnail(id, image, false);
+                } else {
+                    ClientPaintingManager.registerImage(id, image, false);
+                }
+            });
+        });
     }
 
     @Override

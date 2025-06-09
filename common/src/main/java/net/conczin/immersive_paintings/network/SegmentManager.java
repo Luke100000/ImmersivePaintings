@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SegmentManager {
-    private static final Map<String, ByteArrayOutputStream> buffer = new HashMap<>();
+    private final Map<String, ByteArrayOutputStream> buffer = new HashMap<>();
 
-    public static Optional<BufferedImage> handleSegmentedPayload(String key, SegmentedPayload payload) {
+    public Optional<BufferedImage> handleSegmentedPayload(String key, SegmentedPayload payload) {
         ByteArrayOutputStream byteBuffer = buffer.computeIfAbsent(key, k -> new ByteArrayOutputStream());
         try {
             byteBuffer.write(payload.data());

@@ -3,10 +3,10 @@ plugins {
 }
 
 configurations {
-    commonJava{
+    commonJava {
         canBeResolved = true
     }
-    commonResources{
+    commonResources {
         canBeResolved = true
     }
 }
@@ -31,10 +31,10 @@ processResources {
     from(configurations.commonResources)
 }
 
- tasks.named('javadoc', Javadoc).configure {
-     dependsOn(configurations.commonJava)
-     source(configurations.commonJava)
- }
+tasks.named('javadoc', Javadoc).configure {
+    dependsOn(configurations.commonJava)
+    source(configurations.commonJava)
+}
 
 tasks.named('sourcesJar', Jar) {
     dependsOn(configurations.commonJava)

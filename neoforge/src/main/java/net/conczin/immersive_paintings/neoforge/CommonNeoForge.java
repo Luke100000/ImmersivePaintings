@@ -3,14 +3,15 @@ package net.conczin.immersive_paintings.neoforge;
 import java.util.function.Consumer;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.entity.Entities;
-import net.conczin.immersive_paintings.item.Items;
-import net.conczin.immersive_paintings.network.Network;
+import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registration.Items;
+import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.util.Utils.RegisterHelper;
+import net.conczin.immersive_paintings.registration.Network;
+import net.conczin.immersive_paintings.registration.RegisterHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -53,17 +54,17 @@ public final class CommonNeoForge {
     @SubscribeEvent
     public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
         Network.register(usingRegistrar(event.registrar("1")));
-        Network.registerSender(PacketDistributor::sendToPlayer);
+        NetworkHandler.registerSender(PacketDistributor::sendToPlayer);
     }
 
     public static Network.Registrar usingRegistrar(final PayloadRegistrar registrar) {
         return new Network.Registrar() {
             @Override
-            public <T extends ImmersivePayload> void register(ImmersivePayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec, boolean isServer) {
+            public <T extends ImmersivePayload> void register(ImmersivePayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec, boolean isServer) {
                 if (isServer) {
-                    registrar.playToServer(type, codec, (payload, ctx) -> payload.handle(ctx.player()));
+                    registrar.playToServer(type, codec, (payload, ctx) -> payload.handle(ctx.player(), ctx::enqueueWork));
                 } else {
-                    registrar.playToClient(type, codec, (payload, ctx) -> payload.handle(ctx.player()));
+                    registrar.playToClient(type, codec, (payload, ctx) -> payload.handle(ctx.player(), ctx::enqueueWork));
                 }
             }
         };

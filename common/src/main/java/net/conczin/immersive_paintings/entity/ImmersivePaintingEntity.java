@@ -2,13 +2,13 @@ package net.conczin.immersive_paintings.entity;
 
 import net.conczin.immersive_paintings.*;
 import net.conczin.immersive_paintings.compat.XercaPaintCompat;
-import net.conczin.immersive_paintings.item.Items;
-import net.conczin.immersive_paintings.network.Network;
+import net.conczin.immersive_paintings.registration.Items;
+import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
-import net.conczin.immersive_paintings.painting.ClientPaintingManager;
-import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.painting.PlayerManager;
-import net.conczin.immersive_paintings.painting.ServerPaintingManager;
+import net.conczin.immersive_paintings.ClientPaintingManager;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.registration.Entities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
@@ -155,7 +156,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
             if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
                 Config config = Config.getInstance();
-                Network.sendToClient(serverPlayer, new OpenGuiPayload(
+                NetworkHandler.sendToClient(serverPlayer, new OpenGuiPayload(
                         OpenGuiPayload.GuiType.EDITOR, getId(),
                         config.minPaintingResolution, config.maxPaintingResolution,
                         config.showOtherPlayersPaintings, config.uploadPermissionLevel
@@ -208,12 +209,6 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void playPlacementSound() {
         playSound(SoundEvents.PAINTING_PLACE, 1.0f, 1.0f);
     }
-
-    @Override
-    public void startSeenByPlayer(ServerPlayer player) {
-        PlayerManager.playerRequestedImages(player);
-        super.startSeenByPlayer(player);
-    }
     
     @Override
     public void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -227,19 +222,19 @@ public class ImmersivePaintingEntity extends HangingEntity {
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         if (MOTIVE.equals(data)) {
-            Painting painting;
+            Optional<Painting> painting;
             if (level().isClientSide) {
                 painting = ClientPaintingManager.getPainting(getMotive());
             } else {
                 painting = ServerPaintingManager.getPainting(getServer(), getMotive());
             }
 
-            if (!painting.hash().equals(Painting.DEFAULT.hash())) {
-                getEntityData().set(WIDTH, Math.max(painting.width(), 1));
-                getEntityData().set(HEIGHT, Math.max(painting.height(), 1));
-            }
+            painting.ifPresent((p) -> {
+                getEntityData().set(WIDTH, Math.max(p.width(), 1));
+                getEntityData().set(HEIGHT, Math.max(p.height(), 1));
 
-            recalculateBoundingBox();
+                recalculateBoundingBox();
+            });
         }
 
         super.onSyncedDataUpdated(data);

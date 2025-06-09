@@ -26,7 +26,7 @@ public class LazyNetworkManager {
         cooldownClient = Math.max(cooldownClient - 1.0, 0.0);
         while (!serverQueue.isEmpty() && cooldownClient < 1.0) {
             LazyPacket packet = serverQueue.removeFirst();
-            Network.Client.sendToServer(packet.payload());
+            NetworkHandler.Client.sendToServer(packet.payload());
             cooldownClient += 20.0 / Config.getInstance().maxPacketsPerSecond;
         }
     }
@@ -35,7 +35,7 @@ public class LazyNetworkManager {
         cooldownServer = Math.max(cooldownServer - 1.0, 0.0);
         while (!clientQueue.isEmpty() && cooldownServer < 1.0) {
             LazyPacket packet = clientQueue.removeFirst();
-            Network.sendToClient(packet.player, packet.payload());
+            NetworkHandler.sendToClient(packet.player, packet.payload());
             cooldownServer += 20.0 / Config.getInstance().maxPacketsPerSecond;
         }
     }

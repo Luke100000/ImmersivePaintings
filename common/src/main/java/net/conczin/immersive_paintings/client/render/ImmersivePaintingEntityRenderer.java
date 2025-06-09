@@ -3,9 +3,8 @@ package net.conczin.immersive_paintings.client.render;
 import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
-import net.conczin.immersive_paintings.painting.ClientPaintingManager;
-import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.painting.Painting.Size;
+import net.conczin.immersive_paintings.ClientPaintingManager;
+import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -20,6 +19,7 @@ import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -48,13 +48,20 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
 
         double distance = (client.player == null ? 0 : client.player.distanceTo(paintingEntity));
         double blocksVisible = Math.tan(client.options.fov().get() / 180.0 * Math.PI / 2.0) * 2.0 * distance;
-        int resolution = ClientPaintingManager.getPainting(paintingEntity.getMotive()).resolution();
+
+        Optional<Painting> painting = ClientPaintingManager.getPainting(paintingEntity.getMotive());
+        if (painting.isEmpty())
+            return ClientPaintingManager.getImageIdentifier(Painting.DEFAULT_IDENTIFIER, Painting.Size.FULL);
+
+        int resolution = painting.get().resolution();
         double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
 
-        Size size = pixelDensity > config.eighthResolutionThreshold ? Painting.Size.EIGHTH
-                : pixelDensity > config.quarterResolutionThreshold ? Size.QUARTER
+        Painting.Size size = pixelDensity > config.thumbResolutionThreshold ? Painting.Size.THUMBNAIL
+                : pixelDensity > config.eighthResolutionThreshold ? Painting.Size.EIGHTH
+                : pixelDensity > config.quarterResolutionThreshold ? Painting.Size.QUARTER
                 : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
-                : Size.FULL;
+                : Painting.Size.FULL;
+
 
         return ClientPaintingManager.getImageIdentifier(paintingEntity.getMotive(), size);
     }

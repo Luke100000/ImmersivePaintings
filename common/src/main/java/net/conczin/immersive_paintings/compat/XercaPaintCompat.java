@@ -1,11 +1,13 @@
 package net.conczin.immersive_paintings.compat;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.awt.image.BufferedImage;
 
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
-import net.conczin.immersive_paintings.painting.Painting;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.platform.Services;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,6 +18,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class XercaPaintCompat {
     public static boolean interactWithPainting(ImmersivePaintingEntity painting, Player player, InteractionHand hand) {
+        if (!Services.PLATFORM.isModLoaded("xercapaint"))
+            return false;
+
         ItemStack stack = player.getItemInHand(hand);
         ResourceLocation location = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (location.getNamespace().equals("xercapaint")) {
@@ -66,7 +71,8 @@ public class XercaPaintCompat {
 
                 // upload
                 // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
-                ResourceLocation identifier = (new PaintingRegisterPayload(w / 16, h / 16, 16, title, false, false, false)).handle(player, bufferedImage, author, Painting.Type.XERCA);
+                Painting p = new Painting(w / 16, h / 16, 16, title, author, player.getUUID(), Painting.Type.XERCA, EnumSet.noneOf(Painting.Flag.class), "");
+                ResourceLocation identifier = PaintingRegisterPayload.handle(player, bufferedImage, p);
 
                 // apply
                 if (identifier != null)

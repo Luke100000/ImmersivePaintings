@@ -2,7 +2,7 @@ package net.conczin.immersive_paintings.neoforge;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
-import net.conczin.immersive_paintings.painting.PlayerManager;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.resources.PaintingsLoader;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,7 +28,14 @@ public class EventBus {
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().level().isClientSide) {
-            PlayerManager.playerLoggedOff((ServerPlayer)event.getEntity());
+            ServerPaintingManager.playerLoggedOut((ServerPlayer)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!event.getEntity().level().isClientSide) {
+            ServerPaintingManager.playerLoggedIn((ServerPlayer)event.getEntity());
         }
     }
 

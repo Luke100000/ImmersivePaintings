@@ -2,14 +2,15 @@ package net.conczin.immersive_paintings.network.payload.c2s;
 
 import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.network.Network;
+import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.network.payload.s2c.PaintingListPayload;
+import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
-import net.conczin.immersive_paintings.painting.Painting;
-import net.conczin.immersive_paintings.painting.ServerPaintingManager;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.util.ImageManipulations;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,81 +20,74 @@ import java.awt.image.BufferedImage;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.EnumSet;
 
-public record PaintingRegisterPayload(int width, int height, int resolution, String name, boolean hidden, boolean nsfw, boolean graffiti) implements ImmersivePayload {
+public record PaintingRegisterPayload(int width, int height, int resolution, String name, EnumSet<Painting.Flag> flags) implements ImmersivePayload {
     public static final Type<PaintingRegisterPayload> TYPE = new Type<>(Main.locate("painting_register"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRegisterPayload> STREAM_CODEC = StreamCodec.ofMember(PaintingRegisterPayload::encode, PaintingRegisterPayload::decode);
-
-    public RegistryFriendlyByteBuf encode(RegistryFriendlyByteBuf buf) {
-        buf.writeInt(width());
-        buf.writeInt(height());
-        buf.writeInt(resolution());
-        buf.writeUtf(name());
-
-        buf.writeBoolean(hidden());
-        buf.writeBoolean(nsfw());
-        buf.writeBoolean(graffiti());
-
-        return buf;
-    }
-
-    public static PaintingRegisterPayload decode(RegistryFriendlyByteBuf buf) {
-        int width = buf.readInt();
-        int height = buf.readInt();
-        int resolution = buf.readInt();
-        String name = buf.readUtf();
-        boolean hidden = buf.readBoolean();
-        boolean nsfw = buf.readBoolean();
-        boolean graffiti = buf.readBoolean();
-        return new PaintingRegisterPayload(width, height, resolution, name, hidden, nsfw, graffiti);
-    }
+    public static final StreamCodec<FriendlyByteBuf, PaintingRegisterPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, PaintingRegisterPayload::width,
+            ByteBufCodecs.INT, PaintingRegisterPayload::height,
+            ByteBufCodecs.INT, PaintingRegisterPayload::resolution,
+            ByteBufCodecs.STRING_UTF8, PaintingRegisterPayload::name,
+            Painting.Flag.STREAM_CODEC, PaintingRegisterPayload::flags,
+            PaintingRegisterPayload::new
+    );
 
     private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
-        Network.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(i, error));
+        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(i, error));
     }
 
     // Separate method to allow for Xerca compatibility
-    public ResourceLocation handle(Player player, BufferedImage image, String author, Painting.Type type) {
+    public static ResourceLocation handle(Player player, BufferedImage image, Painting painting) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             String hash = String.format("%032x", new BigInteger(1, md5.digest(ImageManipulations.encode(image))));
-            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), nsfw(), graffiti(), hash);
+            painting = painting.withHash(hash);
             ResourceLocation identifier = painting.location();
 
             ServerPaintingManager.registerPainting(player.getServer(), identifier, painting, image);
-            Network.sendToAllClients(player.getServer(), new PaintingListPayload(identifier, painting));
+            NetworkHandler.sendToAllClients(player.getServer(), new PaintingSyncPayload(identifier, painting));
             paintingRegisterError(player, "", identifier);
             return identifier;
         } catch (NoSuchAlgorithmException e) {
-            Painting painting = new Painting(width(), height(), resolution(), name(), author, player.getUUID(), type, hidden(), nsfw(), graffiti(), "");
-            paintingRegisterError(player, "", painting.location());
+            Main.LOGGER.error("failed to hash painting {}", painting.location(), e);
+            paintingRegisterError(player, "hash_failed", painting.location());
         }
 
         return null;
     }
 
     @Override
-    public void handle(Player player) {
-        BufferedImage image = ServerPaintingManager.uploadedImages.remove(player.getUUID());
+    public void handle(Player player, Runner runner) {
+        int width = width();
+        int height = height();
+        int resolution = resolution();
+        String name = name();
+        EnumSet<Painting.Flag> flags = flags();
 
-        if (!player.hasPermissions(Config.getInstance().uploadPermissionLevel)) {
-            paintingRegisterError(player, "no_permission", null);
-            return;
-        }
+        runner.run(() -> {
+            BufferedImage image = ImageUploadPayload.uploaded.remove(player.getStringUUID());
 
-        if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
-            paintingRegisterError(player, "too_large", null);
-            return;
-        }
+            if (!player.hasPermissions(Config.getInstance().uploadPermissionLevel)) {
+                paintingRegisterError(player, "no_permission", null);
+                return;
+            }
 
-        long count = ServerPaintingManager.getCustomPaintings(player.getServer()).values().stream().filter(p -> p.author().equals(player.getGameProfile().getName())).count();
-        if (count > Config.getInstance().maxUserImages) {
-            paintingRegisterError(player, "limit_reached", null);
-            return;
-        }
+            if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
+                paintingRegisterError(player, "too_large", null);
+                return;
+            }
 
-        handle(player, image, player.getGameProfile().getName(), Painting.Type.PAINTING);
+            long count = ServerPaintingManager.getCustomPaintings(player.getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
+            if (count > Config.getInstance().maxUserImages) {
+                paintingRegisterError(player, "limit_reached", null);
+                return;
+            }
+
+            Painting p = new Painting(width, height, resolution, name, player.getGameProfile().getName(), player.getUUID(), Painting.Type.PAINTING, flags, "");
+            handle(player, image, p);
+        });
     }
 
     @Override

@@ -1,10 +1,11 @@
-package net.conczin.immersive_paintings.painting;
+package net.conczin.immersive_paintings.util;
 
 import net.conczin.immersive_paintings.Main;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 public abstract class Cache<K, V> {
     public static final Path CACHE_PATH = Path.of(Main.MOD_ID + "_cache");
 
-    private final LinkedHashMap<K, V> cache;
+    private final Map<K, V> cache;
 
     // TODO: Add a way to configure this number in settings
     public Cache() {
@@ -22,19 +23,19 @@ public abstract class Cache<K, V> {
 
     // The maximum number of entries to allow in the cache before old entries start getting evicted
     public Cache(int maxEntries) {
-        this.cache = new LinkedHashMap<>(maxEntries+1, 0.75F, true) {
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<K, V>(maxEntries+1, 0.75F, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> entry) {
                 return size() > maxEntries;
             }
-        };
+        });
     }
 
-    abstract String getCachePath(K key);
+    public abstract String getCachePath(K key);
 
-    abstract V decode(byte[] bytes) throws IOException;
+    public abstract V decode(byte[] bytes) throws IOException;
 
-    abstract byte[] encode(V key);
+    public abstract byte[] encode(V key);
 
     // TODO: Some sort of logging needs to be done if the file doesn't exist
     private File getFile(K key) {
@@ -62,7 +63,8 @@ public abstract class Cache<K, V> {
             cache.put(key, data);
             return Optional.of(data);
         } catch (IOException e) {
-            e.printStackTrace();
+            // https://logging.apache.org/log4j/2.x/manual/api.html#best-practice-exception
+            Main.LOGGER.error("failed getting cached file {}", file, e);
         }
 
         return Optional.empty();
@@ -74,7 +76,7 @@ public abstract class Cache<K, V> {
             try {
                 Files.createDirectories(path.getParent());
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.LOGGER.error("failed creating directories for {}", path.getParent(), e);
                 return;
             }
         }
@@ -83,7 +85,7 @@ public abstract class Cache<K, V> {
             outputStream.write(encode(value));
             cache.put(key, value);
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.LOGGER.error("failed writing cached file {}", path, e);
         }
     }
 
@@ -101,7 +103,7 @@ public abstract class Cache<K, V> {
             if (entries.findAny().isEmpty())
                 Files.delete(parent);
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.LOGGER.error("failed deleting cache directory {}", parent, e);
         }
 
         return deleted;

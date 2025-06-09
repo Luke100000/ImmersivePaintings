@@ -19,8 +19,7 @@ public final class Config {
         return INSTANCE;
     }
 
-    // TODO Options:
-    // - Restrict editing to painting owner
+    // TODO Options: Restrict editing to painting owner
 
     // General
     public boolean testIfSpaceEmpty = false;
@@ -37,6 +36,7 @@ public final class Config {
     public float halfResolutionThreshold = 2.0f;
     public float quarterResolutionThreshold = 4.0f;
     public float eighthResolutionThreshold = 8.0f;
+    public float thumbResolutionThreshold = 16.0f;
 
     public int maxUserImageWidth = 4096;
     public int maxUserImageHeight = 4096;
@@ -47,8 +47,8 @@ public final class Config {
 
     // Advanced
     public int maxPacketsPerSecond = 20;
-    public int packetSize = 16 * 1024;
-    public int packetSplitInterval = 200;
+    public int packetSize = 64 * 1024;
+    public int packetSplitInterval = 250;
 
     public int version = 0;
 
@@ -65,7 +65,7 @@ public final class Config {
             version = getVersion();
             writer.write(GSON.toJson(this));
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.LOGGER.error("Failed to save Immersive Paintings config!", e);
         }
     }
 
@@ -79,8 +79,7 @@ public final class Config {
                 config.save();
                 return config;
             } catch (Exception e) {
-                Main.LOGGER.error("Failed to load Immersive Paintings config! Default config is used for now. Delete the file to reset.");
-                Main.LOGGER.error(e);
+                Main.LOGGER.error("Failed to load Immersive Paintings config! Default config is used for now. Delete the file to reset.", e);
                 return new Config();
             }
         } else {

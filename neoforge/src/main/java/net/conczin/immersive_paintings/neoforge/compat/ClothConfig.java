@@ -36,6 +36,7 @@ public class ClothConfig {
         image.addEntry(makeEntry(entryBuilder, "halfResolutionThreshold", config.halfResolutionThreshold, newValue -> config.halfResolutionThreshold = newValue));
         image.addEntry(makeEntry(entryBuilder, "quarterResolutionThreshold", config.quarterResolutionThreshold, newValue -> config.quarterResolutionThreshold = newValue));
         image.addEntry(makeEntry(entryBuilder, "eighthResolutionThreshold", config.eighthResolutionThreshold, newValue -> config.eighthResolutionThreshold = newValue));
+        image.addEntry(makeEntry(entryBuilder, "thumbResolutionThreshold", config.thumbResolutionThreshold, newValue -> config.thumbResolutionThreshold = newValue));
 
         image.addEntry(makeEntry(entryBuilder, "maxUserImageWidth", config.maxUserImageWidth, newValue -> config.maxUserImageWidth = newValue));
         image.addEntry(makeEntry(entryBuilder, "maxUserImageHeight", config.maxUserImageHeight, newValue -> config.maxUserImageHeight = newValue));

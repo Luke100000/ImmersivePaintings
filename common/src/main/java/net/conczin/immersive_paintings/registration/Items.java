@@ -1,7 +1,7 @@
-package net.conczin.immersive_paintings.item;
+package net.conczin.immersive_paintings.registration;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.util.Utils.RegisterHelper;
+import net.conczin.immersive_paintings.item.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -14,7 +14,7 @@ public class Items {
     public static final ImmersiveGlowGraffitiItem GLOW_GRAFFITI = new ImmersiveGlowGraffitiItem();
 
     public static final CreativeModeTab PAINTING_TAB = CreativeModeTab.builder(null, -1)
-            .title(Component.translatable("itemGroup." + Main.locate(Main.MOD_ID + "_tab").toLanguageKey()))
+            .title(Component.translatable("itemGroup.immersive_paintings.immersive_paintings_tab"))
             .icon(() -> new ItemStack(PAINTING))
             .displayItems((params, output) -> {
                 output.accept(PAINTING);

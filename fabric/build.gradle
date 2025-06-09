@@ -23,10 +23,10 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    include(implementation("com.twelvemonkeys.common:common-lang:${webp_version}")) { transitive = false }
-    include(implementation("com.twelvemonkeys.common:common-image:${webp_version}")) { transitive = false }
-    include(implementation("com.twelvemonkeys.imageio:imageio-core:${webp_version}")) { transitive = false }
-    include(implementation("com.twelvemonkeys.imageio:imageio-webp:${webp_version}")) { transitive = false }
+    include(implementation("com.twelvemonkeys.common:common-lang:${webp_version}"))
+    include(implementation("com.twelvemonkeys.common:common-image:${webp_version}"))
+    include(implementation("com.twelvemonkeys.imageio:imageio-core:${webp_version}"))
+    include(implementation("com.twelvemonkeys.imageio:imageio-webp:${webp_version}"))
 }
 
 loom {

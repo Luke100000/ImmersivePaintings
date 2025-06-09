@@ -3,14 +3,15 @@ package net.conczin.immersive_paintings.fabric;
 import java.util.function.Consumer;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.entity.Entities;
+import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.registration.Entities;
 import net.conczin.immersive_paintings.fabric.resources.FabricPaintings;
-import net.conczin.immersive_paintings.item.Items;
+import net.conczin.immersive_paintings.registration.Items;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
-import net.conczin.immersive_paintings.network.Network;
+import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.painting.PlayerManager;
-import net.conczin.immersive_paintings.util.Utils.RegisterHelper;
+import net.conczin.immersive_paintings.registration.Network;
+import net.conczin.immersive_paintings.registration.RegisterHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,7 +23,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.packs.PackType;
@@ -46,10 +47,14 @@ public final class CommonFabric implements ModInitializer {
 
         // Network
         Network.register(usingRegistrar());
-        Network.registerSender(ServerPlayNetworking::send);
+        NetworkHandler.registerSender(ServerPlayNetworking::send);
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-            PlayerManager.playerLoggedOff(handler.player)
+            ServerPaintingManager.playerLoggedOut(handler.player)
+        );
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+                ServerPaintingManager.playerLoggedIn(handler.player)
         );
 
         ServerTickEvents.START_SERVER_TICK.register((server) -> LazyNetworkManager.tickServer());
@@ -60,10 +65,10 @@ public final class CommonFabric implements ModInitializer {
     public static Network.Registrar usingRegistrar() {
         return new Network.Registrar() {
             @Override
-            public <T extends ImmersivePayload> void register(ImmersivePayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec, boolean isServer) {
+            public <T extends ImmersivePayload> void register(ImmersivePayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec, boolean isServer) {
                 if (isServer) {
                     PayloadTypeRegistry.playC2S().register(type, codec);
-                    ServerPlayNetworking.registerGlobalReceiver(type, (payload, ctx) -> payload.handle(ctx.player()));
+                    ServerPlayNetworking.registerGlobalReceiver(type, (payload, ctx) -> payload.handle(ctx.player(), ctx.server()::execute));
                 } else {
                     PayloadTypeRegistry.playS2C().register(type, codec);
 
@@ -83,7 +88,7 @@ public final class CommonFabric implements ModInitializer {
         }
 
         public static <T extends ImmersivePayload> void register(ImmersivePayload.Type<T> type) {
-            ClientPlayNetworking.registerGlobalReceiver(type, (payload, ctx) -> payload.handle(ctx.player()));
+            ClientPlayNetworking.registerGlobalReceiver(type, (payload, ctx) -> payload.handle(ctx.player(), ctx.client()::execute));
         }
     }
 }

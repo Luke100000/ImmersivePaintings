@@ -1,14 +1,20 @@
 package net.conczin.immersive_paintings.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.twelvemonkeys.image.ImageUtil;
+import net.conczin.immersive_paintings.Config;
+import net.conczin.immersive_paintings.Painting.Size;
+import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ImageManipulations {
     public static void write(BufferedImage image, File file) {
@@ -23,9 +29,8 @@ public class ImageManipulations {
         try {
             return ImageIO.read(new ByteArrayInputStream(bytes));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public static byte[] encode(BufferedImage image) {
@@ -38,40 +43,102 @@ public class ImageManipulations {
         return stream.toByteArray();
     }
 
-    public static NativeImage bufferedToNative(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        NativeImage nativeImage = new NativeImage(width, height, false);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int argb = image.getRGB(x, y);
-                int a = argb >> 24 & 255;
-                int r = argb >> 16 & 255;
-                int g = argb >> 8 & 255;
-                int b = argb & 255;
+    public static void processByteArrayInChunks(byte[] input, TriConsumer<byte[], Integer, Integer> consumer) {
+        int splits = (int)Math.ceil((double)input.length / Config.getInstance().packetSize);
+        int split = 0;
+        for (int i = 0; i < input.length; i += Config.getInstance().packetSize) {
+            byte[] b = Arrays.copyOfRange(input, i, Math.min(input.length, i + Config.getInstance().packetSize));
+            consumer.accept(b, split, splits);
+            split++;
+        }
+    }
 
-                nativeImage.setPixelRGBA(x, y, (a << 24) | (b << 16) | (g << 8) | r);
+    public static NativeImage bufferedToNative(BufferedImage image) {
+        NativeImage nativeImage = new NativeImage(image.getWidth(), image.getHeight(), false);
+        ColorModel model = image.getColorModel();
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                Object elements = image.getRaster().getDataElements(x, y, null);
+
+                int abgr = (model.getAlpha(elements) << 24) |
+                        (model.getBlue(elements) << 16) |
+                        (model.getGreen(elements) << 8) |
+                        model.getRed(elements);
+
+                nativeImage.setPixelRGBA(x, y, abgr);
             }
         }
         return nativeImage;
     }
 
-    public static void resize(BufferedImage image, BufferedImage source, double zoom, int ox, int oy) {
+    public static BufferedImage resizeImage(BufferedImage in, Size size) {
+        int w = in.getWidth();
+        int h = in.getHeight();
+
+        switch (size) {
+            case Size.FULL -> {
+                return in;
+            }
+            case Size.HALF -> {
+                w /= 2;
+                h /= 2;
+            }
+            case Size.QUARTER -> {
+                w /= 4;
+                h /= 4;
+            }
+            case Size.EIGHTH -> {
+                w /= 8;
+                h /= 8;
+            }
+            case Size.THUMBNAIL -> {
+                float z = Math.min(
+                        (float)Config.getInstance().thumbnailSize / w,
+                        (float)Config.getInstance().thumbnailSize / h
+                );
+
+                // The thumbnail would not be smaller than the actual painting
+                if (z < 1.0f) {
+                    w *= z;
+                    h *= z;
+                }
+
+                // If the zoom didn't change then the original image is small enough already
+                if (w == in.getWidth())
+                    return in;
+            }
+            case Size.NSFW -> {
+                // NSFW Images can only be resized from thumbnails so there's no need to downscale
+                return ImageUtil.blur(in, (float)Config.getInstance().thumbnailSize / 8);
+            }
+        }
+
+        BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        resize(out, in, (float)in.getWidth() / w, 0, 0);
+        return out;
+    }
+
+    public static void resize(BufferedImage image, BufferedImage source, float zoom, int ox, int oy) {
+        ColorModel sourceModel = source.getColorModel();
+
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 int red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
                 for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
                     for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
-                        int rgb = source.getRGB(px, py);
+                        Object elements = source.getRaster().getDataElements(px, py, null);
 
-                        red += rgb >> 16 & 255;
-                        green += rgb >> 8 & 255;
-                        blue += rgb & 255;
-                        alpha += rgb >> 24 & 255;
+                        red += sourceModel.getRed(elements);
+                        green += sourceModel.getGreen(elements);;
+                        blue += sourceModel.getBlue(elements);;
+                        alpha += sourceModel.getAlpha(elements);;
+
                         samples++;
                     }
                 }
+
                 if (samples > 0) {
                     red /= samples;
                     green /= samples;
@@ -85,11 +152,13 @@ public class ImageManipulations {
     }
 
     public static void dither(BufferedImage image, double dither) {
+        ColorModel model = image.getColorModel();
+
         float[] hsv = new float[3];
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                int argb = image.getRGB(x, y);
-                Color.RGBtoHSB(argb >> 16 & 255, argb >> 8 & 255, argb & 255, hsv);
+                Object elements = image.getRaster().getDataElements(x, y, null);
+                Color.RGBtoHSB(model.getRed(elements), model.getGreen(elements), model.getBlue(elements), hsv);
 
                 for (int i = 1; i < 3; i++) {
                     if (x % 2 == y % 2) {
@@ -110,6 +179,8 @@ public class ImageManipulations {
 
         final int EXCLUDE_HUE = 1;
 
+        ColorModel model = image.getColorModel();
+
         // base
         int base = image.getWidth() * image.getHeight();
         for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
@@ -121,8 +192,8 @@ public class ImageManipulations {
         // create histogram
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                int argb = image.getRGB(x, y);
-                Color.RGBtoHSB(argb >> 16 & 255, argb >> 8 & 255, argb & 255, hsv);
+                Object elements = image.getRaster().getDataElements(x, y, null);
+                Color.RGBtoHSB(model.getRed(elements), model.getGreen(elements), model.getBlue(elements), hsv);
 
                 for (int i = 0; i < 3; i++) {
                     hist[i][toByte(hsv[i])]++;
@@ -157,8 +228,8 @@ public class ImageManipulations {
         // assign to new bins
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                int argb = image.getRGB(x, y);
-                Color.RGBtoHSB(argb >> 16 & 255, argb >> 8 & 255, argb & 255, hsv);
+                Object elements = image.getRaster().getDataElements(x, y, null);
+                Color.RGBtoHSB(model.getRed(elements), model.getGreen(elements), model.getBlue(elements), hsv);
 
                 for (int channel = EXCLUDE_HUE; channel < 3; channel++) {
                     hsv[channel] = lookup[channel][toByte(hsv[channel])];
