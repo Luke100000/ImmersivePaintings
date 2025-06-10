@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.network;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ public class LazyNetworkManager {
         while (!serverQueue.isEmpty() && cooldownClient < 1.0) {
             LazyPacket packet = serverQueue.removeFirst();
             NetworkHandler.Client.sendToServer(packet.payload());
-            cooldownClient += 20.0 / Config.getInstance().maxPacketsPerSecond;
+            cooldownClient += 20.0 / Configs.COMMON.maxPacketsPerSecond;
         }
     }
 
@@ -36,12 +36,12 @@ public class LazyNetworkManager {
         while (!clientQueue.isEmpty() && cooldownServer < 1.0) {
             LazyPacket packet = clientQueue.removeFirst();
             NetworkHandler.sendToClient(packet.player, packet.payload());
-            cooldownServer += 20.0 / Config.getInstance().maxPacketsPerSecond;
+            cooldownServer += 20.0 / Configs.COMMON.maxPacketsPerSecond;
         }
     }
 
     public static float getRemainingTime() {
-        return (float)serverQueue.size() / Config.getInstance().maxPacketsPerSecond;
+        return (float)serverQueue.size() / Configs.COMMON.maxPacketsPerSecond;
     }
 
     record LazyPacket(ImmersivePayload payload, ServerPlayer player) {}

@@ -2,6 +2,8 @@ package net.conczin.immersive_paintings.entity;
 
 import net.conczin.immersive_paintings.*;
 import net.conczin.immersive_paintings.compat.XercaPaintCompat;
+import net.conczin.immersive_paintings.config.CommonConfig;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.registration.Items;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
@@ -59,10 +61,6 @@ public class ImmersivePaintingEntity extends HangingEntity {
         super(entityType, level);
     }
 
-    public ImmersivePaintingEntity(EntityType<? extends HangingEntity> entityType, Level level, BlockPos pos) {
-        super(entityType, level, pos);
-    }
-
     @Override
     protected void setDirection(Direction direction) {
         setDirection(direction, rotation);
@@ -82,6 +80,10 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
 
         recalculateBoundingBox();
+    }
+
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
     }
 
     @Override
@@ -133,7 +135,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     
     @Override
     public boolean survives() {
-        if (Config.getInstance().testIfSpaceEmpty && !level().noCollision(this)) {
+        if (Configs.COMMON.testIfSpaceEmpty && !level().noCollision(this)) {
             return false;
         }
 
@@ -148,14 +150,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     public boolean canBeCollidedWith() {
-        return Config.getInstance().paintingsHaveCollision;
+        return Configs.COMMON.paintingsHaveCollision;
     }
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
             if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
-                Config config = Config.getInstance();
+                CommonConfig config = Configs.COMMON;
                 NetworkHandler.sendToClient(serverPlayer, new OpenGuiPayload(
                         OpenGuiPayload.GuiType.EDITOR, getId(),
                         config.minPaintingResolution, config.maxPaintingResolution,

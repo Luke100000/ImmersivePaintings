@@ -1,10 +1,11 @@
 package net.conczin.immersive_paintings.client.render;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -44,7 +45,7 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
     @Override
     public ResourceLocation getTextureLocation(T paintingEntity) {
         Minecraft client = Minecraft.getInstance();
-        Config config = Config.getInstance();
+        ClientConfig config = Configs.CLIENT;
 
         double distance = (client.player == null ? 0 : client.player.distanceTo(paintingEntity));
         double blocksVisible = Math.tan(client.options.fov().get() / 180.0 * Math.PI / 2.0) * 2.0 * distance;

@@ -1,6 +1,5 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
@@ -8,6 +7,7 @@ import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -69,18 +69,18 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
         runner.run(() -> {
             BufferedImage image = ImageUploadPayload.uploaded.remove(player.getStringUUID());
 
-            if (!player.hasPermissions(Config.getInstance().uploadPermissionLevel)) {
+            if (!player.hasPermissions(Configs.COMMON.uploadPermissionLevel)) {
                 paintingRegisterError(player, "no_permission", null);
                 return;
             }
 
-            if (image.getWidth() > Config.getInstance().maxUserImageWidth || image.getHeight() > Config.getInstance().maxUserImageHeight) {
+            if (image.getWidth() > Configs.COMMON.maxUserImageWidth || image.getHeight() > Configs.COMMON.maxUserImageHeight) {
                 paintingRegisterError(player, "too_large", null);
                 return;
             }
 
             long count = ServerPaintingManager.getCustomPaintings(player.getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
-            if (count > Config.getInstance().maxUserImages) {
+            if (count > Configs.COMMON.maxUserImages) {
                 paintingRegisterError(player, "limit_reached", null);
                 return;
             }

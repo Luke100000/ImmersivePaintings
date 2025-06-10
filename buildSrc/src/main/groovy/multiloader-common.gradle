@@ -91,8 +91,7 @@ processResources {
             'neoforge_loader_version_range': neoforge_loader_version_range,
             'forge_version'                : forge_version,
             'forge_loader_version_range'   : forge_loader_version_range,
-            'cloth_config_version'         : cloth_config_version,
-            'modmenu_version'              : modmenu_version,
+            'fzzy_config_version'         : fzzy_config_version,
             'credits'                      : credits,
             'java_version'                 : java_version
     ]

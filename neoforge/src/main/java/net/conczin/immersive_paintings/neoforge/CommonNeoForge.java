@@ -3,12 +3,9 @@ package net.conczin.immersive_paintings.neoforge;
 import java.util.function.Consumer;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registration.Entities;
-import net.conczin.immersive_paintings.registration.Items;
+import net.conczin.immersive_paintings.registration.*;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.registration.Network;
-import net.conczin.immersive_paintings.registration.RegisterHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,10 +30,7 @@ public final class CommonNeoForge {
     }
 
     private static <T> void registerHelper(RegisterEvent event, Registry<T> register, Consumer<RegisterHelper<T>> consumer) {
-        event.register(
-            register.key(),
-            registry -> consumer.accept(registry::register)
-        );
+        event.register(register.key(), registry -> consumer.accept(registry::register));
     }
 
     @SubscribeEvent
@@ -48,7 +42,7 @@ public final class CommonNeoForge {
     @SubscribeEvent
     public static void registerItems(RegisterEvent event) {
         registerHelper(event, BuiltInRegistries.ITEM, Items::registerItems);
-        registerHelper(event, BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTab);
+        registerHelper(event, BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTabs);
     }
 
     @SubscribeEvent

@@ -43,7 +43,7 @@ public final class CommonFabric implements ModInitializer {
 
         // Items and Creative Tabs
         registerHelper(BuiltInRegistries.ITEM, Items::registerItems);
-        registerHelper(BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTab);
+        registerHelper(BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTabs);
 
         // Network
         Network.register(usingRegistrar());

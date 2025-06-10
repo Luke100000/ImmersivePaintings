@@ -45,7 +45,8 @@ public class ImmersivePaintingItem extends Item {
             rotation = Math.floorMod((int) Math.floor(player.getYRot() / 90.0f + 2.5) * 90, 360);
         }
 
-        ImmersivePaintingEntity entity = new ImmersivePaintingEntity(getEntityType(), level, attachmentPosition);
+        ImmersivePaintingEntity entity = getEntityType().create(level);
+        entity.setPos(attachmentPosition);
         entity.setDirection(direction, rotation);
 
         // TODO: I'm not sure if this is necessary

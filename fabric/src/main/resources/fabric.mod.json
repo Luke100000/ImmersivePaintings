@@ -21,9 +21,6 @@
     ],
     "client": [
       "net.conczin.immersive_paintings.fabric.ClientFabric"
-    ],
-    "modmenu": [
-      "net.conczin.immersive_paintings.fabric.compat.ModMenu"
     ]
   },
   "mixins": [
@@ -33,10 +30,8 @@
     "java": ">=${java_version}",
     "minecraft": ">=${minecraft_version}",
     "fabric": "*",
-    "fabricloader": ">=${fabric_loader_version}"
+    "fabricloader": ">=${fabric_loader_version}",
+    "fzzy-config": ">=${fzzy_config_version}"
   },
-  "suggests": {
-    "cloth_config": ">=${cloth_config_version}",
-    "modmenu": ">=${modmenu_version}"
-  }
+  "suggests": {}
 }

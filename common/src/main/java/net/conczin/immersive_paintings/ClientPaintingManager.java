@@ -4,6 +4,7 @@ import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.c2s.ImageRequestPayload;
 import net.conczin.immersive_paintings.Painting.Size;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.Minecraft;
@@ -56,7 +57,7 @@ public class ClientPaintingManager {
     }
 
     private static ResourceLocation getOrNSFW(Map<Size, ResourceLocation> mapping, ResourceLocation identifier, Size size) {
-        if (Config.getInstance().showNSFWPaintings)
+        if (Configs.CLIENT.showNSFWPaintings)
             return mapping.get(size);
 
         Painting p = paintings.get(identifier);
@@ -207,13 +208,13 @@ public class ClientPaintingManager {
         int res = Math.max(painting.width(), painting.height()) * painting.resolution();
         registerImageType(identifier, image, Size.FULL, Size.FULL, alreadyCached);
 
-        Size halfSize = res / 2 < Config.getInstance().lodResolutionMinimum ? Size.FULL : Size.HALF;
+        Size halfSize = res / 2 < Configs.CLIENT.lodResolutionMinimum ? Size.FULL : Size.HALF;
         registerImageType(identifier, image, halfSize, Size.HALF, alreadyCached);
 
-        Size quarterSize = res / 4 < Config.getInstance().lodResolutionMinimum ? halfSize : Size.QUARTER;
+        Size quarterSize = res / 4 < Configs.CLIENT.lodResolutionMinimum ? halfSize : Size.QUARTER;
         registerImageType(identifier, image, quarterSize, Size.QUARTER, alreadyCached);
 
-        Size eighthSize = res / 8 < Config.getInstance().lodResolutionMinimum ? quarterSize : Size.EIGHTH;
+        Size eighthSize = res / 8 < Configs.CLIENT.lodResolutionMinimum ? quarterSize : Size.EIGHTH;
         registerImageType(identifier, image, eighthSize, Size.EIGHTH, alreadyCached);
 
         setImageRequest(identifier, false, true);

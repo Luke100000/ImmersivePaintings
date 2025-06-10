@@ -32,8 +32,8 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId = "cloth_config"
-versionRange = "[${cloth_config_version},)"
+modId = "fzzy_config"
+versionRange = "[${fzzy_config_version},)"
 ordering = "AFTER"
 side = "CLIENT"
 

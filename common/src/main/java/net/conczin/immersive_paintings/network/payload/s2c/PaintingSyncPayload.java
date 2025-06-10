@@ -3,12 +3,12 @@ package net.conczin.immersive_paintings.network.payload.s2c;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,7 +27,7 @@ public record PaintingSyncPayload(Map<ResourceLocation, Optional<Painting>> pain
     // The interval is chosen to be an arbitrary number that feels like a good amount to send at a time
     public static List<PaintingSyncPayload> splitPaintings(Map<ResourceLocation, Optional<Painting>> paintings, boolean clearFirst) {
         List<PaintingSyncPayload> paintingsList = new ArrayList<>();
-        final int interval = Config.getInstance().packetSplitInterval;
+        final int interval = Configs.COMMON.packetSplitInterval;
 
         Map<ResourceLocation, Optional<Painting>> optionalPaintings = paintings
                 .entrySet()

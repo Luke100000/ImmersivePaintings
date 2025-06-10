@@ -1,6 +1,5 @@
 package net.conczin.immersive_paintings.client.gui;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.client.gui.widget.*;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
@@ -9,6 +8,7 @@ import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.c2s.*;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.resources.FrameLoader;
 import net.conczin.immersive_paintings.util.*;
 import net.minecraft.ChatFormatting;
@@ -26,11 +26,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -80,7 +81,7 @@ public class ImmersivePaintingScreen extends Screen {
 
         this.minResolution = minResolution;
         this.maxResolution = maxResolution;
-        this.showOtherPlayersPaintings = showOtherPlayersPaintings || Config.getInstance().showOtherPlayersPaintings; // Prefer server, fall back to client if they mismatch
+        this.showOtherPlayersPaintings = showOtherPlayersPaintings && Configs.CLIENT.showOtherPlayersPaintings; // Prefer server, fall back to client if they mismatch
         this.uploadPermissionLevel = uploadPermissionLevel;
 
         if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(entityId) instanceof ImmersivePaintingEntity painting) {
@@ -826,7 +827,7 @@ public class ImmersivePaintingScreen extends Screen {
     private void updateSearch() {
         filteredPaintings.clear();
 
-        boolean showNSFW = Config.getInstance().showNSFWPaintings;
+        boolean showNSFW = Configs.CLIENT.showNSFWPaintings;
         UUID uuid = Minecraft.getInstance().player.getUUID();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(e -> {
@@ -880,9 +881,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            int dot = path.lastIndexOf('.');
-            int sep = path.lastIndexOf(Path.of(path).getFileSystem().getSeparator());
-            currentImageName = path.substring(sep + 1, dot).replaceFirst("[.][^.]+$", "");
+            currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
             settings = new PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
@@ -892,11 +891,11 @@ public class ImmersivePaintingScreen extends Screen {
     private BufferedImage loadImage(String path, ResourceLocation identifier) {
         InputStream stream = null;
         try {
-            stream = URI.create(path).toURL().openStream();
+            stream = new URL(path).openStream();
         } catch (Exception exception) {
             try {
                 stream = new FileInputStream(path);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 Main.LOGGER.error("failed loading image {} from path {}", identifier, path, e);
             }
         }

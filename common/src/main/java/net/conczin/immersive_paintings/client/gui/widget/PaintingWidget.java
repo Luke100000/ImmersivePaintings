@@ -2,8 +2,8 @@ package net.conczin.immersive_paintings.client.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -39,7 +39,7 @@ public class PaintingWidget extends Button {
     }
 
     public void update(ResourceLocation identifier, int paintingWidth, int paintingHeight) {
-        int thumbnailSize = Config.getInstance().thumbnailSize;
+        int thumbnailSize = Configs.CLIENT.thumbnailSize;
 
         this.identifier = identifier;
         this.paintingWidth = paintingWidth * thumbnailSize;

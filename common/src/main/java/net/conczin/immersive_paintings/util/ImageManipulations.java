@@ -2,8 +2,8 @@ package net.conczin.immersive_paintings.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.twelvemonkeys.image.ImageUtil;
-import net.conczin.immersive_paintings.Config;
 import net.conczin.immersive_paintings.Painting.Size;
+import net.conczin.immersive_paintings.registration.Configs;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.imageio.ImageIO;
@@ -44,10 +44,11 @@ public class ImageManipulations {
     }
 
     public static void processByteArrayInChunks(byte[] input, TriConsumer<byte[], Integer, Integer> consumer) {
-        int splits = (int)Math.ceil((double)input.length / Config.getInstance().packetSize);
+        int packetSize = Configs.COMMON.packetSize;
+        int splits = (int)Math.ceil((double)input.length / packetSize);
         int split = 0;
-        for (int i = 0; i < input.length; i += Config.getInstance().packetSize) {
-            byte[] b = Arrays.copyOfRange(input, i, Math.min(input.length, i + Config.getInstance().packetSize));
+        for (int i = 0; i < input.length; i += packetSize) {
+            byte[] b = Arrays.copyOfRange(input, i, Math.min(input.length, i + packetSize));
             consumer.accept(b, split, splits);
             split++;
         }
@@ -94,8 +95,8 @@ public class ImageManipulations {
             }
             case Size.THUMBNAIL -> {
                 float z = Math.min(
-                        (float)Config.getInstance().thumbnailSize / w,
-                        (float)Config.getInstance().thumbnailSize / h
+                        (float) Configs.CLIENT.thumbnailSize / w,
+                        (float) Configs.CLIENT.thumbnailSize / h
                 );
 
                 // The thumbnail would not be smaller than the actual painting
@@ -110,7 +111,7 @@ public class ImageManipulations {
             }
             case Size.NSFW -> {
                 // NSFW Images can only be resized from thumbnails so there's no need to downscale
-                return ImageUtil.blur(in, (float)Config.getInstance().thumbnailSize / 8);
+                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize / 8);
             }
         }
 

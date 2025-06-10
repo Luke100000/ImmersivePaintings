@@ -31,7 +31,7 @@ public class Items {
         helper.register(Main.locate("glow_graffiti"), GLOW_GRAFFITI);
     }
 
-    public static void registerCreativeTab(RegisterHelper<CreativeModeTab> helper) {
+    public static void registerCreativeTabs(RegisterHelper<CreativeModeTab> helper) {
         helper.register(Main.locate("paintings"), PAINTING_TAB);
     }
 }

@@ -23,5 +23,12 @@ def getAppVersion = { ->
 
 
 subprojects {
+    repositories {
+        maven {
+            name = "FzzyMaven"
+            url = "https://maven.fzzyhmstrs.me/"
+        }
+    }
+
     version = getAppVersion()
 }
