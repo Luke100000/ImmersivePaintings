@@ -132,7 +132,7 @@ public class ImmersivePaintingScreen extends Screen {
         switch (page) {
             case NEW -> {
                 graphics.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.drop"), 220);
+                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.drop"), 220);
                 int y = height / 2 - 40 - wrap.size() * 12;
                 for (Component text : wrap) {
                     graphics.drawCenteredString(font, text, width / 2, y, 0xFFFFFFFF);
@@ -170,7 +170,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case DELETE -> {
                 graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.confirm_deletion"), 300);
+                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Component t : wrap) {
                     graphics.drawCenteredString(font, t, width / 2, y, 0XFFFFFF);
@@ -179,7 +179,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case ADMIN_DELETE -> {
                 graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.confirm_admin_deletion"), 300);
+                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_admin_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Component t : wrap) {
                     graphics.drawCenteredString(font, t, width / 2, y, 0XFFFFFF);
@@ -187,7 +187,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case LOADING -> {
-                Component text = Component.translatable("immersive_paintings.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
+                Component text = Component.translatable("immersive_paintings.gui.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
                 graphics.drawCenteredString(font, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
@@ -224,7 +224,7 @@ public class ImmersivePaintingScreen extends Screen {
             int w = 400 / b.size();
             for (Page page : b) {
                 Button btn = addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))
+                    Component.translatable("immersive_paintings.gui.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))
                     .bounds(x, height / 2 - 90 - 22, w, 20)
                     .build()
                 );
@@ -241,7 +241,7 @@ public class ImmersivePaintingScreen extends Screen {
                 editBox.setMaxLength(1024);
 
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.load"), sender -> loadImage(editBox.getValue()))
+                    Component.translatable("immersive_paintings.gui.load"), sender -> loadImage(editBox.getValue()))
                     .bounds(width / 2 - 50, height / 2 - 15, 100, 20)
                     .build()
                 );
@@ -272,7 +272,7 @@ public class ImmersivePaintingScreen extends Screen {
             case CREATE -> {
                 // Name
                 EditBox editBox = addRenderableWidget(new EditBox(font, width / 2 - 90, height / 2 - 100, 180, 20,
-                        Component.translatable("immersive_paintings.name")));
+                        Component.translatable("immersive_paintings.gui.name")));
                 editBox.setMaxLength(256);
                 editBox.setValue(currentImageName);
                 editBox.setResponder(s -> currentImageName = s);
@@ -280,14 +280,14 @@ public class ImmersivePaintingScreen extends Screen {
                 int y = height / 2 - 60;
 
                 // Width
-                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.width", settings.width, 1, 16, v -> {
+                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.gui.width", settings.width, 1, 16, v -> {
                     settings.width = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Height
-                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.height", settings.height, 1, 16, v -> {
+                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.gui.height", settings.height, 1, 16, v -> {
                     settings.height = v;
                     shouldReProcess = true;
                 }));
@@ -300,7 +300,7 @@ public class ImmersivePaintingScreen extends Screen {
                         .builder(Component.literal(String.valueOf(settings.resolution)), sender -> {})
                         .pos(x + 25, y)
                         .size(50, 20)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.resolution")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.resolution")))
                         .build()
                 );
 
@@ -316,7 +316,7 @@ public class ImmersivePaintingScreen extends Screen {
                         })
                         .pos(x, y)
                         .size(25, 20)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.resolution")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.resolution")))
                         .build()
                 );
 
@@ -332,7 +332,7 @@ public class ImmersivePaintingScreen extends Screen {
                         })
                         .pos(x + 75, y)
                         .size(25, 20)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.resolution")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.resolution")))
                         .build()
                 );
 
@@ -340,14 +340,14 @@ public class ImmersivePaintingScreen extends Screen {
                 y += 10;
 
                 // Color reduction
-                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.colors", settings.colors, 2, 25, v -> {
+                addRenderableWidget(new IntegerSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.gui.colors", settings.colors, 2, 25, v -> {
                     settings.colors = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
                 y += 22;
 
                 // Dither
-                addRenderableWidget(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.dither", settings.dither, v -> {
+                addRenderableWidget(new PercentageSliderWidget(width / 2 - 200, y, 100, 20, "immersive_paintings.gui.dither", settings.dither, v -> {
                     settings.dither = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
@@ -355,10 +355,10 @@ public class ImmersivePaintingScreen extends Screen {
                 // PixelArt
                 y = height / 2 - 50;
                 addRenderableWidget(Checkbox
-                        .builder(Component.translatable("immersive_paintings.pixelart"), font)
+                        .builder(Component.translatable("immersive_paintings.gui.pixelart"), font)
                         .pos(width / 2 + 100, y)
                         .selected(settings.pixelArt)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.pixelart.tooltip")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.pixelart.tooltip")))
                         .onValueChange((w, v) -> {
                             settings.pixelArt = v;
                             adaptToPixelArt();
@@ -371,10 +371,10 @@ public class ImmersivePaintingScreen extends Screen {
 
                 // Hide
                 addRenderableWidget(Checkbox
-                        .builder(Component.translatable("immersive_paintings.hide"), font)
+                        .builder(Component.translatable("immersive_paintings.gui.hide"), font)
                         .pos(width / 2 + 100, y)
                         .selected(settings.hidden)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.visibility")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.visibility")))
                         .onValueChange((w, v) -> settings.hidden = !settings.hidden)
                         .build()
                 );
@@ -382,45 +382,45 @@ public class ImmersivePaintingScreen extends Screen {
 
                 // NSFW
                 addRenderableWidget(Checkbox
-                        .builder(Component.translatable("immersive_paintings.nsfw"), font)
+                        .builder(Component.translatable("immersive_paintings.gui.nsfw"), font)
                         .pos(width / 2 + 100, y)
                         .selected(settings.nsfw)
-                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.nsfw.tooltip")))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.nsfw")))
                         .onValueChange((w, v) -> settings.nsfw = !settings.nsfw)
                         .build()
                 );
                 y += 22;
 
                 // Offset X
-                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.x_offset", settings.offsetX, v -> {
+                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.gui.x_offset", settings.offsetX, v -> {
                     settings.offsetX = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset Y
-                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.y_offset", settings.offsetY, v -> {
+                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.gui.y_offset", settings.offsetY, v -> {
                     settings.offsetY = v;
                     shouldReProcess = true;
                 }));
                 y += 22;
 
                 // Offset
-                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.zoom", settings.zoom, entity.isGraffiti() ? 0.5 : 1.0, entity.isGraffiti() ? 1.5 : 3.0, v -> {
+                addRenderableWidget(new PercentageSliderWidget(width / 2 + 100, y, 100, 20, "immersive_paintings.gui.zoom", settings.zoom, entity.isGraffiti() ? 0.5 : 1.0, entity.isGraffiti() ? 1.5 : 3.0, v -> {
                     settings.zoom = v;
                     shouldReProcess = true;
                 })).active = !settings.pixelArt;
 
                 // Cancel
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.cancel"), v -> setPage(Page.NEW))
+                    Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.NEW))
                     .bounds(width / 2 - 85, height / 2 + 75, 80, 20)
                     .build()
                 );
 
                 // Save
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.save"), v -> {
+                    Component.translatable("immersive_paintings.gui.save"), v -> {
                         ImageManipulations.processByteArrayInChunks(ImageManipulations.encode(pixelatedImage), (ints, split, splits) -> LazyNetworkManager.sendToServer(new ImageUploadPayload(currentImageName, ints, split, splits)));
 
                         EnumSet<Painting.Flag> flags = settings.getFlags();
@@ -482,12 +482,12 @@ public class ImmersivePaintingScreen extends Screen {
                     .builder(Component.literal(String.valueOf(filteredResolution)), sender -> {})
                     .pos(x + 50 + 8, height / 2 - 90)
                     .size(25, 20)
-                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.filter_resolution")))
+                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.filter_resolution")))
                     .build()
                 );
 
                 Button allWidget = addRenderableWidget(Button
-                    .builder(Component.translatable("immersive_paintings.filter.all"), sender -> {
+                    .builder(Component.translatable("immersive_paintings.gui.filter_all"), sender -> {
                         filteredResolution = 0;
                         updateSearch();
                         widget.setMessage(Component.literal(String.valueOf(filteredResolution)));
@@ -495,7 +495,7 @@ public class ImmersivePaintingScreen extends Screen {
                     })
                     .pos(x, height / 2 - 90)
                     .size(25, 20)
-                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.filter_resolution")))
+                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.filter_resolution")))
                     .build()
                 );
 
@@ -508,7 +508,7 @@ public class ImmersivePaintingScreen extends Screen {
                     })
                     .pos(x + 25 + 8, height / 2 - 90)
                     .size(25, 20)
-                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.filter_resolution")))
+                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.filter_resolution")))
                     .build()
                 );
 
@@ -521,7 +521,7 @@ public class ImmersivePaintingScreen extends Screen {
                     })
                     .pos(x + 75 + 8, height / 2 - 90)
                     .size(25, 20)
-                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.tooltip.filter_resolution")))
+                    .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.filter_resolution")))
                     .build()
                 );
 
@@ -609,20 +609,20 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.done"), v -> onClose())
+                    Component.translatable("immersive_paintings.gui.done"), v -> onClose())
                     .bounds(width / 2 - 50, height / 2 + 70, 100, 20)
                     .build()
                 );
             }
             case DELETE -> {
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.cancel"), v -> setPage(Page.YOURS))
+                    Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.YOURS))
                     .bounds(width / 2 - 100 - 5, height / 2 + 20, 100, 20)
                     .build()
                 );
 
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.delete"), v -> {
+                    Component.translatable("immersive_paintings.gui.delete"), v -> {
                         NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
                         setPage(Page.YOURS);
                     })
@@ -632,7 +632,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case ADMIN_DELETE -> {
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.cancel"), v -> setPage(Page.PLAYERS))
+                    Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.PLAYERS))
                     .bounds(width / 2 - 115, height / 2 + 10, 70, 20)
                     .build()
                 );
@@ -647,7 +647,7 @@ public class ImmersivePaintingScreen extends Screen {
                 );
 
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.delete_all"), v -> {
+                    Component.translatable("immersive_paintings.gui.delete_all"), v -> {
                         NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
                         setPage(Page.PLAYERS);
                     })
@@ -718,19 +718,19 @@ public class ImmersivePaintingScreen extends Screen {
 
                     ClientPaintingManager.getPainting(identifier).ifPresent(p -> {
                         tooltip.add(Component.literal(p.name()));
-                        tooltip.add(Component.translatable("immersive_paintings.by_author", p.author()).withStyle(ChatFormatting.ITALIC));
-                        tooltip.add(Component.translatable("immersive_paintings.resolution", p.width(), p.height(), p.resolution()).withStyle(ChatFormatting.ITALIC));
+                        tooltip.add(Component.translatable("immersive_paintings.gui.by_author", p.author()).withStyle(ChatFormatting.ITALIC));
+                        tooltip.add(Component.translatable("immersive_paintings.gui.resolution", p.width(), p.height(), p.resolution()).withStyle(ChatFormatting.ITALIC));
 
                         if (page == Page.YOURS && p.has(Painting.Flag.HIDDEN)) {
-                            tooltip.add(Component.translatable("immersive_paintings.hidden").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                            tooltip.add(Component.translatable("immersive_paintings.gui.hidden").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                         }
 
                         if (page == Page.YOURS && p.has(Painting.Flag.NSFW)) {
-                            tooltip.add(Component.translatable("immersive_paintings.nsfw").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                            tooltip.add(Component.translatable("immersive_paintings.gui.nsfw").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                         }
 
                         if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
-                            tooltip.add(Component.translatable("immersive_paintings.right_click_to_delete").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                            tooltip.add(Component.translatable("immersive_paintings.gui.right_click_to_delete").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                         }
                     });
 
@@ -927,7 +927,7 @@ public class ImmersivePaintingScreen extends Screen {
                     int alpha = (color >> 24) & 255;
                     if (alpha != 255) {
                         if (error == null) {
-                            setError(Component.translatable("immersive_paintings.graffiti_warning"));
+                            setError(Component.translatable("immersive_paintings.gui.graffiti_warning"));
                         }
                         //image.setRGB(x, y, color & ((0xFF << 24) | 0x00ffffff));
                         color = (255 << 24) | (color & 0x00ffffff);

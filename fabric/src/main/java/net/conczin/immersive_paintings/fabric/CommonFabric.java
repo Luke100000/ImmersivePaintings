@@ -4,17 +4,17 @@ import java.util.function.Consumer;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registration.*;
 import net.conczin.immersive_paintings.fabric.resources.FabricPaintings;
-import net.conczin.immersive_paintings.registration.Items;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.registration.Network;
-import net.conczin.immersive_paintings.registration.RegisterHelper;
+import net.conczin.immersive_paintings.util.PaintingArgumentType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -49,6 +49,15 @@ public final class CommonFabric implements ModInitializer {
         Network.register(usingRegistrar());
         NetworkHandler.registerSender(ServerPlayNetworking::send);
 
+        // Commands
+        ArgumentTypeRegistry.registerArgumentType(Main.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
+        registerHelper(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, Command::registerArgumentTypes);
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            Command.registerCommands(dispatcher::register);
+        });
+
+        // Events
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
             ServerPaintingManager.playerLoggedOut(handler.player)
         );

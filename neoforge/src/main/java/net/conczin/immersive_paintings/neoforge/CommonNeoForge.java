@@ -6,6 +6,8 @@ import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.registration.*;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.util.PaintingArgumentType;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,15 +36,18 @@ public final class CommonNeoForge {
     }
 
     @SubscribeEvent
-    public static void registerEntities(RegisterEvent event) {
-        registerHelper(event, BuiltInRegistries.ENTITY_TYPE, Entities::registerEntities);
-        registerHelper(event, NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, Entities::registerEntitySerializers);
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegisterEvent event) {
+    public static void register(RegisterEvent event) {
+        // Items
         registerHelper(event, BuiltInRegistries.ITEM, Items::registerItems);
         registerHelper(event, BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTabs);
+
+        // Entities
+        registerHelper(event, BuiltInRegistries.ENTITY_TYPE, Entities::registerEntities);
+        registerHelper(event, NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, Entities::registerEntitySerializers);
+
+        // Commands
+        ArgumentTypeInfos.registerByClass(PaintingArgumentType.class, PaintingArgumentType.INFO);
+        registerHelper(event, BuiltInRegistries.COMMAND_ARGUMENT_TYPE, Command::registerArgumentTypes);
     }
 
     @SubscribeEvent

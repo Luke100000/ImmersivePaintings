@@ -6,7 +6,7 @@ import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.registration.Configs;
 
-@Translation(prefix = Configs.CONFIG_ID + ".client")
+@Translation(prefix = Configs.CONFIG_ID + "client")
 public class ClientConfig extends Config {
     public ClientConfig() {
         super(Main.locate("client_config"));

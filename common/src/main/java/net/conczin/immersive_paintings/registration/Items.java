@@ -14,7 +14,7 @@ public class Items {
     public static final ImmersiveGlowGraffitiItem GLOW_GRAFFITI = new ImmersiveGlowGraffitiItem();
 
     public static final CreativeModeTab PAINTING_TAB = CreativeModeTab.builder(null, -1)
-            .title(Component.translatable("itemGroup.immersive_paintings.immersive_paintings_tab"))
+            .title(Component.translatable("itemGroup.immersive_paintings"))
             .icon(() -> new ItemStack(PAINTING))
             .displayItems((params, output) -> {
                 output.accept(PAINTING);

@@ -6,7 +6,7 @@ import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.registration.Configs;
 
-@Translation(prefix = Configs.CONFIG_ID + ".common")
+@Translation(prefix = Configs.CONFIG_ID + "common")
 public class CommonConfig extends Config {
     public CommonConfig() {
         super(Main.locate("common_config"));
@@ -34,9 +34,4 @@ public class CommonConfig extends Config {
     public int packetSize = 64 * 1024;
     @ConfigGroup.Pop
     public int packetSplitInterval = 250;
-
-    @Override
-    public void onUpdateClient() {
-        // TODO
-    }
 }
