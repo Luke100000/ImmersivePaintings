@@ -6,45 +6,42 @@ import immersive_paintings.cobalt.network.NetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.*;
 
 import java.util.function.Function;
 
 public class NetworkHandlerImpl extends NetworkHandler.Impl {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final int PROTOCOL_VERSION = 1;
 
-    private final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
-            new Identifier(Main.SHORT_MOD_ID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+    private final SimpleChannel channel = ChannelBuilder.named(new Identifier(Main.SHORT_MOD_ID, "main"))
+            .networkProtocolVersion(PROTOCOL_VERSION)
+            .acceptedVersions(Channel.VersionTest.exact(PROTOCOL_VERSION))
+            .simpleChannel();
 
     private int id = 0;
 
     @Override
     public <T extends Message> void registerMessage(Class<T> msg, Function<PacketByteBuf, T> constructor) {
-        channel.registerMessage(id++, msg,
-                Message::encode,
-                constructor,
-                (m, ctx) -> {
-                    ctx.get().enqueueWork(() -> {
-                        ServerPlayerEntity sender = ctx.get().getSender();
+        this.channel.messageBuilder(msg, id++)
+                .encoder(Message::encode)
+                .decoder(constructor)
+                .consumerNetworkThread((m, ctx) -> {
+                    ctx.enqueueWork(() -> {
+                        ServerPlayerEntity sender = ctx.getSender();
                         m.receive(sender);
                     });
-                    ctx.get().setPacketHandled(true);
-                });
+                    ctx.setPacketHandled(true);
+                })
+                .add();
     }
 
     @Override
     public void sendToServer(Message m) {
-        channel.sendToServer(m);
+        this.channel.send(m, PacketDistributor.SERVER.noArg());
     }
 
     @Override
     public void sendToPlayer(Message m, ServerPlayerEntity e) {
-        channel.send(PacketDistributor.PLAYER.with(() -> e), m);
+        this.channel.send(m, PacketDistributor.PLAYER.with(e));
     }
 }

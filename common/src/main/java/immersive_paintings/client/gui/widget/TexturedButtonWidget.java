@@ -3,6 +3,7 @@ package immersive_paintings.client.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -11,12 +12,12 @@ import net.minecraft.util.math.MathHelper;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TexturedButtonWidget extends DefaultButtonWidget {
+public class TexturedButtonWidget extends ButtonWidget {
     private final int u, v, tw, th, w, h;
     private final Identifier texture;
 
-    public TexturedButtonWidget(int x, int y, int width, int height, Identifier texture, int u, int v, int tw, int th, Text message, PressAction onPress, Supplier<List<OrderedText>> tooltipSupplier) {
-        super(x, y, width, height, message, onPress, tooltipSupplier);
+    public TexturedButtonWidget(int x, int y, int width, int height, Identifier texture, int u, int v, int tw, int th, Text message, PressAction onPress) {
+        super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
         this.texture = texture;
         this.w = width;
         this.h = height;
@@ -27,7 +28,7 @@ public class TexturedButtonWidget extends DefaultButtonWidget {
     }
 
     @Override
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         if (hovered) {
             RenderSystem.setShaderColor(1.0f, 0.75f, 0.75f, this.alpha);
         } else {
