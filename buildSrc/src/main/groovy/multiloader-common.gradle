@@ -9,8 +9,6 @@ base {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
-    withSourcesJar()
-//    withJavadocJar()
 }
 
 repositories {
@@ -32,11 +30,15 @@ repositories {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
     }
+    maven {
+        name = "FzzyMaven"
+        url = "https://maven.fzzyhmstrs.me/"
+    }
 }
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-['apiElements', 'runtimeElements', 'sourcesElements'].each { variant ->
+['apiElements', 'runtimeElements'].each { variant ->
     configurations."$variant".outgoing {
         capability("$group:${base.archivesName.get()}:$version")
         capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
@@ -44,12 +46,6 @@ repositories {
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
-    }
-}
-
-sourcesJar {
-    from(rootProject.file('LICENSE')) {
-        rename { "${it}_${mod_name}" }
     }
 }
 
@@ -89,9 +85,10 @@ processResources {
             'description'                  : project.description,
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
-            'forge_version'                : forge_version,
-            'forge_loader_version_range'   : forge_loader_version_range,
-            'fzzy_config_version'         : fzzy_config_version,
+//            'forge_version'                : forge_version,
+//            'forge_loader_version_range'   : forge_loader_version_range,
+            'fzzy_config_version'          : fzzy_config_version,
+            'modmenu_version'              : modmenu_version,
             'credits'                      : credits,
             'java_version'                 : java_version
     ]

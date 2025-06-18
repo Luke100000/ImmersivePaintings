@@ -9,19 +9,28 @@ repositories {
 
 neoForge {
     version = neoforge_version
+
     // Automatically enable neoforge AccessTransformers if the file exists
     def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
         accessTransformers.add(at.absolutePath)
     }
+
     parchment {
         minecraftVersion = parchment_minecraft
         mappingsVersion = parchment_version
     }
+
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
             ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+
+            def dir = project.getLayout().getProjectDirectory().dir('runs/' + it.name)
+            if (!dir.asFile.exists()) {
+                dir.asFile.mkdir()
+            }
+            getGameDirectory().convention(dir)
         }
         client {
             client()
@@ -33,12 +42,15 @@ neoForge {
             server()
         }
     }
+
     mods {
         "${mod_id}" {
             sourceSet sourceSets.main
         }
     }
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "me.fzzyhmstrs:fzzy_config:${fzzy_config_version}+neoforge"
@@ -48,5 +60,3 @@ dependencies {
     jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-core:${webp_version}")))
     jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-webp:${webp_version}")))
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }

@@ -1,5 +1,5 @@
 modLoader = "javafml" #mandatory
-loaderVersion = "${neoforge_loader_version_range}" #mandatory This is typically bumped every Minecraft version by Forge. See https://files.minecraftforge.net/ for a list of versions.
+loaderVersion = "${neoforge_loader_version_range}"
 license = "${license}" # Review your options at https://choosealicense.com/.
 issueTrackerURL="${mod_issues}"
 

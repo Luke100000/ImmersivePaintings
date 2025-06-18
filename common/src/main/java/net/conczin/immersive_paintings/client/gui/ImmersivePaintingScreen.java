@@ -567,7 +567,10 @@ public class ImmersivePaintingScreen extends Screen {
                             // I don't like having to set it here, there should be a better way
                             entity.setFrame(frame);
                             entity.setMaterial(material);
-                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), entity.getMotive(), frame, material));
+                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                PaintingEditPayload.Option.FRAME, frame.toString(),
+                                PaintingEditPayload.Option.MATERIAL, material.toString()
+                            )));
                             setPage(Page.FRAME);
                         })
                         .bounds(width / 2 - 200, y, 100, 20)
@@ -590,7 +593,9 @@ public class ImmersivePaintingScreen extends Screen {
                         Component.literal(""),
                         v -> {
                             entity.setMaterial(material);
-                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), entity.getMotive(), entity.getFrame(), material));
+                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                    PaintingEditPayload.Option.MATERIAL, material.toString()
+                            )));
                             materialList.forEach(b -> b.active = true);
                             v.active = false;
                         }
@@ -638,7 +643,7 @@ public class ImmersivePaintingScreen extends Screen {
                 );
 
                 addRenderableWidget(Button.builder(
-                    Component.translatable("immersive_paintings.delete"), v -> {
+                    Component.translatable("immersive_paintings.gui.delete"), v -> {
                         NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
                         setPage(Page.PLAYERS);
                     })
@@ -738,7 +743,9 @@ public class ImmersivePaintingScreen extends Screen {
                     PaintingWidget paintingWidget = addRenderableWidget(new PaintingWidget(
                         (int) (width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                         sender -> {
-                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), identifier, entity.getFrame(), entity.getMaterial()));
+                            NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                    PaintingEditPayload.Option.MOTIVE, identifier.toString()
+                            )));
                             if (entity.isGraffiti()) {
                                 onClose();
                             } else {
@@ -827,7 +834,6 @@ public class ImmersivePaintingScreen extends Screen {
     private void updateSearch() {
         filteredPaintings.clear();
 
-        boolean showNSFW = Configs.CLIENT.showNSFWPaintings;
         UUID uuid = Minecraft.getInstance().player.getUUID();
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(e -> {
@@ -835,7 +841,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                     return  (
                             (page == Page.YOURS && !p.is(Painting.Type.DATAPACK) && p.authorUUID().equals(uuid)) ||
-                            (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || showNSFW)) ||
+                            (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || Configs.CLIENT.showNSFWPaintings || isOp())) ||
                             (page == Page.DATAPACKS && p.is(Painting.Type.DATAPACK))
                             ) &&
                             p.has(Painting.Flag.GRAFFITI) == entity.isGraffiti() &&

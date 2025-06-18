@@ -50,7 +50,7 @@
   "immersive_paintings.gui.tooltip.filter_resolution": "Filter by resolution",
   "immersive_paintings.gui.tooltip.resolution": "Pixels per block",
   "immersive_paintings.gui.tooltip.visibility": "Hidden paintings are not visible in the selection screen to other players.",
-  "immersive_paintings.gui.tooltip.nsfw": "NSFW Paintings are blurred for users who have them disabled",
+  "immersive_paintings.gui.tooltip.nsfw": "NSFW Paintings are blurred for players who have them disabled locally",
 
   "immersive_paintings.frame.none": "None",
   "immersive_paintings.frame.simple": "Simple",

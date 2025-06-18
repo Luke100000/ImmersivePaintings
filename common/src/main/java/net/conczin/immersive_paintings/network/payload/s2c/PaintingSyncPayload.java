@@ -11,13 +11,18 @@ import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public record PaintingSyncPayload(Map<ResourceLocation, Optional<Painting>> paintings, boolean clear) implements ImmersivePayload {
     public static final Type<PaintingSyncPayload> TYPE = new Type<>(Main.locate("painting_list"));
-    public static final StreamCodec<FriendlyByteBuf, PaintingSyncPayload> STREAM_CODEC = StreamCodec.ofMember(PaintingSyncPayload::encode, PaintingSyncPayload::decode);
+    public static final StreamCodec<FriendlyByteBuf, PaintingSyncPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ByteBufCodecs.optional(Painting.STREAM_CODEC)), PaintingSyncPayload::paintings,
+            ByteBufCodecs.BOOL, PaintingSyncPayload::clear,
+            PaintingSyncPayload::new
+    );
 
     public PaintingSyncPayload(ResourceLocation identifier, Painting painting) {
         this(Map.of(identifier, Optional.ofNullable(painting)), false);
@@ -59,18 +64,6 @@ public record PaintingSyncPayload(Map<ResourceLocation, Optional<Painting>> pain
         }
 
         return paintingsList;
-    }
-
-    public FriendlyByteBuf encode(FriendlyByteBuf buf) {
-        buf.writeMap(paintings, ResourceLocation.STREAM_CODEC, (b, painting) -> b.writeOptional(painting, Painting.STREAM_CODEC));
-        buf.writeBoolean(clear);
-        return buf;
-    }
-
-    public static PaintingSyncPayload decode(FriendlyByteBuf buf) {
-        Map<ResourceLocation, Optional<Painting>> paintings = buf.readMap(ResourceLocation.STREAM_CODEC, (b) -> b.readOptional(Painting.STREAM_CODEC));
-        boolean clear = buf.readBoolean();
-        return new PaintingSyncPayload(paintings, clear);
     }
 
     @Override

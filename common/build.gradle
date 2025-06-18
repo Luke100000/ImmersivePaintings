@@ -16,19 +16,15 @@ neoForge {
     }
 }
 
-repositories {
-    maven { url = "https://thedarkcolour.github.io/KotlinForForge/" }
-}
-
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-    implementation "me.fzzyhmstrs:fzzy_config:${fzzy_config_version}+neoforge"
+    compileOnly group: 'me.fzzyhmstrs', name: 'fzzy_config', version: "${fzzy_config_version}+neoforge"
 
-    implementation "com.twelvemonkeys.imageio:imageio-webp:${webp_version}"
+    implementation group: 'com.twelvemonkeys.imageio', name: 'imageio-webp', version: "${webp_version}"
 }
 
 configurations {

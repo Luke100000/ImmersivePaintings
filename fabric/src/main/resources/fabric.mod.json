@@ -31,7 +31,9 @@
     "minecraft": ">=${minecraft_version}",
     "fabric": "*",
     "fabricloader": ">=${fabric_loader_version}",
-    "fzzy-config": ">=${fzzy_config_version}"
+    "fzzy_config": ">=${fzzy_config_version}"
   },
-  "suggests": {}
+  "suggests": {
+    "modmenu": ">=${modmenu_version}"
+  }
 }
