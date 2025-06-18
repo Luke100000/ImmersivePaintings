@@ -28,10 +28,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -721,12 +718,7 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(Text.translatable("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
-                    PaintingWidget paintingWidget = addDrawableChild(new PaintingWidget(
-                            ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL),
-                            (int) (width / 2 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48,
-                            46, 46,
-
-                            // Left-Click
+                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int) (width / 2.0 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
@@ -848,7 +840,7 @@ public class ImmersivePaintingScreen extends Screen {
         filteredPaintings.addAll(ClientPaintingManager.getPaintings().entrySet().stream()
                 .filter(v -> v.getValue().graffiti == entity.isGraffiti())
                 .filter(v -> page != Page.YOURS || Objects.equals(v.getValue().author, playerName) && !v.getValue().datapack)
-                .filter(v -> page != Page.PLAYERS || !v.getValue().datapack && !v.getValue().hidden)
+                .filter(v -> page != Page.PLAYERS || !v.getValue().datapack && (!v.getValue().hidden || isOp()))
                 .filter(v -> page != Page.DATAPACKS || v.getValue().datapack)
                 .filter(v -> v.getKey().toString().contains(filteredString))
                 .filter(v -> filteredResolution == 0 || v.getValue().resolution == filteredResolution)
@@ -916,7 +908,7 @@ public class ImmersivePaintingScreen extends Screen {
             try {
                 stream = new FileInputStream(path);
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.LOGGER.error(e);
             }
         }
 
@@ -928,7 +920,7 @@ public class ImmersivePaintingScreen extends Screen {
                 stream.close();
                 return nativeImage;
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.LOGGER.error(e);
             }
         }
 
@@ -1067,7 +1059,7 @@ public class ImmersivePaintingScreen extends Screen {
             double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
             double dw = currentImage.getWidth() / d;
             double dh = currentImage.getHeight() / d;
-            for (float diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
+            for (double diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
                 int pw = (int) Math.ceil(dw * diagonal);
                 int ph = (int) Math.ceil(dh * diagonal);
                 double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);

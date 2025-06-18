@@ -8,7 +8,7 @@ import static java.awt.Color.RGBtoHSB;
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class ByteImage {
-    private final static int BANDS = 4;
+    private static final int BANDS = 4;
     private final byte[] bytes;
     private final int width, height;
 
