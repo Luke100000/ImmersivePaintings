@@ -18,7 +18,7 @@
   "immersive_paintings.pixelart": "Pixel Kunst",
   "immersive_paintings.pixelart.tooltip": "Erhält Pixel und schaltet Postprocesing aus",
   "immersive_paintings.tooltip.filter_resolution": "Filtere nach Auflösung",
-  "immersive_paintings.tooltip.resolution": "Pixels pro Block",
+  "immersive_paintings.tooltip.resolution": "Pixel pro Block",
   "immersive_paintings.load": "Lade Bild",
   "immersive_paintings.name": "Name",
   "immersive_paintings.width": "Breite: %s Blöcke",
