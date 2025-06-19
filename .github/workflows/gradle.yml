@@ -19,10 +19,8 @@ jobs:
           java-version: 17
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle - Forge
-        run: ./gradlew :forge:build
-      - name: Build with Gradle - Fabric
-        run: ./gradlew :fabric:build
+      - name: Build with Gradle
+        run: ./gradlew build
       - name: Get tag
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         id: tag
@@ -37,7 +35,7 @@ jobs:
       - name: "Rename Forge files"
         run: mv "forge/build/libs/immersive_paintings-${{steps.tag.outputs.tag}}.jar" "forge/build/libs/immersive_paintings-${{steps.tag.outputs.tag}}-forge.jar"
       - name: "Upload Fabric"
-        uses: Kir-Antipov/mc-publish@v3.3
+        uses: Kir-Antipov/mc-publish@v3.3.0
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         with:
           modrinth-id: 6txNkua3
@@ -60,7 +58,7 @@ jobs:
 
           fail-mode: skip
       - name: "Upload Forge"
-        uses: Kir-Antipov/mc-publish@v3.3
+        uses: Kir-Antipov/mc-publish@v3.3.0
         if: ${{ success() && startsWith(github.ref, 'refs/tags/') }}
         with:
           modrinth-id: 6txNkua3
