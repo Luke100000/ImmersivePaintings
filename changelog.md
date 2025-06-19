@@ -1,7 +1,6 @@
 # 0.7.0
-* Updated to Minecraft 1.21
-* 
-* 
+
+* Updated to Minecraft 1.21 (Thanks turtletowerz!)
 
 # 0.6.7
 

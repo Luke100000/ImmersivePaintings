@@ -1,14 +1,12 @@
 package net.conczin.immersive_paintings.fabric;
 
-import java.util.function.Consumer;
-
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.conczin.immersive_paintings.registration.*;
 import net.conczin.immersive_paintings.fabric.resources.FabricPaintings;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.registration.*;
 import net.conczin.immersive_paintings.util.PaintingArgumentType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -27,6 +25,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.packs.PackType;
+
+import java.util.function.Consumer;
 
 public final class CommonFabric implements ModInitializer {
     private static <T> void registerHelper(Registry<T> register, Consumer<RegisterHelper<T>> consumer) {
@@ -51,13 +51,11 @@ public final class CommonFabric implements ModInitializer {
 
         // Commands
         ArgumentTypeRegistry.registerArgumentType(Main.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            Command.registerCommands(dispatcher::register);
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> Command.registerCommands(dispatcher::register));
 
         // Events
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-            ServerPaintingManager.playerLoggedOut(handler.player)
+                ServerPaintingManager.playerLoggedOut(handler.player)
         );
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->

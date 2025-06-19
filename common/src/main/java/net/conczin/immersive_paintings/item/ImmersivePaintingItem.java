@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.item;
 
-import net.conczin.immersive_paintings.registration.Entities;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
+import net.conczin.immersive_paintings.registration.Entities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -46,14 +46,9 @@ public class ImmersivePaintingItem extends Item {
         }
 
         ImmersivePaintingEntity entity = getEntityType().create(level);
+        if (entity == null) return InteractionResult.FAIL;
         entity.setPos(attachmentPosition);
         entity.setDirection(direction, rotation);
-
-        // TODO: I'm not sure if this is necessary
-//        CustomData customData = itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
-//        if (!customData.isEmpty()) {
-//            EntityType.updateCustomEntityTag(level, player, entity, customData);
-//        }
 
         if (entity.survives()) {
             if (!level.isClientSide) {

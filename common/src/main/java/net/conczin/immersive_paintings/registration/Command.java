@@ -1,14 +1,12 @@
 package net.conczin.immersive_paintings.registration;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingDeletePayload;
 import net.conczin.immersive_paintings.util.PaintingArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 

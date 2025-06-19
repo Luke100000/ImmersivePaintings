@@ -1,16 +1,16 @@
 package net.conczin.immersive_paintings.entity;
 
-import net.conczin.immersive_paintings.*;
-import net.conczin.immersive_paintings.compat.XercaPaintCompat;
-import net.conczin.immersive_paintings.config.CommonConfig;
-import net.conczin.immersive_paintings.registration.Configs;
-import net.conczin.immersive_paintings.registration.Items;
-import net.conczin.immersive_paintings.network.NetworkHandler;
-import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
 import net.conczin.immersive_paintings.ClientPaintingManager;
+import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.compat.XercaPaintCompat;
+import net.conczin.immersive_paintings.config.CommonConfig;
+import net.conczin.immersive_paintings.network.NetworkHandler;
+import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registration.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -39,11 +39,10 @@ import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import org.jetbrains.annotations.Nullable;
 
 public class ImmersivePaintingEntity extends HangingEntity {
     protected static final Predicate<Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;

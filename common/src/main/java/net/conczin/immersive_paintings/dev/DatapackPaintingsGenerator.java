@@ -1,5 +1,11 @@
 package net.conczin.immersive_paintings.dev;
 
+import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
+import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
+import net.conczin.immersive_paintings.util.ImageManipulations;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,12 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
-import net.conczin.immersive_paintings.util.ImageManipulations;
-
-import javax.imageio.ImageIO;
-
 public class DatapackPaintingsGenerator {
     static final String base = "../paintings/";
     static final String output = "../common/src/main/resources/data/immersive_paintings/paintings/";
@@ -24,10 +24,10 @@ public class DatapackPaintingsGenerator {
         try {
             Files.createDirectories(Paths.get(output));
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.LOGGER.error("failed creating output directory {}", output, e);
         }
 
-        for (int res : new int[] {16, 32, 64, 128}) {
+        for (int res : new int[]{16, 32, 64, 128}) {
             process("Airships - AlexRuizArt.jpg", 5, 3, 0.25, 0, res, false);
             process("Autumn - NostalgiaTree.png", 3, 2, 0.0, 0, res, false);
             process("Beyond Hill and Dale - Alena Aenami.jpg", 2, 1, 0.25, 12, res, false);

@@ -2,7 +2,10 @@ package net.conczin.immersive_paintings.util;
 
 import net.conczin.immersive_paintings.Main;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -23,7 +26,7 @@ public abstract class Cache<K, V> {
 
     // The maximum number of entries to allow in the cache before old entries start getting evicted
     public Cache(int maxEntries) {
-        this.cache = Collections.synchronizedMap(new LinkedHashMap<K, V>(maxEntries+1, 0.75F, true) {
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<>(maxEntries + 1, 0.75F, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> entry) {
                 return size() > maxEntries;

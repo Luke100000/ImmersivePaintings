@@ -101,16 +101,16 @@ public class ImageManipulations {
 
                 // The thumbnail would not be smaller than the actual painting
                 if (z < 1.0f) {
-                    w *= z;
-                    h *= z;
+                    w *= (int) z;
+                    h *= (int) z;
                 }
 
-                // If the zoom didn't change then the original image is small enough already
+                // If the zoom didn't change, then the original image is small enough already
                 if (w == in.getWidth())
                     return in;
             }
             case Size.NSFW -> {
-                // NSFW Images can only be resized from thumbnails so there's no need to downscale
+                // NSFW Images can only be resized from thumbnails, so there's no need to downscale
                 return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize / 8);
             }
         }
@@ -132,9 +132,9 @@ public class ImageManipulations {
                         Object elements = source.getRaster().getDataElements(px, py, null);
 
                         red += sourceModel.getRed(elements);
-                        green += sourceModel.getGreen(elements);;
-                        blue += sourceModel.getBlue(elements);;
-                        alpha += sourceModel.getAlpha(elements);;
+                        green += sourceModel.getGreen(elements);
+                        blue += sourceModel.getBlue(elements);
+                        alpha += sourceModel.getAlpha(elements);
 
                         samples++;
                     }
@@ -213,8 +213,8 @@ public class ImageManipulations {
                 int pixels = 0;
                 while (pixels <= binSize && end < 256) {
                     float v = hist[channel][end];
-                    pixels += v;
-                    sum += end * v;
+                    pixels += (int) v;
+                    sum += (int) (end * v);
                     end++;
                 }
 

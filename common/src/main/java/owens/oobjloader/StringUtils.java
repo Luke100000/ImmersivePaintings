@@ -36,7 +36,7 @@ public class StringUtils {
         if (list == null) {
             return null;
         }
-        if (list.equals("")) {
+        if (list.isEmpty()) {
             return null;
         }
 
@@ -135,7 +135,7 @@ public class StringUtils {
         if (list == null) {
             return null;
         }
-        if (list.equals("")) {
+        if (list.isEmpty()) {
             return null;
         }
 
@@ -171,7 +171,7 @@ public class StringUtils {
         int index = 0;
         while (index < numbers.length) {
             //            	    log.log(INFO, "examining numbers["+index+"]=|"+numbers[index]+"|");
-            if (numbers[index].trim().equals("")) {
+            if (numbers[index].trim().isEmpty()) {
                 //                log.log(INFO, "numbers["+index+"] is empty, adding emptymarker to list");
                 returnList.add(emptyMarker);
             } else {
@@ -191,7 +191,7 @@ public class StringUtils {
         if (list == null) {
             return null;
         }
-        if (list.equals("")) {
+        if (list.isEmpty()) {
             return null;
         }
 
@@ -233,7 +233,7 @@ public class StringUtils {
         if (list == null) {
             return null;
         }
-        if (list.equals("")) {
+        if (list.isEmpty()) {
             return null;
         }
 

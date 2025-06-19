@@ -1,14 +1,12 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
-import java.util.Optional;
-
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.network.payload.s2c.ImageResponsePayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
-import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,12 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Optional;
+
 public record ImageRequestPayload(ResourceLocation identifier, boolean thumbnail) implements ImmersivePayload {
     public static final Type<ImageRequestPayload> TYPE = new Type<>(Main.locate("image_request"));
     public static final StreamCodec<FriendlyByteBuf, ImageRequestPayload> STREAM_CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC, ImageRequestPayload::identifier,
-        ByteBufCodecs.BOOL, ImageRequestPayload::thumbnail,
-        ImageRequestPayload::new
+            ResourceLocation.STREAM_CODEC, ImageRequestPayload::identifier,
+            ByteBufCodecs.BOOL, ImageRequestPayload::thumbnail,
+            ImageRequestPayload::new
     );
 
     @Override
