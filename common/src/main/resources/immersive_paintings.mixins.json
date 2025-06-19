@@ -3,11 +3,10 @@
   "minVersion": "0.8",
   "package": "net.conczin.immersive_paintings.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
-  "client": [
+  "refmap": "${mod_id}.refmap.json",
+  "mixins": [
     "EntityTypeMixin"
   ],
-  "server": [],
   "injectors": {
     "defaultRequire": 1
   }

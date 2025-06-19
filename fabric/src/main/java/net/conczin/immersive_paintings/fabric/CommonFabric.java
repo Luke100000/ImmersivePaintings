@@ -51,8 +51,6 @@ public final class CommonFabric implements ModInitializer {
 
         // Commands
         ArgumentTypeRegistry.registerArgumentType(Main.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
-        registerHelper(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, Command::registerArgumentTypes);
-
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             Command.registerCommands(dispatcher::register);
         });

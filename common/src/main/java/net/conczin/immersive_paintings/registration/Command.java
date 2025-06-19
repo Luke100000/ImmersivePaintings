@@ -39,10 +39,6 @@ public class Command {
             )
         );
 
-    public static void registerArgumentTypes(RegisterHelper<ArgumentTypeInfo<?, ?>> helper) {
-        helper.register(Main.locate("painting_argument"), PaintingArgumentType.INFO);
-    }
-
     public static void registerCommands(Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer) {
         consumer.accept(PAINTING_COMMAND);
     }

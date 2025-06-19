@@ -47,7 +47,7 @@ public final class CommonNeoForge {
 
         // Commands
         ArgumentTypeInfos.registerByClass(PaintingArgumentType.class, PaintingArgumentType.INFO);
-        registerHelper(event, BuiltInRegistries.COMMAND_ARGUMENT_TYPE, Command::registerArgumentTypes);
+        event.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE.key(), Main.locate("painting_argument"), () -> PaintingArgumentType.INFO);
     }
 
     @SubscribeEvent
