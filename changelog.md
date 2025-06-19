@@ -1,3 +1,7 @@
+# 0.6.8
+
+* Ops can now bypass the hidden flag
+
 # 0.6.7
 
 * fixed visibility of hidden paintings
