@@ -30,8 +30,6 @@ forge*changelog.txt
 /mcmodsrepo
 /local.properties
 
-# Files from architectury
-.architectury-transformer
 /logs
 /.vscode
 /curseforge

@@ -1,6 +1,7 @@
-# 0.6.8
-
-* Ops can now bypass the hidden flag
+# 0.7.0
+* Updated to Minecraft 1.21
+* 
+* 
 
 # 0.6.7
 

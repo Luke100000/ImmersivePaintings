@@ -1,34 +1,39 @@
 {
   "schemaVersion": 1,
-  "id": "immersive_paintings",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "Immersive Paintings",
-  "description": "Use your own paintings!",
+  "name": "${mod_name}",
+  "description": "${description}",
   "authors": [
-    "Luke100000"
+    "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/immersivePaintings",
-    "sources": "https://github.com/Luke100000/immersivePaintings",
-    "issues": "https://github.com/Luke100000/immersivePaintings/issues"
+    "homepage": "${mod_homepage}",
+    "sources": "${mod_sources}",
+    "issues": "${mod_issues}"
   },
-  "license": "GPL-3.0-only",
+  "license": "${license}",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "immersive_paintings.fabric.CommonFabric"
+      "net.conczin.immersive_paintings.fabric.CommonFabric"
     ],
     "client": [
-      "immersive_paintings.fabric.ClientFabric"
+      "net.conczin.immersive_paintings.fabric.ClientFabric"
     ]
   },
   "mixins": [
-    "immersive_paintings.mixin.json"
+    "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.3",
-    "java": ">=8",
-    "fabric-api-base": ">=0.1.0"
+    "java": ">=${java_version}",
+    "minecraft": ">=${minecraft_version}",
+    "fabric": "*",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fzzy_config": ">=${fzzy_config_version}"
+  },
+  "suggests": {
+    "modmenu": ">=${modmenu_version}"
   }
 }
