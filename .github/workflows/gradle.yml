@@ -22,10 +22,8 @@ jobs:
           java-version: 21
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle - NeoForge
-        run: ./gradlew :neoforge:build
-      - name: Build with Gradle - Fabric
-        run: ./gradlew :fabric:build
+      - name: Build with Gradle
+        run: ./gradlew build
       - name: Upload Artifacts - NeoForge
         uses: actions/upload-artifact@v4
         with:
