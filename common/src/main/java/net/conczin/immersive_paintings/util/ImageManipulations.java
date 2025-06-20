@@ -100,9 +100,10 @@ public class ImageManipulations {
                 );
 
                 // The thumbnail would not be smaller than the actual painting
+                // NOTE: This cannot be (int) casted because rounding errors can produce 0x0 images
                 if (z < 1.0f) {
-                    w *= (int) z;
-                    h *= (int) z;
+                    w *= z;
+                    h *= z;
                 }
 
                 // If the zoom didn't change, then the original image is small enough already
