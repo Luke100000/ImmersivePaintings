@@ -64,6 +64,10 @@ jobs:
             ${{steps.split.outputs._1}}
           java: |
             Java 21
+          dependencies: |
+            fabric-api
+            fzzy-config
+            modmenu(optional)
 
           fail-mode: skip
       - name: "Upload NeoForge"
@@ -87,5 +91,8 @@ jobs:
             ${{steps.split.outputs._1}}
           java: |
             Java 21
+          dependencies: |
+            fzzy-config
+            modmenu(optional)
 
           fail-mode: skip
