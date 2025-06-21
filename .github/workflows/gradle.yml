@@ -64,8 +64,6 @@ jobs:
             ${{steps.split.outputs._1}}
           java: |
             Java 21
-          dependencies: |
-            fabric-api | cloth-config | recommends | *
 
           fail-mode: skip
       - name: "Upload NeoForge"
@@ -89,7 +87,5 @@ jobs:
             ${{steps.split.outputs._1}}
           java: |
             Java 21
-          dependencies: |
-            cloth-config
 
           fail-mode: skip
