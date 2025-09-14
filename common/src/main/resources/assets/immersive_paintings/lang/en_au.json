@@ -89,7 +89,7 @@
   "config.immersive_paintings.client.generalGroup": "General Settings",
   "config.immersive_paintings.client.advancedGroup": "Advanced Settings",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test If Painting Space Empty",
-  "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Enable space check for paintings every 5 seconds. Disabling this saves a lot of server compute",
+  "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Enable space check for paintings every 5 seconds. Disabling this saves a lot of server resources",
   "config.immersive_paintings.common.paintingsHaveCollision": "Paintings Have Collisions",
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Can entities collide with paintings",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Show Other Player's Paintings",
