@@ -10,8 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-public record ImageResponsePayload(ResourceLocation identifier, boolean thumbnail, byte[] data, int segment,
-                                   int totalSegments) implements ImmersivePayload, SegmentManager.SegmentedPayload {
+public record ImageResponsePayload(ResourceLocation identifier, boolean thumbnail, byte[] data, int segment, int totalSegments) implements ImmersivePayload {
     public static final Type<ImageResponsePayload> TYPE = new Type<>(Main.locate("image_response"));
     public static final StreamCodec<FriendlyByteBuf, ImageResponsePayload> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, ImageResponsePayload::identifier,
@@ -26,14 +25,18 @@ public record ImageResponsePayload(ResourceLocation identifier, boolean thumbnai
 
     @Override
     public void handle(Player player, Runner runner) {
-        String key = identifier.toString();
+        String key = identifier().toString();
         if (thumbnail)
             key += "_thumbnail"; // Allows Thumbnail and FULL to download together
 
         ResourceLocation id = identifier();
         boolean thumbnail = thumbnail();
 
-        manager.handleSegmentedPayload(key, this).ifPresent(image -> runner.run(() -> {
+        byte[] data = data();
+        int segment = segment();
+        int totalSegments = totalSegments();
+
+        manager.handleSegmentedPayload(key, data, segment, totalSegments).ifPresent(image -> runner.run(() -> {
             if (thumbnail) {
                 ClientPaintingManager.registerThumbnail(id, image, false);
             } else {

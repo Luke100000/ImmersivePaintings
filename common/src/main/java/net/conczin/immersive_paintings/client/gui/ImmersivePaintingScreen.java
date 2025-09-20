@@ -150,10 +150,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 if (shouldReProcess && currentImage != null) {
-                    service.submit(() -> {
-                        pixelatedImage = pixelateImage(currentImage, settings);
-                        shouldUpload = true;
-                    });
+                    service.submit(() -> pixelateImage());
                     shouldReProcess = false;
                 }
 
@@ -432,7 +429,16 @@ public class ImmersivePaintingScreen extends Screen {
                 // Save
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.save"), v -> {
-                                    ImageManipulations.processByteArrayInChunks(ImageManipulations.encode(pixelatedImage), (ints, split, splits) -> LazyNetworkManager.sendToServer(new ImageUploadPayload(currentImageName, ints, split, splits)));
+                                    byte[] encoded = null;
+
+                                    try {
+                                        encoded = ImageManipulations.encode(pixelatedImage);
+                                    } catch (IOException e) {
+                                        Main.LOGGER.error("could not encode temp image", e);
+                                        return;
+                                    }
+
+                                    ImageManipulations.processByteArrayInChunks(encoded, (ints, split, splits) -> LazyNetworkManager.sendToServer(new ImageUploadPayload(ints, split, splits)));
 
                                     EnumSet<Painting.Flag> flags = settings.getFlags();
                                     if (entity.isGraffiti())
@@ -804,7 +810,7 @@ public class ImmersivePaintingScreen extends Screen {
                             if (currentImage != null) {
                                 currentImagePixelZoomCache = -1;
                                 currentImageName = file.getName();
-                                settings = new PixelatorSettings(currentImage);
+                                settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
                                 setPage(Page.CREATE);
                                 pixelateImage();
                             }
@@ -902,7 +908,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
             currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
-            settings = new PixelatorSettings(currentImage);
+            settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();
         }
@@ -1066,8 +1072,8 @@ public class ImmersivePaintingScreen extends Screen {
             this.pixelArt = pixelArt;
         }
 
-        PixelatorSettings(BufferedImage currentImage) {
-            this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
+        PixelatorSettings(BufferedImage currentImage, int minResolution, int maxResolution) {
+            this(0, 10, Math.clamp(64, minResolution, maxResolution), 1, 1, 0.5, 0.5, 1, false);
 
             double target = currentImage.getWidth() / (double) currentImage.getHeight();
             double bestScore = 100;

@@ -12,34 +12,17 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 public class ImageManipulations {
-    public static void write(BufferedImage image, File file) {
-        try {
-            ImageIO.write(image, "png", file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public static BufferedImage decode(byte[] bytes) throws IOException {
+        return ImageIO.read(new ByteArrayInputStream(bytes));
     }
 
-    public static BufferedImage decode(byte[] bytes) {
-        try {
-            return ImageIO.read(new ByteArrayInputStream(bytes));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static byte[] encode(BufferedImage image) {
+    public static byte[] encode(BufferedImage image) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageIO.write(image, "png", stream);
         return stream.toByteArray();
     }
 
@@ -99,8 +82,13 @@ public class ImageManipulations {
                         (float) Configs.CLIENT.thumbnailSize / h
                 );
 
+                // Additional check for tiny thumbnails relative to their parent image
+                // This is roughly 128 / 4000, so any image that large should have a slightly larger thumbnail
+                if (z < 0.032)
+                    z = 0.032f;
+
                 // The thumbnail would not be smaller than the actual painting
-                // NOTE: This cannot be (int) casted because rounding errors can produce 0x0 images
+                // NOTE: This cannot be (int) cast because rounding errors can produce 0x0 images
                 if (z < 1.0f) {
                     w *= z;
                     h *= z;
@@ -119,6 +107,13 @@ public class ImageManipulations {
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         resize(out, in, (float)in.getWidth() / w, 0, 0);
         return out;
+    }
+
+    // Color.HSBtoRGB returns 255 alpha for all pixels, so we need to apply our own alpha
+    // 16777215 is the opposite of the number set in Color.HSBtoRGB
+    private static int HSBtoARGB(float[] hsv, int alpha) {
+        int colorNoAlpha = Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]) & 16777215;
+        return (alpha << 24) | colorNoAlpha;
     }
 
     public static void resize(BufferedImage image, BufferedImage source, float zoom, int ox, int oy) {
@@ -170,7 +165,7 @@ public class ImageManipulations {
                     }
                 }
 
-                image.setRGB(x, y, Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]));
+                image.setRGB(x, y, HSBtoARGB(hsv, model.getAlpha(elements)));
             }
         }
     }
@@ -237,7 +232,7 @@ public class ImageManipulations {
                     hsv[channel] = lookup[channel][toByte(hsv[channel])];
                 }
 
-                image.setRGB(x, y, Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]));
+                image.setRGB(x, y, HSBtoARGB(hsv, model.getAlpha(elements)));
             }
         }
     }

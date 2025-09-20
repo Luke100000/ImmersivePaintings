@@ -17,10 +17,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.EnumSet;
+import java.util.Optional;
 
 public record PaintingRegisterPayload(int width, int height, int resolution, String name, EnumSet<Painting.Flag> flags) implements ImmersivePayload {
     public static final Type<PaintingRegisterPayload> TYPE = new Type<>(Main.locate("painting_register"));
@@ -35,7 +37,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
     );
 
     private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
-        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(i, error));
+        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(Optional.ofNullable(i), error));
     }
 
     // Separate method to allow for Xerca compatibility
@@ -52,7 +54,10 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
             return identifier;
         } catch (NoSuchAlgorithmException e) {
             Main.LOGGER.error("failed to hash painting {}", painting.location(), e);
-            paintingRegisterError(player, "hash_failed", painting.location());
+            paintingRegisterError(player, "hash_failed", null);
+        } catch (IOException e) {
+            Main.LOGGER.error("failed to encode painting {}", painting.location(), e);
+            paintingRegisterError(player, "hash_failed", null);
         }
 
         return null;
@@ -74,15 +79,27 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
                 return;
             }
 
-            if (image.getWidth() > Configs.COMMON.maxUserImageWidth || image.getHeight() > Configs.COMMON.maxUserImageHeight) {
-                paintingRegisterError(player, "too_large", null);
-                return;
-            }
-
             long count = ServerPaintingManager.getCustomPaintings(player.getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
             if (count > Configs.COMMON.maxUserImages) {
                 paintingRegisterError(player, "limit_reached", null);
                 return;
+            }
+
+            Main.LOGGER.debug("{}, {}, {}, {}", image.getWidth(), Configs.COMMON.maxUserImageWidth, image.getHeight(), Configs.COMMON.maxUserImageHeight);
+            if (image.getWidth() > Configs.COMMON.maxUserImageWidth || image.getHeight() > Configs.COMMON.maxUserImageHeight) {
+                if (!Configs.COMMON.automaticImageResizing) {
+                    paintingRegisterError(player, "too_large", null);
+                    return;
+                }
+
+                float z = Math.min(
+                        (float) Configs.COMMON.maxUserImageWidth / image.getWidth(),
+                        (float) Configs.COMMON.maxUserImageHeight / image.getHeight()
+                );
+
+                BufferedImage newImage = new BufferedImage((int)(image.getWidth() * z), (int)(image.getHeight() * z), BufferedImage.TYPE_INT_ARGB);
+                ImageManipulations.resize(newImage, image, 1 / z, 0, 0);
+                image = newImage;
             }
 
             Painting p = new Painting(width, height, resolution, name, player.getGameProfile().getName(), player.getUUID(), Painting.Type.PAINTING, flags, "");

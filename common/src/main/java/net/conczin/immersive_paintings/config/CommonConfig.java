@@ -18,6 +18,7 @@ public class CommonConfig extends Config {
     public boolean testIfSpaceEmpty = false;
     public boolean paintingsHaveCollision = false;
     public boolean showOtherPlayersPaintings = true;
+    public boolean automaticImageResizing = false;
     @ConfigGroup.Pop
     public int uploadPermissionLevel = 0;
 

@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -228,12 +229,22 @@ public class ClientPaintingManager {
 
         @Override
         public BufferedImage decode(byte[] bytes) {
-            return ImageManipulations.decode(bytes);
+            try {
+                return ImageManipulations.decode(bytes);
+            } catch (IOException e) {
+                Main.LOGGER.error("could not read image from client cache", e);
+            }
+            return null;
         }
 
         @Override
         public byte[] encode(BufferedImage image) {
-            return ImageManipulations.encode(image);
+            try {
+                return ImageManipulations.encode(image);
+            } catch (IOException e) {
+                Main.LOGGER.error("could not write image to client cache", e);
+            }
+            return null;
         }
     }
 }
