@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Posibilas entites kolidita kun pinturas",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Montrar Alies Pinturas",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Es alies pinturas vidibla en la pintura redaktilo GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatika Imago Redukto",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatike redukti imajus qua es plu grandi quam la permesita limito",
   "config.immersive_paintings.common.uploadPermissionLevel": "Permiso de Upload Nivel",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivel de permiso postula por uploada pinturas. Defaltas a toda playeres",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksima Bildo Larĝo",
