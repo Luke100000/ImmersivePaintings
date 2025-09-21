@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kas üksused võivad maalidega kokku põrkuda",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Näita teiste mängijate maale",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Kas teiste mängijate maalid on maalide redigeerimise GUI-s nähtavad?",
+  "config.immersive_paintings.common.automaticImageResizing": "Automaatne pildi suuruse muutmine",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automaatselt muuta lubatud piirmäärast suuremate piltide suurust",
   "config.immersive_paintings.common.uploadPermissionLevel": "Üleslaadimisõiguse tase",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Maalide üleslaadimiseks vajalik loa tase. Vaikimisi kõik mängijad",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimaalne pildi laius",
