@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "क्या इकाइयाँ चित्रों के साथ टकरा सकती हैं",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "अन्य खिलाड़ियों के चित्र दिखाएँ",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "क्या अन्य खिलाड़ियों के चित्र चित्र संपादित GUI में दिखाई देते हैं",
+  "config.immersive_paintings.common.automaticImageResizing": "स्वचालित छवि आकार परिवर्तन",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "स्वचालित रूप से उन छवियों का आकार बदलें जो अनुमति से अधिक बड़े हैं",
   "config.immersive_paintings.common.uploadPermissionLevel": "अपलोड अनुमति स्तर",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "चित्रों को अपलोड करने के लिए आवश्यक अनुमति स्तर। सभी खिलाड़ियों के लिए डिफ़ॉल्ट",
   "config.immersive_paintings.common.maxUserImageWidth": "अधिकतम छवि चौड़ाई",
