@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "An féidir le nithe comhoibriú le péintéisí",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Taispeáin Péintéisí na nImreoirí Eile",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "An bhfuil péintéisí na n-imreoirí eile le feiceáil sa GUI eagarthóireachta péintéireachta",
+  "config.immersive_paintings.common.automaticImageResizing": "Athraigh Míreanna Uimhreach Gautomatic",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Athraigh go huathoibríoch míreanna atá níos mó ná an teorainn ceadaithe",
   "config.immersive_paintings.common.uploadPermissionLevel": "Leibhéal Cead Ualoid",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Leibhéal ceada atá riachtanach chun péintéisí a uaslódáil. Pleananna chun na himreoirí",
   "config.immersive_paintings.common.maxUserImageWidth": "Leithead Íomhá Uasta",
