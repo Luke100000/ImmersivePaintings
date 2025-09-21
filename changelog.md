@@ -3,6 +3,7 @@
 * Fixed graffiti transparency issue
 * Added automatic resize of huge images
 * More error handling
+* Fixed pixel-multiple-deduplication being confused on small images
 
 # 0.7.0
 

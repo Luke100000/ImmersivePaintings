@@ -28,7 +28,7 @@ public class ImageManipulations {
 
     public static void processByteArrayInChunks(byte[] input, TriConsumer<byte[], Integer, Integer> consumer) {
         int packetSize = Configs.COMMON.packetSize;
-        int splits = (int)Math.ceil((double)input.length / packetSize);
+        int splits = (int) Math.ceil((double) input.length / packetSize);
         int split = 0;
         for (int i = 0; i < input.length; i += packetSize) {
             byte[] b = Arrays.copyOfRange(input, i, Math.min(input.length, i + packetSize));
@@ -46,9 +46,9 @@ public class ImageManipulations {
                 Object elements = image.getRaster().getDataElements(x, y, null);
 
                 int abgr = (model.getAlpha(elements) << 24) |
-                        (model.getBlue(elements) << 16) |
-                        (model.getGreen(elements) << 8) |
-                        model.getRed(elements);
+                           (model.getBlue(elements) << 16) |
+                           (model.getGreen(elements) << 8) |
+                           model.getRed(elements);
 
                 nativeImage.setPixelRGBA(x, y, abgr);
             }
@@ -105,11 +105,11 @@ public class ImageManipulations {
         }
 
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        resize(out, in, (float)in.getWidth() / w, 0, 0);
+        resize(out, in, (float) in.getWidth() / w, 0, 0);
         return out;
     }
 
-    // Color.HSBtoRGB returns 255 alpha for all pixels, so we need to apply our own alpha
+    // Color.HSBtoRGB returns alpha 255 for all pixels, so we need to apply our own alpha
     // 16777215 is the opposite of the number set in Color.HSBtoRGB
     private static int HSBtoARGB(float[] hsv, int alpha) {
         int colorNoAlpha = Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]) & 16777215;
@@ -123,8 +123,8 @@ public class ImageManipulations {
             for (int y = 0; y < image.getHeight(); y++) {
                 int red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
-                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
-                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
+                for (int px = Math.max(0, (int) (ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
+                    for (int py = Math.max(0, (int) (oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
                         Object elements = source.getRaster().getDataElements(px, py, null);
 
                         red += sourceModel.getRed(elements);
@@ -143,7 +143,7 @@ public class ImageManipulations {
                     alpha /= samples;
                 }
 
-                image.setRGB(x, y,(alpha << 24) | (red << 16) | (green << 8) | blue);
+                image.setRGB(x, y, (alpha << 24) | (red << 16) | (green << 8) | blue);
             }
         }
     }
@@ -159,9 +159,9 @@ public class ImageManipulations {
 
                 for (int i = 1; i < 3; i++) {
                     if (x % 2 == y % 2) {
-                        hsv[i] = (float)Math.min(1.0f, hsv[i] + dither * 0.5);
+                        hsv[i] = (float) Math.min(1.0f, hsv[i] + dither * 0.5);
                     } else {
-                        hsv[i] = (float)Math.max(0.0f, hsv[i] - dither * 0.5);
+                        hsv[i] = (float) Math.max(0.0f, hsv[i] - dither * 0.5);
                     }
                 }
 
@@ -215,7 +215,7 @@ public class ImageManipulations {
                 }
 
                 for (int b = start; b < end; b++) {
-                    lookup[channel][b] = (float)sum / pixels / 255.0f;
+                    lookup[channel][b] = (float) sum / pixels / 255.0f;
                 }
 
                 start = end;
@@ -238,10 +238,11 @@ public class ImageManipulations {
     }
 
     private static int toByte(float v) {
-        return Math.min(255, Math.max(0, (int)(v * 255)));
+        return Math.min(255, Math.max(0, (int) (v * 255)));
     }
 
     public static int scanForPixelArtMultiple(BufferedImage image) {
+        int maxScale = Math.min(image.getWidth(), image.getHeight()) / 64;
         int[] hist = new int[64];
         for (int y = 0; y < image.getHeight(); y += 7) {
             int l = 0;
@@ -262,7 +263,7 @@ public class ImageManipulations {
 
         int bestScore = 0;
         int best = 1;
-        for (int i = 1; i < hist.length; i++) {
+        for (int i = 1; i < Math.min(hist.length, maxScale); i++) {
             if (hist[i] > bestScore) {
                 bestScore = hist[i];
                 best = i;
