@@ -1,4 +1,4 @@
-# 0.7.1
+# 0.7.4
 
 * Fixed graffiti transparency issue
 * Added automatic resize of huge images
