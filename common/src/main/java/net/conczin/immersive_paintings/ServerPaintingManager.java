@@ -79,10 +79,14 @@ public class ServerPaintingManager extends SavedData {
 
     public static void registerPainting(MinecraftServer server, ResourceLocation identifier, Painting painting, BufferedImage image) {
         if (image != null) {
-            paintingCache.set(identifier, ImageManipulations.encode(image));
-            thumbnailCache.set(identifier, ImageManipulations.encode(ImageManipulations.resizeImage(image, Painting.Size.THUMBNAIL)));
-            getCustomPaintings(server).put(identifier, painting);
-            get(server).setDirty(true);
+            try {
+                paintingCache.set(identifier, ImageManipulations.encode(image));
+                thumbnailCache.set(identifier, ImageManipulations.encode(ImageManipulations.resizeImage(image, Painting.Size.THUMBNAIL)));
+                getCustomPaintings(server).put(identifier, painting);
+                get(server).setDirty(true);
+            } catch (IOException e) {
+                Main.LOGGER.error("could not register image {}", identifier, e);
+            }
         }
     }
 
@@ -122,7 +126,14 @@ public class ServerPaintingManager extends SavedData {
 
             // Add any thumbnails that don't exist for some reason
             if (!thumbnailCache.exists(id)) {
-                paintingCache.get(id).ifPresent(b -> thumbnailCache.set(id, ImageManipulations.encode(ImageManipulations.resizeImage(ImageManipulations.decode(b), Painting.Size.THUMBNAIL))));
+                try {
+                    Optional<byte[]> source = paintingCache.get(id);
+                    if (source.isPresent()) {
+                        thumbnailCache.set(id, ImageManipulations.encode(ImageManipulations.resizeImage(ImageManipulations.decode(source.get()), Painting.Size.THUMBNAIL)));
+                    }
+                } catch (IOException e) {
+                    Main.LOGGER.error("could not create thumbnail from stored image", e);
+                }
             }
 
             m.customServerPaintings.put(id, painting);

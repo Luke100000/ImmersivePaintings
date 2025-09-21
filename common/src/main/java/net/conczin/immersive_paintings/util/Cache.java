@@ -85,8 +85,11 @@ public abstract class Cache<K, V> {
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(path.toFile())) {
-            outputStream.write(encode(value));
-            cache.put(key, value);
+            byte[] v = encode(value);
+            if (v != null) {
+                outputStream.write(v);
+                cache.put(key, value);
+            }
         } catch (IOException e) {
             Main.LOGGER.error("failed writing cached file {}", path, e);
         }

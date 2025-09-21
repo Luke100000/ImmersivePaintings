@@ -87,7 +87,11 @@ public class DatapackPaintingsGenerator {
 
         File file = new File(name + ".png");
 
-        ImageManipulations.write(ImmersivePaintingScreen.pixelateImage(image, settings), file);
+        try {
+            ImageIO.write(ImmersivePaintingScreen.pixelateImage(image, settings), "png", file);
+        } catch (IOException e) {
+            Main.LOGGER.error("could not load datapack image {}", name, e);
+        }
     }
 
     private static BufferedImage loadImage(String path) throws IOException {

@@ -1,5 +1,6 @@
 package net.conczin.immersive_paintings.network;
 
+import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 
 import java.awt.image.BufferedImage;
@@ -12,27 +13,24 @@ import java.util.Optional;
 public class SegmentManager {
     private final Map<String, ByteArrayOutputStream> buffer = new HashMap<>();
 
-    public Optional<BufferedImage> handleSegmentedPayload(String key, SegmentedPayload payload) {
+    public Optional<BufferedImage> handleSegmentedPayload(String key, byte[] data, int segment, int totalSegments) {
         ByteArrayOutputStream byteBuffer = buffer.computeIfAbsent(key, k -> new ByteArrayOutputStream());
         try {
-            byteBuffer.write(payload.data());
+            byteBuffer.write(data);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
 
-        if (payload.segment() + 1 == payload.totalSegments()) {
+        if (segment + 1 == totalSegments) {
             buffer.remove(key);
-            return Optional.ofNullable(ImageManipulations.decode(byteBuffer.toByteArray()));
+
+            try {
+                return Optional.of(ImageManipulations.decode(byteBuffer.toByteArray()));
+            } catch (IOException e) {
+                Main.LOGGER.error("could not combne segmented payloads for {}", key, e);
+            }
         }
 
         return Optional.empty();
-    }
-
-    public interface SegmentedPayload {
-        byte[] data();
-    
-        int segment();
-    
-        int totalSegments();
     }
 }
