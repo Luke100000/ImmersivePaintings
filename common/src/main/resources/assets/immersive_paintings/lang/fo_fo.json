@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kunna einingar kollidere við myndir",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Vís aðrar leikarar myndir",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Eru myndir frá aðrum leikarum sýnilegar í myndarskipanini",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatiserað myndarstøtt",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatiserað støtt myndir, sum eru størri enn loyvda mark",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Loyvi Stig",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Loyvi stig kravd fyri at uploada myndir. Støttur til allar leikarar",
   "config.immersive_paintings.common.maxUserImageWidth": "Mátt av mynd breidd",
