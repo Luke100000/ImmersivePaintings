@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Ĉu entoj povas kolizi kun pentraĵoj",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Montru la Pentraĵojn de Aliaj Ludantoj",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ĉu la pentraĵoj de aliaj ludantoj estas videblaj en la pentraĵa redakta GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Aŭtomata Bildo Grandigo",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Aŭtomate grandigi bildojn, kiuj estas pli grandaj ol la permesita limo",
   "config.immersive_paintings.common.uploadPermissionLevel": "Rajto alŝuti Nivelo",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivelo de rajto necesa por alŝuti pentraĵojn. Defaŭltoj al ĉiuj ludantoj",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimuma Bildo Laro",
