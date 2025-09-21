@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Geta aðilar rekist á myndir",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Sýna myndir annarra spela",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Eru myndir annarra spela sjáanlegar í myndatöku GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Sjálfvirk myndastærðarbreyting",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Sjálfvirkt breyta myndum sem eru stærri en leyfileg mörk",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upphleðsluréttindi",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Réttindastig sem krafist er til að hlaða upp myndum. Fer aðeins eftir öllum spilurum",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksímmyndarbreidd",
