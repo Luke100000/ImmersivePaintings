@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "All an tuth ydh help rag colwarhe pleynd",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Dha pleynd y gober a blydhen ol",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Yma a scredh y pleynd yn kybsel pleynder pleyerow an da",
+  "config.immersive_paintings.common.automaticImageResizing": "Resizing Image Awtomatyk",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Awtomatyk a resizedh an images a yw byth gwell a vynner an llew a gret.",
   "config.immersive_paintings.common.uploadPermissionLevel": "Uhel a Dernage Anghwad",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Uhel a'r a dhia hag a gew bal a pleynerow",
   "config.immersive_paintings.common.maxUserImageWidth": "Tella Gwasghes Obsi",
