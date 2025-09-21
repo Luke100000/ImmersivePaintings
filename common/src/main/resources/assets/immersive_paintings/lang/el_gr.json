@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Μπορεί οντότητες να συγκρούονται με πίνακες",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Εμφάνιση Ζωγραφικών Άλλου Παίκτη",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Είναι πίνακες άλλων παικτών ορατά στο γραφικό περιβάλλον επεξεργασίας ζωγραφικής",
+  "config.immersive_paintings.common.automaticImageResizing": "Αυτόματη Αλλαγή Μεγέθους Εικόνας",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Αυτόματη αλλαγή μεγέθους εικόνων που είναι μεγαλύτερες από το επιτρεπόμενο όριο",
   "config.immersive_paintings.common.uploadPermissionLevel": "Επίπεδο Άδειας Αποστολής",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Απαιτείται επίπεδο δικαιωμάτων για να ανεβάσετε πίνακες ζωγραφικής. Προεπιλογές σε όλους τους παίκτες",
   "config.immersive_paintings.common.maxUserImageWidth": "Μέγιστο Πλάτος Εικόνας",
