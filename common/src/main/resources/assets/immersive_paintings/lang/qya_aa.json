@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Cen entities collide with paintë",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Show Other Player's Paintëngs",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Are other player's paintëngs visible i the painting edit GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "\"Laitalë hresta\"",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "\"Nai laitalyë hrestaron i lëca yéva nénu\"",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Permission Level",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Permission level required to upload paintë. Defaults i all players",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximum Image Width",
