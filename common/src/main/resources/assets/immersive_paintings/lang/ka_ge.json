@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "შეძლებენ თუ არა სუბიექტები ნახატებთან შეჯახება",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "მთელი მოთამაშის ნახატების ჩვენება",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "იყვენენ თუ არა სხვა მოთამაშის ნახატები ნახატის რედაქტირების GUI-ში",
+  "config.immersive_paintings.common.automaticImageResizing": "ავტომატური სურათების ზომის შეცვლა",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "ავტომატურად შეცვალეთ სურათების ზომები, რომლებიც გაწვდილი ლიმიტზე მეტია",
   "config.immersive_paintings.common.uploadPermissionLevel": "სურათების ატვირთვის_perm_level",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ატვირთვისთვის საჭიროა ატვირთვის დონე. სტატუსი ყველა მოთამაშისთვის",
   "config.immersive_paintings.common.maxUserImageWidth": "მაქსიმალური სურათის სიგანე",
