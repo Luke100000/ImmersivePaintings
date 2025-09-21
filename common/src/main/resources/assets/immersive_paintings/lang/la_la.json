@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Possunt res collidere cum picturis",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Aliena Picturae Luseri Monstrare",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Suntne picturae alterius lusori visibiles in GUI picturae edendi",
+  "config.immersive_paintings.common.automaticImageResizing": "Imago Automatice Reductio",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Images automatice redigere quae maiorem sunt quam limites permissorum",
   "config.immersive_paintings.common.uploadPermissionLevel": "Gradus Licentiae Upload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Gradus licentiae necessarius ad upload picturas. Default est omnes lusores",
   "config.immersive_paintings.common.maxUserImageWidth": "Maxima Largitudo Imaginis",
