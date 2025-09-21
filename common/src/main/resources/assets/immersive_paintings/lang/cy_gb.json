@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "A all endidau gysylltu â phaeintiadau",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Dangos Paentiadau Chwaraewr Eraill",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "A ydy paentiadau chwaraewr arall yn weladwy yn y GUI golygu paentiadau",
+  "config.immersive_paintings.common.automaticImageResizing": "Addasu Delweddau Yn Awtomatig",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Addasu delweddau yn awtomatig sy'n fwy nag y ffin ganiateiedig",
   "config.immersive_paintings.common.uploadPermissionLevel": "Lefel Caniatâd Uwchradd",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Lefel caniatâd sy'n ofynnol i uwchlwytho paentiadau. Mae'n dychwelyd i'r holl chwaraewyr",
   "config.immersive_paintings.common.maxUserImageWidth": "Lled Delwedd Mwyaf",
