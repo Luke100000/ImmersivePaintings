@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "se jerna lo nu fenga",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "fendi lo fenga lo se fenda",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "lo nu fenda lo fenga se fenda fendi lo se fenda",
+  "config.immersive_paintings.common.automaticImageResizing": "le nu jgari lo se pixretci",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "jgari lo pixretci cu ma'enai le nu se sanga je fanmo",
   "config.immersive_paintings.common.uploadPermissionLevel": "lo nu se fendi lo nu palta",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "lo nu palta lo fenga se fendi. co'a lo se palta lo prenu",
   "config.immersive_paintings.common.maxUserImageWidth": "lo nu toke'e ikau",
