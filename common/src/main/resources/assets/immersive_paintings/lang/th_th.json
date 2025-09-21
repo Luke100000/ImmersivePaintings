@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "วัตถุสามารถชนกับภาพวาดได้หรือไม่",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "แสดงภาพวาดของผู้เล่นอื่น",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "ภาพวาดของผู้เล่นคนอื่นสามารถมองเห็นได้ในหน้าต่างแก้ไขภาพวาดหรือไม่",
+  "config.immersive_paintings.common.automaticImageResizing": "การปรับขนาดภาพอัตโนมัติ",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "ปรับขนาดภาพโดยอัตโนมัติหากมีขนาดใหญ่กว่าที่กำหนด",
   "config.immersive_paintings.common.uploadPermissionLevel": "ระดับสิทธิ์การอัปโหลด",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ระดับสิทธิ์ที่ต้องการเพื่ออัปโหลดภาพวาด. ค่าเริ่มต้นคือผู้เล่นทุกคน",
   "config.immersive_paintings.common.maxUserImageWidth": "ความกว้างสูงสุดของภาพ",
