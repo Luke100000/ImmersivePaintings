@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Pueden les entidades colisionar con les pintures",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Amuestra les pintures d'otres xugadores",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Son visibles les pintures d'otres xugadores na GUI d'editación de pintures",
+  "config.immersive_paintings.common.automaticImageResizing": "Redimensionamiento automáticu d'imaxes",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensionar automáticamente imaxes que son más grandes que'l límit permitíu",
   "config.immersive_paintings.common.uploadPermissionLevel": "Nivél de Permisu d'Ascensión",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivél de permisu requeríu pa subir pintures. Predetermina a tolos xugadores",
   "config.immersive_paintings.common.maxUserImageWidth": "Amplariu Máximu de Imaxe",
