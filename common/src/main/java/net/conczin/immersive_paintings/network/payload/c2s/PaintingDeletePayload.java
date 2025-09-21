@@ -1,14 +1,11 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
-import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,13 +13,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDelete) implements ImmersivePayload {
-	public static final Type<PaintingDeletePayload> TYPE = new Type<>(Main.locate("painting_delete"));
-	public static final StreamCodec<FriendlyByteBuf, PaintingDeletePayload> STREAM_CODEC = StreamCodec.composite(
-		ResourceLocation.STREAM_CODEC, PaintingDeletePayload::identifier,
-		ByteBufCodecs.BOOL, PaintingDeletePayload::adminDelete,
-		PaintingDeletePayload::new
-	);
+    public static final Type<PaintingDeletePayload> TYPE = new Type<>(Main.locate("painting_delete"));
+    public static final StreamCodec<FriendlyByteBuf, PaintingDeletePayload> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC, PaintingDeletePayload::identifier,
+            ByteBufCodecs.BOOL, PaintingDeletePayload::adminDelete,
+            PaintingDeletePayload::new
+    );
 
     private static void deletePainting(MinecraftServer server, Player player, ResourceLocation painting) {
         ServerPaintingManager.deregisterPainting(server, painting);
@@ -44,6 +46,7 @@ public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDe
             }
 
             MinecraftServer server = player.getServer();
+            if (server == null) return;
 
             PaintingSyncPayload payload;
             if (adminDelete) {
@@ -66,8 +69,8 @@ public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDe
         });
     }
 
-	@Override
-	public Type<PaintingDeletePayload> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<PaintingDeletePayload> type() {
+        return TYPE;
+    }
 }

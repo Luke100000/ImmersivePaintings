@@ -1,3 +1,9 @@
+# 0.7.1
+
+* Fixed graffiti transparency issue
+* Added automatic resize of huge images
+* More error handling
+
 # 0.7.0
 
 * Updated to Minecraft 1.21 (Thanks turtletowerz!)

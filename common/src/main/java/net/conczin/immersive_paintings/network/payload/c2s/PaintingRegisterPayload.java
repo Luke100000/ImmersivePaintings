@@ -1,18 +1,19 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.network.NetworkHandler;
-import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
-import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.network.NetworkHandler;
+import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
+import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -24,7 +25,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.EnumSet;
 import java.util.Optional;
 
-public record PaintingRegisterPayload(int width, int height, int resolution, String name, EnumSet<Painting.Flag> flags) implements ImmersivePayload {
+public record PaintingRegisterPayload(
+        int width,
+        int height,
+        int resolution,
+        String name,
+        EnumSet<Painting.Flag> flags
+) implements ImmersivePayload {
     public static final Type<PaintingRegisterPayload> TYPE = new Type<>(Main.locate("painting_register"));
 
     public static final StreamCodec<FriendlyByteBuf, PaintingRegisterPayload> STREAM_CODEC = StreamCodec.composite(
@@ -37,7 +44,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
     );
 
     private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
-        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(Optional.ofNullable(i), error));
+        NetworkHandler.sendToClient((ServerPlayer) player, new PaintingRegisterErrorPayload(Optional.ofNullable(i), error));
     }
 
     // Separate method to allow for Xerca compatibility
@@ -48,8 +55,11 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
             painting = painting.withHash(hash);
             ResourceLocation identifier = painting.location();
 
-            ServerPaintingManager.registerPainting(player.getServer(), identifier, painting, image);
-            NetworkHandler.sendToAllClients(player.getServer(), new PaintingSyncPayload(identifier, painting));
+            MinecraftServer server = player.getServer();
+            if (server != null) {
+                ServerPaintingManager.registerPainting(server, identifier, painting, image);
+                NetworkHandler.sendToAllClients(server, new PaintingSyncPayload(identifier, painting));
+            }
             paintingRegisterError(player, "", identifier);
             return identifier;
         } catch (NoSuchAlgorithmException e) {
@@ -97,7 +107,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
                         (float) Configs.COMMON.maxUserImageHeight / image.getHeight()
                 );
 
-                BufferedImage newImage = new BufferedImage((int)(image.getWidth() * z), (int)(image.getHeight() * z), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage newImage = new BufferedImage((int) (image.getWidth() * z), (int) (image.getHeight() * z), BufferedImage.TYPE_INT_ARGB);
                 ImageManipulations.resize(newImage, image, 1 / z, 0, 0);
                 image = newImage;
             }

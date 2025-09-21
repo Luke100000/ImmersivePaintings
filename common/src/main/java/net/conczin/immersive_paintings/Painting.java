@@ -1,14 +1,10 @@
 package net.conczin.immersive_paintings;
 
-import java.util.EnumSet;
-import java.util.UUID;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,18 +13,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public record Painting(int version, int width, int height, int resolution, String name, String author, UUID authorUUID, Type type, EnumSet<Flag> flags, String hash) {
+import java.util.EnumSet;
+import java.util.UUID;
+
+public record Painting(int version, int width, int height, int resolution, String name, String author, UUID authorUUID,
+                       Type type, EnumSet<Flag> flags, String hash) {
     public static final Codec<Painting> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Codec.INT.fieldOf("version").forGetter(Painting::version),
-        Codec.INT.fieldOf("width").forGetter(Painting::width),
-        Codec.INT.fieldOf("height").forGetter(Painting::height),
-        Codec.INT.fieldOf("resolution").forGetter(Painting::resolution),
-        Codec.STRING.fieldOf("name").forGetter(Painting::name),
-        Codec.STRING.fieldOf("author").forGetter(Painting::author),
-        UUIDUtil.CODEC.fieldOf("authorUUID").forGetter(Painting::authorUUID),
-        Type.CODEC.fieldOf("type").forGetter(Painting::type),
-        Flag.CODEC.fieldOf("flags").forGetter(Painting::flags),
-        Codec.STRING.fieldOf("hash").forGetter(Painting::hash)
+            Codec.INT.fieldOf("version").forGetter(Painting::version),
+            Codec.INT.fieldOf("width").forGetter(Painting::width),
+            Codec.INT.fieldOf("height").forGetter(Painting::height),
+            Codec.INT.fieldOf("resolution").forGetter(Painting::resolution),
+            Codec.STRING.fieldOf("name").forGetter(Painting::name),
+            Codec.STRING.fieldOf("author").forGetter(Painting::author),
+            UUIDUtil.CODEC.fieldOf("authorUUID").forGetter(Painting::authorUUID),
+            Type.CODEC.fieldOf("type").forGetter(Painting::type),
+            Flag.CODEC.fieldOf("flags").forGetter(Painting::flags),
+            Codec.STRING.fieldOf("hash").forGetter(Painting::hash)
     ).apply(i, Painting::new));
 
     public static final StreamCodec<ByteBuf, Painting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
@@ -82,7 +82,7 @@ public record Painting(int version, int width, int height, int resolution, Strin
         QUARTER,
         EIGHTH,
         THUMBNAIL,
-        NSFW;
+        NSFW
     }
 
     public enum Flag {

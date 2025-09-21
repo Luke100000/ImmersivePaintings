@@ -46,7 +46,7 @@ public class XercaPaintCompat {
 
             DataComponentType<?> CANVAS_PIXELS = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_pixels"));
 
-            if (w > 0 && stack.has(CANVAS_PIXELS)) {
+            if (CANVAS_PIXELS != null && w > 0 && stack.has(CANVAS_PIXELS)) {
                 DataComponentMap map = stack.getComponents();
 
                 // convert

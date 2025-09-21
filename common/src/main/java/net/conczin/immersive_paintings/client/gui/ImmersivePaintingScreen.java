@@ -429,7 +429,7 @@ public class ImmersivePaintingScreen extends Screen {
                 // Save
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.save"), v -> {
-                                    byte[] encoded = null;
+                                    byte[] encoded;
 
                                     try {
                                         encoded = ImageManipulations.encode(pixelatedImage);
