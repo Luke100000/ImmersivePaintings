@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "האם ישויות יכולות להתנגש בציורים?",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "הצג ציורים של שחקנים אחרים",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "האם ציורים של שחקנים אחרים נראים בממשק המשתמש הגרפי לעריכת ציורים?",
+  "config.immersive_paintings.common.automaticImageResizing": "שינוי גודל תמונה אוטומטי",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "שינוי גודל אוטומטי של תמונות שגודלן עולה על המגבלה המותרת",
   "config.immersive_paintings.common.uploadPermissionLevel": "רמת הרשאת העלאה",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "רמת ההרשאה הנדרשת כדי להעלות ציורים. ברירת המחדל היא כל השחקנים.",
   "config.immersive_paintings.common.maxUserImageWidth": "רוחב תמונה מרבי",
