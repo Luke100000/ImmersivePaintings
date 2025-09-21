@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Können Einheiten mit Malereien kollidieren",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Zeige die Malereien anderer Spieler",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sind die Malereien anderer Spieler im Malerei-Bearbeitungs-GUI sichtbar",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatisches Bildgrößenänderung",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatisch die Bilder anpassen, die größer sind als das erlaubte Limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Hochlade-Berechtigungsstufe",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsstufe erforderlich, um Malereien hochzuladen. Standardmäßig für alle Spieler",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale Bildbreite",
