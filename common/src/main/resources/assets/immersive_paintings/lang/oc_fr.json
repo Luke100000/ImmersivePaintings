@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Los entitats pòden colidir amb los paintings",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Mostrar los paintings dels autres jogaires",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Los paintings dels autres jogaires son visibles dins lo GUI d’edicion dels paintings",
+  "config.immersive_paintings.common.automaticImageResizing": "Redimensionament Automatic d'Imatges",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensionar automàticament las imatges que son mai grandas que lo limit permés",
   "config.immersive_paintings.common.uploadPermissionLevel": "Nivèl de permission per cargar",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivèl de permission requerit per cargar los paintings. Ddefaults a totes los jogaires",
   "config.immersive_paintings.common.maxUserImageWidth": "Largor màxima de l’imatge",
