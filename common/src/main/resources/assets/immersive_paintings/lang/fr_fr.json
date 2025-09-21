@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Les entités peuvent entrer en collision avec les peintures",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Afficher les peintures des autres joueurs",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Les peintures d'autres joueurs sont-elles visibles dans l'interface d'édition de la peinture",
+  "config.immersive_paintings.common.automaticImageResizing": "Redimensionnement automatique de l'image",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensionner automatiquement les images qui sont plus grandes que la limite autorisée",
   "config.immersive_paintings.common.uploadPermissionLevel": "Niveau d'autorisation de téléchargement",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Niveau de permission requis pour télécharger des peintures. Par défaut pour tous les joueurs",
   "config.immersive_paintings.common.maxUserImageWidth": "Largeur maximale de l'image",
