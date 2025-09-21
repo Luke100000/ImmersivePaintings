@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Gall ez eus an entitioù c'holl gant ar skeudennoù",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Diskouez skeudennoù an oberoù all",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Emañ skeudennoù an oberoù all gwelet en ar GUI az a ger",
+  "config.immersive_paintings.common.automaticImageResizing": "Kendalc'h ar Skeudenn kevel",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Kendalc'h ar skeudenoù a zo brasoc'h eget an doare a zo dalc'het",
   "config.immersive_paintings.common.uploadPermissionLevel": "Level Demeur a skol",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Eured ouzh ar politiquez da upload ar skeudennoù. Default da holl ghoarierien",
   "config.immersive_paintings.common.maxUserImageWidth": "Ur Bwidth Uzi",
