@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kön nen Entitäten mit Molen kollidieren",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Zeige Molen von anderen Spielern",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sind die Molen von anderen Spielern im Mal-Edit-GUI sichtbar",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatische Bildgröße ändern",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatisch Bilder, die größer sind als de erlaubte Grenze, ändern",
   "config.immersive_paintings.common.uploadPermissionLevel": "Hochladen Berechtigungsniveau",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsniveau dat för dat Hochladen von Molen kräut worden. Standartmäßig för all Spieler",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale Bildbreite",
