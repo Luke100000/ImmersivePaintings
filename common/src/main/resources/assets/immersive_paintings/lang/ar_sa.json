@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "هل يمكن أن تتصادم الكيانات مع اللوحات",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "عرض لوحات اللاعبين الآخرين",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "هل لوحات اللاعبين الآخرين مرئية في واجهة تحرير اللوحات",
+  "config.immersive_paintings.common.automaticImageResizing": "تغيير حجم الصورة تلقائيًا",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "تغيير حجم الصور تلقائيًا التي تزيد عن الحد المسموح به",
   "config.immersive_paintings.common.uploadPermissionLevel": "مستوى إذن التحميل",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "مستوى الإذن المطلوب لتحميل اللوحات. الإعداد الافتراضي هو لجميع اللاعبين",
   "config.immersive_paintings.common.maxUserImageWidth": "أقصى عرض للصورة",
