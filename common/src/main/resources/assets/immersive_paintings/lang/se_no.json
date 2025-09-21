@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Borgnlamiid go geavahit",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Näida ógij bearegeahččat's geavahit",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Tii'rán eage geavahan ájagat",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatikalaš biletit oagi",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatikalaš oagii biletit mii nuppii lea sállin",
   "config.immersive_paintings.common.uploadPermissionLevel": "Uploadit ađđe",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Bifohkkama ađđá rinneiden spekula seji ahte geavahit. Defaultas geavahitti masu",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximá Imagen  Leavta",
