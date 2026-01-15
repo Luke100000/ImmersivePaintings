@@ -1,6 +1,5 @@
 package net.conczin.immersive_paintings.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
@@ -33,6 +32,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.FilenameUtils;
+import org.joml.Matrix3x2fStack;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -155,7 +155,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
-                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(ImageManipulations.bufferedToNative(pixelatedImage)));
+                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(() -> "temp_pixelated", ImageManipulations.bufferedToNative(pixelatedImage)));
                 }
 
                 int maxWidth = 190;
@@ -163,12 +163,12 @@ public class ImmersivePaintingScreen extends Screen {
                 int tw = settings.resolution * settings.width;
                 int th = settings.resolution * settings.height;
                 float size = Math.min((float) maxWidth / tw, (float) maxHeight / th);
-                PoseStack poseStack = graphics.pose();
-                poseStack.pushPose();
-                poseStack.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
-                poseStack.scale(size, size, 1.0f);
+                Matrix3x2fStack matrix = graphics.pose();
+                matrix.pushMatrix();
+                matrix.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f);
+                matrix.scale(size, size);
                 graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
-                poseStack.popPose();
+                matrix.popMatrix();
 
                 if (error != null) {
                     graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
@@ -931,7 +931,7 @@ public class ImmersivePaintingScreen extends Screen {
                 BufferedImage image = ImageIO.read(stream);
                 if (image != null) {
                     preprocessImage(image);
-                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(identifier::toString, ImageManipulations.bufferedToNative(image)));
                     stream.close();
                     return image;
                 }

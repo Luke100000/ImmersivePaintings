@@ -4,6 +4,7 @@ import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
 import net.conczin.immersive_paintings.platform.Services;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,8 +16,14 @@ import net.minecraft.world.item.ItemStack;
 import java.awt.image.BufferedImage;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 public class XercaPaintCompat {
+    private static DataComponentType<?> getComponent(String name) {
+        Optional<Holder.Reference<DataComponentType<?>>> optional = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", name));
+        return optional.<DataComponentType<?>>map(Holder.Reference::value).orElse(null);
+    }
+
     public static boolean interactWithPainting(ImmersivePaintingEntity painting, Player player, InteractionHand hand) {
         if (!Services.PLATFORM.isModLoaded("xercapaint"))
             return false;
@@ -44,7 +51,9 @@ public class XercaPaintCompat {
                 }
             }
 
-            DataComponentType<?> CANVAS_PIXELS = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_pixels"));
+            DataComponentType<?> CANVAS_PIXELS = getComponent("canvas_pixels");
+            if (CANVAS_PIXELS == null)
+                return false;
 
             if (w > 0 && stack.has(CANVAS_PIXELS)) {
                 DataComponentMap map = stack.getComponents();
@@ -62,8 +71,13 @@ public class XercaPaintCompat {
                     }
                 }
 
-                DataComponentType<?> CANVAS_TITLE = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_title"));
-                DataComponentType<?> CANVAS_AUTHOR = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_author"));
+                DataComponentType<?> CANVAS_TITLE = getComponent("canvas_title");
+                if (CANVAS_TITLE == null)
+                    return false;
+
+                DataComponentType<?> CANVAS_AUTHOR = getComponent("canvas_author");
+                if (CANVAS_AUTHOR == null)
+                    return false;
 
                 // title
                 String title = map.has(CANVAS_TITLE) ? (String) stack.getComponents().get(CANVAS_TITLE) : "Unnamed Painting #" + player.getRandom().nextInt(1048576);

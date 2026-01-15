@@ -33,7 +33,7 @@ side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "fzzy_config"
-versionRange = "[${fzzy_config_version},)"
+versionRange = "[${fzzy_config_version_neo},)"
 ordering = "AFTER"
 side = "BOTH"
 

@@ -87,15 +87,25 @@ processResources {
             'neoforge_loader_version_range': neoforge_loader_version_range,
 //            'forge_version'                : forge_version,
 //            'forge_loader_version_range'   : forge_loader_version_range,
-            'fzzy_config_version'          : fzzy_config_version,
+            'fzzy_config_version_neo'      : fzzy_config_version_neo,
+            'fzzy_config_version_fabric'   : fzzy_config_version_fabric,
             'modmenu_version'              : modmenu_version,
             'credits'                      : credits,
             'java_version'                 : java_version
     ]
 
-    filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
+    var jsonExpandProps = expandProps.collectEntries {
+        key, value -> [(key): value instanceof String ? value.replace("\n", "\\\\n") : value]
+    }
+
+    filesMatching(['META-INF/mods.toml', 'META-INF/neoforge.mods.toml']) {
         expand expandProps
     }
+
+    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+        expand jsonExpandProps
+    }
+
     inputs.properties(expandProps)
 }
 

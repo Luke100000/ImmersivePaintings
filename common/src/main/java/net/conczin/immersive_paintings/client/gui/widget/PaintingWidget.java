@@ -9,6 +9,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 
 import java.awt.image.BufferedImage;
 
@@ -64,15 +65,15 @@ public class PaintingWidget extends Button {
     // TODO: Fix
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
+        Matrix3x2fStack matrix = graphics.pose();
+        matrix.pushMatrix();
         float scale = Math.min((float)width / paintingWidth, (float)height / paintingHeight);
         if (isHovered()) {
             scale *= 1.1f;
         }
-        pose.translate(getX() + (width - paintingWidth * scale) / 2, getY() + (height - paintingHeight * scale) / 2, 0.0f);
-        pose.scale(scale, scale, 1.0f);
+        matrix.translate(getX() + (width - paintingWidth * scale) / 2, getY() + (height - paintingHeight * scale) / 2);
+        matrix.scale(scale, scale);
         graphics.blit(identifier, 0, 0, 0, 0, paintingWidth, paintingHeight, paintingWidth, paintingHeight);
-        pose.popPose();
+        matrix.popMatrix();
     }
 }

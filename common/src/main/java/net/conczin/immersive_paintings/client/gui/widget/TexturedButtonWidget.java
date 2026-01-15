@@ -24,11 +24,12 @@ public class TexturedButtonWidget extends Button {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        if (isHovered()) {
-            RenderSystem.setShaderColor(1.0f, 0.75f, 0.75f, alpha);
-        } else {
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-        }
+        // TODO: 1.21.6
+//        if (isHovered()) {
+//            RenderSystem.setShaderColor(1.0f, 0.75f, 0.75f, alpha);
+//        } else {
+//            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+//        }
 
         graphics.blit(texture, getX(), getY(), 0, (active ? 0 : 16), w, h, tw, th);
 

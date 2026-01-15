@@ -127,7 +127,6 @@ public class ClientPaintingManager {
             () -> requested.remove(thumbId)
         );
 
-
         paintingCache.get(fullId).ifPresentOrElse(
             bufferedImage -> registerImage(identifier, bufferedImage, true),
             () -> requested.remove(fullId)
@@ -178,8 +177,9 @@ public class ClientPaintingManager {
                     paintingCache.set(path, target);
             }
 
-            ResourceLocation id = Minecraft.getInstance().getTextureManager().register(Main.MOD_ID + "/" + path, new DynamicTexture(ImageManipulations.bufferedToNative(target)));
-            mapping.put(realSize, id);
+            ResourceLocation name = Main.locate(path);
+            Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(name::toString, ImageManipulations.bufferedToNative(target)));
+            mapping.put(realSize, name);
 
             if (size == Size.THUMBNAIL && Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen)
                 screen.updateWidget(identifier);

@@ -19,7 +19,7 @@ dependencies {
 
     // Dependencies
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
-    modImplementation("me.fzzyhmstrs:fzzy_config:${fzzy_config_version}")
+    modImplementation("me.fzzyhmstrs:fzzy_config:${fzzy_config_version_fabric}")
 
     // Third Party Dependencies
     include(implementation("com.twelvemonkeys.common:common-lang:${webp_version}"))

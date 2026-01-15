@@ -15,7 +15,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -24,7 +23,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(Main.MOD_ID)
-@EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.MOD)
+@EventBusSubscriber(modid = Main.MOD_ID)
 public final class CommonNeoForge {
     @SubscribeEvent
     public static void setup(FMLCommonSetupEvent event) {

@@ -1,6 +1,7 @@
 package net.conczin.immersive_paintings.client.render;
 
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.client.render.state.ImmersivePaintingRenderState;
 import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.ClientPaintingManager;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
@@ -26,33 +28,44 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
-public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T> {
-    public ImmersivePaintingEntityRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx);
+public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T, ImmersivePaintingRenderState> {
+    public ImmersivePaintingRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public void render(T entity, float yaw, float tickDelta, PoseStack poses, MultiBufferSource buffer, int light) {
-        poses.pushPose();
-        poses.mulPose(Axis.YP.rotationDegrees(-yaw));
-        poses.mulPose(Axis.XP.rotationDegrees(-entity.getViewXRot(tickDelta)));
-        poses.scale(0.0625f, 0.0625f, 0.0625f);
-        renderPainting(poses, buffer, entity);
-        poses.popPose();
-        super.render(entity, yaw, tickDelta, poses, buffer, light);
+    public ImmersivePaintingRenderState createRenderState() {
+        return new ImmersivePaintingRenderState();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T paintingEntity) {
+    public void extractRenderState(T entity, ImmersivePaintingRenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+
+        state.light = LevelRenderer.getLightColor(entity.level(), entity.blockPosition());
+
+        state.xRot = entity.getXRot(partialTick);
+        state.yRot = entity.getYRot(partialTick);
+        //state.rotation = entity.getRotation();
+        state.isGlowing = entity.isGlowing();
+        state.isGraffiti = entity.isGraffiti();
+        state.widthPixels = entity.getPaintingWidth() * 16;
+        state.heightPixels = entity.getPaintingHeight() * 16;
+
+        state.frame = entity.getFrame();
+        state.material = entity.getMaterial();
+
         Minecraft client = Minecraft.getInstance();
         ClientConfig config = Configs.CLIENT;
 
-        double distance = (client.player == null ? 0 : client.player.distanceTo(paintingEntity));
+        double distance = (client.player == null ? 0 : client.player.distanceTo(entity));
         double blocksVisible = Math.tan(client.options.fov().get() / 180.0 * Math.PI / 2.0) * 2.0 * distance;
 
-        Optional<Painting> painting = ClientPaintingManager.getPainting(paintingEntity.getMotive());
-        if (painting.isEmpty())
-            return ClientPaintingManager.getImageIdentifier(Painting.DEFAULT_IDENTIFIER, Painting.Size.FULL);
+        Optional<Painting> painting = ClientPaintingManager.getPainting(entity.getMotive());
+        if (painting.isEmpty()) {
+            state.texture = ClientPaintingManager.getImageIdentifier(Painting.DEFAULT_IDENTIFIER, Painting.Size.FULL);
+            return;
+        }
 
         int resolution = painting.get().resolution();
         double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
@@ -63,8 +76,26 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
                 : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
                 : Painting.Size.FULL;
 
+        state.texture = ClientPaintingManager.getImageIdentifier(entity.getMotive(), size);
+    }
 
-        return ClientPaintingManager.getImageIdentifier(paintingEntity.getMotive(), size);
+    // TODO
+    @Override
+    protected int getBlockLightLevel(T entity, BlockPos pos) {
+        int parentLight = super.getBlockLightLevel(entity, pos);
+        return entity.isGlowing() ? Math.max(5, parentLight) : parentLight;
+    }
+
+    @Override
+    public void render(ImmersivePaintingRenderState state, PoseStack poseStack, MultiBufferSource buffer, int light) {
+        super.render(state, poseStack, buffer, light);
+
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(-state.yRot));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-state.xRot));
+        poseStack.scale(0.0625f, 0.0625f, 0.0625f);
+        renderPainting(poseStack, buffer, state);
+        poseStack.popPose();
     }
 
     protected int getLight(int light, boolean glowing) {
@@ -81,28 +112,20 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         return LightTexture.pack((int)(LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
     }
 
-    private void renderPainting(PoseStack poses, MultiBufferSource buffer, T entity) {
-        int light = LevelRenderer.getLightColor(entity.level(), entity.blockPosition());
-
+    private void renderPainting(PoseStack poses, MultiBufferSource buffer, ImmersivePaintingRenderState state) {
         PoseStack.Pose pose = poses.last();
         VertexConsumer vertexConsumer;
 
-        boolean hasFrame = !entity.getFrame().getPath().equals("none");
-
-        int widthPixels = entity.getPaintingWidth() * 16;
-        int heightPixels = entity.getPaintingHeight() * 16;
-
-        boolean glowing = entity.isGlowing();
-        boolean graffiti = entity.isGraffiti();
+        boolean hasFrame = !state.frame.equals(Main.NONE_LOCATION);
 
         //canvas
-        vertexConsumer = buffer.getBuffer(graffiti ? RenderType.entityTranslucent(getTextureLocation(entity)) : RenderType.entitySolid(getTextureLocation(entity)));
-        renderFaces(graffiti ? "objects/graffiti.obj" : "objects/canvas.obj", pose, vertexConsumer, getLight(light, glowing), widthPixels, heightPixels, hasFrame ? 1.0f : 0.0f);
+        vertexConsumer = buffer.getBuffer(state.isGraffiti ? RenderType.entityTranslucent(state.texture) : RenderType.entitySolid(state.texture));
+        renderFaces(state.isGraffiti ? "objects/graffiti.obj" : "objects/canvas.obj", pose, vertexConsumer, getLight(state.light, state.isGlowing), state.widthPixels, state.heightPixels, hasFrame ? 1.0f : 0.0f);
 
         //frame
         if (hasFrame) {
-            vertexConsumer = buffer.getBuffer(RenderType.entityCutout(entity.getMaterial()));
-            renderFrame(entity.getFrame(), pose, vertexConsumer, getFrameLight(light, glowing), widthPixels, heightPixels);
+            vertexConsumer = buffer.getBuffer(RenderType.entityCutout(state.material));
+            renderFrame(state.frame, pose, vertexConsumer, getFrameLight(state.light, state.isGlowing), state.widthPixels, state.heightPixels);
         }
     }
 

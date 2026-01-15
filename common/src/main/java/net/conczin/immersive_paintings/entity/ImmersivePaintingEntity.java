@@ -13,7 +13,6 @@ import net.conczin.immersive_paintings.registration.Entities;
 import net.conczin.immersive_paintings.registration.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -22,6 +21,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -37,6 +37,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -69,13 +71,13 @@ public class ImmersivePaintingEntity extends HangingEntity {
         if (direction == null)
             return;
 
-        this.direction = direction;
+        setDirectionRaw(direction);
         this.rotation = rotation;
 
         if (direction.getAxis().isHorizontal()) {
-            absRotateTo(direction.get2DDataValue() * 90, 0);
+            absSnapRotationTo(direction.get2DDataValue() * 90, 0);
         } else {
-            absRotateTo(rotation, direction == Direction.UP ? 90.0f : -90.0f);
+            absSnapRotationTo(rotation, direction == Direction.UP ? 90.0f : -90.0f);
         }
 
         recalculateBoundingBox();
@@ -87,7 +89,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     protected AABB calculateBoundingBox(BlockPos pos, Direction side) {
-        Vec3 front = Vec3.atLowerCornerOf(side.getNormal());
+        Vec3 front = Vec3.atLowerCornerOf(side.getUnitVec3i());
         Vec3 up = side.getAxis().isVertical() ? new Vec3(0, 0, 1) : new Vec3(0, 1, 0);
         Vec3 cross = up.cross(front);
 
@@ -138,17 +140,17 @@ public class ImmersivePaintingEntity extends HangingEntity {
             return false;
         }
 
-        BlockPos blockPos = pos.relative(direction.getOpposite());
+        BlockPos blockPos = pos.relative(getDirection().getOpposite());
         BlockState blockState = level().getBlockState(blockPos);
         if (!blockState.isSolid() && !DiodeBlock.isDiode(blockState)) {
             return false;
         }
 
-        return level().getEntities(this, getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((ImmersivePaintingEntity)v).direction == direction);
+        return level().getEntities(this, getBoundingBox(), PREDICATE).stream().noneMatch(v -> v.getDirection() == getDirection());
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith(@Nullable Entity entity) {
         return Configs.COMMON.paintingsHaveCollision;
     }
 
@@ -163,6 +165,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
                         config.showOtherPlayersPaintings, config.uploadPermissionLevel
                 ));
             }
+
             return InteractionResult.CONSUME;
         } else {
             return InteractionResult.PASS;
@@ -175,36 +178,23 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
-    public void dropItem(@Nullable Entity entity) {
-        if (level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+    public void dropItem(ServerLevel serverLevel, @Nullable Entity entity) {
+        if (serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
             if (entity instanceof Player playerEntity && playerEntity.hasInfiniteMaterials()) {
                 return;
             }
 
-            spawnAtLocation(getItem());
+            spawnAtLocation(serverLevel, getItem());
         }
     }
 
-    // Three methods below are taken from Painting
-    // They are needed to avoid an issue where when updating a motive, the motive is
-    // temporarily reset to "none" and the position gets messed up.
-    // NOTE: I think trackingPosition is the only one that matters, but keep all of them just in case
-    @Override
-    public void moveTo(double x, double y, double z, float yRot, float xRot) {
-        this.setPos(x, y, z);
-    }
-
-    @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
-        this.setPos(x, y, z);
-    }
-
+    // When updating a motive, the motive is temporarily reset to "none" and the position gets messed up.
+    // Fix this by fixing the tracking position to the lower corner.
     @Override
     public Vec3 trackingPosition() {
         return Vec3.atLowerCornerOf(this.pos);
     }
-
 
     @Override
     public void playPlacementSound() {
@@ -213,9 +203,10 @@ public class ImmersivePaintingEntity extends HangingEntity {
     
     @Override
     public void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(MOTIVE, Main.locate("none"));
-        builder.define(FRAME, Main.locate("none"));
-        builder.define(MATERIAL, Main.locate("none"));
+        super.defineSynchedData(builder);
+        builder.define(MOTIVE, Main.NONE_LOCATION);
+        builder.define(FRAME, Main.NONE_LOCATION);
+        builder.define(MATERIAL, Main.NONE_LOCATION);
         builder.define(WIDTH, 1);
         builder.define(HEIGHT, 1);
     }
@@ -251,7 +242,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
      */
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entityTrackerEntry) {
-        return new ClientboundAddEntityPacket(this, (rotation << 4) | (byte)direction.get3DDataValue(), getPos());
+        return new ClientboundAddEntityPacket(this, (rotation << 4) | (byte)getDirection().get3DDataValue(), getPos());
     }
 
     @Override
@@ -262,31 +253,36 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         SynchedEntityData tracker = getEntityData();
-        nbt.putString("Motive", tracker.get(MOTIVE).toString());
-        nbt.putString("Frame", tracker.get(FRAME).toString());
-        nbt.putString("Material", tracker.get(MATERIAL).toString());
-        nbt.putInt("Facing", direction.get3DDataValue());
-        nbt.putInt("Rotation", rotation);
-        super.addAdditionalSaveData(nbt);
+        tag.putString("Motive", tracker.get(MOTIVE).toString());
+        tag.putString("Frame", tracker.get(FRAME).toString());
+        tag.putString("Material", tracker.get(MATERIAL).toString());
+        tag.putInt("Facing", getDirection().get3DDataValue());
+        tag.putInt("Rotation", rotation);
+        super.addAdditionalSaveData(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        setFrame(ResourceLocation.parse(nbt.getString("Frame")));
-        setMaterial(ResourceLocation.parse(nbt.getString("Material")));
-        this.direction = Direction.from3DDataValue(nbt.getInt("Facing"));
-        this.rotation = nbt.getInt("Rotation");
+    public void readAdditionalSaveData(ValueInput input) {
+        setFrame(ResourceLocation.parse(input.getStringOr("Frame", Main.NONE_LOCATION.toString())));
+        setMaterial(ResourceLocation.parse(input.getStringOr("Material", Main.NONE_LOCATION.toString())));
+        Direction direction = Direction.from3DDataValue(input.getIntOr("Facing", Direction.SOUTH.get3DDataValue()));
+        int rotation = input.getIntOr("Rotation", 0);
+        setDirection(direction, rotation);
 
         // Wait until additional data has been loaded to set motive,
         // saving the number of times that the painting calculates its bounding box.
-        super.readAdditionalSaveData(nbt);
-        setMotive(ResourceLocation.parse(nbt.getString("Motive")));
+        super.readAdditionalSaveData(input);
+        setMotive(ResourceLocation.parse(input.getStringOr("Motive", Main.NONE_LOCATION.toString())));
     }
 
     public Item getItem() {
         return Items.PAINTING;
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     public boolean isGraffiti() {
@@ -309,20 +305,20 @@ public class ImmersivePaintingEntity extends HangingEntity {
         return getEntityData().get(MOTIVE);
     }
 
-    public void setMotive(ResourceLocation motive) {
-        getEntityData().set(MOTIVE, motive);
-    }
-
     public ResourceLocation getFrame() {
         return getEntityData().get(FRAME);
     }
 
-    public void setFrame(ResourceLocation frame) {
-        getEntityData().set(FRAME, frame);
-    }
-
     public ResourceLocation getMaterial() {
         return getEntityData().get(MATERIAL);
+    }
+
+    public void setMotive(ResourceLocation motive) {
+        getEntityData().set(MOTIVE, motive);
+    }
+
+    public void setFrame(ResourceLocation frame) {
+        getEntityData().set(FRAME, frame);
     }
 
     public void setMaterial(ResourceLocation material) {

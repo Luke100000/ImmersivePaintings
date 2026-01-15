@@ -1,14 +1,13 @@
 package net.conczin.immersive_paintings;
 
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -20,24 +19,44 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 public class ServerPaintingManager extends SavedData {
-    private static final SavedData.Factory<ServerPaintingManager> TYPE = new SavedData.Factory<>(ServerPaintingManager::new, ServerPaintingManager::fromNbt, null);
-    private static final Codec<Map<ResourceLocation, Painting>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, Painting.CODEC);
+    public static final SavedDataType<ServerPaintingManager> TYPE = new SavedDataType<>(
+            Main.MOD_ID,
+            ServerPaintingManager::new,
+            ctx -> RecordCodecBuilder.create(instance -> instance.group(
+                    RecordCodecBuilder.point(ctx.levelOrThrow()),
+                    Codec.unboundedMap(ResourceLocation.CODEC, Painting.CODEC).fieldOf("paintings").forGetter(s -> s.customPaintings)
+            ).apply(instance, ServerPaintingManager::new)),
+            null
+    );
+
+    private final ServerLevel level;
+
     private static final Set<UUID> sent = new HashSet<>();
 
+    private final Map<ResourceLocation, Painting> customPaintings;
     private static Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings = new HashMap<>();
-    private final Map<ResourceLocation, Painting> customServerPaintings = new HashMap<>();
 
     private static final ServerCache paintingCache = new ServerCache("");
     private static final ServerCache thumbnailCache = new ServerCache("_thumbnail");
 
+    public ServerPaintingManager(SavedData.Context ctx) {
+        this(ctx.levelOrThrow(), new HashMap<>());
+    }
+
+    public ServerPaintingManager(ServerLevel level, Map<ResourceLocation, Painting> customPaintings) {
+        this.level = level;
+        this.customPaintings = customPaintings;
+    }
+
     private static ServerPaintingManager get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(TYPE, Main.MOD_ID);
+        return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
     public static Map<ResourceLocation, Painting> getCustomPaintings(MinecraftServer server) {
-        return get(server).customServerPaintings;
+        return get(server).customPaintings;
     }
 
     public static Map<ResourceLocation, Entry<Painting, Resource>> getDatapackPaintings() {
@@ -111,44 +130,6 @@ public class ServerPaintingManager extends SavedData {
             payloads.forEach(payload -> NetworkHandler.sendToClient(player, payload));
             sent.add(player.getUUID());
         }
-    }
-
-    public static ServerPaintingManager fromNbt(CompoundTag nbt, HolderLookup.Provider lookup) {
-        ServerPaintingManager m = new ServerPaintingManager();
-
-        Map<ResourceLocation, Painting> paintings = CODEC.parse(NbtOps.INSTANCE, nbt.getCompound("paintings"))
-            .result()
-            .orElse(new HashMap<>());
-
-        paintings.forEach((id, painting) -> {
-            if (!paintingCache.exists(id))
-                return;
-
-            // Add any thumbnails that don't exist for some reason
-            if (!thumbnailCache.exists(id)) {
-                try {
-                    Optional<byte[]> source = paintingCache.get(id);
-                    if (source.isPresent()) {
-                        thumbnailCache.set(id, ImageManipulations.encode(ImageManipulations.resizeImage(ImageManipulations.decode(source.get()), Painting.Size.THUMBNAIL)));
-                    }
-                } catch (IOException e) {
-                    Main.LOGGER.error("could not create thumbnail from stored image", e);
-                }
-            }
-
-            m.customServerPaintings.put(id, painting);
-        });
-
-        return m;
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookup) {
-        CODEC.encodeStart(NbtOps.INSTANCE, customServerPaintings)
-            .result()
-            .ifPresent(tag -> nbt.put("paintings", tag));
-
-        return nbt;
     }
 
     private static class ServerCache extends Cache<ResourceLocation, byte[]> {

@@ -14,6 +14,7 @@ import java.io.IOException;
 public final class Main {
     public static final String MOD_ID = "immersive_paintings";
     public static final Logger LOGGER = LogManager.getLogger();
+    public static final ResourceLocation NONE_LOCATION = locate("none");
 
     public static ResourceLocation locate(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
