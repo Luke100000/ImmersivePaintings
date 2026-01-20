@@ -4,10 +4,10 @@ import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
-import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterErrorPayload;
+import net.conczin.immersive_paintings.network.payload.s2c.PaintingRegisterResponsePayload;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -37,7 +37,7 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
     );
 
     private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
-        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterErrorPayload(Optional.ofNullable(i), error));
+        NetworkHandler.sendToClient((ServerPlayer)player, new PaintingRegisterResponsePayload(Optional.ofNullable(i), error));
     }
 
     // Separate method to allow for Xerca compatibility

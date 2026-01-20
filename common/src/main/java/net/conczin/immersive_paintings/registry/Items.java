@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.registration;
+package net.conczin.immersive_paintings.registry;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.item.*;
@@ -25,10 +25,10 @@ public class Items {
             .build();
 
     public static void registerItems(RegisterHelper<Item> helper) {
-        helper.register(Main.locate("painting"), PAINTING);
-        helper.register(Main.locate("glow_painting"), GLOW_PAINTING);
-        helper.register(Main.locate("graffiti"), GRAFFITI);
-        helper.register(Main.locate("glow_graffiti"), GLOW_GRAFFITI);
+        helper.register(ImmersivePaintingItem.KEY.location(), PAINTING);
+        helper.register(ImmersiveGlowPaintingItem.KEY.location(), GLOW_PAINTING);
+        helper.register(ImmersiveGraffitiItem.KEY.location(), GRAFFITI);
+        helper.register(ImmersiveGlowGraffitiItem.KEY.location(), GLOW_GRAFFITI);
     }
 
     public static void registerCreativeTabs(RegisterHelper<CreativeModeTab> helper) {

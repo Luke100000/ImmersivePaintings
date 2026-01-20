@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.registration;
+package net.conczin.immersive_paintings.registry;
 
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;

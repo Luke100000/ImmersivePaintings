@@ -2,7 +2,7 @@ package net.conczin.immersive_paintings;
 
 import com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi;
 import net.conczin.immersive_paintings.dev.DatapackPaintingsGenerator;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,10 +1,11 @@
 package net.conczin.immersive_paintings;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.c2s.ImageRequestPayload;
 import net.conczin.immersive_paintings.Painting.Size;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.Minecraft;
@@ -14,10 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class ClientPaintingManager {
@@ -25,11 +23,20 @@ public class ClientPaintingManager {
 
     private static final Map<ResourceLocation, Map<Size, ResourceLocation>> textureMap = Collections.synchronizedMap(new HashMap<>());
 
-    private static final Map<String, Boolean> requested = Collections.synchronizedMap(new HashMap<>());
+    private static final Set<String> requested = Collections.synchronizedSet(new HashSet<>());
 
-    private static final ClientCache paintingCache = new ClientCache();
+    // We don't need to cache entries in memory on the client, the value is always immediately registered as a texture
+    private static final ClientCache paintingCache = new ClientCache(0);
 
     private final static ExecutorService service = Executors.newFixedThreadPool(2);
+
+    public static void newTexture(ResourceLocation location, BufferedImage data) {
+        Minecraft.getInstance().execute(() -> {
+            NativeImage image = ImageManipulations.bufferedToNative(data);
+            DynamicTexture texture = new DynamicTexture(location::toString, image);
+            Minecraft.getInstance().getTextureManager().register(location, texture);
+        });
+    }
 
     public static Map<ResourceLocation, Painting> getPaintings() {
         return paintings;
@@ -47,11 +54,11 @@ public class ClientPaintingManager {
 
     private static void setImageRequest(ResourceLocation identifier, boolean thumbnail, boolean delete) {
         String id = textureIdentifier(identifier, thumbnail ? Size.THUMBNAIL : Size.FULL);
-        if (requested.containsKey(id) == delete) {
+        if (requested.contains(id) == delete) {
             if (delete) {
                 requested.remove(id);
             } else {
-                requested.put(id, true);
+                requested.add(id);
                 NetworkHandler.Client.sendToServer(new ImageRequestPayload(identifier, thumbnail));
             }
         }
@@ -96,9 +103,9 @@ public class ClientPaintingManager {
         } else if (!mapping.containsKey(size)) {
             boolean isThumbnail = (size == Size.THUMBNAIL);
 
+            // Request the full image and attempt to temporarily use a thumbnail identifier until it's ready
             setImageRequest(identifier, isThumbnail, false);
 
-            // Request the full image and attempt to temporarily use a thumbnail identifier until it's ready
             if (!isThumbnail && mapping.containsKey(Size.THUMBNAIL)) {
                 return getOrNSFW(mapping, identifier, Size.THUMBNAIL);
             }
@@ -114,8 +121,8 @@ public class ClientPaintingManager {
         String thumbId = textureIdentifier(identifier, Size.THUMBNAIL);
 
         // Set that they are being processed so we don't try to reach out to the network at the same time
-        requested.put(fullId, true);
-        requested.put(thumbId, true);
+        requested.add(fullId);
+        requested.add(thumbId);
 
         paintings.put(identifier, painting);
 
@@ -153,7 +160,7 @@ public class ClientPaintingManager {
         textureMap.putIfAbsent(identifier, new HashMap<>());
         Map<Size, ResourceLocation> mapping = textureMap.get(identifier);
 
-        // Handle cases where an image is too small, and realSize == Size.HALF/QUARTER/EIGHTH but size == Size.FULL
+        // Handle cases where an image is too small, and realSize == Size.HALF/QUARTER but size == Size.FULL
         if (mapping.containsKey(size) && size != realSize) {
             mapping.put(realSize, mapping.get(size));
             return;
@@ -178,7 +185,7 @@ public class ClientPaintingManager {
             }
 
             ResourceLocation name = Main.locate(path);
-            Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(name::toString, ImageManipulations.bufferedToNative(target)));
+            newTexture(name, target);
             mapping.put(realSize, name);
 
             if (size == Size.THUMBNAIL && Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen)
@@ -215,13 +222,14 @@ public class ClientPaintingManager {
         Size quarterSize = res / 4 < Configs.CLIENT.lodResolutionMinimum ? halfSize : Size.QUARTER;
         registerImageType(identifier, image, quarterSize, Size.QUARTER, alreadyCached);
 
-        Size eighthSize = res / 8 < Configs.CLIENT.lodResolutionMinimum ? quarterSize : Size.EIGHTH;
-        registerImageType(identifier, image, eighthSize, Size.EIGHTH, alreadyCached);
-
         setImageRequest(identifier, false, true);
     }
 
     private static class ClientCache extends Cache<String, BufferedImage> {
+        public ClientCache(int maxEntries) {
+            super(maxEntries);
+        }
+
         @Override
         public String getCachePath(String key) {
             return key + ".png";

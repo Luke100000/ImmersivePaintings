@@ -3,6 +3,7 @@ package net.conczin.immersive_paintings;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -32,10 +34,6 @@ public class ServerPaintingManager extends SavedData {
             null
     );
 
-    private final ServerLevel level;
-
-    private static final Set<UUID> sent = new HashSet<>();
-
     private final Map<ResourceLocation, Painting> customPaintings;
     private static Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings = new HashMap<>();
 
@@ -47,8 +45,7 @@ public class ServerPaintingManager extends SavedData {
     }
 
     public ServerPaintingManager(ServerLevel level, Map<ResourceLocation, Painting> customPaintings) {
-        this.level = level;
-        this.customPaintings = customPaintings;
+        this.customPaintings = new HashMap<>(customPaintings); // Codec gives us an ImmutableMap, we need it mutable
     }
 
     private static ServerPaintingManager get(MinecraftServer server) {
@@ -64,7 +61,6 @@ public class ServerPaintingManager extends SavedData {
     }
 
     public static void setDatapackPaintings(Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings) {
-        // TODO: List old packs as deleted, refresh and use new ones
         ServerPaintingManager.datapackPaintings = datapackPaintings;
     }
 
@@ -116,26 +112,43 @@ public class ServerPaintingManager extends SavedData {
         thumbnailCache.delete(identifier);
     }
 
-    public static void playerLoggedOut(ServerPlayer player) {
-        sent.remove(player.getUUID());
-    }
-
     public static void playerLoggedIn(ServerPlayer player) {
-        if (!sent.contains(player.getUUID())) {
-            HashMap<ResourceLocation, Optional<Painting>> paintings = new HashMap<>();
-            getDatapackPaintings().forEach((id, entry) -> paintings.put(id, Optional.of(entry.getKey())));
-            getCustomPaintings(player.getServer()).forEach((id, p) -> paintings.put(id, Optional.of(p)));
+        HashMap<ResourceLocation, Optional<Painting>> paintings = new HashMap<>();
+        getDatapackPaintings().forEach((id, entry) -> paintings.put(id, Optional.of(entry.getKey())));
+        getCustomPaintings(player.getServer()).forEach((id, p) -> paintings.put(id, Optional.of(p)));
 
-            List<PaintingSyncPayload> payloads = PaintingSyncPayload.splitPaintings(paintings, true);
-            payloads.forEach(payload -> NetworkHandler.sendToClient(player, payload));
-            sent.add(player.getUUID());
+        // Break paintings up into smaller batches if necessary to avoid packet limits
+        // The interval is chosen to be an arbitrary number that feels like a good amount to send at a time
+        List<PaintingSyncPayload> payloads = new ArrayList<>();
+        final int interval = Configs.COMMON.packetSplitInterval;
+
+        Main.LOGGER.debug("Found {} paintings, splitting into {} groups", paintings.size(), paintings.size() / interval + Math.min(paintings.size() % interval, 1));
+
+        int size = paintings.size();
+        int processed = 0;
+
+        while (processed < size) {
+            int currentSize = Math.min(size - processed, interval);
+            Map<ResourceLocation, Optional<Painting>> p = paintings
+                    .entrySet()
+                    .stream()
+                    .skip(processed)
+                    .limit(currentSize)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            payloads.add(new PaintingSyncPayload(p));
+
+            processed += currentSize;
         }
+
+        payloads.forEach(payload -> NetworkHandler.sendToClient(player, payload));
     }
 
     private static class ServerCache extends Cache<ResourceLocation, byte[]> {
         private String suffix = ".png";
 
         public ServerCache(String suffix) {
+            super();
             this.suffix = suffix + this.suffix;
         }
 

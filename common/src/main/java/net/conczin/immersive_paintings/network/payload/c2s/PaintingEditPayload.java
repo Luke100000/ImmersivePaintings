@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,18 +16,19 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public record PaintingEditPayload(int entityId, Map<Option, String> options) implements ImmersivePayload {
+public record PaintingEditPayload(UUID entityId, Map<Option, String> options) implements ImmersivePayload {
     public static final Type<PaintingEditPayload> TYPE = new Type<>(Main.locate("painting_edit"));
     public static final StreamCodec<FriendlyByteBuf, PaintingEditPayload> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.INT, PaintingEditPayload::entityId,
+        UUIDUtil.STREAM_CODEC, PaintingEditPayload::entityId,
         ByteBufCodecs.map(HashMap::new, Option.STREAM_CODEC, ByteBufCodecs.STRING_UTF8), PaintingEditPayload::options,
         PaintingEditPayload::new
     );
 
     @Override
     public void handle(Player player, Runner runner) {
-        int entityId = entityId();
+        UUID entityId = entityId();
         Map<Option, String> options = options();
 
         runner.run(() -> {

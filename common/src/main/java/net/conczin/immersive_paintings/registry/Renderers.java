@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.registration;
+package net.conczin.immersive_paintings.registry;
 
 import net.conczin.immersive_paintings.client.render.ImmersivePaintingRenderer;
 import net.conczin.immersive_paintings.entity.*;

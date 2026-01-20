@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.fabric;
 
-import net.conczin.immersive_paintings.registration.Renderers;
+import net.conczin.immersive_paintings.registry.Renderers;
 import net.conczin.immersive_paintings.fabric.resources.FabricFrameLoader;
 import net.conczin.immersive_paintings.fabric.resources.FabricObjectLoader;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;

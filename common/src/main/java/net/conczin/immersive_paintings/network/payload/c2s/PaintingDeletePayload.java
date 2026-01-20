@@ -56,7 +56,7 @@ public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDe
 
                 // All deleted paintings are 1 byte (Optional.empty()) in the payload, so a player would need to have millions
                 // of paintings deleted in order to go over the max packet size, which is realistically impossible
-                payload = new PaintingSyncPayload(deletedPaintings, false);
+                payload = new PaintingSyncPayload(deletedPaintings);
             } else {
                 deletePainting(server, player, identifier);
                 payload = new PaintingSyncPayload(identifier, null);

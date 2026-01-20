@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.registration;
+package net.conczin.immersive_paintings.registry;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.conczin.immersive_paintings.Painting;
@@ -29,6 +29,8 @@ public class Command {
 
                     if (e.isEmpty())
                         throw PaintingArgumentType.ERROR_INVALID_PLAYER.create(author);
+
+                    // TODO: Option to delete a single painting from an author
 
                     new PaintingDeletePayload(e.get().getKey(), true).handle(context.getSource().getPlayer(), Runnable::run);
                     context.getSource().sendSuccess(() -> Component.translatable("immersive_paintings.command.success.delete", author), true);

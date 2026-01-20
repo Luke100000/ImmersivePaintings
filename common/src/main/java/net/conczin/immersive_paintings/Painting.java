@@ -80,7 +80,6 @@ public record Painting(int version, int width, int height, int resolution, Strin
         FULL,
         HALF,
         QUARTER,
-        EIGHTH,
         THUMBNAIL,
         NSFW;
     }

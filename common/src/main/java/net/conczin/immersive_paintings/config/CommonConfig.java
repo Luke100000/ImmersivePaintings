@@ -4,7 +4,7 @@ import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 
 @Translation(prefix = Configs.CONFIG_ID + "common")
 public class CommonConfig extends Config {

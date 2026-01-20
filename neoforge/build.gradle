@@ -21,6 +21,8 @@ neoForge {
         mappingsVersion = parchment_version
     }
 
+    validateAccessTransformers = true
+
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
@@ -54,7 +56,9 @@ neoForge {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 dependencies {
     implementation "me.fzzyhmstrs:fzzy_config:${fzzy_config_version_neo}+neoforge"

@@ -4,7 +4,7 @@ import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 
 @Translation(prefix = Configs.CONFIG_ID + "client")
 public class ClientConfig extends Config {
@@ -21,9 +21,8 @@ public class ClientConfig extends Config {
     public int thumbnailSize = 128;
     public int lodResolutionMinimum = 32;
 
-    public float halfResolutionThreshold = 4.0f;
-    public float quarterResolutionThreshold = 8.0f;
-    public float eighthResolutionThreshold = 16.0f;
+    public float halfResolutionThreshold = 2.0f;
+    public float quarterResolutionThreshold = 4.0f;
     @ConfigGroup.Pop
-    public float thumbResolutionThreshold = 32.0f;
+    public float thumbResolutionThreshold = 8.0f;
 }

@@ -19,6 +19,8 @@ public abstract class Cache<K, V> {
 
     private final Map<K, V> cache;
 
+    private final int cacheSize;
+
     // TODO: Add a way to configure this number in settings
     public Cache() {
         this(200);
@@ -26,6 +28,8 @@ public abstract class Cache<K, V> {
 
     // The maximum number of entries to allow in the cache before old entries start getting evicted
     public Cache(int maxEntries) {
+        this.cacheSize = maxEntries;
+
         this.cache = Collections.synchronizedMap(new LinkedHashMap<>(maxEntries + 1, 0.75F, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> entry) {
@@ -46,8 +50,10 @@ public abstract class Cache<K, V> {
         return Files.exists(path) ? path.toFile() : null;
     }
 
-    public boolean exists(K key) {
-        return getFile(key) != null;
+    private void setCache(K key, V value) {
+        if (cacheSize == 0)
+            return;
+        cache.put(key, value);
     }
 
     public Optional<V> get(K key) {
@@ -63,7 +69,7 @@ public abstract class Cache<K, V> {
             if (data == null)
                 return Optional.empty();
 
-            cache.put(key, data);
+            setCache(key, data);
             return Optional.of(data);
         } catch (IOException e) {
             // https://logging.apache.org/log4j/2.x/manual/api.html#best-practice-exception
@@ -88,7 +94,7 @@ public abstract class Cache<K, V> {
             byte[] v = encode(value);
             if (v != null) {
                 outputStream.write(v);
-                cache.put(key, value);
+                setCache(key, value);
             }
         } catch (IOException e) {
             Main.LOGGER.error("failed writing cached file {}", path, e);

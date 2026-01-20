@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.mixin;
 
-import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registry.Entities;
 import net.minecraft.world.entity.EntityType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

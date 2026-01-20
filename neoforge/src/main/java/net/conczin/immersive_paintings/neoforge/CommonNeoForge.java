@@ -3,7 +3,7 @@ package net.conczin.immersive_paintings.neoforge;
 import java.util.function.Consumer;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registration.*;
+import net.conczin.immersive_paintings.registry.*;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.util.PaintingArgumentType;

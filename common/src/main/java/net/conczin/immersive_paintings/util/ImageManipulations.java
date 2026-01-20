@@ -2,8 +2,9 @@ package net.conczin.immersive_paintings.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.twelvemonkeys.image.ImageUtil;
+import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.Painting.Size;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 
 public class ImageManipulations {
     public static BufferedImage decode(byte[] bytes) throws IOException {
@@ -72,10 +74,6 @@ public class ImageManipulations {
                 w /= 4;
                 h /= 4;
             }
-            case Size.EIGHTH -> {
-                w /= 8;
-                h /= 8;
-            }
             case Size.THUMBNAIL -> {
                 float z = Math.min(
                         (float) Configs.CLIENT.thumbnailSize / w,
@@ -117,6 +115,9 @@ public class ImageManipulations {
     }
 
     public static void resize(BufferedImage image, BufferedImage source, float zoom, int ox, int oy) {
+        // TODO: test g.drawImage
+        //Graphics2D g = image.createGraphics();
+
         ColorModel sourceModel = source.getColorModel();
 
         for (int x = 0; x < image.getWidth(); x++) {
@@ -270,5 +271,119 @@ public class ImageManipulations {
         }
 
         return best;
+    }
+
+    public static int getCurrentImagePixelZoomCache(BufferedImage currentImage, int zoomCache) {
+        if (zoomCache < 0) {
+            return scanForPixelArtMultiple(currentImage);
+        }
+        return zoomCache;
+    }
+
+    public static BufferedImage pixelateImage(BufferedImage currentImage, PixelatorSettings settings, int zoomCache) {
+        BufferedImage pixelatedImage = new BufferedImage(settings.resolution * settings.width, settings.resolution * settings.height, BufferedImage.TYPE_INT_ARGB);
+
+        //zoom
+        float zoom;
+        if (settings.pixelArt) {
+            if (zoomCache < 0) {
+                zoom = getCurrentImagePixelZoomCache(currentImage, zoomCache);
+            } else {
+                zoom = zoomCache;
+            }
+        } else {
+            float fx = (float) currentImage.getWidth() / pixelatedImage.getWidth();
+            float fy = (float) currentImage.getHeight() / pixelatedImage.getHeight();
+            zoom = (float) (Math.min(fx, fy) / settings.zoom);
+        }
+
+        //offset
+        int ox = (int) ((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
+        int oy = (int) ((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
+        if (settings.pixelArt) {
+            ox = ox / ((int) zoom) * ((int) zoom);
+            oy = oy / ((int) zoom) * ((int) zoom);
+        }
+
+        //downscale
+        resize(pixelatedImage, currentImage, zoom, ox, oy);
+
+        //dither
+        if (settings.dither > 0 && !settings.pixelArt) {
+            if (settings.colors > 1) {
+                dither(pixelatedImage, settings.dither / settings.colors);
+            } else {
+                dither(pixelatedImage, settings.dither / 16.0);
+            }
+        }
+
+        //reduce colors
+        if (settings.colors > 1 && !settings.pixelArt) {
+            reduceColors(pixelatedImage, settings.colors);
+        }
+
+        return pixelatedImage;
+    }
+
+    public static final class PixelatorSettings {
+        public double dither;
+        public int colors;
+        public int resolution;
+        public int width;
+        public int height;
+        public double offsetX;
+        public double offsetY;
+        public double zoom;
+        public boolean pixelArt;
+        public boolean hidden = true;
+        public boolean nsfw;
+
+        public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
+            this.dither = dither;
+            this.colors = colors;
+            this.resolution = resolution;
+            this.width = width;
+            this.height = height;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+            this.zoom = zoom;
+            this.pixelArt = pixelArt;
+        }
+
+        public PixelatorSettings(BufferedImage currentImage) {
+            this(currentImage, Configs.COMMON.minPaintingResolution, Configs.COMMON.maxPaintingResolution);
+        }
+
+        PixelatorSettings(BufferedImage currentImage, int minResolution, int maxResolution) {
+            this(0, 10, Math.clamp(64, minResolution, maxResolution), 1, 1, 0.5, 0.5, 1, false);
+
+            double target = currentImage.getWidth() / (double) currentImage.getHeight();
+            double bestScore = 100;
+
+            double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
+            double dw = currentImage.getWidth() / d;
+            double dh = currentImage.getHeight() / d;
+            for (double diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
+                int pw = (int) Math.ceil(dw * diagonal);
+                int ph = (int) Math.ceil(dh * diagonal);
+                double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
+                if (e < bestScore) {
+                    width = Math.max(1, Math.min(16, pw));
+                    height = Math.max(1, Math.min(16, ph));
+                    bestScore = e;
+                }
+            }
+        }
+
+        public EnumSet<Painting.Flag> getFlags() {
+            EnumSet<Painting.Flag> flags = EnumSet.noneOf(Painting.Flag.class);
+            if (nsfw)
+                flags.add(Painting.Flag.NSFW);
+
+            if (hidden)
+                flags.add(Painting.Flag.HIDDEN);
+
+            return flags;
+        }
     }
 }

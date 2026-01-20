@@ -1,11 +1,10 @@
-package net.conczin.immersive_paintings.client.gui.widget;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+package net.conczin.immersive_paintings.client.gui.widgets;
 
 import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +39,9 @@ public class PaintingWidget extends Button {
     }
 
     public void update(ResourceLocation identifier, int paintingWidth, int paintingHeight) {
-        int thumbnailSize = Configs.CLIENT.thumbnailSize;
-
         this.identifier = identifier;
-        this.paintingWidth = paintingWidth * thumbnailSize;
-        this.paintingHeight = paintingHeight * thumbnailSize;
+        this.paintingWidth = paintingWidth * Configs.CLIENT.thumbnailSize;
+        this.paintingHeight = paintingHeight * Configs.CLIENT.thumbnailSize;
     }
 
     @Override
@@ -62,7 +59,6 @@ public class PaintingWidget extends Button {
         return button == 0 || button == 1;
     }
 
-    // TODO: Fix
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Matrix3x2fStack matrix = graphics.pose();
@@ -73,7 +69,7 @@ public class PaintingWidget extends Button {
         }
         matrix.translate(getX() + (width - paintingWidth * scale) / 2, getY() + (height - paintingHeight * scale) / 2);
         matrix.scale(scale, scale);
-        graphics.blit(identifier, 0, 0, 0, 0, paintingWidth, paintingHeight, paintingWidth, paintingHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, identifier, 0, 0, 0, 0, paintingWidth, paintingHeight, paintingWidth, paintingHeight);
         matrix.popMatrix();
     }
 }

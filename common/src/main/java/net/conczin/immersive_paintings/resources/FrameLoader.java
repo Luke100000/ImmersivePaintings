@@ -24,7 +24,7 @@ public class FrameLoader extends SimpleJsonResourceReloadListener<JsonElement> {
     private static final String DEFAULT_MATERIAL = Main.locate("frame/simple/oak").toString();
 
     public FrameLoader() {
-        super(ExtraCodecs.JSON, FileToIdConverter.json(Main.MOD_ID)); // TODO: Test
+        super(ExtraCodecs.JSON, FileToIdConverter.json("frames"));
     }
 
     @Override

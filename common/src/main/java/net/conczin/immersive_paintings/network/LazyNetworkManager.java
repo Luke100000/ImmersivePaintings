@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.network;
 
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;

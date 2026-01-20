@@ -6,7 +6,7 @@ import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Configs;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -46,7 +46,6 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
 
         state.xRot = entity.getXRot(partialTick);
         state.yRot = entity.getYRot(partialTick);
-        //state.rotation = entity.getRotation();
         state.isGlowing = entity.isGlowing();
         state.isGraffiti = entity.isGraffiti();
         state.widthPixels = entity.getPaintingWidth() * 16;
@@ -71,7 +70,6 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
 
         Painting.Size size = pixelDensity > config.thumbResolutionThreshold ? Painting.Size.THUMBNAIL
-                : pixelDensity > config.eighthResolutionThreshold ? Painting.Size.EIGHTH
                 : pixelDensity > config.quarterResolutionThreshold ? Painting.Size.QUARTER
                 : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
                 : Painting.Size.FULL;

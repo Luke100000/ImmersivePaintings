@@ -2,7 +2,7 @@ package net.conczin.immersive_paintings.item;
 
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
-import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registry.Entities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;

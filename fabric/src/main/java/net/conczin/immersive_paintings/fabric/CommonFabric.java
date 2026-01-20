@@ -6,7 +6,7 @@ import net.conczin.immersive_paintings.fabric.resources.FabricPaintings;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
-import net.conczin.immersive_paintings.registration.*;
+import net.conczin.immersive_paintings.registry.*;
 import net.conczin.immersive_paintings.util.PaintingArgumentType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -52,11 +52,6 @@ public final class CommonFabric implements ModInitializer {
         // Commands
         ArgumentTypeRegistry.registerArgumentType(Main.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> Command.registerCommands(dispatcher::register));
-
-        // Events
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-                ServerPaintingManager.playerLoggedOut(handler.player)
-        );
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
                 ServerPaintingManager.playerLoggedIn(handler.player)

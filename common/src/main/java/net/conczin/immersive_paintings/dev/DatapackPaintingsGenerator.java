@@ -1,8 +1,7 @@
 package net.conczin.immersive_paintings.dev;
 
 import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
+import net.conczin.immersive_paintings.util.ImageManipulations.PixelatorSettings;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 
 import javax.imageio.ImageIO;
@@ -88,7 +87,7 @@ public class DatapackPaintingsGenerator {
         File file = new File(name + ".png");
 
         try {
-            ImageIO.write(ImmersivePaintingScreen.pixelateImage(image, settings), "png", file);
+            ImageIO.write(ImageManipulations.pixelateImage(image, settings, -1), "png", file);
         } catch (IOException e) {
             Main.LOGGER.error("could not load datapack image {}", name, e);
         }

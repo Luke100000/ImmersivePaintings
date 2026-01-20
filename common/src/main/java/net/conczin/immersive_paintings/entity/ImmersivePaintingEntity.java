@@ -4,13 +4,11 @@ import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.client.gui.GuiWrapper;
 import net.conczin.immersive_paintings.compat.XercaPaintCompat;
-import net.conczin.immersive_paintings.config.CommonConfig;
-import net.conczin.immersive_paintings.network.NetworkHandler;
-import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
-import net.conczin.immersive_paintings.registration.Configs;
-import net.conczin.immersive_paintings.registration.Entities;
-import net.conczin.immersive_paintings.registration.Items;
+import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.registry.Entities;
+import net.conczin.immersive_paintings.registry.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -22,7 +20,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,7 +30,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -156,20 +152,13 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
-            if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
-                CommonConfig config = Configs.COMMON;
-                NetworkHandler.sendToClient(serverPlayer, new OpenGuiPayload(
-                        OpenGuiPayload.GuiType.EDITOR, getId(),
-                        config.minPaintingResolution, config.maxPaintingResolution,
-                        config.showOtherPlayersPaintings, config.uploadPermissionLevel
-                ));
-            }
-
-            return InteractionResult.CONSUME;
-        } else {
-            return InteractionResult.PASS;
+        if (player.isCrouching() && !level().isClientSide) {
+            XercaPaintCompat.interactWithPainting(this, player, hand);
+        } else if (!player.isCrouching() && level().isClientSide) {
+            GuiWrapper.open(getUUID());
         }
+
+        return InteractionResult.CONSUME;
     }
 
     @Override
@@ -259,30 +248,24 @@ public class ImmersivePaintingEntity extends HangingEntity {
         tag.putString("Frame", tracker.get(FRAME).toString());
         tag.putString("Material", tracker.get(MATERIAL).toString());
         tag.putInt("Facing", getDirection().get3DDataValue());
-        tag.putInt("Rotation", rotation);
+        tag.putInt("VRotation", rotation);
         super.addAdditionalSaveData(tag);
     }
 
     @Override
     public void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+
         setFrame(ResourceLocation.parse(input.getStringOr("Frame", Main.NONE_LOCATION.toString())));
         setMaterial(ResourceLocation.parse(input.getStringOr("Material", Main.NONE_LOCATION.toString())));
         Direction direction = Direction.from3DDataValue(input.getIntOr("Facing", Direction.SOUTH.get3DDataValue()));
-        int rotation = input.getIntOr("Rotation", 0);
-        setDirection(direction, rotation);
 
-        // Wait until additional data has been loaded to set motive,
-        // saving the number of times that the painting calculates its bounding box.
-        super.readAdditionalSaveData(input);
+        setDirection(direction, input.getIntOr("VRotation", 0));
         setMotive(ResourceLocation.parse(input.getStringOr("Motive", Main.NONE_LOCATION.toString())));
     }
 
     public Item getItem() {
         return Items.PAINTING;
-    }
-
-    public int getRotation() {
-        return rotation;
     }
 
     public boolean isGraffiti() {

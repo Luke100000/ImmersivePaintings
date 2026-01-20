@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.entity;
 
-import net.conczin.immersive_paintings.registration.Items;
+import net.conczin.immersive_paintings.registry.Items;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
