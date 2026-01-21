@@ -6,7 +6,7 @@ import com.mojang.logging.LogUtils;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class PaintingsLoader extends SimplePreparableReloadListener<Map<ResourceLocation, Entry<Painting, Resource>>> {
+public class PaintingsLoader extends SimplePreparableReloadListener<Map<Identifier, Entry<Painting, Resource>>> {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final Gson GSON = new GsonBuilder().create();
 
@@ -29,19 +29,19 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
     private static final int dataTypeLength = dataType.length() + 1;
     private static final int fileSuffixLength = ".json".length();
     
-    protected static final ResourceLocation ID = Main.locate(dataType);
+    protected static final Identifier ID = Main.locate(dataType);
 
     @Override
-    protected Map<ResourceLocation, Entry<Painting, Resource>> prepare(ResourceManager manager, ProfilerFiller profiler) {
-        Map<ResourceLocation, Entry<Painting, Resource>> map = new HashMap<>();
+    protected Map<Identifier, Entry<Painting, Resource>> prepare(ResourceManager manager, ProfilerFiller profiler) {
+        Map<Identifier, Entry<Painting, Resource>> map = new HashMap<>();
         
-        Map<ResourceLocation, Resource> resources = manager.listResources(dataType, (path) -> path.getPath().endsWith(".png"));
-        for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+        Map<Identifier, Resource> resources = manager.listResources(dataType, (path) -> path.getPath().endsWith(".png"));
+        for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
             String string = entry.getKey().getPath();
-            ResourceLocation imageIdentifier = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), string.substring(dataTypeLength, string.length() - fileSuffixLength));
+            Identifier imageIdentifier = Identifier.fromNamespaceAndPath(entry.getKey().getNamespace(), string.substring(dataTypeLength, string.length() - fileSuffixLength));
 
             try {
-                ResourceLocation jsonIdentifier = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), string.replace(".png", ".json"));
+                Identifier jsonIdentifier = Identifier.fromNamespaceAndPath(entry.getKey().getNamespace(), string.replace(".png", ".json"));
                 Optional<Resource> resource = manager.getResource(jsonIdentifier);
 
                 if (resource.isEmpty()) {
@@ -75,7 +75,7 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, Entry<Painting, Resource>> prepared, ResourceManager manager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, Entry<Painting, Resource>> prepared, ResourceManager manager, ProfilerFiller profiler) {
         ServerPaintingManager.setDatapackPaintings(prepared);
     }
 }

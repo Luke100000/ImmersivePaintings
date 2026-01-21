@@ -62,7 +62,7 @@ public class ImmersivePaintingItem extends Item {
         entity.setDirection(direction, rotation);
 
         if (entity.survives()) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 entity.playPlacementSound();
                 level.gameEvent(player, GameEvent.ENTITY_PLACE, entity.position());
                 level.addFreshEntity(entity);

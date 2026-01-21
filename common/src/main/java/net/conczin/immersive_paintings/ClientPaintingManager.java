@@ -11,7 +11,7 @@ import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,9 +19,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class ClientPaintingManager {
-    private static final Map<ResourceLocation, Painting> paintings = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<Identifier, Painting> paintings = Collections.synchronizedMap(new HashMap<>());
 
-    private static final Map<ResourceLocation, Map<Size, ResourceLocation>> textureMap = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<Identifier, Map<Size, Identifier>> textureMap = Collections.synchronizedMap(new HashMap<>());
 
     private static final Set<String> requested = Collections.synchronizedSet(new HashSet<>());
 
@@ -30,7 +30,7 @@ public class ClientPaintingManager {
 
     private final static ExecutorService service = Executors.newFixedThreadPool(2);
 
-    public static void newTexture(ResourceLocation location, BufferedImage data) {
+    public static void newTexture(Identifier location, BufferedImage data) {
         Minecraft.getInstance().execute(() -> {
             NativeImage image = ImageManipulations.bufferedToNative(data);
             DynamicTexture texture = new DynamicTexture(location::toString, image);
@@ -38,21 +38,21 @@ public class ClientPaintingManager {
         });
     }
 
-    public static Map<ResourceLocation, Painting> getPaintings() {
+    public static Map<Identifier, Painting> getPaintings() {
         return paintings;
     }
 
-    public static Optional<Painting> getPainting(ResourceLocation identifier) {
+    public static Optional<Painting> getPainting(Identifier identifier) {
         return Optional.ofNullable(paintings.get(identifier));
     }
 
-    private static String textureIdentifier(ResourceLocation identifier, Size size) {
+    private static String textureIdentifier(Identifier identifier, Size size) {
         if (size == Size.FULL)
             return identifier.getPath();
         return identifier.getPath() + "_" + size.name().toLowerCase();
     }
 
-    private static void setImageRequest(ResourceLocation identifier, boolean thumbnail, boolean delete) {
+    private static void setImageRequest(Identifier identifier, boolean thumbnail, boolean delete) {
         String id = textureIdentifier(identifier, thumbnail ? Size.THUMBNAIL : Size.FULL);
         if (requested.contains(id) == delete) {
             if (delete) {
@@ -64,7 +64,7 @@ public class ClientPaintingManager {
         }
     }
 
-    private static ResourceLocation getOrNSFW(Map<Size, ResourceLocation> mapping, ResourceLocation identifier, Size size) {
+    private static Identifier getOrNSFW(Map<Size, Identifier> mapping, Identifier identifier, Size size) {
         if (Configs.CLIENT.showNSFWPaintings)
             return mapping.get(size);
 
@@ -86,11 +86,11 @@ public class ClientPaintingManager {
         return Painting.DEFAULT_IDENTIFIER;
     }
 
-    public static ResourceLocation getImageIdentifier(ResourceLocation identifier, Size size) {
+    public static Identifier getImageIdentifier(Identifier identifier, Size size) {
         if (!paintings.containsKey(identifier))
             return Painting.DEFAULT_IDENTIFIER;
 
-        Map<Size, ResourceLocation> mapping = textureMap.get(identifier);
+        Map<Size, Identifier> mapping = textureMap.get(identifier);
 
         if (mapping == null) {
             // Attempt to get the thumbnail first so there's at least something displayed
@@ -116,7 +116,7 @@ public class ClientPaintingManager {
         return getOrNSFW(mapping, identifier, size);
     }
 
-    public static void registerPainting(ResourceLocation identifier, Painting painting) {
+    public static void registerPainting(Identifier identifier, Painting painting) {
         String fullId = textureIdentifier(identifier, Size.FULL);
         String thumbId = textureIdentifier(identifier, Size.THUMBNAIL);
 
@@ -140,13 +140,13 @@ public class ClientPaintingManager {
         );
     }
 
-    public static void deregisterPainting(ResourceLocation identifier) {
+    public static void deregisterPainting(Identifier identifier) {
         if (!paintings.containsKey(identifier))
             return;
 
         paintings.remove(identifier);
 
-        Map<Size, ResourceLocation> map = textureMap.remove(identifier);
+        Map<Size, Identifier> map = textureMap.remove(identifier);
         if (map != null) {
             TextureManager manager = Minecraft.getInstance().getTextureManager();
             map.forEach((size, id) -> {
@@ -156,9 +156,9 @@ public class ClientPaintingManager {
         }
     }
 
-    private static void registerImageType(ResourceLocation identifier, BufferedImage fullImage, Size size, Size realSize, final boolean alreadyCached) {
+    private static void registerImageType(Identifier identifier, BufferedImage fullImage, Size size, Size realSize, final boolean alreadyCached) {
         textureMap.putIfAbsent(identifier, new HashMap<>());
-        Map<Size, ResourceLocation> mapping = textureMap.get(identifier);
+        Map<Size, Identifier> mapping = textureMap.get(identifier);
 
         // Handle cases where an image is too small, and realSize == Size.HALF/QUARTER but size == Size.FULL
         if (mapping.containsKey(size) && size != realSize) {
@@ -184,7 +184,7 @@ public class ClientPaintingManager {
                     paintingCache.set(path, target);
             }
 
-            ResourceLocation name = Main.locate(path);
+            Identifier name = Main.locate(path);
             newTexture(name, target);
             mapping.put(realSize, name);
 
@@ -193,14 +193,14 @@ public class ClientPaintingManager {
         });
     }
 
-    public static void registerThumbnail(ResourceLocation identifier, BufferedImage image, boolean alreadyCached) {
+    public static void registerThumbnail(Identifier identifier, BufferedImage image, boolean alreadyCached) {
         registerImageType(identifier, image, Size.THUMBNAIL, Size.THUMBNAIL, alreadyCached);
         setImageRequest(identifier, true, true);
     }
 
     // TODO: for datapacks, use FULL for all sizes that aren't thumbnail
     // registers this textures and make it readable
-    public static void registerImage(ResourceLocation identifier, BufferedImage image, boolean alreadyCached) {
+    public static void registerImage(Identifier identifier, BufferedImage image, boolean alreadyCached) {
         if (!paintings.containsKey(identifier) && !alreadyCached) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;

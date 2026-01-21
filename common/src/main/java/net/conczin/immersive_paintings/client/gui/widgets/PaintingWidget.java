@@ -4,9 +4,12 @@ import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registry.Configs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 
@@ -14,7 +17,7 @@ import java.awt.image.BufferedImage;
 
 public class PaintingWidget extends Button {
     private BufferedImage image;
-    private ResourceLocation identifier = Painting.DEFAULT_IDENTIFIER;
+    private Identifier identifier = Painting.DEFAULT_IDENTIFIER;
 
     private int paintingWidth = 256;
     private int paintingHeight = 256;
@@ -33,34 +36,35 @@ public class PaintingWidget extends Button {
     }
 
     // Specifically for screenshots where the image needs to be stored so it can be created when clicked
-    public void update(ResourceLocation identifier, BufferedImage image) {
+    public void update(Identifier identifier, BufferedImage image) {
         this.image = image;
         update(identifier, 4, 2);
     }
 
-    public void update(ResourceLocation identifier, int paintingWidth, int paintingHeight) {
+    public void update(Identifier identifier, int paintingWidth, int paintingHeight) {
         this.identifier = identifier;
         this.paintingWidth = paintingWidth * Configs.CLIENT.thumbnailSize;
         this.paintingHeight = paintingHeight * Configs.CLIENT.thumbnailSize;
     }
 
     @Override
-    public void onPress() {
-        if (button == 0) {
-            onPress.onPress(this);
-        } else {
-            onPressRight.onPress(this);
+    public void onPress(InputWithModifiers input) {
+        if (input instanceof MouseButtonEvent event) {
+            if (event.button() == 0) {
+                onPress.onPress(this);
+            } else {
+                onPressRight.onPress(this);
+            }
         }
     }
 
     @Override
-    protected boolean isValidClickButton(int button) {
-        this.button = button;
-        return button == 0 || button == 1;
+    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
+        return buttonInfo.button() == 0 || buttonInfo.button() == 1;
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderContents(GuiGraphics graphics, int i, int i1, float v) {
         Matrix3x2fStack matrix = graphics.pose();
         matrix.pushMatrix();
         float scale = Math.min((float)width / paintingWidth, (float)height / paintingHeight);

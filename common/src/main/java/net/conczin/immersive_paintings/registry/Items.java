@@ -25,10 +25,10 @@ public class Items {
             .build();
 
     public static void registerItems(RegisterHelper<Item> helper) {
-        helper.register(ImmersivePaintingItem.KEY.location(), PAINTING);
-        helper.register(ImmersiveGlowPaintingItem.KEY.location(), GLOW_PAINTING);
-        helper.register(ImmersiveGraffitiItem.KEY.location(), GRAFFITI);
-        helper.register(ImmersiveGlowGraffitiItem.KEY.location(), GLOW_GRAFFITI);
+        helper.register(ImmersivePaintingItem.KEY.identifier(), PAINTING);
+        helper.register(ImmersiveGlowPaintingItem.KEY.identifier(), GLOW_PAINTING);
+        helper.register(ImmersiveGraffitiItem.KEY.identifier(), GRAFFITI);
+        helper.register(ImmersiveGlowGraffitiItem.KEY.identifier(), GLOW_GRAFFITI);
     }
 
     public static void registerCreativeTabs(RegisterHelper<CreativeModeTab> helper) {

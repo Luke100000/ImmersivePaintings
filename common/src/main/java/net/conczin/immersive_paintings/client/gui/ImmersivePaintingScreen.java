@@ -29,7 +29,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.FormattedCharSequence;
 import org.apache.commons.io.FilenameUtils;
 import org.joml.Matrix3x2fStack;
@@ -57,14 +60,14 @@ public class ImmersivePaintingScreen extends Screen {
     private int filteredResolution = 0;
     private int filteredWidth = 0;
     private int filteredHeight = 0;
-    private final List<ResourceLocation> filteredPaintings = new ArrayList<>();
+    private final List<Identifier> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
     private Page page;
 
     private Button pageWidget;
 
-    private final Map<ResourceLocation, PaintingWidget> paintingWidgets = new HashMap<>();
+    private final Map<Identifier, PaintingWidget> paintingWidgets = new HashMap<>();
     private BufferedImage currentImage;
     private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
@@ -74,7 +77,7 @@ public class ImmersivePaintingScreen extends Screen {
     private List<File> screenshots = List.of();
     private int screenshotPage;
 
-    private ResourceLocation deletePainting;
+    private Identifier deletePainting;
     private Component error;
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
@@ -163,7 +166,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case DELETE, ADMIN_DELETE -> {
-                ResourceLocation background = ResourceLocation.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
+                Identifier background = Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
 
                 Component component;
                 if (page == Page.DELETE) {
@@ -192,12 +195,12 @@ public class ImmersivePaintingScreen extends Screen {
         super.render(graphics, mouseX, mouseY, delta);
     }
 
-    private List<ResourceLocation> getMaterialsList(ResourceLocation frame) {
+    private List<Identifier> getMaterialsList(Identifier frame) {
         return FrameLoader.frames.values().stream()
                 .filter(v -> v.frame().equals(frame))
                 .map(FrameLoader.Frame::material)
                 .distinct()
-                .sorted(ResourceLocation::compareTo)
+                .sorted(Identifier::compareTo)
                 .toList();
     }
 
@@ -214,7 +217,7 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
 
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.hasPermissions(Configs.COMMON.uploadPermissionLevel)) {
+            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Configs.COMMON.uploadPermissionLevel)))) {
                 b.add(Page.NEW);
             }
 
@@ -571,11 +574,11 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<ResourceLocation> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(ResourceLocation::compareTo).toList();
-                for (ResourceLocation frame : frames) {
+                List<Identifier> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(Identifier::compareTo).toList();
+                for (Identifier frame : frames) {
                     Button widget = addRenderableWidget(Button.builder(
                                     Component.translatable("immersive_paintings.frame." + identifierToTranslation(frame)), v -> {
-                                        ResourceLocation material = getMaterialsList(frame).getFirst();
+                                        Identifier material = getMaterialsList(frame).getFirst();
 
                                         // TODO
                                         // This is needed so that when the GUI updates it has the right frame and material set
@@ -598,12 +601,12 @@ public class ImmersivePaintingScreen extends Screen {
                 //material
                 int py = 0;
                 int px = 0;
-                List<ResourceLocation> materials = getMaterialsList(entity.getFrame());
+                List<Identifier> materials = getMaterialsList(entity.getFrame());
                 List<Button> materialList = new LinkedList<>();
-                for (ResourceLocation material : materials) {
+                for (Identifier material : materials) {
                     Button widget = addRenderableWidget(new TexturedButtonWidget(
                             width / 2 - 80 + px * 65, height / 2 - 80 + py * 20, 64, 16,
-                            ResourceLocation.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
+                            Identifier.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
                             64, 32,
                             Component.literal(""),
                             v -> {
@@ -661,13 +664,13 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    public void updateWidget(ResourceLocation identifier) {
+    public void updateWidget(Identifier identifier) {
         if (paintingWidgets.containsKey(identifier)) {
             ClientPaintingManager.getPainting(identifier).ifPresent(p -> paintingWidgets.get(identifier).update(ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL), p.width(), p.height()));
         }
     }
 
-    public static String identifierToTranslation(ResourceLocation location) {
+    public static String identifierToTranslation(Identifier location) {
         String s = location.getPath();
         String lastSplit = s.substring(s.lastIndexOf("/") + 1);
 
@@ -703,7 +706,7 @@ public class ImmersivePaintingScreen extends Screen {
             for (int x = 0; x < 8; x++) {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
-                    ResourceLocation identifier = filteredPaintings.get(i);
+                    Identifier identifier = filteredPaintings.get(i);
 
                     //tooltip
                     List<Component> tooltip = new LinkedList<>();
@@ -787,7 +790,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 paintingWidget.setTooltip(Tooltip.create(Component.literal(file.getName())));
 
-                ResourceLocation identifier = Main.locate("screenshot_" + x);
+                Identifier identifier = Main.locate("screenshot_" + x);
                 paintingWidgets.put(identifier, paintingWidget);
 
                 service.submit(() -> paintingWidget.update(identifier, loadImage(file.getPath(), identifier)));
@@ -839,7 +842,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean isOp() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(4);
+        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
     }
 
     private void setSelectionPage(int p) {
@@ -875,7 +878,7 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private BufferedImage loadImage(String path, ResourceLocation identifier) {
+    private BufferedImage loadImage(String path, Identifier identifier) {
         InputStream stream = null;
         try {
             stream = new URL(path).openStream();

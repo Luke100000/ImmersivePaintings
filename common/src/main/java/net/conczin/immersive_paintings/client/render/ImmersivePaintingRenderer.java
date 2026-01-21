@@ -12,12 +12,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
@@ -85,14 +87,36 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
     }
 
     @Override
-    public void render(ImmersivePaintingRenderState state, PoseStack poseStack, MultiBufferSource buffer, int light) {
-        super.render(state, poseStack, buffer, light);
+    public void submit(ImmersivePaintingRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+        super.submit(renderState, poseStack, collector, cameraState);
 
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-state.yRot));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-state.xRot));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-renderState.yRot));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-renderState.xRot));
         poseStack.scale(0.0625f, 0.0625f, 0.0625f);
-        renderPainting(poseStack, buffer, state);
+
+        //PoseStack.Pose pose = poseStack.last();
+        //VertexConsumer vertexConsumer;
+
+        boolean hasFrame = !renderState.frame.equals(Main.NONE_LOCATION);
+
+        //canvas
+        String name = renderState.isGraffiti ? "objects/graffiti.obj" : "objects/canvas.obj";
+        collector.submitCustomGeometry(
+                poseStack,
+                renderState.isGraffiti ? RenderTypes.entityTranslucent(renderState.texture) : RenderTypes.entitySolid(renderState.texture),
+                (pose, vertexConsumer) -> renderFaces(name, pose, vertexConsumer, getLight(renderState.light, renderState.isGlowing), renderState.widthPixels, renderState.heightPixels, hasFrame ? 1.0f : 0.0f)
+        );
+
+        //frame
+        if (hasFrame) {
+            collector.submitCustomGeometry(
+                    poseStack,
+                    RenderTypes.entityCutout(renderState.material),
+                    (pose, vertexConsumer) -> renderFrame(renderState.frame, pose, vertexConsumer, getFrameLight(renderState.light, renderState.isGlowing), renderState.widthPixels, renderState.heightPixels)
+            );
+        }
+
         poseStack.popPose();
     }
 
@@ -110,24 +134,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         return LightTexture.pack((int)(LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
     }
 
-    private void renderPainting(PoseStack poses, MultiBufferSource buffer, ImmersivePaintingRenderState state) {
-        PoseStack.Pose pose = poses.last();
-        VertexConsumer vertexConsumer;
-
-        boolean hasFrame = !state.frame.equals(Main.NONE_LOCATION);
-
-        //canvas
-        vertexConsumer = buffer.getBuffer(state.isGraffiti ? RenderType.entityTranslucent(state.texture) : RenderType.entitySolid(state.texture));
-        renderFaces(state.isGraffiti ? "objects/graffiti.obj" : "objects/canvas.obj", pose, vertexConsumer, getLight(state.light, state.isGlowing), state.widthPixels, state.heightPixels, hasFrame ? 1.0f : 0.0f);
-
-        //frame
-        if (hasFrame) {
-            vertexConsumer = buffer.getBuffer(RenderType.entityCutout(state.material));
-            renderFrame(state.frame, pose, vertexConsumer, getFrameLight(state.light, state.isGlowing), state.widthPixels, state.heightPixels);
-        }
-    }
-
-    private void renderFaces(String name, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
+    public static void renderFaces(String name, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
         List<Face> faces = ObjectLoader.objects.get(Main.locate(name));
         for (Face face : faces) {
             for (FaceVertex v : face.vertices) {
@@ -146,15 +153,15 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         }
     }
 
-    private List<Face> getFaces(ResourceLocation frame, String part) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(frame.getNamespace(), frame.getPath() + "/" + part + ".obj");
+    private List<Face> getFaces(Identifier frame, String part) {
+        Identifier id = Identifier.fromNamespaceAndPath(frame.getNamespace(), frame.getPath() + "/" + part + ".obj");
         if (ObjectLoader.objects.containsKey(id)) {
             return ObjectLoader.objects.get(id);
         }
         return List.of();
     }
 
-    private void renderFrame(ResourceLocation frame, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height) {
+    private void renderFrame(Identifier frame, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height) {
         List<Face> faces = getFaces(frame, "bottom");
         for (int x = 0; x < width / 16; x++) {
             float u = width == 16 ? 0.75f : (x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f);
@@ -193,7 +200,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         }
     }
 
-    private void vertex(PoseStack.Pose pose, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light) {
+    private static void vertex(PoseStack.Pose pose, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light) {
         vertexConsumer.addVertex(pose, x, y, z - 0.5f).setColor(255, 255, 255, 255).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
     }
 }

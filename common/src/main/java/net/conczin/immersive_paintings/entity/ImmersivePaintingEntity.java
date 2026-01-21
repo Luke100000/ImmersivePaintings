@@ -17,7 +17,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -29,10 +29,10 @@ import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -45,9 +45,9 @@ import java.util.function.Predicate;
 public class ImmersivePaintingEntity extends HangingEntity {
     protected static final Predicate<Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
 
-    private static final EntityDataAccessor<ResourceLocation> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
-    private static final EntityDataAccessor<ResourceLocation> FRAME = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
-    private static final EntityDataAccessor<ResourceLocation> MATERIAL = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> FRAME = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> MATERIAL = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
 
     private static final EntityDataAccessor<Integer> WIDTH = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
@@ -152,9 +152,9 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.isCrouching() && !level().isClientSide) {
+        if (player.isCrouching() && !level().isClientSide()) {
             XercaPaintCompat.interactWithPainting(this, player, hand);
-        } else if (!player.isCrouching() && level().isClientSide) {
+        } else if (!player.isCrouching() && level().isClientSide()) {
             GuiWrapper.open(getUUID());
         }
 
@@ -168,7 +168,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     @Override
     public void dropItem(ServerLevel serverLevel, @Nullable Entity entity) {
-        if (serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+        if (serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)) {
             playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
             if (entity instanceof Player playerEntity && playerEntity.hasInfiniteMaterials()) {
                 return;
@@ -204,10 +204,10 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         if (MOTIVE.equals(data)) {
             Optional<Painting> painting;
-            if (level().isClientSide) {
+            if (level().isClientSide()) {
                 painting = ClientPaintingManager.getPainting(getMotive());
             } else {
-                painting = ServerPaintingManager.getPainting(getServer(), getMotive());
+                painting = ServerPaintingManager.getPainting(level().getServer(), getMotive());
             }
 
             painting.ifPresent((p) -> {
@@ -256,12 +256,12 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
 
-        setFrame(ResourceLocation.parse(input.getStringOr("Frame", Main.NONE_LOCATION.toString())));
-        setMaterial(ResourceLocation.parse(input.getStringOr("Material", Main.NONE_LOCATION.toString())));
+        setFrame(Identifier.parse(input.getStringOr("Frame", Main.NONE_LOCATION.toString())));
+        setMaterial(Identifier.parse(input.getStringOr("Material", Main.NONE_LOCATION.toString())));
         Direction direction = Direction.from3DDataValue(input.getIntOr("Facing", Direction.SOUTH.get3DDataValue()));
 
         setDirection(direction, input.getIntOr("VRotation", 0));
-        setMotive(ResourceLocation.parse(input.getStringOr("Motive", Main.NONE_LOCATION.toString())));
+        setMotive(Identifier.parse(input.getStringOr("Motive", Main.NONE_LOCATION.toString())));
     }
 
     public Item getItem() {
@@ -284,27 +284,27 @@ public class ImmersivePaintingEntity extends HangingEntity {
         return getEntityData().get(HEIGHT);
     }
 
-    public ResourceLocation getMotive() {
+    public Identifier getMotive() {
         return getEntityData().get(MOTIVE);
     }
 
-    public ResourceLocation getFrame() {
+    public Identifier getFrame() {
         return getEntityData().get(FRAME);
     }
 
-    public ResourceLocation getMaterial() {
+    public Identifier getMaterial() {
         return getEntityData().get(MATERIAL);
     }
 
-    public void setMotive(ResourceLocation motive) {
+    public void setMotive(Identifier motive) {
         getEntityData().set(MOTIVE, motive);
     }
 
-    public void setFrame(ResourceLocation frame) {
+    public void setFrame(Identifier frame) {
         getEntityData().set(FRAME, frame);
     }
 
-    public void setMaterial(ResourceLocation material) {
+    public void setMaterial(Identifier material) {
         getEntityData().set(MATERIAL, material);
     }
 }

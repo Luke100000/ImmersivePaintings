@@ -6,7 +6,7 @@ import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.registry.Configs;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,24 +27,23 @@ public class ServerPaintingManager extends SavedData {
     public static final SavedDataType<ServerPaintingManager> TYPE = new SavedDataType<>(
             Main.MOD_ID,
             ServerPaintingManager::new,
-            ctx -> RecordCodecBuilder.create(instance -> instance.group(
-                    RecordCodecBuilder.point(ctx.levelOrThrow()),
-                    Codec.unboundedMap(ResourceLocation.CODEC, Painting.CODEC).fieldOf("paintings").forGetter(s -> s.customPaintings)
-            ).apply(instance, ServerPaintingManager::new)),
+            RecordCodecBuilder.create(i -> i.group(
+                    Codec.unboundedMap(Identifier.CODEC, Painting.CODEC).fieldOf("paintings").forGetter(s -> s.customPaintings)
+            ).apply(i, ServerPaintingManager::new)),
             null
     );
 
-    private final Map<ResourceLocation, Painting> customPaintings;
-    private static Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings = new HashMap<>();
+    private final Map<Identifier, Painting> customPaintings;
+    private static Map<Identifier, Entry<Painting, Resource>> datapackPaintings = new HashMap<>();
 
     private static final ServerCache paintingCache = new ServerCache("");
     private static final ServerCache thumbnailCache = new ServerCache("_thumbnail");
 
-    public ServerPaintingManager(SavedData.Context ctx) {
-        this(ctx.levelOrThrow(), new HashMap<>());
+    public ServerPaintingManager() {
+        this(new HashMap<>());
     }
 
-    public ServerPaintingManager(ServerLevel level, Map<ResourceLocation, Painting> customPaintings) {
+    public ServerPaintingManager(Map<Identifier, Painting> customPaintings) {
         this.customPaintings = new HashMap<>(customPaintings); // Codec gives us an ImmutableMap, we need it mutable
     }
 
@@ -52,19 +51,19 @@ public class ServerPaintingManager extends SavedData {
         return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public static Map<ResourceLocation, Painting> getCustomPaintings(MinecraftServer server) {
+    public static Map<Identifier, Painting> getCustomPaintings(MinecraftServer server) {
         return get(server).customPaintings;
     }
 
-    public static Map<ResourceLocation, Entry<Painting, Resource>> getDatapackPaintings() {
+    public static Map<Identifier, Entry<Painting, Resource>> getDatapackPaintings() {
         return datapackPaintings;
     }
 
-    public static void setDatapackPaintings(Map<ResourceLocation, Entry<Painting, Resource>> datapackPaintings) {
+    public static void setDatapackPaintings(Map<Identifier, Entry<Painting, Resource>> datapackPaintings) {
         ServerPaintingManager.datapackPaintings = datapackPaintings;
     }
 
-    public static Optional<Painting> getPainting(MinecraftServer server, ResourceLocation identifier) {
+    public static Optional<Painting> getPainting(MinecraftServer server, Identifier identifier) {
         if (datapackPaintings.containsKey(identifier)) {
             return Optional.of(datapackPaintings.get(identifier).getKey());
         } else {
@@ -72,7 +71,7 @@ public class ServerPaintingManager extends SavedData {
         }
     }
 
-    public static Optional<byte[]> getImageData(ResourceLocation identifier, boolean thumbnail) {
+    public static Optional<byte[]> getImageData(Identifier identifier, boolean thumbnail) {
         if (datapackPaintings.containsKey(identifier)) {
             // TODO: Not doing thumbnails for datapacks simplifies some things, but if a user adds a
             // custom datapack with larger images (default pack is only ~4MB), then it will be slower
@@ -92,7 +91,7 @@ public class ServerPaintingManager extends SavedData {
         }
     }
 
-    public static void registerPainting(MinecraftServer server, ResourceLocation identifier, Painting painting, BufferedImage image) {
+    public static void registerPainting(MinecraftServer server, Identifier identifier, Painting painting, BufferedImage image) {
         if (image != null) {
             try {
                 paintingCache.set(identifier, ImageManipulations.encode(image));
@@ -105,7 +104,7 @@ public class ServerPaintingManager extends SavedData {
         }
     }
 
-    public static void deregisterPainting(MinecraftServer server, ResourceLocation identifier) {
+    public static void deregisterPainting(MinecraftServer server, Identifier identifier) {
         getCustomPaintings(server).remove(identifier);
         get(server).setDirty(true);
         paintingCache.delete(identifier);
@@ -113,9 +112,9 @@ public class ServerPaintingManager extends SavedData {
     }
 
     public static void playerLoggedIn(ServerPlayer player) {
-        HashMap<ResourceLocation, Optional<Painting>> paintings = new HashMap<>();
+        HashMap<Identifier, Optional<Painting>> paintings = new HashMap<>();
         getDatapackPaintings().forEach((id, entry) -> paintings.put(id, Optional.of(entry.getKey())));
-        getCustomPaintings(player.getServer()).forEach((id, p) -> paintings.put(id, Optional.of(p)));
+        getCustomPaintings(player.level().getServer()).forEach((id, p) -> paintings.put(id, Optional.of(p)));
 
         // Break paintings up into smaller batches if necessary to avoid packet limits
         // The interval is chosen to be an arbitrary number that feels like a good amount to send at a time
@@ -129,7 +128,7 @@ public class ServerPaintingManager extends SavedData {
 
         while (processed < size) {
             int currentSize = Math.min(size - processed, interval);
-            Map<ResourceLocation, Optional<Painting>> p = paintings
+            Map<Identifier, Optional<Painting>> p = paintings
                     .entrySet()
                     .stream()
                     .skip(processed)
@@ -144,7 +143,7 @@ public class ServerPaintingManager extends SavedData {
         payloads.forEach(payload -> NetworkHandler.sendToClient(player, payload));
     }
 
-    private static class ServerCache extends Cache<ResourceLocation, byte[]> {
+    private static class ServerCache extends Cache<Identifier, byte[]> {
         private String suffix = ".png";
 
         public ServerCache(String suffix) {
@@ -153,11 +152,11 @@ public class ServerPaintingManager extends SavedData {
         }
 
         @Override
-        public String getCachePath(ResourceLocation key) {
+        public String getCachePath(Identifier key) {
             return key.getPath() + suffix;
         }
 
-        public Optional<byte[]> getResource(ResourceLocation key, Resource resource) {
+        public Optional<byte[]> getResource(Identifier key, Resource resource) {
             Optional<byte[]> data = get(key);
             if (data.isPresent())
                 return data;

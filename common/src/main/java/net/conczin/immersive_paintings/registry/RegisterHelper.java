@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.registry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface RegisterHelper<T> {
-    void register(ResourceLocation name, T value);
+    void register(Identifier name, T value);
 }

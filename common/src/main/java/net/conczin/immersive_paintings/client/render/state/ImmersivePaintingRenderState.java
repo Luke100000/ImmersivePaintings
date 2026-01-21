@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.client.render.state;
 
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ImmersivePaintingRenderState extends EntityRenderState {
     public int light;
@@ -14,8 +14,8 @@ public class ImmersivePaintingRenderState extends EntityRenderState {
     public int widthPixels;
     public int heightPixels;
 
-    public ResourceLocation frame;
-    public ResourceLocation material;
+    public Identifier frame;
+    public Identifier material;
 
-    public ResourceLocation texture;
+    public Identifier texture;
 }

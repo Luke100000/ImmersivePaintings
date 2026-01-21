@@ -8,7 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class XercaPaintCompat {
     private static DataComponentType<?> getComponent(String name) {
-        Optional<Holder.Reference<DataComponentType<?>>> optional = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", name));
+        Optional<Holder.Reference<DataComponentType<?>>> optional = BuiltInRegistries.DATA_COMPONENT_TYPE.get(Identifier.fromNamespaceAndPath("xercapaint", name));
         return optional.<DataComponentType<?>>map(Holder.Reference::value).orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class XercaPaintCompat {
             return false;
 
         ItemStack stack = player.getItemInHand(hand);
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier location = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (location.getNamespace().equals("xercapaint")) {
             int w = 0, h = 0;
             switch (location.getPath()) {
@@ -86,7 +86,7 @@ public class XercaPaintCompat {
                 // upload
                 // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
                 Painting p = new Painting(w / 16, h / 16, 16, title, author, player.getUUID(), Painting.Type.XERCA, EnumSet.noneOf(Painting.Flag.class), "");
-                ResourceLocation identifier = PaintingRegisterPayload.handle(player, bufferedImage, p);
+                Identifier identifier = PaintingRegisterPayload.handle(player, bufferedImage, p);
 
                 // apply
                 if (identifier != null)

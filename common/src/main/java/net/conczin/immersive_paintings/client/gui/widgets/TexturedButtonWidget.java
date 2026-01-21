@@ -5,14 +5,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class TexturedButtonWidget extends Button {
     private final int tw, th, w, h;
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
-    public TexturedButtonWidget(int x, int y, int width, int height, ResourceLocation texture, int tw, int th, Component message, Button.OnPress onPress) {
+    public TexturedButtonWidget(int x, int y, int width, int height, Identifier texture, int tw, int th, Component message, Button.OnPress onPress) {
         super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.w = width;
@@ -22,7 +22,7 @@ public class TexturedButtonWidget extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderContents(GuiGraphics graphics, int i, int i1, float v) {
         graphics.blit(RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA, texture, getX(), getY(), 0, (active ? 0 : 16), w, h, tw, th);
 
         int j = active ? 0xFFFFFF : 0xA0A0A0;

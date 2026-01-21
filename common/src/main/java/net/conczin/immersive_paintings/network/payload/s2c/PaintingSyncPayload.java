@@ -10,27 +10,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record PaintingSyncPayload(Map<ResourceLocation, Optional<Painting>> paintings) implements ImmersivePayload {
+public record PaintingSyncPayload(Map<Identifier, Optional<Painting>> paintings) implements ImmersivePayload {
     public static final Type<PaintingSyncPayload> TYPE = new Type<>(Main.locate("painting_list"));
     public static final StreamCodec<FriendlyByteBuf, PaintingSyncPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ByteBufCodecs.optional(Painting.STREAM_CODEC)), PaintingSyncPayload::paintings,
+            ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, ByteBufCodecs.optional(Painting.STREAM_CODEC)), PaintingSyncPayload::paintings,
             PaintingSyncPayload::new
     );
 
-    public PaintingSyncPayload(ResourceLocation identifier, Painting painting) {
+    public PaintingSyncPayload(Identifier identifier, Painting painting) {
         this(Map.of(identifier, Optional.ofNullable(painting)));
     }
 
     @Override
     public void handle(Player player, Runner runner) {
-        Map<ResourceLocation, Optional<Painting>> paintings = paintings();
+        Map<Identifier, Optional<Painting>> paintings = paintings();
         runner.run(() -> {
             paintings.forEach((id, painting) -> {
                 if (painting.isEmpty()) {

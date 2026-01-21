@@ -11,7 +11,8 @@ pluginManagement {
             }
             filter {
                 includeGroup('net.fabricmc')
-                includeGroup('fabric-loom')
+                includeGroup('net.fabricmc.fabric-loom-remap')
+                includeGroup('net.fabricmc.unpick')
             }
         }
     }

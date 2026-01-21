@@ -33,7 +33,7 @@ public class EventBus {
 
     @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getEntity().level().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             ServerPaintingManager.playerLoggedIn((ServerPlayer)event.getEntity());
         }
     }

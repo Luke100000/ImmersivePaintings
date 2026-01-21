@@ -9,6 +9,8 @@ base {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
@@ -38,14 +40,21 @@ repositories {
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-['apiElements', 'runtimeElements'].each { variant ->
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
     configurations."$variant".outgoing {
+        capability("$group:${project.name}:$version")
         capability("$group:${base.archivesName.get()}:$version")
         capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
         capability("$group:$mod_id:$version")
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
+    }
+}
+
+sourcesJar {
+    from(rootProject.file('LICENSE')) {
+        rename { "${it}_${mod_name}" }
     }
 }
 
@@ -87,8 +96,7 @@ processResources {
             'neoforge_loader_version_range': neoforge_loader_version_range,
 //            'forge_version'                : forge_version,
 //            'forge_loader_version_range'   : forge_loader_version_range,
-            'fzzy_config_version_neo'      : fzzy_config_version_neo,
-            'fzzy_config_version_fabric'   : fzzy_config_version_fabric,
+            'fzzy_config_version'          : fzzy_config_version,
             'modmenu_version'              : modmenu_version,
             'credits'                      : credits,
             'java_version'                 : java_version
