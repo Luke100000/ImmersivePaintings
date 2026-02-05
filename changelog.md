@@ -1,3 +1,7 @@
+# 0.6.9
+
+* Fixed crash on weird URLs on Windows
+
 # 0.6.8
 
 * Ops can now bypass the hidden flag
