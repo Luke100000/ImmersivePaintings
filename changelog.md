@@ -1,6 +1,7 @@
 # 0.6.9
 
-* Fixed crash on weird URLs on Windows
+* Fixed a crash on weird URLs on Windows
+* Fixed maxPaintingResolution lower than 32
 
 # 0.6.8
 

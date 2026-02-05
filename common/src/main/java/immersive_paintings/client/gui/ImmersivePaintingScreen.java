@@ -629,7 +629,7 @@ public class ImmersivePaintingScreen extends Screen {
                             if (currentImage != null) {
                                 currentImagePixelZoomCache = -1;
                                 currentImageName = file.getName();
-                                settings = new PixelatorSettings(currentImage);
+                                settings = new PixelatorSettings(currentImage, maxResolution);
                                 setPage(Page.CREATE);
                                 pixelateImage();
                             }
@@ -737,7 +737,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
             currentImageName = URI.create(path).getPath().replaceFirst(".*/", "").replaceFirst("[.][^.]+$", "");
-            settings = new PixelatorSettings(currentImage);
+            settings = new PixelatorSettings(currentImage, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();
         }
@@ -893,8 +893,8 @@ public class ImmersivePaintingScreen extends Screen {
             this.pixelArt = pixelArt;
         }
 
-        PixelatorSettings(ByteImage currentImage) {
-            this(0.25, 10, 32, 1, 1, 0.5, 0.5, 1, false);
+        PixelatorSettings(ByteImage currentImage, int maxResolution) {
+            this(0.25, 10, Math.min(32, maxResolution), 1, 1, 0.5, 0.5, 1, false);
 
             double target = currentImage.getWidth() / (double) currentImage.getHeight();
             double bestScore = 100;
