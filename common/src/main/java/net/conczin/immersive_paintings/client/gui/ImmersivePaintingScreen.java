@@ -32,7 +32,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -40,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -907,7 +907,7 @@ public class ImmersivePaintingScreen extends Screen {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
+            currentImageName = URI.create(path).getPath().replaceFirst(".*/", "").replaceFirst("[.][^.]+$", "");
             settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();

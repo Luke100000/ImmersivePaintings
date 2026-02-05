@@ -1,3 +1,8 @@
+# 0.7.5
+
+* Fixed crash on weird URLs on Windows
+* Synced translations
+
 # 0.7.4
 
 * Fixed graffiti transparency issue
