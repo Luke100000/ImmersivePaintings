@@ -718,7 +718,7 @@ public class ImmersivePaintingScreen extends Screen {
                         tooltip.add(Text.translatable("immersive_paintings.right_click_to_delete").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                     }
 
-                    paintingWidgetList.add(addDrawableChild(new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int) (width / 2.0 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
+                    PaintingWidget paintingWidget = new PaintingWidget(ClientPaintingManager.getPaintingTexture(identifier, Painting.Type.THUMBNAIL), (int) (width / 2.0 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                             sender -> {
                                 entity.setMotive(identifier);
                                 NetworkHandler.sendToServer(new PaintingModifyRequest(entity));
@@ -739,10 +739,13 @@ public class ImmersivePaintingScreen extends Screen {
                                     setPage(Page.ADMIN_DELETE);
                                 }
                             }
-                    ));
+                    );
 
                     Tooltip paintingTooltip = Tooltip.of(FlowingText.consolidate(tooltip));
                     paintingWidget.setTooltip(paintingTooltip);
+                    
+                    addDrawableChild(paintingWidget);
+                    paintingWidgetList.add(paintingWidget);
 
                     this.paintingWidgetList.add(paintingWidget);
 
