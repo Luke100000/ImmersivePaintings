@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "ಎಂಟಿಟಿಗಳು ಚಿತ್ರಗಳೊಂದಿಗೆ ಘರ್ಷಣೆಯಲ್ಲಿದೆಯೆ",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "अन्य ಆಟಗಾರರ ಚಿತ್ರಗಳನ್ನು ತೋರಿಸಿ",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "ಚಿತ್ರ ಸಂಪಾದನೆಯ GUI ಯಲ್ಲಿ ಇತರ ಆಟಗಾರರ ಚಿತ್ರಗಳು ದೃಶ್ಯರಹಿತರಾಗುತ್ತಿವೆಯೇ?",
+  "config.immersive_paintings.common.automaticImageResizing": "ಸ್ವಚ್ಛಂದ ಚಿತ್ರವನ್ನು ಪರಿಮಾಣಗೊಳಿಸುವುದು",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "ಅನುಮತಿಸಿದ ಗರಿಷ್ಠ ಮಿತಿಯಿಂದ ದೊಡ್ಡದಾದ ಚಿತ್ರಗಳನ್ನು ಸ್ವಚ್ಛಂದವಾಗಿ ಪರಿಮಾಣಗೊಳಿಸಿ",
   "config.immersive_paintings.common.uploadPermissionLevel": "ಅಪ್ಲೋಡ್ ಅನುಮತಿ ಮಟ್ಟ",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ಚಿತ್ರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲು ಅಗRequired ಉತ್ತರದ ಮಟ್ಟ. ಎಲ್ಲಾ ಆಟಗಾರರಿಗೆ ಡೀಫಾಲ್ಟ್",
   "config.immersive_paintings.common.maxUserImageWidth": "ಗರಿಷ್ಠ ಇಮೇಜ್ ಅಗಲ",

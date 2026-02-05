@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Ma entities isku dhici karaan sawirrada",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Muujinta Sawirrada Ciyaartoyda Kale",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ma sawirrada ciyaartoyda kale waa la arki karaa gudaha GUI-da tifaftirka sawirka",
+  "config.immersive_paintings.common.automaticImageResizing": "Sawir iswadaaqaya",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Si otomaatig ah u cabbir sawirada ka weyn xadka la ogolyahay",
   "config.immersive_paintings.common.uploadPermissionLevel": "Heerka Ogolaanshaha Soo Gelinta",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Heerka ogolaanshaha ee loo baahan yahay si loo soo geliyo sawirrada. Waxa uu u degaa dhammaan ciyaartoyda",
   "config.immersive_paintings.common.maxUserImageWidth": "Ballaca Sawirka Ugu Badan",

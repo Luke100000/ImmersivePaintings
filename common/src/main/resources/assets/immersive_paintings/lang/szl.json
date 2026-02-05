@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Czy byty mogą kolidować z obrazami",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Pokaż obrazy innych graczy",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Czy obrazy innych graczy są widoczne w GUI edycji obrazu",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatyczno przeskalowywaniy obrazek",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatyczno przeskalowuj obrazki, co są wiynksze niź dozwolony limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Poziom uprawnień do przesyłania",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Poziom uprawnień wymagany do przesyłania obrazów. Domyślnie dla wszystkich graczy",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksymalna szerokość obrazu",

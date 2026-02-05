@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Can entities collide with paintin's",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Show Other Player's Paintin's",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Be other player's paintin's visible in the paintin' edit GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatic Image Resizin'",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatically resize images that be larger than the allowed limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Permission Level",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Permission level required t' upload paintin's. Defaults t' all players",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximum Image Width",

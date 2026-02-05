@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Können sich Objekte mit Gemälden überschneiden",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Gemälde anderer Spieler anzeigen",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sind die Gemälde anderer Spieler im Malbearbeitungs-GUI sichtbar",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatische Bildgrössenänderung",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Bilder automatisch verkleinern, die grösser sind als das erlaubte Limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Berechtigungsstufe zum Hochladen",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsstufe erforderlich, um Gemälde hochzuladen. Standardmäßig für alle Spieler",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale Bildbreite",

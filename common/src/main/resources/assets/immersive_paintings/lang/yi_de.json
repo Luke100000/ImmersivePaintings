@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "קקען ערנטיטיעס קאָלעזשירן מיט פאַבריקן",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "ציג פאַרשטייט פאַבריקן פון אנדערע שפּילערס",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "איר פארשטיי אָדער ניט, די פּאַבריקן פון אַנדערע שפּילערס זענען וויוייַטבאר אין דער פאַבריק רעדאַגירן GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "אָוטאָמאַטיש בילד יידיש אַנטשפּלאַטן",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "אָוטאָמאַטיש פֿאַרשטאַרבן בילדער וואָס זענען גרעסער ווי דער ערלויבט מעבר",
   "config.immersive_paintings.common.uploadPermissionLevel": "אַפּלאָדע פּערן לוועל",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "פּערן לוועל פארלאנגט צו אַפּלאָדירן פאַבריקן. דיסקאַונט צו אַלע שפּילערס",
   "config.immersive_paintings.common.maxUserImageWidth": "מאַקסימום בילד וויַט",

@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kënne Entitéiten mat Molen kollidéieren",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Zousätzlech Molen vun aneren Spiller weisen",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sinn déi zousätzlech Molen vun aneren Spiller sichtbar an der Moolerei Editer GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatesch Bild Gréisstännerung",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatesch Gréisstännerung vun Biller déi méi grouss sinn wéi den zulässigen Limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Berechtigungsniveau",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsniveau neeedd fir Molen ze uploaden. Standarde fir all Spiller",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximal Bildbreet",

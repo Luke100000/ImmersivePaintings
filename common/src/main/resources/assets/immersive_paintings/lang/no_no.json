@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kan objekter kollidere med maling",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Vis andre Spilleres Malinger",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Er andre spilleres malerier synlig i maleriets redigering GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatisk bildeskalering",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Endre størrelsen på bilder som er større enn tillatt grense automatisk",
   "config.immersive_paintings.common.uploadPermissionLevel": "Last opp tillatelsesnivå",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Tillatelsesnivå kreves for å laste opp malerier. Standard til alle spillere",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimal bildebredde",

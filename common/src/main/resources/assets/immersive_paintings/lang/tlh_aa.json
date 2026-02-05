@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "naQ ghotpu' ghopPaintings chov",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "De' rIntaH ghopPaintings jIHvaD Dap",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "ghopPaintings jIHvaD Dap lo'ghach suction vIneH",
+  "config.immersive_paintings.common.automaticImageResizing": "ghoSghach mIw tIq",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "reH ghoSghach mIw tIqmey lo'lu'be' 'e' ghoSmoH 'ej ghoSghach mIw tIq'e' nIDghach",
   "config.immersive_paintings.common.uploadPermissionLevel": "ghopPaintings Dap je tIn",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ghopPaintings lo'ghach jIHvaD buS, pIj jIHmoH vIneH",
   "config.immersive_paintings.common.maxUserImageWidth": "mo'  ghopPaintings DaHbe'",

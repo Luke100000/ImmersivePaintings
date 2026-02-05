@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "I entitâts a polen collisionâ cu i dipint",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Mostre i Dipint di Altri Giocadors",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "I dipint di altri giocadors a son visibii inte GUI di modifiche",
+  "config.immersive_paintings.common.automaticImageResizing": "Ridimensionament automatic de l'imagine",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Ridimensiona automaticament les imagjins che sono pi grandi de chê limite permis",
   "config.immersive_paintings.common.uploadPermissionLevel": "Livêl di Permessi di Caricament",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Livêl di permessi richiesti par cargâ i dipint. Dfaut a dutis i giocadors",
   "config.immersive_paintings.common.maxUserImageWidth": "Larghezza Massima Immagine",

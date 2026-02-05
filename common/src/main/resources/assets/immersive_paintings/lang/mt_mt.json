@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Jista' jkun hemm kollisioni bejn l-entitajiet u l-pitturi",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Uri l-Pitturi tal-Plejers L-oħra",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Huma viżibbli l-pitturi tal-plejers l-oħra fil-GUI tat-tnedija tal-pittura?",
+  "config.immersive_paintings.common.automaticImageResizing": "Ħwejjeġ Immaġini Awtomatiku",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Awtomatikament innaviga l-immaġini li huma ikbar mill-limitu meħtieġ",
   "config.immersive_paintings.common.uploadPermissionLevel": "Livell ta' Permess ta' Tniedi",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Livell ta' permess meħtieġ biex tniedi pitturi. Bil-fatt huwa għal kull plejer",
   "config.immersive_paintings.common.maxUserImageWidth": "Aqwa Larghezza tal-Immaġni",

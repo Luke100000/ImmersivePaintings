@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Voi kohteet törmäävät maalauksiin",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Näytä Muiden Pelaajien Maalaukset",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ovatko muut pelaajan maalaukset näkyvissä maalauksen käyttöliittymän muokkauksessa",
+  "config.immersive_paintings.common.automaticImageResizing": "Automaattinen Kuvan Koon Muuttaminen",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Muuta automaattisesti sallitun rajan suurempia kuvia",
   "config.immersive_paintings.common.uploadPermissionLevel": "Lähetyksen Käyttöoikeustaso",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Käyttöoikeustaso vaaditaan maalauksien lataamiseen. Oletuksena kaikille pelaajille",
   "config.immersive_paintings.common.maxUserImageWidth": "Kuvan Enimmäisleveys",

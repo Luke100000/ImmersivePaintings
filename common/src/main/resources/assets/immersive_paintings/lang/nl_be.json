@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kunnen entiteiten botsen met schilderijen",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Toon Schilderijen van Andere Spelers",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Zijn de schilderijen van andere spelers zichtbaar in de schilderij bewerkings-GUI",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatische afbeeldingsresizing",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatisch afbeeldingen bijsnijden die groter zijn dan de toegestane limiet",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Machtigingsniveau",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Machtigingsniveau vereist om schilderijen te uploaden. Standaard voor alle spelers",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale Afbeelding Breedte",

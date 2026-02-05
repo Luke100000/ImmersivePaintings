@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Môžu sa entity zrážať s obrazmi",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Zobraziť obrazy ostatných hráčov",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sú obrazy iných hráčov viditeľné v grafickom rozhraní na úpravu obrazov",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatická zmena veľkosti obrázkov",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatická zmena veľkosti obrázkov, ktoré sú väčšie ako povolený limit",
   "config.immersive_paintings.common.uploadPermissionLevel": "Úroveň oprávnenia na nahrávanie",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Úroveň povolenia potrebná na nahrávanie obrazov. Predvolené nastavenie pre všetkých hráčov",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximálna šírka obrazu",

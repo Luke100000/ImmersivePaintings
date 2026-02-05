@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Үүсгэгчид зургуудтай мөргөлдөж болох уу?",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Бусдын хэрэглэгчийн зургуудыг харуулах",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Бусдын хэрэглэгчийн зургийг засах GUI-д харагдаж байна уу?",
+  "config.immersive_paintings.common.automaticImageResizing": "Автомат зураг хэмжээг өөрчлөх",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Захиалсан хязгаараас том зургийг автомат хэмжээгээр өөрчилнө",
   "config.immersive_paintings.common.uploadPermissionLevel": "Аппрув эрхийн түвшин",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Зургуудыг шUploadлахад шаардлагатай эрхийн түвшин. Бүх тоглогчидод заавал байх болно",
   "config.immersive_paintings.common.maxUserImageWidth": "Дээд зургийн өргөн",

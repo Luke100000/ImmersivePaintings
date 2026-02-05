@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Ці могуць сутнасці сутыкацца з карцінамі",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Паказаць карціны іншых гульцоў",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ці бачныя карціны іншых гульцоў у GUI рэдагавання карцін",
+  "config.immersive_paintings.common.automaticImageResizing": "Аўтаматычнае змяншэнне памеру малюнкаў",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Аўтаматычна змяншаць памеры малюнкаў, якія перавышаюць дазволеныя абмежаванні",
   "config.immersive_paintings.common.uploadPermissionLevel": "Узровень дазволу на загрузку",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Узровень дазволу, неабходны для загрузкі карцін. Па змаўчанні для ўсіх гульцоў",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимальная шырыня выявы",

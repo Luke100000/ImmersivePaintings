@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Можат ли ентитетите да колидираат со сликите",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Прикажи слики на Други Играчи",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Дали сликите на другите играчи се видливи во GUI за уредување на слики",
+  "config.immersive_paintings.common.automaticImageResizing": "Автоматско променување на големината на сликите",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Автоматски променете ги сликите кои се поголеми од дозволениот лимит",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ниво на Дозвола за Подигање",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Ниво на дозвола потребно за подигање на слики. Стандардно за сите играчи",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимална Ширина на Слика",

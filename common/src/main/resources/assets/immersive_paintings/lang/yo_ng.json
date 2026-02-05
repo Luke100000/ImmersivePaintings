@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Ṣé àwọn ẹ̀dá le ní ikọsílẹ̀ pẹ̀lú àwọn iṣẹ́ ọnà",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Ṣàfihàn Àwọn Iṣẹ́ Ọnà Ẹlòmíràn",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ṣé àwọn iṣẹ́ ọnà ẹlòmíràn wà ní ìmọ̀ pẹ̀lú GUI ìtúnṣe iṣẹ́ ọnà",
+  "config.immersive_paintings.common.automaticImageResizing": "Ìyípadà Àwòrán Àtòkànwá",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Ìyípadà àwòrán laifọwọyi ti o tobi ju iye to fa silẹ lọ",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ìpele Àṣẹ Fún Íkàrẹ́",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Ìpele àṣẹ tó jẹ́ dandan láti íkàrẹ́ iṣẹ́ ọnà. Àwọn tó wà fún gbogbo hrá",
   "config.immersive_paintings.common.maxUserImageWidth": "Ìwọn Ẹ̀rọ Àwòrán Tó Pẹ̀lú",

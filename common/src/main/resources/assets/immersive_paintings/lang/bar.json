@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Können Entities mit Bildla kollidier'n",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Zeig andere Spieler ihr Bildla",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sind die Bildla von anderen Spieler im Mal-Edit-GUI sichtbar",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatisches Bildgröße Anpassen",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Bilder automatisch verkleinern, die größer als das erlaubte Limit sind",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload-Berechtigungsstufe",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsstufe, die zum Hochladen von Bildla benötigt wird. Standardmäßig für alle Spieler",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale Bildbreite",

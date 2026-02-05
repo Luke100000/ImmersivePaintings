@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Могат ли обекти да се сблъскват с картини",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Покажи картините на друг играч",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Видими ли са картините на други играчи в графичния интерфейс за редактиране на картини",
+  "config.immersive_paintings.common.automaticImageResizing": "Автоматично оразмеряване на изображенията",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Автоматично промяна на размера на изображенията, които са по-големи от позволеното ограничение",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ниво на разрешение за качване",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Изисква се ниво на разрешение за качване на картини. По подразбиране е за всички играчи",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимална ширина на изображението",

@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Kan einheiter kollidere med måleriar",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Vis måleriar frå andre spelarar",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Er måleriar frå andre spelarar synlege i måleriredigeringsgrensesnittet",
+  "config.immersive_paintings.common.automaticImageResizing": "Automatisk bildestørrelsesjustering",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Automatisk justering av bilder som er større enn den tillatte grensen",
   "config.immersive_paintings.common.uploadPermissionLevel": "Opplastingsrettsnivå",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Rettighetsnivå som kreves for å laste opp måleriar. Standardinnstilling er alle spelarar",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimal bildebreidde",

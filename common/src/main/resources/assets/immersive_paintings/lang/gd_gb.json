@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "An urrainn do nithean freagair le peantaidhean",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Seall Peantaidhean Cluicheadair Eile",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "A bheil peantaidhean cluicheadair eile faicsinneach anns a' GUI deasachaidh peantadh",
+  "config.immersive_paintings.common.automaticImageResizing": "Meudachadh Fhoirmle Duilleag",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Meudaich gu fèin-ghlyñ na h-eòlaichean a tha nas motha na an crìoch ceadaichte",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ìre Ceadaachaidh Luchdaich",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Ìre cheadaachaidh a dh'fheumas tu airson peantaidhean a luchdachadh. A' freagairt ri cluicheadairean uile",
   "config.immersive_paintings.common.maxUserImageWidth": "Leud Dheireach as Miosa",

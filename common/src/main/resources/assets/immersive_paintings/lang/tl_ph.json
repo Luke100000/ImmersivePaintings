@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Maaari bang makabangga ang mga entity sa mga pintura",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Ipakita ang mga Pintura ng Ibang Manlalaro",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Visible ba ang mga pintura ng ibang manlalaro sa GUI ng pag-edit ng pintura",
+  "config.immersive_paintings.common.automaticImageResizing": "Awtomatik na Pag-resize ng Larawan",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Awtomatikong i-resize ang mga larawan na mas malaki kaysa sa pinapayagang limitasyon",
   "config.immersive_paintings.common.uploadPermissionLevel": "Antas ng Pahintulot sa Pag-upload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Antas ng pahintulot na kinakailangan upang mag-upload ng mga pintura. Default sa lahat ng manlalaro",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimal na Lapad ng Imahe",

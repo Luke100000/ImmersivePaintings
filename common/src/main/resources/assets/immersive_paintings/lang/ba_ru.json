@@ -94,6 +94,8 @@
   "config.immersive_paintings.common.paintingsHaveCollision.desc": "Объекттар рәсемдәр менән бәрелешә ала",
   "config.immersive_paintings.common.showOtherPlayersPaintings": "Башҡа уйынсыларҙың рәсемдәрен күрһәтергә",
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Башҡа уйынсыларҙың рәсемдәре рәсем редактирлау GUI-ында күренеме?",
+  "config.immersive_paintings.common.automaticImageResizing": "Автоматик рәсемдәрҙе һурҙырға",
+  "config.immersive_paintings.common.automaticImageResizing.desc": "Рөхсәт ителгән сиктән ҙурыраҡ рәсемдәрҙе автоматик рәүештә һурҙырырға",
   "config.immersive_paintings.common.uploadPermissionLevel": "Йөкләү рөхсәте кимәле",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Рәсемдәр йөкләү өсөн кәрәкле рөхсәт кимәле. Дефолт рәүештә бөтә уйынсыларға",
   "config.immersive_paintings.common.maxUserImageWidth": "Иң ҙур рәсем киңлеге",
