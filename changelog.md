@@ -1,3 +1,7 @@
+# 0.7.6
+
+* Fixed crash introduced in 0.7.5
+
 # 0.7.5
 
 * Fixed crash on weird URLs on Windows

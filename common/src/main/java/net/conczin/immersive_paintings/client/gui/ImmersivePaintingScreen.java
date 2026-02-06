@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -907,11 +906,19 @@ public class ImmersivePaintingScreen extends Screen {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = URI.create(path).getPath().replaceFirst(".*/", "").replaceFirst("[.][^.]+$", "");
+            currentImageName = toFileName(path);
             settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();
         }
+    }
+
+    private String toFileName(String path) {
+        path = path.replace("\\", "/");
+        int lastSlash = path.lastIndexOf('/');
+        int lastDot = path.lastIndexOf('.');
+        if (lastDot < lastSlash) lastDot = path.length(); // no extension
+        return path.substring(lastSlash + 1, lastDot);
     }
 
     private BufferedImage loadImage(String path, ResourceLocation identifier) {
