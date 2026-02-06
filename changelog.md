@@ -1,3 +1,7 @@
+# 0.6.10
+
+* Fixed crash introduced in 0.6.9
+
 # 0.6.9
 
 * Fixed a crash on weird URLs on Windows
