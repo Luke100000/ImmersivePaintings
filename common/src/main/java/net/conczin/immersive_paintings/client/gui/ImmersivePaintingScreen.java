@@ -1,6 +1,5 @@
 package net.conczin.immersive_paintings.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
@@ -31,7 +30,9 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
+import org.joml.Matrix3x2fStack;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -60,14 +61,14 @@ public class ImmersivePaintingScreen extends Screen {
     private int filteredResolution = 0;
     private int filteredWidth = 0;
     private int filteredHeight = 0;
-    private final List<ResourceLocation> filteredPaintings = new ArrayList<>();
+    private final List<Identifier> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
     private Page page;
 
     private Button pageWidget;
 
-    private final Map<ResourceLocation, PaintingWidget> paintingWidgets = new HashMap<>();
+    private final Map<Identifier, PaintingWidget> paintingWidgets = new HashMap<>();
     private BufferedImage currentImage;
     private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
@@ -77,7 +78,7 @@ public class ImmersivePaintingScreen extends Screen {
     private List<File> screenshots = List.of();
     private int screenshotPage;
 
-    private ResourceLocation deletePainting;
+    private Identifier deletePainting;
     private Component error;
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
@@ -154,7 +155,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
-                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(ImageManipulations.bufferedToNative(pixelatedImage)));
+                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(() -> "immersive_paintings_temp_pixelated", ImageManipulations.bufferedToNative(pixelatedImage)));
                 }
 
                 int maxWidth = 190;
@@ -162,12 +163,12 @@ public class ImmersivePaintingScreen extends Screen {
                 int tw = settings.resolution * settings.width;
                 int th = settings.resolution * settings.height;
                 float size = Math.min((float) maxWidth / tw, (float) maxHeight / th);
-                PoseStack poseStack = graphics.pose();
-                poseStack.pushPose();
-                poseStack.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
-                poseStack.scale(size, size, 1.0f);
-                graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
-                poseStack.popPose();
+                Matrix3x2fStack pose = graphics.pose();
+                pose.pushMatrix();
+                pose.translate((float)(width / 2.0f - tw * size / 2.0f), (float)(height / 2.0f - th * size / 2.0f));
+                pose.scale(size, size);
+                graphics.blit(Main.locate("temp_pixelated"), 0, 0, tw, th, 0.0f, 1.0f, 0.0f, 1.0f);
+                pose.popMatrix();
 
                 if (error != null) {
                     graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
@@ -198,12 +199,12 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private List<ResourceLocation> getMaterialsList(ResourceLocation frame) {
+    private List<Identifier> getMaterialsList(Identifier frame) {
         return FrameLoader.frames.values().stream()
                 .filter(v -> v.frame().equals(frame))
                 .map(FrameLoader.Frame::material)
                 .distinct()
-                .sorted(ResourceLocation::compareTo)
+                .sorted(Identifier::compareTo)
                 .toList();
     }
 
@@ -218,7 +219,7 @@ public class ImmersivePaintingScreen extends Screen {
             if (showOtherPlayersPaintings || isOp()) {
                 b.add(Page.PLAYERS);
             }
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.hasPermissions(uploadPermissionLevel)) {
+            if (Minecraft.getInstance().player == null || canUpload()) {
                 b.add(Page.NEW);
             }
             if (!entity.isGraffiti()) {
@@ -574,11 +575,11 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<ResourceLocation> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(ResourceLocation::compareTo).toList();
-                for (ResourceLocation frame : frames) {
+                List<Identifier> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(Identifier::compareTo).toList();
+                for (Identifier frame : frames) {
                     Button widget = addRenderableWidget(Button.builder(
                                     Component.translatable("immersive_paintings.frame." + identifierToTranslation(frame)), v -> {
-                                        ResourceLocation material = getMaterialsList(frame).getFirst();
+                                        Identifier material = getMaterialsList(frame).getFirst();
 
                                         // TODO
                                         // This is needed so that when the GUI updates it has the right frame and material set
@@ -601,12 +602,12 @@ public class ImmersivePaintingScreen extends Screen {
                 //material
                 int py = 0;
                 int px = 0;
-                List<ResourceLocation> materials = getMaterialsList(entity.getFrame());
+                List<Identifier> materials = getMaterialsList(entity.getFrame());
                 List<Button> materialList = new LinkedList<>();
-                for (ResourceLocation material : materials) {
+                for (Identifier material : materials) {
                     Button widget = addRenderableWidget(new TexturedButtonWidget(
                             width / 2 - 80 + px * 65, height / 2 - 80 + py * 20, 64, 16,
-                            ResourceLocation.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
+                            Identifier.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
                             64, 32,
                             Component.literal(""),
                             v -> {
@@ -681,13 +682,13 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    public void updateWidget(ResourceLocation identifier) {
+    public void updateWidget(Identifier identifier) {
         if (paintingWidgets.containsKey(identifier)) {
             ClientPaintingManager.getPainting(identifier).ifPresent(p -> paintingWidgets.get(identifier).update(ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL), p.width(), p.height()));
         }
     }
 
-    public static String identifierToTranslation(ResourceLocation location) {
+    public static String identifierToTranslation(Identifier location) {
         String s = location.getPath();
         String lastSplit = s.substring(s.lastIndexOf("/") + 1);
 
@@ -734,7 +735,7 @@ public class ImmersivePaintingScreen extends Screen {
             for (int x = 0; x < 8; x++) {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
-                    ResourceLocation identifier = filteredPaintings.get(i);
+                    Identifier identifier = filteredPaintings.get(i);
 
                     //tooltip
                     List<Component> tooltip = new LinkedList<>();
@@ -820,7 +821,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 paintingWidget.setTooltip(Tooltip.create(Component.literal(file.getName())));
 
-                ResourceLocation identifier = Main.locate("screenshot_" + x);
+                Identifier identifier = Main.locate("screenshot_" + x);
                 paintingWidgets.put(identifier, paintingWidget);
 
                 service.submit(() -> {
@@ -877,7 +878,19 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean isOp() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(4);
+        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+    }
+
+    private boolean canUpload() {
+        if (Minecraft.getInstance().player == null) return false;
+        if (uploadPermissionLevel <= 0) return true;
+        LocalPlayer player = Minecraft.getInstance().player;
+        return switch (uploadPermissionLevel) {
+            case 1 -> player.permissions().hasPermission(Permissions.COMMANDS_MODERATOR);
+            case 2 -> player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+            case 3 -> player.permissions().hasPermission(Permissions.COMMANDS_ADMIN);
+            default -> player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+        };
     }
 
     private void setSelectionPage(int p) {
@@ -921,7 +934,7 @@ public class ImmersivePaintingScreen extends Screen {
         return path.substring(lastSlash + 1, lastDot);
     }
 
-    private BufferedImage loadImage(String path, ResourceLocation identifier) {
+    private BufferedImage loadImage(String path, Identifier identifier) {
         InputStream stream = null;
         try {
             stream = new URL(path).openStream();
@@ -938,7 +951,7 @@ public class ImmersivePaintingScreen extends Screen {
                 BufferedImage image = ImageIO.read(stream);
                 if (image != null) {
                     preprocessImage(image);
-                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(() -> "immersive_paintings_" + identifier, ImageManipulations.bufferedToNative(image)));
                     stream.close();
                     return image;
                 }

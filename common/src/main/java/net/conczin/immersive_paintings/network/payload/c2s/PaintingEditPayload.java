@@ -8,7 +8,7 @@ import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -36,13 +36,13 @@ public record PaintingEditPayload(int entityId, Map<Option, String> options) imp
                 options.forEach((option, value) -> {
                     switch (option) {
                         case Option.MOTIVE:
-                            painting.setMotive(ResourceLocation.parse(value));
+                            painting.setMotive(Identifier.parse(value));
                             break;
                         case Option.FRAME:
-                            painting.setFrame(ResourceLocation.parse(value));
+                            painting.setFrame(Identifier.parse(value));
                             break;
                         case Option.MATERIAL:
-                            painting.setMaterial(ResourceLocation.parse(value));
+                            painting.setMaterial(Identifier.parse(value));
                             break;
                         case Option.DELETE:
 

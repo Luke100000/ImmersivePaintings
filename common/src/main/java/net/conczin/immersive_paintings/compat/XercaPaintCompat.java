@@ -7,7 +7,7 @@ import net.conczin.immersive_paintings.platform.Services;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ public class XercaPaintCompat {
             return false;
 
         ItemStack stack = player.getItemInHand(hand);
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier location = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (location.getNamespace().equals("xercapaint")) {
             int w = 0, h = 0;
             switch (location.getPath()) {
@@ -44,7 +44,7 @@ public class XercaPaintCompat {
                 }
             }
 
-            DataComponentType<?> CANVAS_PIXELS = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_pixels"));
+            DataComponentType<?> CANVAS_PIXELS = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Identifier.fromNamespaceAndPath("xercapaint", "canvas_pixels"));
 
             if (CANVAS_PIXELS != null && w > 0 && stack.has(CANVAS_PIXELS)) {
                 DataComponentMap map = stack.getComponents();
@@ -62,8 +62,8 @@ public class XercaPaintCompat {
                     }
                 }
 
-                DataComponentType<?> CANVAS_TITLE = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_title"));
-                DataComponentType<?> CANVAS_AUTHOR = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.fromNamespaceAndPath("xercapaint", "canvas_author"));
+                DataComponentType<?> CANVAS_TITLE = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Identifier.fromNamespaceAndPath("xercapaint", "canvas_title"));
+                DataComponentType<?> CANVAS_AUTHOR = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Identifier.fromNamespaceAndPath("xercapaint", "canvas_author"));
 
                 // title
                 String title = map.has(CANVAS_TITLE) ? (String) stack.getComponents().get(CANVAS_TITLE) : "Unnamed Painting #" + player.getRandom().nextInt(1048576);
@@ -72,7 +72,7 @@ public class XercaPaintCompat {
                 // upload
                 // Lazy server-side way of handling this, but it allows us to skip the LazyNetwork delay
                 Painting p = new Painting(w / 16, h / 16, 16, title, author, player.getUUID(), Painting.Type.XERCA, EnumSet.noneOf(Painting.Flag.class), "");
-                ResourceLocation identifier = PaintingRegisterPayload.handle(player, bufferedImage, p);
+                Identifier identifier = PaintingRegisterPayload.handle(player, bufferedImage, p);
 
                 // apply
                 if (identifier != null)

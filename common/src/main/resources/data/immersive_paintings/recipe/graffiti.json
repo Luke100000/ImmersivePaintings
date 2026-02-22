@@ -6,21 +6,9 @@
     "DBD"
   ],
   "key": {
-    "B": [
-      {
-        "item": "minecraft:bucket"
-      }
-    ],
-    "G": [
-      {
-        "item": "minecraft:gunpowder"
-      }
-    ],
-    "D": [
-      {
-        "tag": "immersive_paintings:dye"
-      }
-    ]
+    "B": "minecraft:bucket",
+    "G": "minecraft:gunpowder",
+    "D": "#immersive_paintings:dye"
   },
   "result": {
     "id": "immersive_paintings:graffiti",

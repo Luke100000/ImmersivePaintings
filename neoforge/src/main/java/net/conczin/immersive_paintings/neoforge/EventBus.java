@@ -8,14 +8,13 @@ import net.conczin.immersive_paintings.resources.PaintingsLoader;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-@EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.GAME)
+@EventBusSubscriber(modid = Main.MOD_ID)
 public class EventBus {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
@@ -34,20 +33,20 @@ public class EventBus {
 
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (!event.getEntity().level().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             ServerPaintingManager.playerLoggedOut((ServerPlayer)event.getEntity());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getEntity().level().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             ServerPaintingManager.playerLoggedIn((ServerPlayer)event.getEntity());
         }
     }
 
     @SubscribeEvent
-    public static void onAddReloadListener(AddReloadListenerEvent event) {
-        event.addListener(new PaintingsLoader());
+    public static void onAddServerReloadListener(AddServerReloadListenersEvent event) {
+        event.addListener(Main.locate("paintings_loader"), new PaintingsLoader());
     }
 }

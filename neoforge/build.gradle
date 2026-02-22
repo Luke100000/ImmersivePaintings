@@ -35,9 +35,9 @@ neoForge {
         client {
             client()
         }
-        data {
-            data()
-        }
+        // data {
+        //     data()
+        // }
         server {
             server()
         }
@@ -55,8 +55,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     implementation "me.fzzyhmstrs:fzzy_config:${fzzy_config_version}+neoforge"
 
-    jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.common:common-lang:${webp_version}")))
-    jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.common:common-image:${webp_version}")))
-    jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-core:${webp_version}")))
-    jarJar(implementation(additionalRuntimeClasspath("com.twelvemonkeys.imageio:imageio-webp:${webp_version}")))
+    jarJar(implementation("com.twelvemonkeys.common:common-lang:${webp_version}"))
+    jarJar(implementation("com.twelvemonkeys.common:common-image:${webp_version}"))
+    jarJar(implementation("com.twelvemonkeys.imageio:imageio-core:${webp_version}"))
+    jarJar(implementation("com.twelvemonkeys.imageio:imageio-webp:${webp_version}"))
 }

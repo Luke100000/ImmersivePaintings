@@ -6,16 +6,8 @@
     "PPP"
   ],
   "key": {
-    "P": [
-      {
-        "item": "minecraft:paper"
-      }
-    ],
-    "D": [
-      {
-        "tag": "immersive_paintings:dye"
-      }
-    ]
+    "P": "minecraft:paper",
+    "D": "#immersive_paintings:dye"
   },
   "result": {
     "id": "immersive_paintings:painting"

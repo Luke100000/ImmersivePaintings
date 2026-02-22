@@ -13,15 +13,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 @Mod(value = Main.MOD_ID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = Main.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Main.MOD_ID, value = Dist.CLIENT)
 public final class ClientNeoForge {
     @SubscribeEvent
     public static void registerNetwork(final RegisterPayloadHandlersEvent event) {
-        NetworkHandler.Client.registerSender(PacketDistributor::sendToServer);
+        NetworkHandler.Client.registerSender(ClientPacketDistributor::sendToServer);
     }
 
     @SubscribeEvent

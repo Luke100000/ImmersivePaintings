@@ -9,8 +9,9 @@ import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
@@ -18,39 +19,39 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDelete) implements ImmersivePayload {
+public record PaintingDeletePayload(Identifier identifier, boolean adminDelete) implements ImmersivePayload {
     public static final Type<PaintingDeletePayload> TYPE = new Type<>(Main.locate("painting_delete"));
     public static final StreamCodec<FriendlyByteBuf, PaintingDeletePayload> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, PaintingDeletePayload::identifier,
+            Identifier.STREAM_CODEC, PaintingDeletePayload::identifier,
             ByteBufCodecs.BOOL, PaintingDeletePayload::adminDelete,
             PaintingDeletePayload::new
     );
 
-    private static void deletePainting(MinecraftServer server, Player player, ResourceLocation painting) {
+    private static void deletePainting(MinecraftServer server, Player player, Identifier painting) {
         ServerPaintingManager.deregisterPainting(server, painting);
         Main.LOGGER.info("Player {} deleted painting {}", player, painting);
     }
 
     @Override
     public void handle(Player player, Runner runner) {
-        ResourceLocation identifier = identifier();
+        Identifier identifier = identifier();
         boolean adminDelete = adminDelete();
 
         runner.run(() -> {
-            Painting painting = ServerPaintingManager.getCustomPaintings(player.getServer()).get(identifier);
+            Painting painting = ServerPaintingManager.getCustomPaintings(player.level().getServer()).get(identifier);
             UUID authorUUID = painting.authorUUID();
 
-            if (!(authorUUID.equals(player.getUUID()) || player.hasPermissions(4))) {
+            if (!(authorUUID.equals(player.getUUID()) || player.permissions().hasPermission(Permissions.COMMANDS_OWNER))) {
                 Main.LOGGER.warn("Player {} tried to delete painting {}, which they do not own", player, identifier);
                 return;
             }
 
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server == null) return;
 
             PaintingSyncPayload payload;
             if (adminDelete) {
-                Map<ResourceLocation, Optional<Painting>> deletedPaintings = ServerPaintingManager.getCustomPaintings(server)
+                Map<Identifier, Optional<Painting>> deletedPaintings = ServerPaintingManager.getCustomPaintings(server)
                         .entrySet().stream()
                         .filter(p -> p.getValue().authorUUID().equals(authorUUID) && !p.getValue().is(Painting.Type.DATAPACK))
                         .collect(Collectors.toMap(Map.Entry::getKey, (e) -> Optional.empty()));

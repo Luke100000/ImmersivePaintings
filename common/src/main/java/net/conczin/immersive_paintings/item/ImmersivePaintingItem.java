@@ -5,6 +5,7 @@ import net.conczin.immersive_paintings.registration.Entities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -15,8 +16,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ImmersivePaintingItem extends Item {
 
-    public ImmersivePaintingItem() {
-        super(new Item.Properties());
+    public ImmersivePaintingItem(Item.Properties properties) {
+        super(properties);
     }
 
     protected boolean mayUseItemAt(Player player, Direction side, ItemStack stack, BlockPos pos) {
@@ -45,20 +46,20 @@ public class ImmersivePaintingItem extends Item {
             rotation = Math.floorMod((int) Math.floor(player.getYRot() / 90.0f + 2.5) * 90, 360);
         }
 
-        ImmersivePaintingEntity entity = getEntityType().create(level);
+        ImmersivePaintingEntity entity = getEntityType().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
         if (entity == null) return InteractionResult.FAIL;
         entity.setPos(attachmentPosition);
         entity.setDirection(direction, rotation);
 
         if (entity.survives()) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 entity.playPlacementSound();
                 level.gameEvent(player, GameEvent.ENTITY_PLACE, entity.position());
                 level.addFreshEntity(entity);
             }
 
             itemStack.shrink(1);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         } else {
             return InteractionResult.CONSUME;
         }

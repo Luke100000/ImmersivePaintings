@@ -1,56 +1,78 @@
 package net.conczin.immersive_paintings.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
-import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+public class ImmersivePaintingEntityRenderer
+        extends EntityRenderer<ImmersivePaintingEntity, ImmersivePaintingEntityRenderer.RenderState> {
 
-public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T> {
+    public static class RenderState extends EntityRenderState {
+        public Identifier textureId = Painting.DEFAULT_IDENTIFIER;
+        public Identifier materialId = Main.locate("none");
+        public Identifier frameId = Main.locate("none");
+        public int paintingWidth = 1;
+        public int paintingHeight = 1;
+        public boolean glowing;
+        public boolean graffiti;
+        public float yaw;
+        public float xRot;
+    }
+
     public ImmersivePaintingEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public void render(T entity, float yaw, float tickDelta, PoseStack poses, MultiBufferSource buffer, int light) {
-        poses.pushPose();
-        poses.mulPose(Axis.YP.rotationDegrees(-yaw));
-        poses.mulPose(Axis.XP.rotationDegrees(-entity.getViewXRot(tickDelta)));
-        poses.scale(0.0625f, 0.0625f, 0.0625f);
-        renderPainting(poses, buffer, entity);
-        poses.popPose();
-        super.render(entity, yaw, tickDelta, poses, buffer, light);
+    public RenderState createRenderState() {
+        return new RenderState();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T paintingEntity) {
+    public void extractRenderState(ImmersivePaintingEntity entity, RenderState state, float tickDelta) {
+        super.extractRenderState(entity, state, tickDelta);
+        state.paintingWidth = entity.getPaintingWidth();
+        state.paintingHeight = entity.getPaintingHeight();
+        state.glowing = entity.isGlowing();
+        state.graffiti = entity.isGraffiti();
+        state.frameId = entity.getFrame();
+        state.materialId = entity.getMaterial();
+        state.textureId = computeTextureId(entity);
+        state.yaw = entity.getYRot();
+        state.xRot = entity.getXRot();
+    }
+
+    private Identifier computeTextureId(ImmersivePaintingEntity entity) {
         Minecraft client = Minecraft.getInstance();
         ClientConfig config = Configs.CLIENT;
 
-        double distance = (client.player == null ? 0 : client.player.distanceTo(paintingEntity));
+        double distance = (client.player == null ? 0 : client.player.distanceTo(entity));
         double blocksVisible = Math.tan(client.options.fov().get() / 180.0 * Math.PI / 2.0) * 2.0 * distance;
 
-        Optional<Painting> painting = ClientPaintingManager.getPainting(paintingEntity.getMotive());
+        Optional<Painting> painting = ClientPaintingManager.getPainting(entity.getMotive());
         if (painting.isEmpty())
             return ClientPaintingManager.getImageIdentifier(Painting.DEFAULT_IDENTIFIER, Painting.Size.FULL);
 
@@ -63,8 +85,40 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
                 : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
                 : Painting.Size.FULL;
 
+        return ClientPaintingManager.getImageIdentifier(entity.getMotive(), size);
+    }
 
-        return ClientPaintingManager.getImageIdentifier(paintingEntity.getMotive(), size);
+    @Override
+    public void submit(RenderState state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
+        poses.pushPose();
+        poses.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+        poses.mulPose(Axis.XP.rotationDegrees(-state.xRot));
+        poses.scale(0.0625f, 0.0625f, 0.0625f);
+
+        int light = state.lightCoords;
+        boolean hasFrame = !state.frameId.getPath().equals("none");
+        int widthPixels = state.paintingWidth * 16;
+        int heightPixels = state.paintingHeight * 16;
+        boolean glowing = state.glowing;
+        boolean graffiti = state.graffiti;
+
+        // Canvas
+        RenderType canvasType = graffiti
+                ? RenderTypes.entityTranslucent(state.textureId)
+                : RenderTypes.entitySolid(state.textureId);
+        String canvasObj = graffiti ? "objects/graffiti.obj" : "objects/canvas.obj";
+        float margin = hasFrame ? 1.0f : 0.0f;
+        collector.submitCustomGeometry(poses, canvasType, (pose, vc) ->
+                renderFaces(canvasObj, pose, vc, getLight(light, glowing), widthPixels, heightPixels, margin));
+
+        // Frame
+        if (hasFrame) {
+            collector.submitCustomGeometry(poses, RenderTypes.entityCutout(state.materialId), (pose, vc) ->
+                    renderFrame(state.frameId, pose, vc, getFrameLight(light, glowing), widthPixels, heightPixels));
+        }
+
+        poses.popPose();
+        super.submit(state, poses, collector, camera);
     }
 
     protected int getLight(int light, boolean glowing) {
@@ -79,31 +133,6 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
             return light;
 
         return LightTexture.pack((int)(LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
-    }
-
-    private void renderPainting(PoseStack poses, MultiBufferSource buffer, T entity) {
-        int light = LevelRenderer.getLightColor(entity.level(), entity.blockPosition());
-
-        PoseStack.Pose pose = poses.last();
-        VertexConsumer vertexConsumer;
-
-        boolean hasFrame = !entity.getFrame().getPath().equals("none");
-
-        int widthPixels = entity.getPaintingWidth() * 16;
-        int heightPixels = entity.getPaintingHeight() * 16;
-
-        boolean glowing = entity.isGlowing();
-        boolean graffiti = entity.isGraffiti();
-
-        //canvas
-        vertexConsumer = buffer.getBuffer(graffiti ? RenderType.entityTranslucent(getTextureLocation(entity)) : RenderType.entitySolid(getTextureLocation(entity)));
-        renderFaces(graffiti ? "objects/graffiti.obj" : "objects/canvas.obj", pose, vertexConsumer, getLight(light, glowing), widthPixels, heightPixels, hasFrame ? 1.0f : 0.0f);
-
-        //frame
-        if (hasFrame) {
-            vertexConsumer = buffer.getBuffer(RenderType.entityCutout(entity.getMaterial()));
-            renderFrame(entity.getFrame(), pose, vertexConsumer, getFrameLight(light, glowing), widthPixels, heightPixels);
-        }
     }
 
     private void renderFaces(String name, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
@@ -125,15 +154,15 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         }
     }
 
-    private List<Face> getFaces(ResourceLocation frame, String part) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(frame.getNamespace(), frame.getPath() + "/" + part + ".obj");
+    private List<Face> getFaces(Identifier frame, String part) {
+        Identifier id = Identifier.fromNamespaceAndPath(frame.getNamespace(), frame.getPath() + "/" + part + ".obj");
         if (ObjectLoader.objects.containsKey(id)) {
             return ObjectLoader.objects.get(id);
         }
         return List.of();
     }
 
-    private void renderFrame(ResourceLocation frame, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height) {
+    private void renderFrame(Identifier frame, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height) {
         List<Face> faces = getFaces(frame, "bottom");
         for (int x = 0; x < width / 16; x++) {
             float u = width == 16 ? 0.75f : (x == 0 ? 0.0f : x == width / 16 - 1 ? 0.5f : 0.25f);
@@ -173,6 +202,6 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
     }
 
     private void vertex(PoseStack.Pose pose, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light) {
-        vertexConsumer.addVertex(pose, x, y, z - 0.5f).setColor(255, 255, 255, 255).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(pose, x, y, z - 0.5f).setColor(-1).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
     }
 }

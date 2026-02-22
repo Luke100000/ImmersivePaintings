@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,13 +33,13 @@ public record Painting(int version, int width, int height, int resolution, Strin
 
     public static final StreamCodec<ByteBuf, Painting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public static final ResourceLocation DEFAULT_IDENTIFIER = Main.locate("textures/block/frame/canvas.png");
+    public static final Identifier DEFAULT_IDENTIFIER = Main.locate("textures/block/frame/canvas.png");
 
     public Painting(int width, int height, int resolution, String name, String author, UUID authorUUID, Type type, EnumSet<Flag> flags, String hash) {
         this(1, width, height, resolution, name, author, authorUUID, type, flags, hash);
     }
 
-    public ResourceLocation location() {
+    public Identifier location() {
         switch (type) {
             case Type.DATAPACK -> {
                 return Main.locate("datapack/" + hash);

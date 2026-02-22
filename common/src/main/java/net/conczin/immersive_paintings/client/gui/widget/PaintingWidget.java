@@ -1,26 +1,26 @@
 package net.conczin.immersive_paintings.client.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 
 import java.awt.image.BufferedImage;
 
 public class PaintingWidget extends Button {
     private BufferedImage image;
-    private ResourceLocation identifier = Painting.DEFAULT_IDENTIFIER;
+    private Identifier identifier = Painting.DEFAULT_IDENTIFIER;
 
     private int paintingWidth = 256;
     private int paintingHeight = 256;
 
     private final Button.OnPress onPressRight;
-    private int button;
 
     public PaintingWidget(int x, int y, int width, int height, Button.OnPress onPress, Button.OnPress onPressRight) {
         super(x, y, width, height, Component.literal("Painting"), onPress, Button.DEFAULT_NARRATION);
@@ -33,12 +33,12 @@ public class PaintingWidget extends Button {
     }
 
     // Specifically for screenshots where the image needs to be stored so it can be created when clicked
-    public void update(ResourceLocation identifier, BufferedImage image) {
+    public void update(Identifier identifier, BufferedImage image) {
         this.image = image;
         update(identifier, 4, 2);
     }
 
-    public void update(ResourceLocation identifier, int paintingWidth, int paintingHeight) {
+    public void update(Identifier identifier, int paintingWidth, int paintingHeight) {
         int thumbnailSize = Configs.CLIENT.thumbnailSize;
 
         this.identifier = identifier;
@@ -47,8 +47,13 @@ public class PaintingWidget extends Button {
     }
 
     @Override
-    public void onPress() {
-        if (button == 0) {
+    protected boolean isValidClickButton(MouseButtonInfo mouseButtonInfo) {
+        return mouseButtonInfo.button() == 0 || mouseButtonInfo.button() == 1;
+    }
+
+    @Override
+    public void onClick(MouseButtonEvent mouseButtonEvent, boolean bl) {
+        if (mouseButtonEvent.buttonInfo().button() == 0) {
             onPress.onPress(this);
         } else {
             onPressRight.onPress(this);
@@ -56,23 +61,16 @@ public class PaintingWidget extends Button {
     }
 
     @Override
-    protected boolean isValidClickButton(int button) {
-        this.button = button;
-        return button == 0 || button == 1;
-    }
-
-    // TODO: Fix
-    @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        Matrix3x2fStack pose = graphics.pose();
+        pose.pushMatrix();
         float scale = Math.min((float)width / paintingWidth, (float)height / paintingHeight);
         if (isHovered()) {
             scale *= 1.1f;
         }
-        pose.translate(getX() + (width - paintingWidth * scale) / 2, getY() + (height - paintingHeight * scale) / 2, 0.0f);
-        pose.scale(scale, scale, 1.0f);
-        graphics.blit(identifier, 0, 0, 0, 0, paintingWidth, paintingHeight, paintingWidth, paintingHeight);
-        pose.popPose();
+        pose.translate(getX() + (width - paintingWidth * scale) / 2, getY() + (height - paintingHeight * scale) / 2);
+        pose.scale(scale, scale);
+        graphics.blit(identifier, 0, 0, paintingWidth, paintingHeight, 0.0f, 1.0f, 0.0f, 1.0f);
+        pose.popMatrix();
     }
 }

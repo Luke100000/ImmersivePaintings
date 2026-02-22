@@ -12,9 +12,10 @@ import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 
 import java.awt.image.BufferedImage;
@@ -43,19 +44,29 @@ public record PaintingRegisterPayload(
             PaintingRegisterPayload::new
     );
 
-    private static void paintingRegisterError(Player player, String error, ResourceLocation i) {
+    private static void paintingRegisterError(Player player, String error, Identifier i) {
         NetworkHandler.sendToClient((ServerPlayer) player, new PaintingRegisterErrorPayload(Optional.ofNullable(i), error));
     }
 
+    private static boolean hasPermissionLevel(Player player, int level) {
+        if (level <= 0) return true;
+        return switch (level) {
+            case 1 -> player.permissions().hasPermission(Permissions.COMMANDS_MODERATOR);
+            case 2 -> player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+            case 3 -> player.permissions().hasPermission(Permissions.COMMANDS_ADMIN);
+            default -> player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+        };
+    }
+
     // Separate method to allow for Xerca compatibility
-    public static ResourceLocation handle(Player player, BufferedImage image, Painting painting) {
+    public static Identifier handle(Player player, BufferedImage image, Painting painting) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             String hash = String.format("%032x", new BigInteger(1, md5.digest(ImageManipulations.encode(image))));
             painting = painting.withHash(hash);
-            ResourceLocation identifier = painting.location();
+            Identifier identifier = painting.location();
 
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server != null) {
                 ServerPaintingManager.registerPainting(server, identifier, painting, image);
                 NetworkHandler.sendToAllClients(server, new PaintingSyncPayload(identifier, painting));
@@ -84,12 +95,12 @@ public record PaintingRegisterPayload(
         runner.run(() -> {
             BufferedImage image = ImageUploadPayload.uploaded.remove(player.getStringUUID());
 
-            if (!player.hasPermissions(Configs.COMMON.uploadPermissionLevel)) {
+            if (!hasPermissionLevel(player, Configs.COMMON.uploadPermissionLevel)) {
                 paintingRegisterError(player, "no_permission", null);
                 return;
             }
 
-            long count = ServerPaintingManager.getCustomPaintings(player.getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
+            long count = ServerPaintingManager.getCustomPaintings(player.level().getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
             if (count > Configs.COMMON.maxUserImages) {
                 paintingRegisterError(player, "limit_reached", null);
                 return;
@@ -112,7 +123,7 @@ public record PaintingRegisterPayload(
                 image = newImage;
             }
 
-            Painting p = new Painting(width, height, resolution, name, player.getGameProfile().getName(), player.getUUID(), Painting.Type.PAINTING, flags, "");
+            Painting p = new Painting(width, height, resolution, name, player.getGameProfile().name(), player.getUUID(), Painting.Type.PAINTING, flags, "");
             handle(player, image, p);
         });
     }

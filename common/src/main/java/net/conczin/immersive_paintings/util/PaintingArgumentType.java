@@ -14,7 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +41,7 @@ public class PaintingArgumentType implements ArgumentType<String> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        Map<ResourceLocation, Painting> paintings = new HashMap<>();
+        Map<Identifier, Painting> paintings = new HashMap<>();
         if (context.getSource() instanceof CommandSourceStack sourceStack) {
             paintings = ServerPaintingManager.getCustomPaintings(sourceStack.getServer());
         } else if (context.getSource() instanceof ClientSuggestionProvider) {

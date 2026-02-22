@@ -50,7 +50,7 @@ public class ImageManipulations {
                            (model.getGreen(elements) << 8) |
                            model.getRed(elements);
 
-                nativeImage.setPixelRGBA(x, y, abgr);
+                nativeImage.setPixelABGR(x, y, abgr);
             }
         }
         return nativeImage;

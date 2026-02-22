@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "immersive_paintings:painting"
-    },
-    {
-      "item": "minecraft:glow_ink_sac"
-    }
+    "immersive_paintings:painting",
+    "minecraft:glow_ink_sac"
   ],
   "result": {
     "id": "immersive_paintings:glow_painting"

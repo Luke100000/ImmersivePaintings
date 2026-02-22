@@ -1,19 +1,19 @@
 package net.conczin.immersive_paintings.client.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 public class TexturedButtonWidget extends Button {
     private final int tw, th, w, h;
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
-    public TexturedButtonWidget(int x, int y, int width, int height, ResourceLocation texture, int tw, int th, Component message, Button.OnPress onPress) {
+    public TexturedButtonWidget(int x, int y, int width, int height, Identifier texture, int tw, int th, Component message, Button.OnPress onPress) {
         super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.w = width;
@@ -23,14 +23,9 @@ public class TexturedButtonWidget extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        if (isHovered()) {
-            RenderSystem.setShaderColor(1.0f, 0.75f, 0.75f, alpha);
-        } else {
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-        }
-
-        graphics.blit(texture, getX(), getY(), 0, (active ? 0 : 16), w, h, tw, th);
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        int color = isHovered() ? ARGB.color(Mth.ceil(alpha * 255), 255, 192, 192) : ARGB.white(Mth.ceil(alpha * 255));
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0.0f, active ? 0.0f : 16.0f, w, h, tw, th, color);
 
         int j = active ? 0xFFFFFF : 0xA0A0A0;
         graphics.drawCenteredString(Minecraft.getInstance().font, getMessage(), getX() + width / 2, getY() + (height - 8) / 2, j | Mth.ceil(alpha * 255.0f) << 24);
