@@ -1,3 +1,7 @@
+# 0.6.11
+
+* Fixed incompat with BetsyRoss
+
 # 0.6.10
 
 * Fixed crash introduced in 0.6.9

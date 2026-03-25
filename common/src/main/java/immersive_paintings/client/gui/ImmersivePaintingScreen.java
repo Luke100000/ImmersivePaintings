@@ -900,6 +900,12 @@ public class ImmersivePaintingScreen extends Screen {
             this.pixelArt = pixelArt;
         }
 
+        // Compatibility with BetsyRoss
+        @SuppressWarnings("unused")
+        PixelatorSettings(ByteImage currentImage) {
+            this(currentImage, 32);
+        }
+
         PixelatorSettings(ByteImage currentImage, int maxResolution) {
             this(0.25, 10, Math.min(32, maxResolution), 1, 1, 0.5, 0.5, 1, false);
 
