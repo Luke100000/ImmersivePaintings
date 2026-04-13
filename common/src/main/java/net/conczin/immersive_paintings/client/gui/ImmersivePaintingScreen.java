@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.client.gui;
 
 import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.client.gui.widgets.IntegerSliderWidget;
 import net.conczin.immersive_paintings.client.gui.widgets.PaintingWidget;
@@ -14,12 +14,12 @@ import net.conczin.immersive_paintings.network.payload.c2s.ImageUploadPayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingDeletePayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingEditPayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
-import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.resources.FrameLoader;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
@@ -34,7 +34,6 @@ import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.commons.io.FilenameUtils;
 import org.joml.Matrix3x2fStack;
 
 import javax.imageio.ImageIO;
@@ -128,14 +127,14 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         switch (page) {
             case NEW -> {
                 graphics.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
                 List<FormattedCharSequence> splits = font.split(Component.translatable("immersive_paintings.gui.drop"), 220);
                 int y = height / 2 - 40 - splits.size() * 12;
                 for (FormattedCharSequence t : splits) {
-                    graphics.drawCenteredString(font, t, width / 2, y, 0xFFFFFFFF);
+                    graphics.centeredText(font, t, width / 2, y, 0xFFFFFFFF);
                     y += 12;
                 }
             }
@@ -146,7 +145,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
-                    ClientPaintingManager.newTexture(Main.locate("temp_pixelated"), pixelatedImage);
+                    ClientPaintingManager.newTexture(ImmersivePaintings.locate("temp_pixelated"), pixelatedImage);
                 }
 
                 int maxWidth = 190;
@@ -158,11 +157,11 @@ public class ImmersivePaintingScreen extends Screen {
                 matrix.pushMatrix();
                 matrix.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f);
                 matrix.scale(size, size);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, ImmersivePaintings.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 matrix.popMatrix();
 
                 if (error != null) {
-                    graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
+                    graphics.centeredText(font, error, width / 2, height / 2, 0xFFFF0000);
                 }
             }
             case DELETE, ADMIN_DELETE -> {
@@ -175,12 +174,12 @@ public class ImmersivePaintingScreen extends Screen {
                     component = Component.translatable("immersive_paintings.gui.confirm_admin_deletion");
                 }
 
-                // Copy drawWordWrap method from GuiGraphics but center the resulting string
+                // Copy drawWordWrap method from GuiGraphicsExtractor but center the resulting string
                 graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
                 //graphics.blit(RenderPipelines.GUI_TEXTURED, background, width / 2 - 160, height / 2 - 50, 0, 0, 320, 100, 32, 32);
                 int y = height / 2 - 35;
                 for (FormattedCharSequence t : font.split(component, 300)) {
-                    graphics.drawCenteredString(font, t, width / 2, y, 0xFFFFFFFF);
+                    graphics.centeredText(font, t, width / 2, y, 0xFFFFFFFF);
                     y += 9;
                 }
 
@@ -188,11 +187,11 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case LOADING -> {
                 Component text = Component.translatable("immersive_paintings.gui.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
-                graphics.drawCenteredString(font, text, width / 2, height / 2, 0xFFFFFFFF);
+                graphics.centeredText(font, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
 
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
     private List<Identifier> getMaterialsList(Identifier frame) {
@@ -213,11 +212,11 @@ public class ImmersivePaintingScreen extends Screen {
             b.add(Page.YOURS);
             b.add(Page.DATAPACKS);
 
-            if ((Configs.COMMON.showOtherPlayersPaintings && Configs.CLIENT.showOtherPlayersPaintings) || isOp()) {
+            if ((Config.COMMON.showOtherPlayersPaintings && Config.CLIENT.showOtherPlayersPaintings) || isOp()) {
                 b.add(Page.PLAYERS);
             }
 
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Configs.COMMON.uploadPermissionLevel)))) {
+            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Config.COMMON.uploadPermissionLevel)))) {
                 b.add(Page.NEW);
             }
 
@@ -313,7 +312,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal("<"), sender -> {
-                            settings.resolution = Math.max(Configs.COMMON.minPaintingResolution, settings.resolution / 2);
+                            settings.resolution = Math.max(Config.COMMON.minPaintingResolution, settings.resolution / 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -329,7 +328,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal(">"), sender -> {
-                            settings.resolution = Math.min(Configs.COMMON.maxPaintingResolution, settings.resolution * 2);
+                            settings.resolution = Math.min(Config.COMMON.maxPaintingResolution, settings.resolution * 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -428,12 +427,12 @@ public class ImmersivePaintingScreen extends Screen {
                 // Save
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.save"), v -> {
-                                    byte[] encoded = null;
+                                    byte[] encoded;
 
                                     try {
                                         encoded = ImageManipulations.encode(pixelatedImage);
                                     } catch (IOException e) {
-                                        Main.LOGGER.error("could not encode temp image", e);
+                                        ImmersivePaintings.LOGGER.error("could not encode temp image", e);
                                         return;
                                     }
 
@@ -519,7 +518,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal("<"), sender -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(Configs.COMMON.minPaintingResolution, filteredResolution / 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(Config.COMMON.minPaintingResolution, filteredResolution / 2);
                             updateSearch();
                             widget.setMessage(Component.literal(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -532,7 +531,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal(">"), sender -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(Configs.COMMON.maxPaintingResolution, filteredResolution * 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(Config.COMMON.maxPaintingResolution, filteredResolution * 2);
                             updateSearch();
                             widget.setMessage(Component.literal(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -790,7 +789,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 paintingWidget.setTooltip(Tooltip.create(Component.literal(file.getName())));
 
-                Identifier identifier = Main.locate("screenshot_" + x);
+                Identifier identifier = ImmersivePaintings.locate("screenshot_" + x);
                 paintingWidgets.put(identifier, paintingWidget);
 
                 service.submit(() -> paintingWidget.update(identifier, loadImage(file.getPath(), identifier)));
@@ -825,7 +824,7 @@ public class ImmersivePaintingScreen extends Screen {
                     Painting p = e.getValue();
                     return (
                                    (page == Page.YOURS && !p.is(Painting.Type.DATAPACK) && p.authorUUID().equals(uuid)) ||
-                                   (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || Configs.CLIENT.showNSFWPaintings || isOp())) ||
+                                   (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || Config.CLIENT.showNSFWPaintings || isOp())) ||
                                    (page == Page.DATAPACKS && p.is(Painting.Type.DATAPACK))
                            ) &&
                            p.has(Painting.Flag.GRAFFITI) == entity.isGraffiti() &&
@@ -868,14 +867,22 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private void loadImage(String path) {
-        currentImage = loadImage(path, Main.locate("temp"));
+        currentImage = loadImage(path, ImmersivePaintings.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
+            currentImageName = toFileName(path);
             settings = new ImageManipulations.PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
         }
+    }
+
+    private String toFileName(String path) {
+        path = path.replace("\\", "/");
+        int lastSlash = path.lastIndexOf('/');
+        int lastDot = path.lastIndexOf('.');
+        if (lastDot < lastSlash) lastDot = path.length(); // no extension
+        return path.substring(lastSlash + 1, lastDot);
     }
 
     private BufferedImage loadImage(String path, Identifier identifier) {
@@ -886,7 +893,7 @@ public class ImmersivePaintingScreen extends Screen {
             try {
                 stream = new FileInputStream(path);
             } catch (Exception e) {
-                Main.LOGGER.error("failed loading image {} from path {}", identifier, path, e);
+                ImmersivePaintings.LOGGER.error("failed loading image {} from path {}", identifier, path, e);
             }
         }
 
@@ -914,7 +921,7 @@ public class ImmersivePaintingScreen extends Screen {
                     return image;
                 }
             } catch (IOException e) {
-                Main.LOGGER.error("failed decoding image {} from path {}", identifier, path, e);
+                ImmersivePaintings.LOGGER.error("failed decoding image {} from path {}", identifier, path, e);
             }
         }
 

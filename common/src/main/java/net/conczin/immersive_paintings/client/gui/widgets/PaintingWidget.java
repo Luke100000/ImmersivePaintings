@@ -1,8 +1,8 @@
 package net.conczin.immersive_paintings.client.gui.widgets;
 
 import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.registry.Configs;
-import net.minecraft.client.gui.GuiGraphics;
+import net.conczin.immersive_paintings.registry.Config;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -43,8 +43,8 @@ public class PaintingWidget extends Button {
 
     public void update(Identifier identifier, int paintingWidth, int paintingHeight) {
         this.identifier = identifier;
-        this.paintingWidth = paintingWidth * Configs.CLIENT.thumbnailSize;
-        this.paintingHeight = paintingHeight * Configs.CLIENT.thumbnailSize;
+        this.paintingWidth = paintingWidth * Config.CLIENT.thumbnailSize;
+        this.paintingHeight = paintingHeight * Config.CLIENT.thumbnailSize;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PaintingWidget extends Button {
     }
 
     @Override
-    protected void renderContents(GuiGraphics graphics, int i, int i1, float v) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int i, int i1, float v) {
         Matrix3x2fStack matrix = graphics.pose();
         matrix.pushMatrix();
         float scale = Math.min((float)width / paintingWidth, (float)height / paintingHeight);

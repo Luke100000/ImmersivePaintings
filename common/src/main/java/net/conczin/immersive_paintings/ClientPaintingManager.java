@@ -5,7 +5,7 @@ import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.c2s.ImageRequestPayload;
 import net.conczin.immersive_paintings.Painting.Size;
-import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.client.Minecraft;
@@ -64,8 +64,9 @@ public class ClientPaintingManager {
         }
     }
 
+    // By this point an image with size "size" will exist, validate any NSFW settings before returning
     private static Identifier getOrNSFW(Map<Size, Identifier> mapping, Identifier identifier, Size size) {
-        if (Configs.CLIENT.showNSFWPaintings)
+        if (Config.CLIENT.showNSFWPaintings)
             return mapping.get(size);
 
         Painting p = paintings.get(identifier);
@@ -82,7 +83,7 @@ public class ClientPaintingManager {
         }
 
         Optional<BufferedImage> image = paintingCache.get(textureIdentifier(identifier, Size.THUMBNAIL));
-        image.ifPresent(bufferedImage -> registerImageType(identifier, bufferedImage, Size.NSFW, Size.NSFW, false));
+        image.ifPresent(bufferedImage -> registerImageType(identifier, bufferedImage, Size.NSFW, Size.NSFW));
         return Painting.DEFAULT_IDENTIFIER;
     }
 
@@ -130,12 +131,12 @@ public class ClientPaintingManager {
         // Doing this allows us to quickly load and resize any necessary cached images
         // The only two sizes that can exist on their own are FULL and THUMBNAIL, all others are generated from them
         paintingCache.get(thumbId).ifPresentOrElse(
-            bufferedImage -> registerThumbnail(identifier, bufferedImage, true),
+            bufferedImage -> registerThumbnail(identifier, bufferedImage),
             () -> requested.remove(thumbId)
         );
 
         paintingCache.get(fullId).ifPresentOrElse(
-            bufferedImage -> registerImage(identifier, bufferedImage, true),
+            bufferedImage -> registerImage(identifier, bufferedImage),
             () -> requested.remove(fullId)
         );
     }
@@ -156,7 +157,7 @@ public class ClientPaintingManager {
         }
     }
 
-    private static void registerImageType(Identifier identifier, BufferedImage fullImage, Size size, Size realSize, final boolean alreadyCached) {
+    private static void registerImageType(Identifier identifier, BufferedImage fullImage, Size size, Size realSize) {
         textureMap.putIfAbsent(identifier, new HashMap<>());
         Map<Size, Identifier> mapping = textureMap.get(identifier);
 
@@ -180,11 +181,10 @@ public class ClientPaintingManager {
                     target = ImageManipulations.resizeImage(fullImage, size);
                 }
 
-                if (!alreadyCached)
-                    paintingCache.set(path, target);
+                paintingCache.set(path, target);
             }
 
-            Identifier name = Main.locate(path);
+            Identifier name = ImmersivePaintings.locate(path);
             newTexture(name, target);
             mapping.put(realSize, name);
 
@@ -193,16 +193,15 @@ public class ClientPaintingManager {
         });
     }
 
-    public static void registerThumbnail(Identifier identifier, BufferedImage image, boolean alreadyCached) {
-        registerImageType(identifier, image, Size.THUMBNAIL, Size.THUMBNAIL, alreadyCached);
+    public static void registerThumbnail(Identifier identifier, BufferedImage image) {
+        registerImageType(identifier, image, Size.THUMBNAIL, Size.THUMBNAIL);
         setImageRequest(identifier, true, true);
     }
 
     // TODO: for datapacks, use FULL for all sizes that aren't thumbnail
-    // registers this textures and make it readable
-    public static void registerImage(Identifier identifier, BufferedImage image, boolean alreadyCached) {
-        if (!paintings.containsKey(identifier) && !alreadyCached) {
-            Main.LOGGER.error("no existing painting record for identifier {}", identifier);
+    public static void registerImage(Identifier identifier, BufferedImage image) {
+        if (!paintings.containsKey(identifier)) {
+            ImmersivePaintings.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;
         }
 
@@ -214,13 +213,13 @@ public class ClientPaintingManager {
         Painting painting = paintings.get(identifier);
 
         int res = Math.max(painting.width(), painting.height()) * painting.resolution();
-        registerImageType(identifier, image, Size.FULL, Size.FULL, alreadyCached);
+        registerImageType(identifier, image, Size.FULL, Size.FULL);
 
-        Size halfSize = res / 2 < Configs.CLIENT.lodResolutionMinimum ? Size.FULL : Size.HALF;
-        registerImageType(identifier, image, halfSize, Size.HALF, alreadyCached);
+        Size halfSize = res / 2 < Config.CLIENT.lodResolutionMinimum ? Size.FULL : Size.HALF;
+        registerImageType(identifier, image, halfSize, Size.HALF);
 
-        Size quarterSize = res / 4 < Configs.CLIENT.lodResolutionMinimum ? halfSize : Size.QUARTER;
-        registerImageType(identifier, image, quarterSize, Size.QUARTER, alreadyCached);
+        Size quarterSize = res / 4 < Config.CLIENT.lodResolutionMinimum ? halfSize : Size.QUARTER;
+        registerImageType(identifier, image, quarterSize, Size.QUARTER);
 
         setImageRequest(identifier, false, true);
     }
@@ -240,7 +239,7 @@ public class ClientPaintingManager {
             try {
                 return ImageManipulations.decode(bytes);
             } catch (IOException e) {
-                Main.LOGGER.error("could not read image from client cache", e);
+                ImmersivePaintings.LOGGER.error("could not read image from client cache", e);
             }
             return null;
         }
@@ -250,7 +249,7 @@ public class ClientPaintingManager {
             try {
                 return ImageManipulations.encode(image);
             } catch (IOException e) {
-                Main.LOGGER.error("could not write image to client cache", e);
+                ImmersivePaintings.LOGGER.error("could not write image to client cache", e);
             }
             return null;
         }

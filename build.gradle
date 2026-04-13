@@ -1,8 +1,8 @@
 plugins {
     // see https://fabricmc.net/develop/ for new versions
-    id 'net.fabricmc.fabric-loom-remap' version '1.14-SNAPSHOT' apply false
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
     // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
-    id 'net.neoforged.moddev' version '2.0.123' apply false
+    id 'net.neoforged.moddev' version '2.0.141' apply false
 }
 
 def getAppVersion = { ->
@@ -20,7 +20,6 @@ def getAppVersion = { ->
         return "0.0.1"
     }
 } as Object
-
 
 subprojects {
     version = getAppVersion()

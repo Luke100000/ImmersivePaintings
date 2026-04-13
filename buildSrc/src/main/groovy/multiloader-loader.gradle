@@ -36,10 +36,11 @@ processResources {
     from(configurations.commonResources)
 }
 
-tasks.named('javadoc', Javadoc).configure {
-    dependsOn(configurations.commonJava)
-    source(configurations.commonJava)
-}
+// Skip javadoc as it breaks with oobjloader
+//tasks.named('javadoc', Javadoc).configure {
+//    dependsOn(configurations.commonJava)
+//    source(configurations.commonJava)
+//}
 
 tasks.named('sourcesJar', Jar) {
     dependsOn(configurations.commonJava)

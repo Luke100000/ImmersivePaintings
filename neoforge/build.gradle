@@ -16,29 +16,20 @@ neoForge {
         accessTransformers.add(at.absolutePath)
     }
 
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
-
     validateAccessTransformers = true
 
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
             ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
-
-            def dir = project.getLayout().getProjectDirectory().dir('runs/' + it.name)
-            if (!dir.asFile.exists()) {
-                dir.asFile.mkdir()
-            }
-            getGameDirectory().convention(dir)
         }
         client {
             client()
+            gameDirectory = this.mkdir(this.file("runs/client"))
         }
         data {
             clientData()
+            gameDirectory = this.mkdir(this.file("runs/data"))
 
             // DataGen can be run by - "./gradlew :neoforge:runData" in Terminal.
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
@@ -46,6 +37,8 @@ neoForge {
         }
         server {
             server()
+            this.file("runs/server").createParentDirectories()
+            gameDirectory = this.mkdir(this.file("runs/server"))
         }
     }
 
@@ -78,8 +71,9 @@ def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', Strin
         }
     }
 }
+
 sourceSets.configureEach {
-    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName, it.getTaskName(null, 'jarJar')].each { variant->
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName, it.getTaskName(null, 'jarJar')].each { variant ->
         configurations.named("$variant") {
             attributes {
                 attribute(loaderAttribute, 'neoforge')

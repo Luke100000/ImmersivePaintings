@@ -40,7 +40,7 @@ public class Command {
             )
         );
 
-    public static void registerCommands(Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer) {
+    public static void register(Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer) {
         consumer.accept(PAINTING_COMMAND);
     }
 }

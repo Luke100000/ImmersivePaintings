@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.network.payload.s2c;
 
 import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 public record ImageResponsePayload(Identifier identifier, boolean thumbnail, byte[] data, int segment, int totalSegments) implements ImmersivePayload {
-    public static final Type<ImageResponsePayload> TYPE = new Type<>(Main.locate("image_response"));
+    public static final Type<ImageResponsePayload> TYPE = new Type<>(ImmersivePaintings.locate("image_response"));
     public static final StreamCodec<FriendlyByteBuf, ImageResponsePayload> STREAM_CODEC = StreamCodec.composite(
             Identifier.STREAM_CODEC, ImageResponsePayload::identifier,
             ByteBufCodecs.BOOL, ImageResponsePayload::thumbnail,
@@ -38,9 +38,9 @@ public record ImageResponsePayload(Identifier identifier, boolean thumbnail, byt
 
         manager.handleSegmentedPayload(key, data, segment, totalSegments).ifPresent(image -> runner.run(() -> {
             if (thumbnail) {
-                ClientPaintingManager.registerThumbnail(id, image, false);
+                ClientPaintingManager.registerThumbnail(id, image);
             } else {
-                ClientPaintingManager.registerImage(id, image, false);
+                ClientPaintingManager.registerImage(id, image);
             }
         }));
     }

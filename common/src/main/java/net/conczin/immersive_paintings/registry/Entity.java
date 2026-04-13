@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.registry;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.entity.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -9,11 +9,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
-public class Entities {
-    private static final Identifier PAINTING_LOCATION = Main.locate("painting");
-    private static final Identifier GLOW_PAINTING_LOCATION = Main.locate("glow_painting");
-    private static final Identifier GRAFFITI_LOCATION = Main.locate("graffiti");
-    private static final Identifier GLOW_GRAFFITI_LOCATION = Main.locate("glow_graffiti");
+import java.util.function.BiConsumer;
+
+public class Entity {
+    private static final Identifier PAINTING_LOCATION = ImmersivePaintings.locate("painting");
+    private static final Identifier GLOW_PAINTING_LOCATION = ImmersivePaintings.locate("glow_painting");
+    private static final Identifier GRAFFITI_LOCATION = ImmersivePaintings.locate("graffiti");
+    private static final Identifier GLOW_GRAFFITI_LOCATION = ImmersivePaintings.locate("glow_graffiti");
 
     public static final EntityType<ImmersivePaintingEntity> PAINTING = createEntityType(ImmersivePaintingEntity::new, PAINTING_LOCATION);
     public static final EntityType<ImmersiveGlowPaintingEntity> GLOW_PAINTING = createEntityType(ImmersiveGlowPaintingEntity::new, GLOW_PAINTING_LOCATION);
@@ -31,14 +33,14 @@ public class Entities {
             .build(ResourceKey.create(Registries.ENTITY_TYPE, location));
     }
 
-    public static void registerEntities(RegisterHelper<EntityType<?>> helper) {
-        helper.register(PAINTING_LOCATION, PAINTING);
-        helper.register(GLOW_PAINTING_LOCATION, GLOW_PAINTING);
-        helper.register(GRAFFITI_LOCATION, GRAFFITI);
-        helper.register(GLOW_GRAFFITI_LOCATION, GLOW_GRAFFITI);
+    public static void register(BiConsumer<Identifier, EntityType<? extends ImmersivePaintingEntity>> consumer) {
+        consumer.accept(PAINTING_LOCATION, PAINTING);
+        consumer.accept(GLOW_PAINTING_LOCATION, GLOW_PAINTING);
+        consumer.accept(GRAFFITI_LOCATION, GRAFFITI);
+        consumer.accept(GLOW_GRAFFITI_LOCATION, GLOW_GRAFFITI);
     }
 
-    public static void registerEntitySerializers(RegisterHelper<EntityDataSerializer<?>> helper) {
-        helper.register(Main.locate("resource"), TRACKED_IDENTIFIER);
+    public static void registerSerializers(BiConsumer<Identifier, EntityDataSerializer<?>> consumer) {
+        consumer.accept(ImmersivePaintings.locate("resource_location"), TRACKED_IDENTIFIER);
     }
 }

@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.network.payload.s2c;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public record PaintingRegisterResponsePayload(Optional<Identifier> identifier, String error) implements ImmersivePayload {
-    public static final Type<PaintingRegisterResponsePayload> TYPE = new Type<>(Main.locate("painting_register_response"));
+    public static final Type<PaintingRegisterResponsePayload> TYPE = new Type<>(ImmersivePaintings.locate("painting_register_response"));
     public static final StreamCodec<FriendlyByteBuf, PaintingRegisterResponsePayload> STREAM_CODEC = StreamCodec.of((buf, msg) -> {
         buf.writeOptional(msg.identifier(), Identifier.STREAM_CODEC);
         buf.writeUtf(msg.error());

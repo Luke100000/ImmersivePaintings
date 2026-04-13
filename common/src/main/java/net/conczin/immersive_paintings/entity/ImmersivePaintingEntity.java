@@ -1,14 +1,14 @@
 package net.conczin.immersive_paintings.entity;
 
 import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.client.gui.GuiWrapper;
 import net.conczin.immersive_paintings.compat.XercaPaintCompat;
-import net.conczin.immersive_paintings.registry.Configs;
-import net.conczin.immersive_paintings.registry.Entities;
-import net.conczin.immersive_paintings.registry.Items;
+import net.conczin.immersive_paintings.registry.Config;
+import net.conczin.immersive_paintings.registry.Entity;
+import net.conczin.immersive_paintings.registry.Item;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -23,11 +23,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DiodeBlock;
@@ -43,11 +41,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ImmersivePaintingEntity extends HangingEntity {
-    protected static final Predicate<Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
+    protected static final Predicate<net.minecraft.world.entity.Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
 
-    private static final EntityDataAccessor<Identifier> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
-    private static final EntityDataAccessor<Identifier> FRAME = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
-    private static final EntityDataAccessor<Identifier> MATERIAL = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entity.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> FRAME = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entity.TRACKED_IDENTIFIER);
+    private static final EntityDataAccessor<Identifier> MATERIAL = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entity.TRACKED_IDENTIFIER);
 
     private static final EntityDataAccessor<Integer> WIDTH = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
@@ -132,7 +130,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     
     @Override
     public boolean survives() {
-        if (Configs.COMMON.testIfSpaceEmpty && !level().noCollision(this)) {
+        if (Config.COMMON.testIfSpaceEmpty && !level().noCollision(this)) {
             return false;
         }
 
@@ -146,19 +144,24 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
-    public boolean canBeCollidedWith(@Nullable Entity entity) {
-        return Configs.COMMON.paintingsHaveCollision;
+    public boolean canBeCollidedWith(@Nullable net.minecraft.world.entity.Entity entity) {
+        return Config.COMMON.paintingsHaveCollision;
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.isCrouching() && !level().isClientSide()) {
-            XercaPaintCompat.interactWithPainting(this, player, hand);
-        } else if (!player.isCrouching() && level().isClientSide()) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        boolean clientSide = level().isClientSide();
+
+        if (player.isCrouching()) {
+            if (!clientSide && XercaPaintCompat.interactWithPainting(this, player, hand)) {
+                return InteractionResult.CONSUME;
+            }
+        } else if (clientSide) {
             GuiWrapper.open(getUUID());
+            return InteractionResult.SUCCESS;
         }
 
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -167,7 +170,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
-    public void dropItem(ServerLevel serverLevel, @Nullable Entity entity) {
+    public void dropItem(ServerLevel serverLevel, @Nullable net.minecraft.world.entity.Entity entity) {
         if (serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)) {
             playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
             if (entity instanceof Player playerEntity && playerEntity.hasInfiniteMaterials()) {
@@ -193,9 +196,9 @@ public class ImmersivePaintingEntity extends HangingEntity {
     @Override
     public void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(MOTIVE, Main.NONE_LOCATION);
-        builder.define(FRAME, Main.NONE_LOCATION);
-        builder.define(MATERIAL, Main.NONE_LOCATION);
+        builder.define(MOTIVE, ImmersivePaintings.NONE_LOCATION);
+        builder.define(FRAME, ImmersivePaintings.NONE_LOCATION);
+        builder.define(MATERIAL, ImmersivePaintings.NONE_LOCATION);
         builder.define(WIDTH, 1);
         builder.define(HEIGHT, 1);
     }
@@ -256,16 +259,16 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
 
-        setFrame(Identifier.parse(input.getStringOr("Frame", Main.NONE_LOCATION.toString())));
-        setMaterial(Identifier.parse(input.getStringOr("Material", Main.NONE_LOCATION.toString())));
+        setFrame(Identifier.parse(input.getStringOr("Frame", ImmersivePaintings.NONE_LOCATION.toString())));
+        setMaterial(Identifier.parse(input.getStringOr("Material", ImmersivePaintings.NONE_LOCATION.toString())));
         Direction direction = Direction.from3DDataValue(input.getIntOr("Facing", Direction.SOUTH.get3DDataValue()));
 
         setDirection(direction, input.getIntOr("VRotation", 0));
-        setMotive(Identifier.parse(input.getStringOr("Motive", Main.NONE_LOCATION.toString())));
+        setMotive(Identifier.parse(input.getStringOr("Motive", ImmersivePaintings.NONE_LOCATION.toString())));
     }
 
-    public Item getItem() {
-        return Items.PAINTING;
+    public net.minecraft.world.item.Item getItem() {
+        return Item.PAINTING;
     }
 
     public boolean isGraffiti() {

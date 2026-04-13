@@ -1,8 +1,7 @@
 package net.conczin.immersive_paintings.entity;
 
-import net.conczin.immersive_paintings.registry.Items;
+import net.conczin.immersive_paintings.registry.Item;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 public class ImmersiveGlowPaintingEntity extends ImmersivePaintingEntity {
@@ -16,7 +15,7 @@ public class ImmersiveGlowPaintingEntity extends ImmersivePaintingEntity {
     }
 
     @Override
-    public Item getItem() {
-        return Items.GLOW_PAINTING;
+    public net.minecraft.world.item.Item getItem() {
+        return Item.GLOW_PAINTING;
     }
 }

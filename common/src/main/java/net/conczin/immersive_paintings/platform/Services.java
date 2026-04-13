@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.platform;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 
 import java.util.ServiceLoader;
 
@@ -12,7 +12,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        Main.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
+        ImmersivePaintings.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 }

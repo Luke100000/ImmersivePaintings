@@ -3,7 +3,7 @@ package net.conczin.immersive_paintings.resources;
 import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.minecraft.resources.Identifier;
@@ -29,7 +29,7 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Identifi
     private static final int dataTypeLength = dataType.length() + 1;
     private static final int fileSuffixLength = ".json".length();
     
-    protected static final Identifier ID = Main.locate(dataType);
+    public static final Identifier ID = ImmersivePaintings.locate("painting_loader");
 
     @Override
     protected Map<Identifier, Entry<Painting, Resource>> prepare(ResourceManager manager, ProfilerFiller profiler) {

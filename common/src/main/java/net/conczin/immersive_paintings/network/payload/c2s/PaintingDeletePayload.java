@@ -3,7 +3,7 @@ package net.conczin.immersive_paintings.network.payload.c2s;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
@@ -18,7 +18,7 @@ import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 
 public record PaintingDeletePayload(Identifier identifier, boolean adminDelete) implements ImmersivePayload {
-	public static final Type<PaintingDeletePayload> TYPE = new Type<>(Main.locate("painting_delete"));
+	public static final Type<PaintingDeletePayload> TYPE = new Type<>(ImmersivePaintings.locate("painting_delete"));
 	public static final StreamCodec<FriendlyByteBuf, PaintingDeletePayload> STREAM_CODEC = StreamCodec.composite(
 		Identifier.STREAM_CODEC, PaintingDeletePayload::identifier,
 		ByteBufCodecs.BOOL, PaintingDeletePayload::adminDelete,
@@ -27,7 +27,7 @@ public record PaintingDeletePayload(Identifier identifier, boolean adminDelete) 
 
     private static void deletePainting(MinecraftServer server, Player player, Identifier painting) {
         ServerPaintingManager.deregisterPainting(server, painting);
-        Main.LOGGER.info("Player {} deleted painting {}", player, painting);
+        ImmersivePaintings.LOGGER.info("Player {} deleted painting {}", player, painting);
     }
 
     @Override
@@ -40,7 +40,7 @@ public record PaintingDeletePayload(Identifier identifier, boolean adminDelete) 
             UUID authorUUID = painting.authorUUID();
 
             if (!(authorUUID.equals(player.getUUID()) || player.permissions().hasPermission(Permissions.COMMANDS_OWNER))) {
-                Main.LOGGER.warn("Player {} tried to delete painting {}, which they do not own", player, identifier);
+                ImmersivePaintings.LOGGER.warn("Player {} tried to delete painting {}, which they do not own", player, identifier);
                 return;
             }
 

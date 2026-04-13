@@ -1,8 +1,7 @@
 package net.conczin.immersive_paintings.entity;
 
-import net.conczin.immersive_paintings.registry.Items;
+import net.conczin.immersive_paintings.registry.Item;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 public class ImmersiveGlowGraffitiEntity extends ImmersivePaintingEntity {
@@ -21,7 +20,7 @@ public class ImmersiveGlowGraffitiEntity extends ImmersivePaintingEntity {
     }
 
     @Override
-    public Item getItem() {
-        return Items.GLOW_GRAFFITI;
+    public net.minecraft.world.item.Item getItem() {
+        return Item.GLOW_GRAFFITI;
     }
 }

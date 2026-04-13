@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.resources;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectLoader extends SimplePreparableReloadListener<Map<Identifier, Resource>> {
-    protected static final Identifier ID = Main.locate("objects");
+    public static final Identifier ID = ImmersivePaintings.locate("objects");
 
     public final static Map<Identifier, List<Face>> objects = new HashMap<>();
 

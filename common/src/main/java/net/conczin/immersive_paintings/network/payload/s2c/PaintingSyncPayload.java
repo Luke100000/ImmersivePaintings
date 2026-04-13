@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.network.payload.s2c;
 
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.ClientPaintingManager;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public record PaintingSyncPayload(Map<Identifier, Optional<Painting>> paintings) implements ImmersivePayload {
-    public static final Type<PaintingSyncPayload> TYPE = new Type<>(Main.locate("painting_list"));
+    public static final Type<PaintingSyncPayload> TYPE = new Type<>(ImmersivePaintings.locate("painting_list"));
     public static final StreamCodec<FriendlyByteBuf, PaintingSyncPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, ByteBufCodecs.optional(Painting.STREAM_CODEC)), PaintingSyncPayload::paintings,
             PaintingSyncPayload::new

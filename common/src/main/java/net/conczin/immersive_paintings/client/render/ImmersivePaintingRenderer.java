@@ -1,25 +1,24 @@
 package net.conczin.immersive_paintings.client.render;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.client.render.state.ImmersivePaintingRenderState;
 import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
@@ -44,7 +43,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
     public void extractRenderState(T entity, ImmersivePaintingRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
 
-        state.light = LevelRenderer.getLightColor(entity.level(), entity.blockPosition());
+        state.light = LevelRenderer.getLightCoords(entity.level(), entity.blockPosition());
 
         state.xRot = entity.getXRot(partialTick);
         state.yRot = entity.getYRot(partialTick);
@@ -57,7 +56,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         state.material = entity.getMaterial();
 
         Minecraft client = Minecraft.getInstance();
-        ClientConfig config = Configs.CLIENT;
+        ClientConfig config = Config.CLIENT;
 
         double distance = (client.player == null ? 0 : client.player.distanceTo(entity));
         double blocksVisible = Math.tan(client.options.fov().get() / 180.0 * Math.PI / 2.0) * 2.0 * distance;
@@ -68,8 +67,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
             return;
         }
 
-        int resolution = painting.get().resolution();
-        double pixelDensity = blocksVisible * resolution / client.getWindow().getHeight();
+        double pixelDensity = blocksVisible * painting.get().resolution() / client.getWindow().getHeight();
 
         Painting.Size size = pixelDensity > config.thumbResolutionThreshold ? Painting.Size.THUMBNAIL
                 : pixelDensity > config.quarterResolutionThreshold ? Painting.Size.QUARTER
@@ -95,10 +93,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         poseStack.mulPose(Axis.XP.rotationDegrees(-renderState.xRot));
         poseStack.scale(0.0625f, 0.0625f, 0.0625f);
 
-        //PoseStack.Pose pose = poseStack.last();
-        //VertexConsumer vertexConsumer;
-
-        boolean hasFrame = !renderState.frame.equals(Main.NONE_LOCATION);
+        boolean hasFrame = !renderState.frame.equals(ImmersivePaintings.NONE_LOCATION);
 
         //canvas
         String name = renderState.isGraffiti ? "objects/graffiti.obj" : "objects/canvas.obj";
@@ -124,18 +119,18 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         if (!glowing)
             return light;
 
-        return LightTexture.pack((int)(LightTexture.block(light) * 0.25 + 15 * 0.75), LightTexture.sky(light));
+        return LightCoordsUtil.pack((int)(LightCoordsUtil.block(light) * 0.25 + 15 * 0.75), LightCoordsUtil.sky(light));
     }
 
     protected int getFrameLight(int light, boolean glowing) {
         if (!glowing)
             return light;
 
-        return LightTexture.pack((int)(LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
+        return LightCoordsUtil.pack((int)(LightCoordsUtil.block(light) * 0.875 + 2), LightCoordsUtil.sky(light));
     }
 
     public static void renderFaces(String name, PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, float width, float height, float margin) {
-        List<Face> faces = ObjectLoader.objects.get(Main.locate(name));
+        List<Face> faces = ObjectLoader.objects.get(ImmersivePaintings.locate(name));
         for (Face face : faces) {
             for (FaceVertex v : face.vertices) {
                 vertex(pose,

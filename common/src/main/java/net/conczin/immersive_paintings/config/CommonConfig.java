@@ -3,13 +3,12 @@ package net.conczin.immersive_paintings.config;
 import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigGroup;
-import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 
-@Translation(prefix = Configs.CONFIG_ID + "common")
+@Translation(prefix = "config." + ImmersivePaintings.MOD_ID + ".common")
 public class CommonConfig extends Config {
     public CommonConfig() {
-        super(Main.locate("common_config"));
+        super(ImmersivePaintings.locate("common_config"));
     }
 
     // TODO Options: Restrict editing to painting owner

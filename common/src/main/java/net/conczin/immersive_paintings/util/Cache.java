@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.util;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class Cache<K, V> {
-    public static final Path CACHE_PATH = Path.of(Main.MOD_ID + "_cache");
+    public static final Path CACHE_PATH = Path.of(ImmersivePaintings.MOD_ID + "_cache");
 
     private final Map<K, V> cache;
 
@@ -73,7 +73,7 @@ public abstract class Cache<K, V> {
             return Optional.of(data);
         } catch (IOException e) {
             // https://logging.apache.org/log4j/2.x/manual/api.html#best-practice-exception
-            Main.LOGGER.error("failed getting cached file {}", file, e);
+            ImmersivePaintings.LOGGER.error("failed getting cached file {}", file, e);
         }
 
         return Optional.empty();
@@ -85,7 +85,7 @@ public abstract class Cache<K, V> {
             try {
                 Files.createDirectories(path.getParent());
             } catch (IOException e) {
-                Main.LOGGER.error("failed creating directories for {}", path.getParent(), e);
+                ImmersivePaintings.LOGGER.error("failed creating directories for {}", path.getParent(), e);
                 return;
             }
         }
@@ -97,7 +97,7 @@ public abstract class Cache<K, V> {
                 setCache(key, value);
             }
         } catch (IOException e) {
-            Main.LOGGER.error("failed writing cached file {}", path, e);
+            ImmersivePaintings.LOGGER.error("failed writing cached file {}", path, e);
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class Cache<K, V> {
             if (entries.findAny().isEmpty())
                 Files.delete(parent);
         } catch (IOException e) {
-            Main.LOGGER.error("failed deleting cache directory {}", parent, e);
+            ImmersivePaintings.LOGGER.error("failed deleting cache directory {}", parent, e);
         }
 
         return deleted;

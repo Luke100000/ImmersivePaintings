@@ -1,26 +1,26 @@
 package net.conczin.immersive_paintings.fabric;
 
-import net.conczin.immersive_paintings.registry.Renderers;
-import net.conczin.immersive_paintings.fabric.resources.FabricFrameLoader;
-import net.conczin.immersive_paintings.fabric.resources.FabricObjectLoader;
+import net.conczin.immersive_paintings.registry.Renderer;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
+import net.conczin.immersive_paintings.resources.FrameLoader;
+import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.server.packs.PackType;
 
 public final class ClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         NetworkHandler.Client.registerSender(ClientPlayNetworking::send);
-        Renderers.register(EntityRendererRegistry::register);
+        Renderer.register(EntityRenderers::register);
 
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new FabricObjectLoader());
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new FabricFrameLoader());
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(ObjectLoader.ID, new ObjectLoader());
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(FrameLoader.ID, new FrameLoader());
 
-        ClientTickEvents.START_CLIENT_TICK.register((client) -> LazyNetworkManager.tickClient());
+        ClientTickEvents.START_CLIENT_TICK.register(_ -> LazyNetworkManager.tickClient());
     }
 }

@@ -3,12 +3,11 @@ package net.conczin.immersive_paintings;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
-import net.conczin.immersive_paintings.registry.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -25,7 +24,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 
 public class ServerPaintingManager extends SavedData {
     public static final SavedDataType<ServerPaintingManager> TYPE = new SavedDataType<>(
-            Main.MOD_ID,
+            ImmersivePaintings.locate(ImmersivePaintings.MOD_ID),
             ServerPaintingManager::new,
             RecordCodecBuilder.create(i -> i.group(
                     Codec.unboundedMap(Identifier.CODEC, Painting.CODEC).fieldOf("paintings").forGetter(s -> s.customPaintings)
@@ -48,7 +47,7 @@ public class ServerPaintingManager extends SavedData {
     }
 
     private static ServerPaintingManager get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(TYPE);
+        return server.getDataStorage().computeIfAbsent(TYPE);
     }
 
     public static Map<Identifier, Painting> getCustomPaintings(MinecraftServer server) {
@@ -86,7 +85,7 @@ public class ServerPaintingManager extends SavedData {
             }
 
             if (image.isEmpty())
-                Main.LOGGER.error("no image found with identifier {} [thumb={}] in cache", identifier, thumbnail);
+                ImmersivePaintings.LOGGER.error("no image found with identifier {} [thumb={}] in cache", identifier, thumbnail);
             return image;
         }
     }
@@ -99,7 +98,7 @@ public class ServerPaintingManager extends SavedData {
                 getCustomPaintings(server).put(identifier, painting);
                 get(server).setDirty(true);
             } catch (IOException e) {
-                Main.LOGGER.error("could not register image {}", identifier, e);
+                ImmersivePaintings.LOGGER.error("could not register image {}", identifier, e);
             }
         }
     }
@@ -119,9 +118,9 @@ public class ServerPaintingManager extends SavedData {
         // Break paintings up into smaller batches if necessary to avoid packet limits
         // The interval is chosen to be an arbitrary number that feels like a good amount to send at a time
         List<PaintingSyncPayload> payloads = new ArrayList<>();
-        final int interval = Configs.COMMON.packetSplitInterval;
+        final int interval = Config.COMMON.packetSplitInterval;
 
-        Main.LOGGER.debug("Found {} paintings, splitting into {} groups", paintings.size(), paintings.size() / interval + Math.min(paintings.size() % interval, 1));
+        ImmersivePaintings.LOGGER.debug("Found {} paintings, splitting into {} groups", paintings.size(), paintings.size() / interval + Math.min(paintings.size() % interval, 1));
 
         int size = paintings.size();
         int processed = 0;

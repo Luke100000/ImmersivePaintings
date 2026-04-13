@@ -2,7 +2,7 @@ package net.conczin.immersive_paintings.network.payload.c2s;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.minecraft.core.UUIDUtil;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public record PaintingEditPayload(UUID entityId, Map<Option, String> options) implements ImmersivePayload {
-    public static final Type<PaintingEditPayload> TYPE = new Type<>(Main.locate("painting_edit"));
+    public static final Type<PaintingEditPayload> TYPE = new Type<>(ImmersivePaintings.locate("painting_edit"));
     public static final StreamCodec<FriendlyByteBuf, PaintingEditPayload> STREAM_CODEC = StreamCodec.composite(
         UUIDUtil.STREAM_CODEC, PaintingEditPayload::entityId,
         ByteBufCodecs.map(HashMap::new, Option.STREAM_CODEC, ByteBufCodecs.STRING_UTF8), PaintingEditPayload::options,

@@ -1,8 +1,8 @@
 package net.conczin.immersive_paintings.item;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
-import net.conczin.immersive_paintings.registry.Entities;
+import net.conczin.immersive_paintings.registry.Entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ImmersivePaintingItem extends Item {
-    public static final ResourceKey<Item> KEY = ResourceKey.create(Registries.ITEM, Main.locate("painting"));
+    public static final ResourceKey<Item> KEY = ResourceKey.create(Registries.ITEM, ImmersivePaintings.locate("painting"));
 
     public ImmersivePaintingItem() {
         this(new Properties().setId(KEY));
@@ -33,7 +33,7 @@ public class ImmersivePaintingItem extends Item {
     }
 
     protected EntityType<? extends ImmersivePaintingEntity> getEntityType() {
-        return Entities.PAINTING;
+        return Entity.PAINTING;
     }
 
     @Override

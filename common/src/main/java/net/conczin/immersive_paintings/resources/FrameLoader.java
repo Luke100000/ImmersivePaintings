@@ -3,7 +3,7 @@ package net.conczin.immersive_paintings.resources;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FrameLoader extends SimpleJsonResourceReloadListener<JsonElement> {
-    public static final Identifier ID = Main.locate("frames");
+    public static final Identifier ID = ImmersivePaintings.locate("frame_loader");
 
     public static final Map<Identifier, Frame> frames = new HashMap<>();
 
-    private static final String DEFAULT_FRAME = Main.locate("frame/simple").toString();
-    private static final String DEFAULT_MATERIAL = Main.locate("frame/simple/oak").toString();
+    private static final String DEFAULT_FRAME = ImmersivePaintings.locate("frame/simple").toString();
+    private static final String DEFAULT_MATERIAL = ImmersivePaintings.locate("frame/simple/oak").toString();
 
     public FrameLoader() {
         super(ExtraCodecs.JSON, FileToIdConverter.json("frames"));
@@ -42,7 +42,7 @@ public class FrameLoader extends SimpleJsonResourceReloadListener<JsonElement> {
 
                 frames.put(entry.getKey(), frame);
             } catch (Exception e) {
-                Main.LOGGER.error(e);
+                ImmersivePaintings.LOGGER.error(e);
             }
         }
     }

@@ -33,7 +33,7 @@ public record Painting(int version, int width, int height, int resolution, Strin
 
     public static final StreamCodec<ByteBuf, Painting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public static final Identifier DEFAULT_IDENTIFIER = Main.locate("textures/block/frame/canvas.png");
+    public static final Identifier DEFAULT_IDENTIFIER = ImmersivePaintings.locate("textures/block/frame/canvas.png");
 
     public Painting(int width, int height, int resolution, String name, String author, UUID authorUUID, Type type, EnumSet<Flag> flags, String hash) {
         this(1, width, height, resolution, name, author, authorUUID, type, flags, hash);
@@ -42,13 +42,13 @@ public record Painting(int version, int width, int height, int resolution, Strin
     public Identifier location() {
         switch (type) {
             case Type.DATAPACK -> {
-                return Main.locate("datapack/" + hash);
+                return ImmersivePaintings.locate("datapack/" + hash);
             }
             case Type.XERCA -> {
-                return Main.locate("xerca/" + hash);
+                return ImmersivePaintings.locate("xerca/" + hash);
             }
         }
-        return Main.locate(authorUUID.toString() + "/" + hash);
+        return ImmersivePaintings.locate(authorUUID.toString() + "/" + hash);
     }
 
     public boolean is(Type t) {

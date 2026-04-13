@@ -21,7 +21,7 @@ import java.util.Optional;
 public class XercaPaintCompat {
     private static DataComponentType<?> getComponent(String name) {
         Optional<Holder.Reference<DataComponentType<?>>> optional = BuiltInRegistries.DATA_COMPONENT_TYPE.get(Identifier.fromNamespaceAndPath("xercapaint", name));
-        return optional.<DataComponentType<?>>map(Holder.Reference::value).orElse(null);
+        return optional.map(Holder.Reference::value).orElse(null);
     }
 
     public static boolean interactWithPainting(ImmersivePaintingEntity painting, Player player, InteractionHand hand) {

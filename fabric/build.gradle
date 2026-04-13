@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.fabricmc.fabric-loom-remap'
+    id 'net.fabricmc.fabric-loom'
 }
 
 repositories {
@@ -9,17 +9,17 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
 
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // Dependencies
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
-    modImplementation("me.fzzyhmstrs:fzzy_config:${fzzy_config_version}")
+    implementation("com.terraformersmc:modmenu:${modmenu_version}")
+    implementation("me.fzzyhmstrs:fzzy_config:${fzzy_config_version}") {
+        // Excluded because 0.7.0-SNAPSHOT doesn't exist as of this commit
+        // It only impacts dev testing and shouldn't be an issue for a release
+        exclude group: "me.lucko", module: "fabric-permissions-api"
+    }
 
     // Third Party Dependencies
     include(implementation("com.twelvemonkeys.common:common-lang:${webp_version}"))
@@ -32,10 +32,6 @@ loom {
     def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
-    }
-
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
     }
 
     runs {
@@ -63,19 +59,13 @@ def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', Strin
         }
     }
 }
+
 sourceSets.configureEach {
     [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
         configurations.named("$variant") {
             attributes {
                 attribute(loaderAttribute, 'fabric')
             }
-        }
-    }
-}
-loom.remapConfigurations.configureEach {
-    configurations.named(it.name) {
-        attributes {
-            attribute(loaderAttribute, 'fabric')
         }
     }
 }
