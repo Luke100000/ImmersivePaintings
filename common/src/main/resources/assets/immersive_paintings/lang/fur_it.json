@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "L'immagine a è too grande!",
   "immersive_paintings.error.limit_reached": "Tu ai raggiunt il to massim ammont di pitture uploadadis!",
   "immersive_paintings.error.hash_failed": "Falît di creâ un hash dal dipint!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Cancellâts dutis le dipintane par il giocator %s",
   "immersive_paintings.command.error.no_player": "Nissun dipint trovât cun autore '%s'",
   "config.immersive_paintings.common": "Impostazions Comuns",
