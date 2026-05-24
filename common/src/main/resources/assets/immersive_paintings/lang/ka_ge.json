@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "სურათი ზედმეტად დიდია!",
   "immersive_paintings.error.limit_reached": "თქვენ მიაღწიეთ თქვენს მაქსიმალურ რაოდენობას ატვირთული ნახატების!",
   "immersive_paintings.error.hash_failed": "ბლედების შექმნა ვერ მოხერხდა!",
+  "immersive_paintings.error.image_load_failed": "სურათის ჩატვირთვა ვერ მოხერხდა, შეამოწმეთ ლოგფაილი!",
   "immersive_paintings.command.success.delete": "მოთამაშისთვის %s ყველა ნახატი წაიშალა",
   "immersive_paintings.command.error.no_player": "ავტორმა '%s' ვერ მოიძებნა ნახატები",
   "config.immersive_paintings.common": "ზოგადი პარამეტრები",
