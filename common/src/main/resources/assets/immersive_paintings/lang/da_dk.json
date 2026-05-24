@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Billedet er for stort!",
   "immersive_paintings.error.limit_reached": "Du har nået dit maksimale antal uploadede malerier!",
   "immersive_paintings.error.hash_failed": "Mislykkedes at oprette hash af maleri!",
+  "immersive_paintings.error.image_load_failed": "Kunne ikke indlæse billedet, tjek loggen!",
   "immersive_paintings.command.success.delete": "Slettede alle malerier til spiller %s",
   "immersive_paintings.command.error.no_player": "Ingen malerier fundet med forfatteren '%s'",
   "config.immersive_paintings.common": "Almindelige Indstillinger",
