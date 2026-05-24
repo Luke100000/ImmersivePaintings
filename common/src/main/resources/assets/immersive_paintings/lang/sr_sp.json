@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Слика је превелика!",
   "immersive_paintings.error.limit_reached": "Достигли сте максималан број отпремљених слика!",
   "immersive_paintings.error.hash_failed": "Непосредно стварање хеша слике није успело!",
+  "immersive_paintings.error.image_load_failed": "Није могуће учитати слику, проверите лог!",
   "immersive_paintings.command.success.delete": "Избрисане су све слике за играча %s",
   "immersive_paintings.command.error.no_player": "Нема слика са аутором '%s'",
   "config.immersive_paintings.common": "Опште поставке",
