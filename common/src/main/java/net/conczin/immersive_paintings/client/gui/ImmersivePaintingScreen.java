@@ -40,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -934,7 +935,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private BufferedImage loadImage(String path, ResourceLocation identifier) {
-        try (InputStream stream = path.startsWith("http://") || path.startsWith("https://") ? new URL(path).openStream() : new FileInputStream(path)) {
+        try (InputStream stream = path.startsWith("http://") || path.startsWith("https://") ? openUrlStream(path) : new FileInputStream(path)) {
             BufferedImage image = ImageIO.read(stream);
             if (image != null) {
                 preprocessImage(image);
@@ -948,6 +949,12 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         return null;
+    }
+
+    private static InputStream openUrlStream(String path) throws IOException {
+        URLConnection connection = new URL(path).openConnection();
+        connection.setRequestProperty("User-Agent", "ImmersivePaintings/1.0");
+        return connection.getInputStream();
     }
 
     // Only graffiti properly supports alpha
