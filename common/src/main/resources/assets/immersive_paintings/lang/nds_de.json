@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bild is to groß!",
   "immersive_paintings.error.limit_reached": "Du hest dien Maximum van uploaden Bilder reikt!",
   "immersive_paintings.error.hash_failed": "Konnte Hash för dat Mål nid kreiren!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "All Molen för Speler %s gelöscht",
   "immersive_paintings.command.error.no_player": "Keen Molen funnen mit Fördör '%s'",
   "config.immersive_paintings.common": "Gemainsame Einstellungen",
