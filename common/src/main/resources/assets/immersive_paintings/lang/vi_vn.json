@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Hình ảnh quá lớn!",
   "immersive_paintings.error.limit_reached": "Bạn đã đạt tới tối đa số lượng tranh được tải lên!",
   "immersive_paintings.error.hash_failed": "Không thể tạo mã băm cho bức tranh!",
+  "immersive_paintings.error.image_load_failed": "Không thể tải hình ảnh, hãy kiểm tra nhật ký!",
   "immersive_paintings.command.success.delete": "Xóa tất cả các bức tranh cho người chơi %s",
   "immersive_paintings.command.error.no_player": "Không tìm thấy tác phẩm hội họa nào của tác giả '%s'.",
   "config.immersive_paintings.common": "Cài đặt chung",
