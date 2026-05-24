@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Ang imahe ay masyadong malaki!",
   "immersive_paintings.error.limit_reached": "Nab reached mo na ang pinakamataas na bilang ng mga na-upload na painting!",
   "immersive_paintings.error.hash_failed": "Nabigong lumikha ng hash ng painting!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Tanggalin ang lahat ng painting para sa manlalaro %s",
   "immersive_paintings.command.error.no_player": "Walang painting na natagpuan na may may-akda '%s'",
   "config.immersive_paintings.common": "Karaniwang Mga Setting",
