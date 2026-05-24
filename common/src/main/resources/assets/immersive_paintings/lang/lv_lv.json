@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Attēls ir pārāk liels!",
   "immersive_paintings.error.limit_reached": "Jūs sasniedzāt maksimālo augšupielādēto gleznu skaitu!",
   "immersive_paintings.error.hash_failed": "Neizdevās izveidot glezna hash!",
+  "immersive_paintings.error.image_load_failed": "Nevar ielādēt attēlu, pārbaudiet žurnālu!",
   "immersive_paintings.command.success.delete": "Izdzēstas visas spēlētāja gleznas %s",
   "immersive_paintings.command.error.no_player": "Nav atrastas gleznas ar autoru '%s'",
   "config.immersive_paintings.common": "Kopējie iestatījumi",
