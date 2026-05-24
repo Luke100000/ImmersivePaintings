@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "L'immagine è troppo grande!",
   "immersive_paintings.error.limit_reached": "Hai raggiunto il numero massimo di pitture caricate!",
   "immersive_paintings.error.hash_failed": "Fallimentu a creâ el hash del quadr!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Eliminâ tüt i quadri per el giocatore %s",
   "immersive_paintings.command.error.no_player": "Nissun quadri trovaa con l'autur '%s'",
   "config.immersive_paintings.common": "Impostazioni Comuni",
