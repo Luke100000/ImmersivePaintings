@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Myndin er of stór!",
   "immersive_paintings.error.limit_reached": "Þú hefur náð hámarki nægjanlegra hlaðinna málverka!",
   "immersive_paintings.error.hash_failed": "Mistókst að búa til hash af myndinni!",
+  "immersive_paintings.error.image_load_failed": "Ekki var hægt að hlaða myndinni, athugaðu skrána!",
   "immersive_paintings.command.success.delete": "Eyddi öllum myndum fyrir spilara %s",
   "immersive_paintings.command.error.no_player": "Engar myndir fundust með höfundinum '%s'",
   "config.immersive_paintings.common": "Almennar stillingar",
