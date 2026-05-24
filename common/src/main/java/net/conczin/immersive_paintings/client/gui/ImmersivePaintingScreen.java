@@ -57,10 +57,10 @@ public class ImmersivePaintingScreen extends Screen {
 
     public final ImmersivePaintingEntity entity;
 
-    private String filteredString = "";
-    private int filteredResolution = 0;
-    private int filteredWidth = 0;
-    private int filteredHeight = 0;
+    private static String filteredString = "";
+    private static int filteredResolution = 32;
+    private static int filteredWidth = 0;
+    private static int filteredHeight = 0;
     private final List<ResourceLocation> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
@@ -837,12 +837,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public void setPage(Page page) {
-        if (page != this.page) {
-            clearSearch();
-        }
-
         this.page = page;
-        filteredResolution = (page == Page.DATAPACKS ? 32 : 0);
 
         rebuild();
 
