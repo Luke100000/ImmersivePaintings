@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Das Bild ist zu groß!",
   "immersive_paintings.error.limit_reached": "Du hast die maximale Anzahl an Gemälden erreicht!",
   "immersive_paintings.error.hash_failed": "Fehler beim Erstellen des Hashs der Malerei!",
+  "immersive_paintings.error.image_load_failed": "Bild konnte nicht geladen werden, Protokoll prüfen!",
   "immersive_paintings.command.success.delete": "Alle Bilder für Spieler %s gelöscht",
   "immersive_paintings.command.error.no_player": "Keine Bilder mit Autor '%s ' gefunden",
   "config.immersive_paintings.common": "Gemeinsame Einstellungen",
