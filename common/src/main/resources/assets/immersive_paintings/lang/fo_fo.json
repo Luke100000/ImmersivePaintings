@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Myndin er ov stór!",
   "immersive_paintings.error.limit_reached": "Tú hevur nádd títt hægsta tal av uppløgdum málningum!",
   "immersive_paintings.error.hash_failed": "Feil við at skapa hash av myndini!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Slettaði allar myndir fyri leikara %s",
   "immersive_paintings.command.error.no_player": "Einki myndir funnið við fyriskipara '%s'",
   "config.immersive_paintings.common": "Vanligar innstillingar",
