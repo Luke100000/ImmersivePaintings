@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "תמונה גדולה מידי!",
   "immersive_paintings.error.limit_reached": "הגעת למכסה המקסימלית שלך של ציורים שהועלו!",
   "immersive_paintings.error.hash_failed": "לא הצלחנו ליצור חתימת hash של הציור!",
+  "immersive_paintings.error.image_load_failed": "לא ניתן לטעון את התמונה, בדוק את היומן!",
   "immersive_paintings.command.success.delete": "נמחקו כל הציורים של השחקן %s",
   "immersive_paintings.command.error.no_player": "לא נמצאו ציורים עם המחבר '%s'",
   "config.immersive_paintings.common": "הגדרות נפוצות",
