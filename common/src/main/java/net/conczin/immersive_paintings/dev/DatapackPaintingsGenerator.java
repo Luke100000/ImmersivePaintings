@@ -1,8 +1,7 @@
 package net.conczin.immersive_paintings.dev;
 
-import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen;
-import net.conczin.immersive_paintings.client.gui.ImmersivePaintingScreen.PixelatorSettings;
+import net.conczin.immersive_paintings.ImmersivePaintings;
+import net.conczin.immersive_paintings.util.ImageManipulations.PixelatorSettings;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 
 import javax.imageio.ImageIO;
@@ -24,7 +23,7 @@ public class DatapackPaintingsGenerator {
         try {
             Files.createDirectories(Paths.get(output));
         } catch (IOException e) {
-            Main.LOGGER.error("failed creating output directory {}", output, e);
+            ImmersivePaintings.LOGGER.error("failed creating output directory {}", output, e);
         }
 
         for (int res : new int[]{16, 32, 64, 128}) {
@@ -88,9 +87,9 @@ public class DatapackPaintingsGenerator {
         File file = new File(name + ".png");
 
         try {
-            ImageIO.write(ImmersivePaintingScreen.pixelateImage(image, settings), "png", file);
+            ImageIO.write(ImageManipulations.pixelateImage(image, settings, -1), "png", file);
         } catch (IOException e) {
-            Main.LOGGER.error("could not load datapack image {}", name, e);
+            ImmersivePaintings.LOGGER.error("could not load datapack image {}", name, e);
         }
     }
 

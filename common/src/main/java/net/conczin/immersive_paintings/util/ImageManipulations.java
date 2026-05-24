@@ -2,8 +2,9 @@ package net.conczin.immersive_paintings.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.twelvemonkeys.image.ImageUtil;
+import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.Painting.Size;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 
 public class ImageManipulations {
     public static BufferedImage decode(byte[] bytes) throws IOException {
@@ -27,7 +29,7 @@ public class ImageManipulations {
     }
 
     public static void processByteArrayInChunks(byte[] input, TriConsumer<byte[], Integer, Integer> consumer) {
-        int packetSize = Configs.COMMON.packetSize;
+        int packetSize = Config.COMMON.packetSize;
         int splits = (int) Math.ceil((double) input.length / packetSize);
         int split = 0;
         for (int i = 0; i < input.length; i += packetSize) {
@@ -50,7 +52,7 @@ public class ImageManipulations {
                            (model.getGreen(elements) << 8) |
                            model.getRed(elements);
 
-                nativeImage.setPixelRGBA(x, y, abgr);
+                nativeImage.setPixelABGR(x, y, abgr);
             }
         }
         return nativeImage;
@@ -72,14 +74,10 @@ public class ImageManipulations {
                 w /= 4;
                 h /= 4;
             }
-            case Size.EIGHTH -> {
-                w /= 8;
-                h /= 8;
-            }
             case Size.THUMBNAIL -> {
                 float z = Math.min(
-                        (float) Configs.CLIENT.thumbnailSize / w,
-                        (float) Configs.CLIENT.thumbnailSize / h
+                        (float) Config.CLIENT.thumbnailSize / w,
+                        (float) Config.CLIENT.thumbnailSize / h
                 );
 
                 // Additional check for tiny thumbnails relative to their parent image
@@ -100,7 +98,7 @@ public class ImageManipulations {
             }
             case Size.NSFW -> {
                 // NSFW Images can only be resized from thumbnails, so there's no need to downscale
-                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize * Configs.CLIENT.nsfwBlurAmount);
+                return ImageUtil.blur(in, (float) Config.CLIENT.thumbnailSize * Config.CLIENT.nsfwBlurAmount);
             }
         }
 
@@ -117,6 +115,9 @@ public class ImageManipulations {
     }
 
     public static void resize(BufferedImage image, BufferedImage source, float zoom, int ox, int oy) {
+        // TODO: test g.drawImage
+        //Graphics2D g = image.createGraphics();
+
         ColorModel sourceModel = source.getColorModel();
 
         for (int x = 0; x < image.getWidth(); x++) {
@@ -238,74 +239,153 @@ public class ImageManipulations {
     }
 
     private static int toByte(float v) {
-        return Math.clamp((int) (v * 255), 0, 255);
+        return Math.min(255, Math.max(0, (int) (v * 255)));
     }
-
-    private static final int MAX_PIXEL_ART_MULTIPLE = 64;
-    private static final int TILE_COLOR_TOLERANCE = 16;
-    private static final int MAX_OFF_COLOR_PIXELS_PER_TILE = 1;
 
     public static int scanForPixelArtMultiple(BufferedImage image) {
-        int maxMultiple = Math.min(MAX_PIXEL_ART_MULTIPLE, Math.min(image.getWidth(), image.getHeight()));
-        for (int multiple = maxMultiple; multiple > 1; multiple--) {
-            if (image.getWidth() % multiple == 0 && image.getHeight() % multiple == 0 && isPixelArtMultiple(image, multiple)) {
-                return multiple;
+        int maxScale = Math.min(image.getWidth(), image.getHeight()) / 64;
+
+        int[] hist = new int[64];
+        for (int y = 0; y < image.getHeight(); y += 7) {
+            int l = 0;
+            int lastColor = 0;
+            for (int x = 0; x < image.getWidth(); x++) {
+                int color = image.getRGB(x, y);
+                if (x == 0 || lastColor == color) {
+                    l++;
+                } else {
+                    if (l < hist.length) {
+                        hist[l]++;
+                    }
+                    l = 1;
+                }
+                lastColor = color;
             }
         }
 
-        return 1;
+        int bestScore = 0;
+        int best = 1;
+        for (int i = 1; i < Math.min(hist.length, maxScale); i++) {
+            if (hist[i] > bestScore) {
+                bestScore = hist[i];
+                best = i;
+            }
+        }
+
+        return best;
     }
 
-    private static boolean isPixelArtMultiple(BufferedImage image, int multiple) {
-        for (int tileX = 0; tileX < image.getWidth(); tileX += multiple) {
-            for (int tileY = 0; tileY < image.getHeight(); tileY += multiple) {
-                if (!isSingleColorTile(image, tileX, tileY, multiple)) {
-                    return false;
+    public static int getCurrentImagePixelZoomCache(BufferedImage currentImage, int zoomCache) {
+        if (zoomCache < 0) {
+            return scanForPixelArtMultiple(currentImage);
+        }
+        return zoomCache;
+    }
+
+    public static BufferedImage pixelateImage(BufferedImage currentImage, PixelatorSettings settings, int zoomCache) {
+        BufferedImage pixelatedImage = new BufferedImage(settings.resolution * settings.width, settings.resolution * settings.height, BufferedImage.TYPE_INT_ARGB);
+
+        //zoom
+        float zoom;
+        if (settings.pixelArt) {
+            if (zoomCache < 0) {
+                zoom = getCurrentImagePixelZoomCache(currentImage, zoomCache);
+            } else {
+                zoom = zoomCache;
+            }
+        } else {
+            float fx = (float) currentImage.getWidth() / pixelatedImage.getWidth();
+            float fy = (float) currentImage.getHeight() / pixelatedImage.getHeight();
+            zoom = (float) (Math.min(fx, fy) / settings.zoom);
+        }
+
+        //offset
+        int ox = (int) ((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
+        int oy = (int) ((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
+        if (settings.pixelArt) {
+            ox = ox / ((int) zoom) * ((int) zoom);
+            oy = oy / ((int) zoom) * ((int) zoom);
+        }
+
+        //downscale
+        resize(pixelatedImage, currentImage, zoom, ox, oy);
+
+        //dither
+        if (settings.dither > 0 && !settings.pixelArt) {
+            if (settings.colors > 1) {
+                dither(pixelatedImage, settings.dither / settings.colors);
+            } else {
+                dither(pixelatedImage, settings.dither / 16.0);
+            }
+        }
+
+        //reduce colors
+        if (settings.colors > 1 && !settings.pixelArt) {
+            reduceColors(pixelatedImage, settings.colors);
+        }
+
+        return pixelatedImage;
+    }
+
+    public static final class PixelatorSettings {
+        public double dither;
+        public int colors;
+        public int resolution;
+        public int width;
+        public int height;
+        public double offsetX;
+        public double offsetY;
+        public double zoom;
+        public boolean pixelArt;
+        public boolean hidden = true;
+        public boolean nsfw;
+
+        public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
+            this.dither = dither;
+            this.colors = colors;
+            this.resolution = resolution;
+            this.width = width;
+            this.height = height;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+            this.zoom = zoom;
+            this.pixelArt = pixelArt;
+        }
+
+        public PixelatorSettings(BufferedImage currentImage) {
+            this(currentImage, Config.COMMON.minPaintingResolution, Config.COMMON.maxPaintingResolution);
+        }
+
+        PixelatorSettings(BufferedImage currentImage, int minResolution, int maxResolution) {
+            this(0, 10, Math.clamp(64, minResolution, maxResolution), 1, 1, 0.5, 0.5, 1, false);
+
+            double target = currentImage.getWidth() / (double) currentImage.getHeight();
+            double bestScore = 100;
+
+            double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
+            double dw = currentImage.getWidth() / d;
+            double dh = currentImage.getHeight() / d;
+            for (double diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
+                int pw = (int) Math.ceil(dw * diagonal);
+                int ph = (int) Math.ceil(dh * diagonal);
+                double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
+                if (e < bestScore) {
+                    width = Math.max(1, Math.min(16, pw));
+                    height = Math.max(1, Math.min(16, ph));
+                    bestScore = e;
                 }
             }
         }
-        return true;
-    }
 
-    private static boolean isSingleColorTile(BufferedImage image, int tileX, int tileY, int size) {
-        long red = 0;
-        long green = 0;
-        long blue = 0;
-        long alpha = 0;
-        int samples = size * size;
+        public EnumSet<Painting.Flag> getFlags() {
+            EnumSet<Painting.Flag> flags = EnumSet.noneOf(Painting.Flag.class);
+            if (nsfw)
+                flags.add(Painting.Flag.NSFW);
 
-        for (int x = tileX; x < tileX + size; x++) {
-            for (int y = tileY; y < tileY + size; y++) {
-                int color = image.getRGB(x, y);
-                red += (color >> 16) & 0xFF;
-                green += (color >> 8) & 0xFF;
-                blue += color & 0xFF;
-                alpha += (color >> 24) & 0xFF;
-            }
+            if (hidden)
+                flags.add(Painting.Flag.HIDDEN);
+
+            return flags;
         }
-
-        int averageRed = (int)(red / samples);
-        int averageGreen = (int)(green / samples);
-        int averageBlue = (int)(blue / samples);
-        int averageAlpha = (int)(alpha / samples);
-        int offColorPixels = 0;
-
-        for (int x = tileX; x < tileX + size; x++) {
-            for (int y = tileY; y < tileY + size; y++) {
-                int color = image.getRGB(x, y);
-                if (!isCloseColor(color, averageRed, averageGreen, averageBlue, averageAlpha) && ++offColorPixels > MAX_OFF_COLOR_PIXELS_PER_TILE) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private static boolean isCloseColor(int color, int red, int green, int blue, int alpha) {
-        return Math.abs(((color >> 16) & 0xFF) - red) <= TILE_COLOR_TOLERANCE
-               && Math.abs(((color >> 8) & 0xFF) - green) <= TILE_COLOR_TOLERANCE
-               && Math.abs((color & 0xFF) - blue) <= TILE_COLOR_TOLERANCE
-               && Math.abs(((color >> 24) & 0xFF) - alpha) <= TILE_COLOR_TOLERANCE;
     }
 }

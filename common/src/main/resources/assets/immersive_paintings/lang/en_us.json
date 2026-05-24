@@ -145,8 +145,6 @@
   "config.immersive_paintings.client.halfResolutionThreshold.desc": "Threshold for resolution of half of the image size",
   "config.immersive_paintings.client.quarterResolutionThreshold": "Quarter Resolution Threshold",
   "config.immersive_paintings.client.quarterResolutionThreshold.desc": "Threshold for resolution of quarter of the image size",
-  "config.immersive_paintings.client.eighthResolutionThreshold": "Eighth Resolution Threshold",
-  "config.immersive_paintings.client.eighthResolutionThreshold.desc": "Threshold for resolution of eighth of the image size",
   "config.immersive_paintings.client.thumbResolutionThreshold": "Thumbnail Resolution Threshold",
   "config.immersive_paintings.client.thumbResolutionThreshold.desc": "Threshold for resolution of thumbnail size"
 }

@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.client.gui.widget;
+package net.conczin.immersive_paintings.client.gui.widgets;
 
 import net.minecraft.network.chat.Component;
 

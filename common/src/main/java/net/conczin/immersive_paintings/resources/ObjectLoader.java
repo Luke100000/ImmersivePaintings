@@ -1,7 +1,7 @@
 package net.conczin.immersive_paintings.resources;
 
-import net.conczin.immersive_paintings.Main;
-import net.minecraft.resources.ResourceLocation;
+import net.conczin.immersive_paintings.ImmersivePaintings;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -18,24 +18,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ObjectLoader extends SimplePreparableReloadListener<Map<ResourceLocation, Resource>> {
-    protected static final ResourceLocation ID = Main.locate("objects");
+public class ObjectLoader extends SimplePreparableReloadListener<Map<Identifier, Resource>> {
+    public static final Identifier ID = ImmersivePaintings.locate("objects");
 
-    public final static Map<ResourceLocation, List<Face>> objects = new HashMap<>();
+    public final static Map<Identifier, List<Face>> objects = new HashMap<>();
 
     @Override
-    protected Map<ResourceLocation, Resource> prepare(ResourceManager manager, ProfilerFiller profiler) {
+    protected Map<Identifier, Resource> prepare(ResourceManager manager, ProfilerFiller profiler) {
         return manager.listResources("objects", n -> n.getPath().endsWith(".obj"));
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, Resource> o, ResourceManager manager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, Resource> o, ResourceManager manager, ProfilerFiller profiler) {
         objects.clear();
         o.forEach((id, res) -> {
             try {
                 InputStream stream = res.open();
                 ArrayList<Face> faces = new Builder(new BufferedReader(new InputStreamReader(stream))).faces;
-                ResourceLocation newId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath());
+                Identifier newId = Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath());
                 objects.put(newId, faces);
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -10,8 +10,7 @@ pluginManagement {
                 }
             }
             filter {
-                includeGroup('net.fabricmc')
-                includeGroup('fabric-loom')
+                includeGroupAndSubgroups('net.fabricmc')
             }
         }
     }
@@ -21,5 +20,5 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-rootProject.name = "${mod_id}"
-include("common", "fabric", /*forge, */"neoforge")
+rootProject.name = 'immersivepaintings'
+include('common', 'fabric', 'neoforge')

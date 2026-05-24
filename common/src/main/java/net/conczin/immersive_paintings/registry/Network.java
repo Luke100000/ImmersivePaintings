@@ -1,4 +1,4 @@
-package net.conczin.immersive_paintings.registration;
+package net.conczin.immersive_paintings.registry;
 
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.conczin.immersive_paintings.network.payload.c2s.*;
@@ -16,9 +16,8 @@ public class Network {
         c.register(PaintingDeletePayload.TYPE, PaintingDeletePayload.STREAM_CODEC, true);
 
         c.register(ImageResponsePayload.TYPE, ImageResponsePayload.STREAM_CODEC, false);
-        c.register(OpenGuiPayload.TYPE, OpenGuiPayload.STREAM_CODEC, false);
         c.register(PaintingSyncPayload.TYPE, PaintingSyncPayload.STREAM_CODEC, false);
-        c.register(PaintingRegisterErrorPayload.TYPE, PaintingRegisterErrorPayload.STREAM_CODEC, false);
+        c.register(PaintingRegisterResponsePayload.TYPE, PaintingRegisterResponsePayload.STREAM_CODEC, false);
     }
 
     public interface Registrar {

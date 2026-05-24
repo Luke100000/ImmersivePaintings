@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.mixin;
 
-import net.conczin.immersive_paintings.registration.Entities;
+import net.conczin.immersive_paintings.registry.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,10 +15,10 @@ public class EntityTypeMixin {
     private void trackDelta(CallbackInfoReturnable<Boolean> cir) {
         EntityType<?> thisObject = (EntityType<?>)(Object)this;
         cir.setReturnValue(cir.getReturnValue()
-                && thisObject != Entities.PAINTING
-                && thisObject != Entities.GLOW_PAINTING
-                && thisObject != Entities.GRAFFITI
-                && thisObject != Entities.GLOW_GRAFFITI
+                && thisObject != Entity.PAINTING
+                && thisObject != Entity.GLOW_PAINTING
+                && thisObject != Entity.GRAFFITI
+                && thisObject != Entity.GLOW_GRAFFITI
         );
     }
 }

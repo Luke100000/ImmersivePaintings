@@ -1,6 +1,6 @@
 package net.conczin.immersive_paintings.network.payload.c2s;
 
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record ImageUploadPayload(byte[] data, int segment, int totalSegments) implements ImmersivePayload {
-    public static final Type<ImageUploadPayload> TYPE = new Type<>(Main.locate("image_upload"));
+    public static final Type<ImageUploadPayload> TYPE = new Type<>(ImmersivePaintings.locate("image_upload"));
     public static final StreamCodec<FriendlyByteBuf, ImageUploadPayload> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BYTE_ARRAY, ImageUploadPayload::data,
         ByteBufCodecs.INT, ImageUploadPayload::segment,

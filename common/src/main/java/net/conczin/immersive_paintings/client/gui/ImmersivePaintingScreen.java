@@ -1,13 +1,12 @@
 package net.conczin.immersive_paintings.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
-import net.conczin.immersive_paintings.client.gui.widget.IntegerSliderWidget;
-import net.conczin.immersive_paintings.client.gui.widget.PaintingWidget;
-import net.conczin.immersive_paintings.client.gui.widget.PercentageSliderWidget;
-import net.conczin.immersive_paintings.client.gui.widget.TexturedButtonWidget;
+import net.conczin.immersive_paintings.client.gui.widgets.IntegerSliderWidget;
+import net.conczin.immersive_paintings.client.gui.widgets.PaintingWidget;
+import net.conczin.immersive_paintings.client.gui.widgets.PercentageSliderWidget;
+import net.conczin.immersive_paintings.client.gui.widgets.TexturedButtonWidget;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
@@ -15,23 +14,27 @@ import net.conczin.immersive_paintings.network.payload.c2s.ImageUploadPayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingDeletePayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingEditPayload;
 import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.resources.FrameLoader;
 import net.conczin.immersive_paintings.util.ImageManipulations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.FormattedCharSequence;
+import org.joml.Matrix3x2fStack;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -46,15 +49,11 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class ImmersivePaintingScreen extends Screen {
     private static final int SCREENSHOTS_PER_PAGE = 5;
 
-    final int minResolution;
-    final int maxResolution;
-    final boolean showOtherPlayersPaintings;
-    final int uploadPermissionLevel;
+    private final static ExecutorService service = Executors.newFixedThreadPool(1);
 
     public final ImmersivePaintingEntity entity;
 
@@ -62,37 +61,31 @@ public class ImmersivePaintingScreen extends Screen {
     private static int filteredResolution = 32;
     private static int filteredWidth = 0;
     private static int filteredHeight = 0;
-    private final List<ResourceLocation> filteredPaintings = new ArrayList<>();
+    private final List<Identifier> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
     private Page page;
 
     private Button pageWidget;
 
-    private final Map<ResourceLocation, PaintingWidget> paintingWidgets = new HashMap<>();
+    private final Map<Identifier, PaintingWidget> paintingWidgets = new HashMap<>();
     private BufferedImage currentImage;
     private static int currentImagePixelZoomCache = -1;
     private String currentImageName;
-    private PixelatorSettings settings;
+    private ImageManipulations.PixelatorSettings settings;
     private BufferedImage pixelatedImage;
 
     private List<File> screenshots = List.of();
     private int screenshotPage;
 
-    private ResourceLocation deletePainting;
+    private Identifier deletePainting;
     private Component error;
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
 
-    private final static ExecutorService service = Executors.newFixedThreadPool(1);
 
-    public ImmersivePaintingScreen(int entityId, int minResolution, int maxResolution, boolean showOtherPlayersPaintings, int uploadPermissionLevel) {
+    public ImmersivePaintingScreen(UUID entityId) {
         super(Component.translatable("item.immersive_paintings.painting"));
-
-        this.minResolution = minResolution;
-        this.maxResolution = maxResolution;
-        this.showOtherPlayersPaintings = showOtherPlayersPaintings && Configs.CLIENT.showOtherPlayersPaintings; // Prefer server, fall back to the client if they mismatch
-        this.uploadPermissionLevel = uploadPermissionLevel;
 
         if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(entityId) instanceof ImmersivePaintingEntity painting) {
             entity = painting;
@@ -129,16 +122,14 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.render(graphics, mouseX, mouseY, delta);
-
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         switch (page) {
             case NEW -> {
                 graphics.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.drop"), 220);
-                int y = height / 2 - 40 - wrap.size() * 12;
-                for (Component text : wrap) {
-                    graphics.drawCenteredString(font, text, width / 2, y, 0xFFFFFFFF);
+                List<FormattedCharSequence> splits = font.split(Component.translatable("immersive_paintings.gui.drop"), 220);
+                int y = height / 2 - 40 - splits.size() * 12;
+                for (FormattedCharSequence t : splits) {
+                    graphics.centeredText(font, t, width / 2, y, 0xFFFFFFFF);
                     y += 12;
                 }
             }
@@ -149,8 +140,7 @@ public class ImmersivePaintingScreen extends Screen {
                 }
 
                 if (shouldUpload && pixelatedImage != null) {
-                    Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(ImageManipulations.bufferedToNative(pixelatedImage)));
-                    shouldUpload = false;
+                    ClientPaintingManager.newTexture(ImmersivePaintings.locate("temp_pixelated"), pixelatedImage);
                 }
 
                 int maxWidth = 190;
@@ -158,48 +148,53 @@ public class ImmersivePaintingScreen extends Screen {
                 int tw = settings.resolution * settings.width;
                 int th = settings.resolution * settings.height;
                 float size = Math.min((float) maxWidth / tw, (float) maxHeight / th);
-                PoseStack poseStack = graphics.pose();
-                poseStack.pushPose();
-                poseStack.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f, 0.0f);
-                poseStack.scale(size, size, 1.0f);
-                graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
-                poseStack.popPose();
-            }
-            case DELETE -> {
-                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_deletion"), 300);
-                int y = height / 2 - 35;
-                for (Component t : wrap) {
-                    graphics.drawCenteredString(font, t, width / 2, y, 0XFFFFFF);
-                    y += 15;
+                Matrix3x2fStack matrix = graphics.pose();
+                matrix.pushMatrix();
+                matrix.translate(width / 2.0f - tw * size / 2.0f, height / 2.0f - th * size / 2.0f);
+                matrix.scale(size, size);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, ImmersivePaintings.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
+                matrix.popMatrix();
+
+                if (error != null) {
+                    graphics.centeredText(font, error, width / 2, height / 2, 0xFFFF0000);
                 }
             }
-            case ADMIN_DELETE -> {
-                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
-                List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_admin_deletion"), 300);
-                int y = height / 2 - 35;
-                for (Component t : wrap) {
-                    graphics.drawCenteredString(font, t, width / 2, y, 0XFFFFFF);
-                    y += 15;
+            case DELETE, ADMIN_DELETE -> {
+                Identifier background = Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
+
+                Component component;
+                if (page == Page.DELETE) {
+                    component = Component.translatable("immersive_paintings.gui.confirm_deletion");
+                } else {
+                    component = Component.translatable("immersive_paintings.gui.confirm_admin_deletion");
                 }
+
+                // Copy drawWordWrap method from GuiGraphicsExtractor but center the resulting string
+                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+                //graphics.blit(RenderPipelines.GUI_TEXTURED, background, width / 2 - 160, height / 2 - 50, 0, 0, 320, 100, 32, 32);
+                int y = height / 2 - 35;
+                for (FormattedCharSequence t : font.split(component, 300)) {
+                    graphics.centeredText(font, t, width / 2, y, 0xFFFFFFFF);
+                    y += 9;
+                }
+
+
             }
             case LOADING -> {
                 Component text = Component.translatable("immersive_paintings.gui.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
-                graphics.drawCenteredString(font, text, width / 2, height / 2, 0xFFFFFFFF);
+                graphics.centeredText(font, text, width / 2, height / 2, 0xFFFFFFFF);
             }
         }
 
-        if (error != null) {
-            graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
-        }
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private List<ResourceLocation> getMaterialsList(ResourceLocation frame) {
+    private List<Identifier> getMaterialsList(Identifier frame) {
         return FrameLoader.frames.values().stream()
                 .filter(v -> v.frame().equals(frame))
                 .map(FrameLoader.Frame::material)
                 .distinct()
-                .sorted(ResourceLocation::compareTo)
+                .sorted(Identifier::compareTo)
                 .toList();
     }
 
@@ -211,12 +206,15 @@ public class ImmersivePaintingScreen extends Screen {
             List<Page> b = new LinkedList<>();
             b.add(Page.YOURS);
             b.add(Page.DATAPACKS);
-            if (showOtherPlayersPaintings || isOp()) {
+
+            if ((Config.COMMON.showOtherPlayersPaintings && Config.CLIENT.showOtherPlayersPaintings) || isOp()) {
                 b.add(Page.PLAYERS);
             }
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.hasPermissions(uploadPermissionLevel)) {
+
+            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Config.COMMON.uploadPermissionLevel)))) {
                 b.add(Page.NEW);
             }
+
             if (!entity.isGraffiti()) {
                 b.add(Page.FRAME);
             }
@@ -224,7 +222,8 @@ public class ImmersivePaintingScreen extends Screen {
             int x = width / 2 - 200;
             int w = 400 / b.size();
             for (Page page : b) {
-                Button btn = addRenderableWidget(Button.builder(
+                Button btn = addRenderableWidget(
+                        Button.builder(
                                 Component.translatable("immersive_paintings.gui.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))
                         .bounds(x, height / 2 - 90 - 22, w, 20)
                         .build()
@@ -298,9 +297,8 @@ public class ImmersivePaintingScreen extends Screen {
                 // Resolution
                 int x = width / 2 - 200;
 
-                Button resolutionWidget = addRenderableWidget(Button
-                        .builder(Component.literal(String.valueOf(settings.resolution)), sender -> {
-                        })
+                Button resolutionWidget = addRenderableOnly(Button
+                        .builder(Component.literal(String.valueOf(settings.resolution)), sender -> {})
                         .pos(x + 25, y)
                         .size(50, 20)
                         .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.resolution")))
@@ -309,7 +307,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal("<"), sender -> {
-                            settings.resolution = Math.max(minResolution, settings.resolution / 2);
+                            settings.resolution = Math.max(Config.COMMON.minPaintingResolution, settings.resolution / 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -325,7 +323,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal(">"), sender -> {
-                            settings.resolution = Math.min(maxResolution, settings.resolution * 2);
+                            settings.resolution = Math.min(Config.COMMON.maxPaintingResolution, settings.resolution * 2);
                             if (settings.pixelArt) {
                                 adaptToPixelArt();
                                 refreshPage();
@@ -429,7 +427,7 @@ public class ImmersivePaintingScreen extends Screen {
                                     try {
                                         encoded = ImageManipulations.encode(pixelatedImage);
                                     } catch (IOException e) {
-                                        Main.LOGGER.error("could not encode temp image", e);
+                                        ImmersivePaintings.LOGGER.error("could not encode temp image", e);
                                         return;
                                     }
 
@@ -515,7 +513,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal("<"), sender -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(minResolution, filteredResolution / 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.max(Config.COMMON.minPaintingResolution, filteredResolution / 2);
                             updateSearch();
                             widget.setMessage(Component.literal(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -528,7 +526,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button
                         .builder(Component.literal(">"), sender -> {
-                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(maxResolution, filteredResolution * 2);
+                            filteredResolution = filteredResolution == 0 ? 32 : Math.min(Config.COMMON.maxPaintingResolution, filteredResolution * 2);
                             updateSearch();
                             widget.setMessage(Component.literal(String.valueOf(filteredResolution)));
                             allWidget.active = true;
@@ -570,18 +568,18 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<ResourceLocation> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(ResourceLocation::compareTo).toList();
-                for (ResourceLocation frame : frames) {
+                List<Identifier> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(Identifier::compareTo).toList();
+                for (Identifier frame : frames) {
                     Button widget = addRenderableWidget(Button.builder(
                                     Component.translatable("immersive_paintings.frame." + identifierToTranslation(frame)), v -> {
-                                        ResourceLocation material = getMaterialsList(frame).getFirst();
+                                        Identifier material = getMaterialsList(frame).getFirst();
 
                                         // TODO
                                         // This is needed so that when the GUI updates it has the right frame and material set
                                         // I don't like having to set it here, there should be a better way
                                         entity.setFrame(frame);
                                         entity.setMaterial(material);
-                                        NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                        NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getUUID(), Map.of(
                                                 PaintingEditPayload.Option.FRAME, frame.toString(),
                                                 PaintingEditPayload.Option.MATERIAL, material.toString()
                                         )));
@@ -597,17 +595,17 @@ public class ImmersivePaintingScreen extends Screen {
                 //material
                 int py = 0;
                 int px = 0;
-                List<ResourceLocation> materials = getMaterialsList(entity.getFrame());
+                List<Identifier> materials = getMaterialsList(entity.getFrame());
                 List<Button> materialList = new LinkedList<>();
-                for (ResourceLocation material : materials) {
+                for (Identifier material : materials) {
                     Button widget = addRenderableWidget(new TexturedButtonWidget(
                             width / 2 - 80 + px * 65, height / 2 - 80 + py * 20, 64, 16,
-                            ResourceLocation.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
+                            Identifier.fromNamespaceAndPath(material.getNamespace(), material.getPath().replace("/block/", "/gui/")),
                             64, 32,
                             Component.literal(""),
                             v -> {
                                 entity.setMaterial(material);
-                                NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getUUID(), Map.of(
                                         PaintingEditPayload.Option.MATERIAL, material.toString()
                                 )));
                                 materialList.forEach(b -> b.active = true);
@@ -633,73 +631,45 @@ public class ImmersivePaintingScreen extends Screen {
                         .build()
                 );
             }
-            case DELETE -> {
-                addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.YOURS))
-                        .bounds(width / 2 - 100 - 5, height / 2 + 20, 100, 20)
-                        .build()
-                );
+            case DELETE, ADMIN_DELETE -> {
+                int w = page == Page.ADMIN_DELETE ? 70 : 100;
+                int h = page == Page.ADMIN_DELETE ? 10 : 20;
+                int start = page == Page.ADMIN_DELETE ? -115 : -105;
+                Page p = page == Page.ADMIN_DELETE ? Page.PLAYERS : Page.YOURS;
 
-                addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.delete"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
-                                    setPage(Page.YOURS);
-                                })
-                        .bounds(width / 2 + 5, height / 2 + 20, 100, 20)
-                        .build()
-                );
-            }
-            case ADMIN_DELETE -> {
-                addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.PLAYERS))
-                        .bounds(width / 2 - 115, height / 2 + 10, 70, 20)
-                        .build()
-                );
+                List<Button.Builder> buttonList = new ArrayList<>();
+                buttonList.add(Button.builder(Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(p)));
+                buttonList.add(Button.builder(Component.translatable("immersive_paintings.gui.delete"), v -> {
+                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
+                    setPage(p);
+                }));
 
-                addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.delete"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
-                                    setPage(Page.PLAYERS);
-                                })
-                        .bounds(width / 2 - 40, height / 2 + 10, 70, 20)
-                        .build()
-                );
+                if (page == Page.ADMIN_DELETE)  {
+                    buttonList.add(Button.builder(Component.translatable("immersive_paintings.gui.delete_all"), v -> {
+                        NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
+                        setPage(Page.PLAYERS);
+                    }));
+                }
 
-                addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.delete_all"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
-                                    setPage(Page.PLAYERS);
-                                })
-                        .bounds(width / 2 + 35, height / 2 + 10, 70, 20)
-                        .build()
-                );
+                for (int i = 0; i < buttonList.size(); i++) {
+                    addRenderableWidget(buttonList.get(i).bounds(width / 2 + start + i * (w + 5), height / 2 + h, w, 20).build());
+                }
             }
         }
     }
 
-    public void updateWidget(ResourceLocation identifier) {
+    public void updateWidget(Identifier identifier) {
         if (paintingWidgets.containsKey(identifier)) {
             ClientPaintingManager.getPainting(identifier).ifPresent(p -> paintingWidgets.get(identifier).update(ClientPaintingManager.getImageIdentifier(identifier, Painting.Size.THUMBNAIL), p.width(), p.height()));
         }
     }
 
-    public static String identifierToTranslation(ResourceLocation location) {
+    public static String identifierToTranslation(Identifier location) {
         String s = location.getPath();
         String lastSplit = s.substring(s.lastIndexOf("/") + 1);
 
         int i = lastSplit.lastIndexOf(".");
         return i < 0 ? lastSplit : lastSplit.substring(0, i);
-    }
-
-    public static List<Component> wrap(Component text, int maxWidth) {
-        return Minecraft.getInstance().font.getSplitter().splitLines(text, maxWidth, Style.EMPTY).stream().map(line -> {
-            MutableComponent compiled = Component.literal("");
-            line.visit((s, t) -> {
-                compiled.append(Component.literal(t).setStyle(s));
-                return Optional.empty();
-            }, text.getStyle());
-            return compiled;
-        }).collect(Collectors.toList());
     }
 
     private static Component consolidate(List<Component> textList) {
@@ -730,7 +700,7 @@ public class ImmersivePaintingScreen extends Screen {
             for (int x = 0; x < 8; x++) {
                 int i = y * 8 + x + selectionPage * 24;
                 if (i >= 0 && i < filteredPaintings.size()) {
-                    ResourceLocation identifier = filteredPaintings.get(i);
+                    Identifier identifier = filteredPaintings.get(i);
 
                     //tooltip
                     List<Component> tooltip = new LinkedList<>();
@@ -753,11 +723,10 @@ public class ImmersivePaintingScreen extends Screen {
                         }
                     });
 
-
                     PaintingWidget paintingWidget = addRenderableWidget(new PaintingWidget(
                             (int) (width / 2.0 + (x - 3.5) * 48) - 24, height / 2 - 66 + y * 48, 46, 46,
                             sender -> {
-                                NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                                NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getUUID(), Map.of(
                                         PaintingEditPayload.Option.MOTIVE, identifier.toString()
                                 )));
                                 if (entity.isGraffiti()) {
@@ -805,26 +774,20 @@ public class ImmersivePaintingScreen extends Screen {
                             if (currentImage != null) {
                                 currentImagePixelZoomCache = -1;
                                 currentImageName = file.getName();
-                                settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
+                                settings = new ImageManipulations.PixelatorSettings(currentImage);
                                 setPage(Page.CREATE);
                                 pixelateImage();
                             }
                         },
-                        b -> {
-                        }
+                        b -> {}
                 ));
 
                 paintingWidget.setTooltip(Tooltip.create(Component.literal(file.getName())));
 
-                ResourceLocation identifier = Main.locate("screenshot_" + x);
+                Identifier identifier = ImmersivePaintings.locate("screenshot_" + x);
                 paintingWidgets.put(identifier, paintingWidget);
 
-                service.submit(() -> {
-                    BufferedImage image = loadImage(file.getPath(), identifier);
-                    if (image != null) {
-                        paintingWidget.update(identifier, image);
-                    }
-                });
+                service.submit(() -> paintingWidget.update(identifier, loadImage(file.getPath(), identifier)));
             } else {
                 break;
             }
@@ -851,7 +814,7 @@ public class ImmersivePaintingScreen extends Screen {
                     Painting p = e.getValue();
                     return (
                                    (page == Page.YOURS && !p.is(Painting.Type.DATAPACK) && p.authorUUID().equals(uuid)) ||
-                                   (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || Configs.CLIENT.showNSFWPaintings || isOp())) ||
+                                   (page == Page.PLAYERS && !p.is(Painting.Type.DATAPACK) && (!p.has(Painting.Flag.HIDDEN) || isOp()) && (!p.has(Painting.Flag.NSFW) || Config.CLIENT.showNSFWPaintings || isOp())) ||
                                    (page == Page.DATAPACKS && p.is(Painting.Type.DATAPACK))
                            ) &&
                            p.has(Painting.Flag.GRAFFITI) == entity.isGraffiti() &&
@@ -868,7 +831,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean isOp() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(4);
+        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
     }
 
     private void setSelectionPage(int p) {
@@ -907,11 +870,11 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean loadImage(String path) {
-        currentImage = loadImage(path, Main.locate("temp"));
+        currentImage = loadImage(path, ImmersivePaintings.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
             currentImageName = toFileName(path);
-            settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
+            settings = new ImageManipulations.PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
             return true;
@@ -927,115 +890,66 @@ public class ImmersivePaintingScreen extends Screen {
         return path.substring(lastSlash + 1, lastDot);
     }
 
-    private BufferedImage loadImage(String path, ResourceLocation identifier) {
-        try (InputStream stream = path.startsWith("http://") || path.startsWith("https://") ? openUrlStream(path) : new FileInputStream(path)) {
-            BufferedImage image = ImageIO.read(stream);
-            if (image != null) {
-                preprocessImage(image);
-                Minecraft.getInstance().execute(() -> {
-                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
-                });
-                return image;
+    private BufferedImage loadImage(String path, Identifier identifier) {
+        InputStream stream = null;
+        try {
+            URLConnection connection = new URL(path).openConnection();
+            connection.setRequestProperty("User-Agent", "ImmersivePaintings/1.0");
+            stream = connection.getInputStream();
+        } catch (Exception exception) {
+            try {
+                stream = new FileInputStream(path);
+            } catch (Exception e) {
+                ImmersivePaintings.LOGGER.error("failed loading image {} from path {}", identifier, path, e);
             }
-        } catch (IOException e) {
-            Main.LOGGER.error("Failed to load image {}", path, e);
+        }
+
+        if (stream != null) {
+            try {
+                BufferedImage image = ImageIO.read(stream);
+                if (image != null) {
+                    // Attempt to preprocess by checking for transparency on non-graffiti paintings
+                    setError(null);
+                    if (!entity.isGraffiti()) {
+                        for (int x = 0; x < image.getWidth(); x++) {
+                            for (int y = 0; y < image.getHeight(); y++) {
+                                int color = image.getRGB(x, y);
+                                if (((color >> 24) & 255) != 255) {
+                                    if (error == null)
+                                        setError(Component.translatable("immersive_paintings.gui.graffiti_warning"));
+                                    image.setRGB(x, y, (255 << 24) | (color & 0x00ffffff));
+                                }
+                            }
+                        }
+                    }
+
+                    ClientPaintingManager.newTexture(identifier, image);
+                    stream.close();
+                    return image;
+                }
+            } catch (IOException e) {
+                ImmersivePaintings.LOGGER.error("failed decoding image {} from path {}", identifier, path, e);
+            }
         }
 
         return null;
     }
 
-    private static InputStream openUrlStream(String path) throws IOException {
-        URLConnection connection = new URL(path).openConnection();
-        connection.setRequestProperty("User-Agent", "ImmersivePaintings/1.0");
-        return connection.getInputStream();
-    }
-
-    // Only graffiti properly supports alpha
-    private void preprocessImage(BufferedImage image) {
-        clearError();
-        if (!entity.isGraffiti()) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                for (int y = 0; y < image.getHeight(); y++) {
-                    int color = image.getRGB(x, y);
-                    int alpha = (color >> 24) & 255;
-                    if (alpha != 255) {
-                        if (error == null) {
-                            setError(Component.translatable("immersive_paintings.gui.graffiti_warning"));
-                        }
-                        //image.setRGB(x, y, color & ((0xFF << 24) | 0x00ffffff));
-                        color = (255 << 24) | (color & 0x00ffffff);
-                        image.setRGB(x, y, color);
-                    }
-                }
-            }
-        }
-    }
-
-    private static int getCurrentImagePixelZoomCache(BufferedImage currentImage) {
-        if (currentImagePixelZoomCache < 0) {
-            currentImagePixelZoomCache = ImageManipulations.scanForPixelArtMultiple(currentImage);
-        }
-        return currentImagePixelZoomCache;
-    }
-
     private void adaptToPixelArt() {
-        double zoom = getCurrentImagePixelZoomCache(currentImage);
-        settings.width = Math.clamp((int) (currentImage.getWidth() / zoom / settings.resolution), 1, 16);
-        settings.height = Math.clamp((int) (currentImage.getHeight() / zoom / settings.resolution), 1, 16);
+        double zoom = currentImagePixelZoomCache = ImageManipulations.getCurrentImagePixelZoomCache(currentImage, currentImagePixelZoomCache);
+        settings.width = Math.max(1, Math.min(16, (int) (currentImage.getWidth() / zoom / settings.resolution)));
+        settings.height = Math.max(1, Math.min(16, (int) (currentImage.getHeight() / zoom / settings.resolution)));
     }
 
     private void pixelateImage() {
-        pixelatedImage = pixelateImage(currentImage, settings);
+        if (settings.pixelArt)
+            currentImagePixelZoomCache = ImageManipulations.getCurrentImagePixelZoomCache(currentImage, currentImagePixelZoomCache);
+        pixelatedImage = ImageManipulations.pixelateImage(currentImage, settings, currentImagePixelZoomCache);
         shouldUpload = true;
-    }
-
-    public static BufferedImage pixelateImage(BufferedImage currentImage, PixelatorSettings settings) {
-        BufferedImage pixelatedImage = new BufferedImage(settings.resolution * settings.width, settings.resolution * settings.height, BufferedImage.TYPE_INT_ARGB);
-
-        //zoom
-        float zoom;
-        if (settings.pixelArt) {
-            zoom = getCurrentImagePixelZoomCache(currentImage);
-        } else {
-            float fx = (float) currentImage.getWidth() / pixelatedImage.getWidth();
-            float fy = (float) currentImage.getHeight() / pixelatedImage.getHeight();
-            zoom = (float) (Math.min(fx, fy) / settings.zoom);
-        }
-
-        //offset
-        int ox = (int) ((currentImage.getWidth() - pixelatedImage.getWidth() * zoom) * settings.offsetX);
-        int oy = (int) ((currentImage.getHeight() - pixelatedImage.getHeight() * zoom) * settings.offsetY);
-        if (settings.pixelArt) {
-            ox = ox / ((int) zoom) * ((int) zoom);
-            oy = oy / ((int) zoom) * ((int) zoom);
-        }
-
-        //downscale
-        ImageManipulations.resize(pixelatedImage, currentImage, zoom, ox, oy);
-
-        //dither
-        if (settings.dither > 0 && !settings.pixelArt) {
-            if (settings.colors > 1) {
-                ImageManipulations.dither(pixelatedImage, settings.dither / settings.colors);
-            } else {
-                ImageManipulations.dither(pixelatedImage, settings.dither / 16.0);
-            }
-        }
-
-        //reduce colors
-        if (settings.colors > 1 && !settings.pixelArt) {
-            ImageManipulations.reduceColors(pixelatedImage, settings.colors);
-        }
-
-        return pixelatedImage;
     }
 
     public void refreshPage() {
         setPage(page);
-    }
-
-    public void clearError() {
-        error = null;
     }
 
     public void setError(Component text) {
@@ -1052,63 +966,5 @@ public class ImmersivePaintingScreen extends Screen {
         DELETE,
         ADMIN_DELETE,
         LOADING
-    }
-
-    public static final class PixelatorSettings {
-        public double dither;
-        public int colors;
-        public int resolution;
-        public int width;
-        public int height;
-        public double offsetX;
-        public double offsetY;
-        public double zoom;
-        public boolean pixelArt;
-        public boolean hidden = true;
-        public boolean nsfw;
-
-        public PixelatorSettings(double dither, int colors, int resolution, int width, int height, double offsetX, double offsetY, double zoom, boolean pixelArt) {
-            this.dither = dither;
-            this.colors = colors;
-            this.resolution = resolution;
-            this.width = width;
-            this.height = height;
-            this.offsetX = offsetX;
-            this.offsetY = offsetY;
-            this.zoom = zoom;
-            this.pixelArt = pixelArt;
-        }
-
-        PixelatorSettings(BufferedImage currentImage, int minResolution, int maxResolution) {
-            this(0, 10, Math.clamp(64, minResolution, maxResolution), 1, 1, 0.5, 0.5, 1, false);
-
-            double target = currentImage.getWidth() / (double) currentImage.getHeight();
-            double bestScore = 100;
-
-            double d = Math.sqrt(currentImage.getWidth() * currentImage.getWidth() + currentImage.getHeight() * currentImage.getHeight());
-            double dw = currentImage.getWidth() / d;
-            double dh = currentImage.getHeight() / d;
-            for (double diagonal = 3.0f; diagonal < 6.0; diagonal += target) {
-                int pw = (int) Math.ceil(dw * diagonal);
-                int ph = (int) Math.ceil(dh * diagonal);
-                double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
-                if (e < bestScore) {
-                    width = Math.clamp(pw, 1, 16);
-                    height = Math.clamp(ph, 1, 16);
-                    bestScore = e;
-                }
-            }
-        }
-
-        public EnumSet<Painting.Flag> getFlags() {
-            EnumSet<Painting.Flag> flags = EnumSet.noneOf(Painting.Flag.class);
-            if (nsfw)
-                flags.add(Painting.Flag.NSFW);
-
-            if (hidden)
-                flags.add(Painting.Flag.HIDDEN);
-
-            return flags;
-        }
     }
 }

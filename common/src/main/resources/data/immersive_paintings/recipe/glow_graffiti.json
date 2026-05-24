@@ -1,12 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
-    {
-      "item": "immersive_paintings:graffiti"
-    },
-    {
-      "item": "minecraft:glow_ink_sac"
-    }
+    "immersive_paintings:graffiti",
+    "minecraft:glow_ink_sac"
   ],
   "result": {
     "id": "immersive_paintings:glow_graffiti"

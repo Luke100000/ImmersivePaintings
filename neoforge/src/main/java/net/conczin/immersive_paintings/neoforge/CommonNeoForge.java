@@ -1,53 +1,54 @@
 package net.conczin.immersive_paintings.neoforge;
 
-import java.util.function.Consumer;
-
-import net.conczin.immersive_paintings.Main;
-import net.conczin.immersive_paintings.registration.*;
+import net.conczin.immersive_paintings.ImmersivePaintings;
+import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.network.LazyNetworkManager;
+import net.conczin.immersive_paintings.registry.*;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.resources.PaintingsLoader;
 import net.conczin.immersive_paintings.util.PaintingArgumentType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-@Mod(Main.MOD_ID)
-@EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.MOD)
+@Mod(ImmersivePaintings.MOD_ID)
+@EventBusSubscriber(modid = ImmersivePaintings.MOD_ID)
 public final class CommonNeoForge {
     @SubscribeEvent
     public static void setup(FMLCommonSetupEvent event) {
-        Main.init();
-    }
-
-    private static <T> void registerHelper(RegisterEvent event, Registry<T> register, Consumer<RegisterHelper<T>> consumer) {
-        event.register(register.key(), registry -> consumer.accept(registry::register));
+        ImmersivePaintings.init();
     }
 
     @SubscribeEvent
     public static void register(RegisterEvent event) {
-        // Items
-        registerHelper(event, BuiltInRegistries.ITEM, Items::registerItems);
-        registerHelper(event, BuiltInRegistries.CREATIVE_MODE_TAB, Items::registerCreativeTabs);
+        // Item
+        Item.register((id, item) -> event.register(BuiltInRegistries.ITEM.key(), id, () -> item));
 
-        // Entities
-        registerHelper(event, BuiltInRegistries.ENTITY_TYPE, Entities::registerEntities);
-        registerHelper(event, NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, Entities::registerEntitySerializers);
+        // Entity
+        Entity.register((id, entityType) -> event.register(BuiltInRegistries.ENTITY_TYPE.key(), id, () -> entityType));
+        Entity.registerSerializers((id, entitySerializer) -> event.register(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS.key(), id, () -> entitySerializer));
 
         // Commands
         ArgumentTypeInfos.registerByClass(PaintingArgumentType.class, PaintingArgumentType.INFO);
-        event.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE.key(), Main.locate("painting_argument"), () -> PaintingArgumentType.INFO);
+        event.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE.key(), ImmersivePaintings.locate("painting_argument"), () -> PaintingArgumentType.INFO);
     }
 
     @SubscribeEvent
@@ -67,5 +68,34 @@ public final class CommonNeoForge {
                 }
             }
         };
+    }
+
+    @SubscribeEvent
+    public static void registerCommands(RegisterCommandsEvent event) {
+        Command.register(event.getDispatcher()::register);
+    }
+
+    @SubscribeEvent
+    public static void registerCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            Item.getItems().forEach(event::accept);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(ServerTickEvent.Post event) {
+        LazyNetworkManager.tickServer();
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!event.getEntity().level().isClientSide()) {
+            ServerPaintingManager.playerLoggedIn((ServerPlayer)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAddReloadListener(AddServerReloadListenersEvent event) {
+        event.addListener(PaintingsLoader.ID, new PaintingsLoader());
     }
 }
