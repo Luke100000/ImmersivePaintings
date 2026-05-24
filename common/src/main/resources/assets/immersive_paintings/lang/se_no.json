@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bilde lea muhtun suohkan!",
   "immersive_paintings.error.limit_reached": "Don lea ferteási maximuin dahkkojuvvon málaid!",
   "immersive_paintings.error.hash_failed": "Mannered hash i geavahusa!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Sudarlean všechny geavahit ožžu %s",
   "immersive_paintings.command.error.no_player": "Ikká geavahitta jittáid su aurbon '%s'",
   "config.immersive_paintings.common": "Sihttaid geavahit",
