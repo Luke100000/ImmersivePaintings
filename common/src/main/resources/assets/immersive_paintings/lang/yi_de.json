@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "בילד איז צו גרויס!",
   "immersive_paintings.error.limit_reached": "דו האָבסט דאָין מערסטמעאַט באַשטימונג פון צוגעהויבענע פּיינטינגס!",
   "immersive_paintings.error.hash_failed": "פאַרפאַלן צו שאַפֿן אַ האַש פון פאַבריק!",
+  "immersive_paintings.error.image_load_failed": "מען האָט נישט געקענט לאָדן דאָס בילד, קוקט אין דעם לאָג!",
   "immersive_paintings.command.success.delete": "איינער פון פאַסד פון אַלע פאַבריקן פֿאַר שפּילער %s",
   "immersive_paintings.command.error.no_player": "ניט פארגעסן פאַבריקן געפֿונען עם מחבר '%s'",
   "config.immersive_paintings.common": "גאַנץ באַשטימונגן",
