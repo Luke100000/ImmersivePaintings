@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bilden är för stor!",
   "immersive_paintings.error.limit_reached": "Du har nått det maximala antalet uppladdade målningar!",
   "immersive_paintings.error.hash_failed": "Det gick inte att skapa hash av målning!",
+  "immersive_paintings.error.image_load_failed": "Kunde inte ladda bilden, kontrollera loggen!",
   "immersive_paintings.command.success.delete": "Tog bort alla målningar för spelare %s",
   "immersive_paintings.command.error.no_player": "Inga målningar hittades med författaren '%s'",
   "config.immersive_paintings.common": "Vanliga inställningar",
