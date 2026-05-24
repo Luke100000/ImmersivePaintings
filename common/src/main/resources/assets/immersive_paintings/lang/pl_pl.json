@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Obraz jest zbyt duży!",
   "immersive_paintings.error.limit_reached": "Osiągnąłeś maksymalną liczbę przesłanych obrazów!",
   "immersive_paintings.error.hash_failed": "Nie udało się utworzyć skrótu obrazu!",
+  "immersive_paintings.error.image_load_failed": "Nie można załadować obrazu, sprawdź log!",
   "immersive_paintings.command.success.delete": "Usunięto wszystkie obrazy gracza %s",
   "immersive_paintings.command.error.no_player": "Nie znaleziono obrazów z autorem '%s'",
   "config.immersive_paintings.common": "Wspólne ustawienia",
