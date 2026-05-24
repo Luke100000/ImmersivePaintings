@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Сурет тым үлкен!",
   "immersive_paintings.error.limit_reached": "Жүктелген суреттердің максималды санына жеттіңіз!",
   "immersive_paintings.error.hash_failed": "Суреттің хэшін жасау сәтсіз аяқталды!",
+  "immersive_paintings.error.image_load_failed": "Суретті жүктеу мүмкін болмады, логты тексеріңіз!",
   "immersive_paintings.command.success.delete": "Ойыншы %s үшін барлық суреттер жойылды",
   "immersive_paintings.command.error.no_player": "Автор '%s' бар суреттер табылмады",
   "config.immersive_paintings.common": "Жалпы параметрлер",
