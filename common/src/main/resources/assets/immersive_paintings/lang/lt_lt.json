@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Vaizdas yra per didelis!",
   "immersive_paintings.error.limit_reached": "Pasiekėte maksimalų įkeltų paveikslų skaičių!",
   "immersive_paintings.error.hash_failed": "Nepavyko sukurti paveikslo hash!",
+  "immersive_paintings.error.image_load_failed": "Nepavyko įkelti vaizdo, patikrinkite žurnalą!",
   "immersive_paintings.command.success.delete": "Ištrinti visi žaidėjo paveikslai %s",
   "immersive_paintings.command.error.no_player": "Nerasta paveikslų su autoriumi '%s'",
   "config.immersive_paintings.common": "Bendrieji nustatymai",
