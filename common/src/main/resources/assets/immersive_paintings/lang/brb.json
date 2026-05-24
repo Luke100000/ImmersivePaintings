@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Afbeelding is te groot!",
   "immersive_paintings.error.limit_reached": "Je hebt je maximale aantal geüploade schilderijen bereikt!",
   "immersive_paintings.error.hash_failed": "Mis-lukt om een hash van het schilderij te creëren!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Alle schilderijen voor speler %s gewist",
   "immersive_paintings.command.error.no_player": "Geen schilderijen gevonden van auteur '%s'",
   "config.immersive_paintings.common": "Algemene Instellingen",
