@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bild ass ze grouss!",
   "immersive_paintings.error.limit_reached": "Dir hutt Är maximal Zuel ugelueden Gemäter erreecht!",
   "immersive_paintings.error.hash_failed": "Fehlgeschloe fir Hash vun der Moolerei ze erstellen!",
+  "immersive_paintings.error.image_load_failed": "Bild konnt net geluede ginn, iwwerpréift de Log!",
   "immersive_paintings.command.success.delete": "All Molen fir Spiller %s gi geläscht",
   "immersive_paintings.command.error.no_player": "Keen Molengefanne mat Autor '%s'",
   "config.immersive_paintings.common": "Gemeinsam Astellungen",
