@@ -128,13 +128,6 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private void clearSearch() {
-        filteredString = "";
-        filteredResolution = 0;
-        filteredWidth = 0;
-        filteredHeight = 0;
-    }
-
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
