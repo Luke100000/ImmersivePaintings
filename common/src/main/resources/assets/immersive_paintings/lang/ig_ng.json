@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Onyonyo ahụ bụ nnukwu!",
   "immersive_paintings.error.limit_reached": "I ruru oke kachasị nke nnukwu ndụmọdụ e debere!",
   "immersive_paintings.error.hash_failed": "Nwapụta njikọ nke eserese emeghị!",
+  "immersive_paintings.error.image_load_failed": "Enweghị ike ibudata onyonyo, lelee ndekọ!",
   "immersive_paintings.command.success.delete": "Kpochapụla eserese niile maka onye egwuregwu %s",
   "immersive_paintings.command.error.no_player": "Enweghị eserese ọ bụla e chọpụtara na onye edemede '%s'",
   "config.immersive_paintings.common": "Ntọala Nkịtị",
