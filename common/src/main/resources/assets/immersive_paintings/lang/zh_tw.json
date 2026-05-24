@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "圖像過大！",
   "immersive_paintings.error.limit_reached": "你上傳的圖像數量已達上限！",
   "immersive_paintings.error.hash_failed": "建立繪圖雜湊失敗！",
+  "immersive_paintings.error.image_load_failed": "無法載入影像，請檢查記錄！",
   "immersive_paintings.command.success.delete": "刪除玩家 %s的所有繪圖",
   "immersive_paintings.command.error.no_player": "未找到作者為 '%s' 的畫作",
   "config.immersive_paintings.common": "常見設定",
