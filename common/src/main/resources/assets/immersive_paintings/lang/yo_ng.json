@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Àwòrán jẹ́ títọ́bi pupọ!",
   "immersive_paintings.error.limit_reached": "O ti de iwọn ti o pọ julọ ti awọn aworan ti a po si!",
   "immersive_paintings.error.hash_failed": "Kò ṣàṣéyọrí láti dá hash iṣẹ́ ọnà!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Pà gbogbo iṣẹ́ ọnà fún hrá %s",
   "immersive_paintings.command.error.no_player": "Kò sí iṣẹ́ ọnà tó wà pẹ̀lú onkọ́wé '%s'",
   "config.immersive_paintings.common": "Àwọn Ìtọ́sọ́nà Àmọ̀dájú",
