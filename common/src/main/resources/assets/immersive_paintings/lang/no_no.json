@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bildet er for stort!",
   "immersive_paintings.error.limit_reached": "Du har nådd ditt maksimale antall opplastede malerier!",
   "immersive_paintings.error.hash_failed": "Kunne ikke opprette hash av maling!",
+  "immersive_paintings.error.image_load_failed": "Kan ikke laste bilde, sjekk loggen!",
   "immersive_paintings.command.success.delete": "Slettet alle maleriene for spiller %s",
   "immersive_paintings.command.error.no_player": "Ingen malerier funnet med forfatteren%s'",
   "config.immersive_paintings.common": "Vanlige innstillinger",
