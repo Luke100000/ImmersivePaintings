@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Imaginea este prea mare!",
   "immersive_paintings.error.limit_reached": "Ați atins numărul maxim de tablouri încărcate!",
   "immersive_paintings.error.hash_failed": "Nu s-a reușit crearea hash-ului de pictură!",
+  "immersive_paintings.error.image_load_failed": "Imaginea nu a putut fi încărcată, verifică jurnalul!",
   "immersive_paintings.command.success.delete": "Toate picturile pentru jucător %s au fost șterse",
   "immersive_paintings.command.error.no_player": "Nu au fost găsite picturi cu autorul '%s'",
   "config.immersive_paintings.common": "Setări comune",
