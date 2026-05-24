@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Image be too large!",
   "immersive_paintings.error.limit_reached": "Ye reached yer maximum amount of uploaded paintin's!",
   "immersive_paintings.error.hash_failed": "Failed t' create hash o' paintin'!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Deleted all paintin's fer player %s",
   "immersive_paintings.command.error.no_player": "No paintin's found with author '%s'",
   "config.immersive_paintings.common": "Common Settin's",
