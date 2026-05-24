@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Image a zo tomm o fly!",
   "immersive_paintings.error.limit_reached": "Skoazellit da vat dom a figurennoù uploadet!",
   "immersive_paintings.error.hash_failed": "Droug da sevel ur hash eus ar skeudenn!",
+  "immersive_paintings.error.image_load_failed": "N'eo ket bet tu kargañ ar skeudenn, gwiriit al log!",
   "immersive_paintings.command.success.delete": "Dibabit holl skeudennoù evit ar c'hoarier %s",
   "immersive_paintings.command.error.no_player": "N'eus skeudenn ebet a zo bet kavet gant an autor '%s'",
   "config.immersive_paintings.common": "Mizaret Kêrioù",
