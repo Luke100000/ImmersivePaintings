@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Obrázok je príliš veľký!",
   "immersive_paintings.error.limit_reached": "Dosiahli ste maximálny počet nahraných obrazov!",
   "immersive_paintings.error.hash_failed": "Nepodarilo sa vytvoriť hash maľby!",
+  "immersive_paintings.error.image_load_failed": "Nemožno načítať obrázok, skontrolujte protokol!",
   "immersive_paintings.command.success.delete": "Odstránené všetky obrazy pre hráča %s",
   "immersive_paintings.command.error.no_player": "Nenašli sa žiadne obrazy s autorom '%s'",
   "config.immersive_paintings.common": "Spoločné nastavenia",
