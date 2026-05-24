@@ -1,5 +1,7 @@
 # 0.7.7
 
+* Added gold, crimson, weather copper, and amethyst frames
+* Added thin frame
 * Fixed pixel art import issues
 * Fixed client desync on some painting placements
 * Show error message on invalid images
