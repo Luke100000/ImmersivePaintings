@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Slika je prevelika!",
   "immersive_paintings.error.limit_reached": "Dosegnuli ste maksimalni broj otpremljenih slika!",
   "immersive_paintings.error.hash_failed": "Nije moguće stvoriti hash slike!",
+  "immersive_paintings.error.image_load_failed": "Nije moguće učitati sliku, provjerite zapisnik!",
   "immersive_paintings.command.success.delete": "Izbrisane sve slike za igrača %s",
   "immersive_paintings.command.error.no_player": "Nema slika s autorom '%s'",
   "config.immersive_paintings.common": "Zajedničke postavke",
