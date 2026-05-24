@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Պատկերը չափազանց մեծ է։",
   "immersive_paintings.error.limit_reached": "Դուք հասել եք առավելագույն չափի, որը կարող եք բեռնել նկարչական նկարների համար։",
   "immersive_paintings.error.hash_failed": "Նկարելու չճանաչելի աղբյուրի ստեղծումը ձախողվեց!",
+  "immersive_paintings.error.image_load_failed": "Պատկերը չհաջողվեց բեռնել, ստուգեք լոգը։",
   "immersive_paintings.command.success.delete": "Ջնջվել են բոլոր նկարները խաղացողի %s için",
   "immersive_paintings.command.error.no_player": "Ձեր '%s' հեղինակ ունեցող նկարները չեն գտնվել",
   "config.immersive_paintings.common": "Ընդհանուր պարամետրեր",
