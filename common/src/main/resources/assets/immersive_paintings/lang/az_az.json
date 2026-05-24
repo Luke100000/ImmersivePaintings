@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Şəkil çox böyükdür!",
   "immersive_paintings.error.limit_reached": "Yüklənmiş rəslərin maksimum sayına çatdınız!",
   "immersive_paintings.error.hash_failed": "Rəngləmə hashesini yaratmaq mümkün olmadı!",
+  "immersive_paintings.error.image_load_failed": "Şəkil yüklənə bilmədi, logu yoxlayın!",
   "immersive_paintings.command.success.delete": "Oyuncu %s üçün bütün rəngləmələr silindi",
   "immersive_paintings.command.error.no_player": "'%s' müəllifi ilə heç bir rəngləmə tapılmadı",
   "config.immersive_paintings.common": "Ümumi Parametrlər",
