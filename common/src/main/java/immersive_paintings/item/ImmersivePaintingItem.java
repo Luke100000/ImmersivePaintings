@@ -1,6 +1,5 @@
 package immersive_paintings.item;
 
-import immersive_paintings.entity.AbstractImmersiveDecorationEntity;
 import immersive_paintings.entity.ImmersivePaintingEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,15 +44,16 @@ public class ImmersivePaintingItem extends Item {
                 EntityType.loadFromEntityNbt(world, playerEntity, paintingEntity, nbtCompound);
             }
 
-            if (paintingEntity.canStayAttached()) {
-                if (!world.isClient) {
-                    ((AbstractImmersiveDecorationEntity) paintingEntity).onPlace();
-                    world.emitGameEvent(playerEntity, GameEvent.ENTITY_PLACE, blockPos);
-                    world.spawnEntity(paintingEntity);
-                }
+            if (world.isClient) {
+                return ActionResult.success(true);
+            }
 
+            if (paintingEntity.canStayAttached()) {
+                paintingEntity.onPlace();
+                world.emitGameEvent(playerEntity, GameEvent.ENTITY_PLACE, blockPos);
+                world.spawnEntity(paintingEntity);
                 itemStack.decrement(1);
-                return ActionResult.success(world.isClient);
+                return ActionResult.success(false);
             } else {
                 return ActionResult.CONSUME;
             }
