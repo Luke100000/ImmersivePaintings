@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Tha an ìomhaigh ro mhòr!",
   "immersive_paintings.error.limit_reached": "Ruig thu an t-suim as àirde de dhealbhan a chaidh a luchdachadh suas!",
   "immersive_paintings.error.hash_failed": "Fàilligidheas ann a bhith a' cruthachadh hash airson peantadh!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Cuir às do na peantaidhean uile airson cluicheadair %s",
   "immersive_paintings.command.error.no_player": "Cha deach peantaidhean sam bith a lorg le ùghdar '%s'",
   "config.immersive_paintings.common": "Seataidhean Coitcheann",
