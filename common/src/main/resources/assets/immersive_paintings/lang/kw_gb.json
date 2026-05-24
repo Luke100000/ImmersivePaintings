@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "An imaj a dhev yth yn tread!",
   "immersive_paintings.error.limit_reached": "Dhyworth ow kwethe an meyth ans an pynsans a vynnows!",
   "immersive_paintings.error.hash_failed": "Plegyn ow kelwel ha dres bo shrewfy!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Dewhans ow kelwel a-barth pleyer %s",
   "immersive_paintings.command.error.no_player": "Nyns ow kelwel pleynd y gaout gans awtor '%s'",
   "config.immersive_paintings.common": "Settyans Comon",
