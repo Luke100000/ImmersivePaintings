@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "L'image es tròp granda!",
   "immersive_paintings.error.limit_reached": "Avetz atench lo vòstre nombre maximum de pinturas cargadas!",
   "immersive_paintings.error.hash_failed": "èrre de crear lo hash del painting!",
+  "immersive_paintings.error.image_load_failed": "Se pòt pas cargar l'imatge, verificatz lo jornal!",
   "immersive_paintings.command.success.delete": "Supressètz totes los paintings pel jogaire %s",
   "immersive_paintings.command.error.no_player": "N’i a cap painting tròpat amb l’autor '%s'",
   "config.immersive_paintings.common": "Paramètres comuns",
