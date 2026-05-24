@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Slika je prevelika!",
   "immersive_paintings.error.limit_reached": "Dosegli ste največje število naloženih slik!",
   "immersive_paintings.error.hash_failed": "Ni uspelo ustvariti hash slike!",
+  "immersive_paintings.error.image_load_failed": "Slike ni bilo mogoče naložiti, preverite dnevnik!",
   "immersive_paintings.command.success.delete": "Odstranjene vse slike za igralca %s",
   "immersive_paintings.command.error.no_player": "Ni bilo najdenih slik z avtorjem '%s'",
   "config.immersive_paintings.common": "Skupne nastavitve",
