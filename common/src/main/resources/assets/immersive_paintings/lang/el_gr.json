@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Η εικόνα είναι πολύ μεγάλη!",
   "immersive_paintings.error.limit_reached": "Φτάσατε στο μέγιστο αριθμό ανεβασμένων πινάκων!",
   "immersive_paintings.error.hash_failed": "Αποτυχία δημιουργίας κατακερματισμού της ζωγραφικής!",
+  "immersive_paintings.error.image_load_failed": "Αδυναμία φόρτωσης εικόνας, ελέγξτε το αρχείο καταγραφής!",
   "immersive_paintings.command.success.delete": "Διαγράφηκαν όλα τα έργα ζωγραφικής για τον παίκτη %s",
   "immersive_paintings.command.error.no_player": "Δεν βρέθηκαν έργα ζωγραφικής με συγγραφέα '%s'",
   "config.immersive_paintings.common": "Κοινές Ρυθμίσεις",
