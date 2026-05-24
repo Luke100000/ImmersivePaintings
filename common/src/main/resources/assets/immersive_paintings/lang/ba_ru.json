@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Һүрәт ҙур!",
   "immersive_paintings.error.limit_reached": "Һеҙ йөкләнгән һүрәттәрҙең максималь иҫәбе менән етерһегеҙ!",
   "immersive_paintings.error.hash_failed": "Рәсемдең хэшын булдыра алмады!",
+  "immersive_paintings.error.image_load_failed": "Рәсемде йөкләп булмай, логты тикшерегеҙ!",
   "immersive_paintings.command.success.delete": "%s уйынсы өсөн бөтә рәсемдәр юйылды",
   "immersive_paintings.command.error.no_player": "'%s' авторы менән рәсемдәр табылмады",
   "config.immersive_paintings.common": "Төп көйләүҙәр",
