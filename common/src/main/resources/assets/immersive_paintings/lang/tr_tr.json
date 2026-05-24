@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Resim çok büyük!",
   "immersive_paintings.error.limit_reached": "Yüklediğiniz maksimum resim sayısına ulaştınız!",
   "immersive_paintings.error.hash_failed": "Resim hash'i oluşturulamadı!",
+  "immersive_paintings.error.image_load_failed": "Resim yüklenemedi, günlüğü kontrol edin!",
   "immersive_paintings.command.success.delete": "Oyuncu için tüm resimler silindi %s",
   "immersive_paintings.command.error.no_player": "'%s' yazarı ile hiçbir resim bulunamadı",
   "config.immersive_paintings.common": "Ortak Ayarlar",
