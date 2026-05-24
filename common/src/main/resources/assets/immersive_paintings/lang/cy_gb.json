@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Mae'r ddelwedd yn rhy fawr!",
   "immersive_paintings.error.limit_reached": "Mae gennych chi eich cyfyngiad lwytho celfyddydau!",
   "immersive_paintings.error.hash_failed": "Methiant i greu hash y paent!",
+  "immersive_paintings.error.image_load_failed": "Methu llwytho'r ddelwedd, gwiriwch y log!",
   "immersive_paintings.command.success.delete": "Dynodwyd pob paentiad ar gyfer chwaraewr %s",
   "immersive_paintings.command.error.no_player": "Ni chafwyd unrhyw baentiadau gyda'r awdur '%s'",
   "config.immersive_paintings.common": "Gosodiadau Cyffredin",
