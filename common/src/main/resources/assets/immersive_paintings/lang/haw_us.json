@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Nui loa ka kiʻi!",
   "immersive_paintings.error.limit_reached": "Ua loaʻa iā ʻoe ka nui ma maʻamau o nā kiʻi i hoʻouna ʻia!",
   "immersive_paintings.error.hash_failed": "Aia ke kūlana e hana ʻole ai i ka ʻāpana o ke kiʻi!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Ua hoʻokomo ʻole ʻia nā kiʻi i nā mea pāʻani %s",
   "immersive_paintings.command.error.no_player": "Aʻohe kiʻi i loaʻa me ka mea author '%s'",
   "config.immersive_paintings.common": "Nā Kūlana Pāʻoihana",
