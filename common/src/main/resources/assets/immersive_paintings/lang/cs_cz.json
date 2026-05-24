@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Obrázek je příliš velký!",
   "immersive_paintings.error.limit_reached": "Dosáhli jste maximálního počtu nahraných obrazů!",
   "immersive_paintings.error.hash_failed": "Nepodařilo se vytvořit hash obrazu!",
+  "immersive_paintings.error.image_load_failed": "Nelze načíst obrázek, zkontrolujte log!",
   "immersive_paintings.command.success.delete": "Odstraněny všechny obrazy hráče %s",
   "immersive_paintings.command.error.no_player": "Nebyly nalezeny žádné malby s autorem '%s'",
   "config.immersive_paintings.common": "Běžná nastavení",
