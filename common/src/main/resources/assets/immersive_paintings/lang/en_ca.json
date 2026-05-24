@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Image is too large!",
   "immersive_paintings.error.limit_reached": "You have reached your maximum amount of uploaded paintings!",
   "immersive_paintings.error.hash_failed": "Failed to create hash of painting!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Deleted all paintings for player %s",
   "immersive_paintings.command.error.no_player": "No paintings found with author '%s'",
   "config.immersive_paintings.common": "Common Settings",
