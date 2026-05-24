@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Irudia handiegia da!",
   "immersive_paintings.error.limit_reached": "Kargatutako margotze kopurua mugara iritsi zara!",
   "immersive_paintings.error.hash_failed": "Pinturaren hash-a sortzen huts egin da!",
+  "immersive_paintings.error.image_load_failed": "Irudia kargatu ezin izan da, egiaztatu log-a!",
   "immersive_paintings.command.success.delete": "Pintura guztiak ezabatu dira %s jokalariarentzat",
   "immersive_paintings.command.error.no_player": "Ez da pintura bat ere aurkitu egilearekin '%s'",
   "config.immersive_paintings.common": "Hedapen Arruntak",
