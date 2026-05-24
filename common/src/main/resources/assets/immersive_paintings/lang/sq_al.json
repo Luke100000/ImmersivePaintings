@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Imazhi është shumë i madh!",
   "immersive_paintings.error.limit_reached": "Keni arritur numrin maksimal të pikturave të ngarkuara!",
   "immersive_paintings.error.hash_failed": "Dështoi të krijojë hash-in e pikturës!",
+  "immersive_paintings.error.image_load_failed": "Nuk u ngarkua imazhi, kontrolloni logun!",
   "immersive_paintings.command.success.delete": "Fshihet të gjitha pikturat për lojtarin %s",
   "immersive_paintings.command.error.no_player": "Nuk u gjetën piktura me autor '%s'",
   "config.immersive_paintings.common": "Caktimet e zakonshme",
