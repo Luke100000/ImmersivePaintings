@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Bild is zu groß!",
   "immersive_paintings.error.limit_reached": "Du hast dein maximales Upload-Limit an Mooler erreicht!",
   "immersive_paintings.error.hash_failed": "Fehler beim Erstellen de Hash vom Gemälde!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "All Gemälde fer Spieler %s gelöscht",
   "immersive_paintings.command.error.no_player": "Keen Gemälde mit Autor '%s' gefunden",
   "config.immersive_paintings.common": "Allgemeine Einstellungen",
