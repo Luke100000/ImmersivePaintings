@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Imej terlalu besar!",
   "immersive_paintings.error.limit_reached": "Anda telah mencapai jumlah maksimum lukisan yang dimuat naik!",
   "immersive_paintings.error.hash_failed": "Gagal untuk mencipta hash lukisan!",
+  "immersive_paintings.error.image_load_failed": "Tidak dapat memuatkan imej, semak log!",
   "immersive_paintings.command.success.delete": "Telah menghapus semua lukisan untuk pemain %s",
   "immersive_paintings.command.error.no_player": "Tiada lukisan yang dijumpai dengan penulis '%s'",
   "config.immersive_paintings.common": "Tetapan Umum",
