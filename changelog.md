@@ -1,3 +1,9 @@
+# 0.7.7
+
+* Fixed pixel art import issues
+* Fixed client desync on some painting placements
+* Show error message on invalid images
+
 # 0.7.6
 
 * Fixed crash introduced in 0.7.5

@@ -40,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -168,10 +169,6 @@ public class ImmersivePaintingScreen extends Screen {
                 poseStack.scale(size, size, 1.0f);
                 graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 poseStack.popPose();
-
-                if (error != null) {
-                    graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
-                }
             }
             case DELETE -> {
                 graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
@@ -195,6 +192,10 @@ public class ImmersivePaintingScreen extends Screen {
                 Component text = Component.translatable("immersive_paintings.gui.upload", (int) Math.ceil(LazyNetworkManager.getRemainingTime()));
                 graphics.drawCenteredString(font, text, width / 2, height / 2, 0xFFFFFFFF);
             }
+        }
+
+        if (error != null) {
+            graphics.drawCenteredString(font, error, width / 2, height / 2, 0xFFFF0000);
         }
     }
 
@@ -899,10 +900,23 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void onFilesDrop(List<Path> paths) {
-        loadImage(paths.getFirst().toString());
+        for (Path path : paths) {
+            if (path == null) continue;
+
+            String p = path.toString();
+            if (p.isEmpty()) continue;
+
+            if (!Files.exists(path)) continue;
+
+            if (loadImage(p)) {
+                return;
+            }
+        }
+
+        setError(Component.translatable("immersive_paintings.error.image_load_failed"));
     }
 
-    private void loadImage(String path) {
+    private boolean loadImage(String path) {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
@@ -910,7 +924,9 @@ public class ImmersivePaintingScreen extends Screen {
             settings = new PixelatorSettings(currentImage, minResolution, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();
+            return true;
         }
+        return false;
     }
 
     private String toFileName(String path) {
@@ -922,29 +938,15 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private BufferedImage loadImage(String path, ResourceLocation identifier) {
-        InputStream stream = null;
-        try {
-            stream = new URL(path).openStream();
-        } catch (Exception exception) {
-            try {
-                stream = new FileInputStream(path);
-            } catch (Exception e) {
-                Main.LOGGER.error("failed loading image {} from path {}", identifier, path, e);
+        try (InputStream stream = path.startsWith("http://") || path.startsWith("https://") ? new URL(path).openStream() : new FileInputStream(path)) {
+            BufferedImage image = ImageIO.read(stream);
+            if (image != null) {
+                preprocessImage(image);
+                Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                return image;
             }
-        }
-
-        if (stream != null) {
-            try {
-                BufferedImage image = ImageIO.read(stream);
-                if (image != null) {
-                    preprocessImage(image);
-                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
-                    stream.close();
-                    return image;
-                }
-            } catch (IOException e) {
-                Main.LOGGER.error("failed decoding image {} from path {}", identifier, path, e);
-            }
+        } catch (IOException e) {
+            Main.LOGGER.error("Failed to load image {}", path, e);
         }
 
         return null;
@@ -980,8 +982,8 @@ public class ImmersivePaintingScreen extends Screen {
 
     private void adaptToPixelArt() {
         double zoom = getCurrentImagePixelZoomCache(currentImage);
-        settings.width = Math.max(1, Math.min(16, (int) (currentImage.getWidth() / zoom / settings.resolution)));
-        settings.height = Math.max(1, Math.min(16, (int) (currentImage.getHeight() / zoom / settings.resolution)));
+        settings.width = Math.clamp((int) (currentImage.getWidth() / zoom / settings.resolution), 1, 16);
+        settings.height = Math.clamp((int) (currentImage.getHeight() / zoom / settings.resolution), 1, 16);
     }
 
     private void pixelateImage() {
@@ -1093,8 +1095,8 @@ public class ImmersivePaintingScreen extends Screen {
                 int ph = (int) Math.ceil(dh * diagonal);
                 double e = Math.abs(pw / (double) ph - target) * Math.sqrt(5 + width + height);
                 if (e < bestScore) {
-                    width = Math.max(1, Math.min(16, pw));
-                    height = Math.max(1, Math.min(16, ph));
+                    width = Math.clamp(pw, 1, 16);
+                    height = Math.clamp(ph, 1, 16);
                     bestScore = e;
                 }
             }
