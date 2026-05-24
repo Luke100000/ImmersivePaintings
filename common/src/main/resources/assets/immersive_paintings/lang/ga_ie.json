@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Tá an íomhá ró-mhór!",
   "immersive_paintings.error.limit_reached": "Tá do mhéid uasta de phéintéireachtaí uaslódáilte bainte amach agat!",
   "immersive_paintings.error.hash_failed": "Teip ar chruthú hash na péintéireachta!",
+  "immersive_paintings.error.image_load_failed": "Níorbh fhéidir an íomhá a lódáil, seiceáil an log!",
   "immersive_paintings.command.success.delete": "Scriosadh na péintéisí go léir do imreoir %s",
   "immersive_paintings.command.error.no_player": "Níl péintéisí le fáil le húdar '%s'",
   "config.immersive_paintings.common": "Socruithe Coitianta",
