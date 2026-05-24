@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "le selci cu to'e girzu!",
   "immersive_paintings.error.limit_reached": "do pu klama le maxcu be le selci be stela!",
   "immersive_paintings.error.hash_failed": "na katna lo nu se jagfokau lo fenga!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "ku klama lo fenga pu se remna lo prenu %s",
   "immersive_paintings.command.error.no_player": "na se fenga lo fenga lo se sitrmu '%s'",
   "config.immersive_paintings.common": "lo nu se sruri",
