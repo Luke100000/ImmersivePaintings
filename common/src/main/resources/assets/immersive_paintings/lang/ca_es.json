@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "La imatge és massa gran!",
   "immersive_paintings.error.limit_reached": "Has arribat a la teva quantitat màxima de pintures pujades!",
   "immersive_paintings.error.hash_failed": "Error en crear el hash de la pintura!",
+  "immersive_paintings.error.image_load_failed": "No s'ha pogut carregar la imatge, comproveu el registre!",
   "immersive_paintings.command.success.delete": "S'han eliminat totes les pintures per al jugador %s",
   "immersive_paintings.command.error.no_player": "No s'han trobat pintures amb l'autor '%s'",
   "config.immersive_paintings.common": "Ajustos generals",
