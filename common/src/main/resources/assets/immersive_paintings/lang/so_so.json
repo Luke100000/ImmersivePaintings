@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Sawirku waa mid aad u weyn!",
   "immersive_paintings.error.limit_reached": "Waxaad gaartay tirada ugu badan ee sawirrada lagu shubay!",
   "immersive_paintings.error.hash_failed": "Hash-ka sawirka lama abuurin!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Dhamaan sawirrada ayaa la tirtiray ciyaartoyga %s",
   "immersive_paintings.command.error.no_player": "Ma jiraan sawirro la helay oo leh qoraaga '%s'",
   "config.immersive_paintings.common": "Dejinta Caadiga ah",
