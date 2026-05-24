@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Изображение слишком большое!",
   "immersive_paintings.error.limit_reached": "Ты достиг максимального количества загруженных картин!",
   "immersive_paintings.error.hash_failed": "Не удалось создать хеш картины!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Удалены все картины для игрока %s",
   "immersive_paintings.command.error.no_player": "Не найдено картин с автором '%s'",
   "config.immersive_paintings.common": "Общие параметры",
