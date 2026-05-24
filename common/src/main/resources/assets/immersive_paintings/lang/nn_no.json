@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Biletet er for stort!",
   "immersive_paintings.error.limit_reached": "Du har nådd maksimum for opplastade målningar!",
   "immersive_paintings.error.hash_failed": "Mislyktes med å lage hash av måleriet!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Slettet alle måleriar for spelar %s",
   "immersive_paintings.command.error.no_player": "Ingen måleriar funne med forfattar '%s'",
   "config.immersive_paintings.common": "Vanlege innstillingar",
