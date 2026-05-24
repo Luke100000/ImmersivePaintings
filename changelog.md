@@ -1,3 +1,7 @@
+# 0.6.13
+
+* Fixed memory leak
+
 # 0.6.12
 
 * Fixed pixel art import issues

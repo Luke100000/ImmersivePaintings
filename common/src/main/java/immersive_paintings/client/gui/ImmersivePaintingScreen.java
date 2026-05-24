@@ -153,6 +153,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 if (shouldUpload && pixelatedImage != null) {
                     MinecraftClient.getInstance().getTextureManager().registerTexture(Main.locate("temp_pixelated"), new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(pixelatedImage)));
+                    shouldUpload = false;
                 }
 
                 int maxWidth = 190;
