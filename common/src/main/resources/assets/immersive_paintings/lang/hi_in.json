@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "छवि बहुत बड़ी है!",
   "immersive_paintings.error.limit_reached": "आपने अपलोड की गई पेंटिंग्स की अधिकतम संख्या तक पहुंच गए हैं!",
   "immersive_paintings.error.hash_failed": "चित्र का हैश बनाने में विफल!",
+  "immersive_paintings.error.image_load_failed": "छवि लोड नहीं हो सकी, लॉग देखें!",
   "immersive_paintings.command.success.delete": "खिलाड़ी %s के लिए सभी चित्र हटा दिए गए",
   "immersive_paintings.command.error.no_player": "लेखक '%s' के साथ कोई चित्र नहीं मिला",
   "config.immersive_paintings.common": "सामान्य सेटिंग्स",
