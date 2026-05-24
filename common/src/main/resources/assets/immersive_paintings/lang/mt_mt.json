@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "L-immaġini huma kbar wisq!",
   "immersive_paintings.error.limit_reached": "Intlaqt it-tamiet massimi tiegħek ta' ħlewwa mniżżla!",
   "immersive_paintings.error.hash_failed": "Ikkrejjat il-hash tal-pittura!",
+  "immersive_paintings.error.image_load_failed": "Ma setgħetx titgħabba l-immaġni, iċċekkja l-log!",
   "immersive_paintings.command.success.delete": "Ħassar il-pitturi kollha għall-plejer %s",
   "immersive_paintings.command.error.no_player": "Mhux instabet pittura bl-awtur '%s'",
   "config.immersive_paintings.common": "Impostazzjonijiet Komuni",
