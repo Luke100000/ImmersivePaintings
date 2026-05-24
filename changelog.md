@@ -1,3 +1,9 @@
+# 0.6.12
+
+* Fixed pixel art import issues
+* Fixed client desync on some painting placements
+* Show error message on invalid images
+
 # 0.6.11
 
 * Fixed incompat with BetsyRoss

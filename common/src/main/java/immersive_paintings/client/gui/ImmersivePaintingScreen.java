@@ -167,9 +167,6 @@ public class ImmersivePaintingScreen extends Screen {
                 context.drawTexture(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 matrices.pop();
 
-                if (error != null) {
-                    context.drawCenteredTextWithShadow(textRenderer, error, width / 2, height / 2, 0xFFFF0000);
-                }
             }
             case DELETE -> {
                 context.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
@@ -196,6 +193,10 @@ public class ImmersivePaintingScreen extends Screen {
         }
 
         super.render(context, mouseX, mouseY, delta);
+
+        if (error != null) {
+            context.drawCenteredTextWithShadow(textRenderer, error, width / 2, height / 2, 0xFFFF0000);
+        }
     }
 
     private List<Identifier> getMaterialsList() {
@@ -736,12 +737,15 @@ public class ImmersivePaintingScreen extends Screen {
 
             if (!Files.exists(path)) continue;
 
-            loadImage(p);
-            break;
+            if (loadImage(p)) {
+                return;
+            }
         }
+
+        setError(Text.translatable("immersive_paintings.error.image_load_failed"));
     }
 
-    private void loadImage(String path) {
+    private boolean loadImage(String path) {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
@@ -749,7 +753,9 @@ public class ImmersivePaintingScreen extends Screen {
             settings = new PixelatorSettings(currentImage, maxResolution);
             setPage(Page.CREATE);
             pixelateImage();
+            return true;
         }
+        return false;
     }
 
     private String toFileName(String path) {
@@ -761,29 +767,14 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private ByteImage loadImage(String path, Identifier identifier) {
-        InputStream stream = null;
-        try {
-            stream = new URL(path).openStream();
-        } catch (Exception exception) {
-            try {
-                stream = new FileInputStream(path);
-            } catch (Exception e) {
-                Main.LOGGER.error(e);
-            }
+        try (InputStream stream = path.startsWith("http://") || path.startsWith("https://") ? new URL(path).openStream() : new FileInputStream(path)) {
+            ByteImage nativeImage = ByteImage.read(stream);
+            preprocessImage(nativeImage);
+            MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(nativeImage)));
+            return nativeImage;
+        } catch (IOException e) {
+            Main.LOGGER.error("Failed to load image {}", path, e);
         }
-
-        if (stream != null) {
-            try {
-                ByteImage nativeImage = ByteImage.read(stream);
-                preprocessImage(nativeImage);
-                MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(ClientUtils.byteImageToNativeImage(nativeImage)));
-                stream.close();
-                return nativeImage;
-            } catch (IOException e) {
-                Main.LOGGER.error(e);
-            }
-        }
-
         return null;
     }
 
