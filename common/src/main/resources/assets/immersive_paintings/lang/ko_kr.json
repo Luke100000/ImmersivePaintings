@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "이미지가 너무 큽니다!",
   "immersive_paintings.error.limit_reached": "업로드 할 수 있는 그림의 최대 개수에 도달했습니다!",
   "immersive_paintings.error.hash_failed": "페인팅 해시를 생성하지 못했습니다!",
+  "immersive_paintings.error.image_load_failed": "이미지를 로드할 수 없습니다, 로그를 확인하세요!",
   "immersive_paintings.command.success.delete": "플레이어의 모든 그림 삭제 %s",
   "immersive_paintings.command.error.no_player": "'%s' 작가의 그림이 없습니다.",
   "config.immersive_paintings.common": "공통 설정",
