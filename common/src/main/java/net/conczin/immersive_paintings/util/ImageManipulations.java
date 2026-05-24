@@ -100,7 +100,7 @@ public class ImageManipulations {
             }
             case Size.NSFW -> {
                 // NSFW Images can only be resized from thumbnails, so there's no need to downscale
-                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize / 8);
+                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize * Configs.CLIENT.nsfwBlurAmount);
             }
         }
 

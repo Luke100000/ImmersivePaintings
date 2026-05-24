@@ -16,6 +16,7 @@ public class ClientConfig extends Config {
     public boolean showOtherPlayersPaintings = true;
     @ConfigGroup.Pop
     public boolean showNSFWPaintings = true;
+    public float nsfwBlurAmount = 0.25f;
 
     public ConfigGroup advancedGroup = new ConfigGroup("advanced");
     public int thumbnailSize = 128;
