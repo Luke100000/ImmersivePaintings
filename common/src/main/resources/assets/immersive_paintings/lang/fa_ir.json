@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "تصویر بسیار بزرگ است!",
   "immersive_paintings.error.limit_reached": "شما به حداکثر میزان نقاشی‌های آپلود شده رسیده اید!",
   "immersive_paintings.error.hash_failed": "ایجاد هش نقاشی ناموفق!",
+  "immersive_paintings.error.image_load_failed": "بارگذاری تصویر ناموفق بود، لاگ را بررسی کنید!",
   "immersive_paintings.command.success.delete": "تمام نقاشی‌ها برای بازیکن %s حذف شدند",
   "immersive_paintings.command.error.no_player": "نقاشی‌هایی با نویسنده '%s' پیدا نشد",
   "config.immersive_paintings.common": "تنظیمات عمومی",
