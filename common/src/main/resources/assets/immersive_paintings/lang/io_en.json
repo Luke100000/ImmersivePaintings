@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Obrazo tro granda!",
   "immersive_paintings.error.limit_reached": "Vi atingis vian maksimumon de pendentaj pentraĵoj!",
   "immersive_paintings.error.hash_failed": "Fatal a krear hash de pintura!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Surtut tota pinta por player %s",
   "immersive_paintings.command.error.no_player": "Nuli pinturas trovat kun autor '%s'",
   "config.immersive_paintings.common": "Komuna Agordes",
