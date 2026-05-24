@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "¡A imaxe ye demasiado grande!",
   "immersive_paintings.error.limit_reached": "¡Alcanzaes la cantidá máxima de pinturas subíes!",
   "immersive_paintings.error.hash_failed": "Falló al crear l'hash de la pintura!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Suprimí t alangas pintures pa'l xugador %s",
   "immersive_paintings.command.error.no_player": "Non se encontraron pintures con'l autor '%s'",
   "config.immersive_paintings.common": "Configuraciones Comunes",
