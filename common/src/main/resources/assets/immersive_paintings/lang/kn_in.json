@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "ಚಿತ್ರವು ಹೆಚ್ಚು ದೊಡ್ಡದು!",
   "immersive_paintings.error.limit_reached": "ನೀವು ನಿಮ್ಮ ಅಪ್ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರಗಳ ಗರಿಷ್ಟ ಸಂಖ್ಯೆಗೆ ಮುಟ್ಟಿದ್ದೀರಿ!",
   "immersive_paintings.error.hash_failed": "ಚಿತ್ರದ ಹ್ಯಾಶ್ ಅನ್ನು ನಿರ್ಮಿಸಲು ವಿಫಲವಾಗಿದೆ!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": " ಆಟಗಾರ %s ಗೆ ಎಲ್ಲಾ ಚಿತ್ರಗಳನ್ನು ತೆಗೆದು ಹಾಕಲಾಗಿದೆ",
   "immersive_paintings.command.error.no_player": "ಲೇಖಕ '%s' ಇಂದ ಯಾವುದೇ ಚಿತ್ರಗಳನ್ನು ಕಂಡು ಹೀನಾಯವಾಗಿದೆ",
   "config.immersive_paintings.common": "ಸಮಾನ ಆರೋಗ್ಯಗಳು",
