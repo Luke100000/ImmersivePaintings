@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "画像が大きすぎます",
   "immersive_paintings.error.limit_reached": "アップロードできる絵画の枚数が上限に達しました。",
   "immersive_paintings.error.hash_failed": "ペイントのハッシュを作成できませんでした！",
+  "immersive_paintings.error.image_load_failed": "画像を読み込めませんでした。ログを確認してください！",
   "immersive_paintings.command.success.delete": "プレイヤー %sの絵画をすべて削除しました",
   "immersive_paintings.command.error.no_player": "作者の%s ' の絵は見つかりませんでした",
   "config.immersive_paintings.common": "共通設定",
