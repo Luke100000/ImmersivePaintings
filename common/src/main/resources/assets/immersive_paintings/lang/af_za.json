@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Beeld is te groot!",
   "immersive_paintings.error.limit_reached": "Jy het jou maksimum aantal oplaai skilderye bereik!",
   "immersive_paintings.error.hash_failed": "Kon nie die has van die skildery aanmaak nie!",
+  "immersive_paintings.error.image_load_failed": "Konn nie die beeld laai nie, kyk na die log!",
   "immersive_paintings.command.success.delete": "Verwyder alle skilderye vir speler %s",
   "immersive_paintings.command.error.no_player": "Geen skilderye gevind met outeur '%s'",
   "config.immersive_paintings.common": "Algemene Instellings",
