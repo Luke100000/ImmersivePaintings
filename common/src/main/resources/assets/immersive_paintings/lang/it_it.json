@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "L'immagine è troppo grande!",
   "immersive_paintings.error.limit_reached": "Hai raggiunto il numero massimo di dipinti caricati!",
   "immersive_paintings.error.hash_failed": "Impossibile creare l'hash della pittura!",
+  "immersive_paintings.error.image_load_failed": "Impossibile caricare l'immagine, controllare il registro!",
   "immersive_paintings.command.success.delete": "Eliminato tutti i dipinti per il giocatore %s",
   "immersive_paintings.command.error.no_player": "Nessun dipinto trovato con autore '%s'",
   "config.immersive_paintings.common": "Impostazioni Comuni",
