@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "รูปภาพใหญ่เกินไป!",
   "immersive_paintings.error.limit_reached": "คุณถึงขีดจำกัดการอัปโหลดภาพวาดแล้ว!",
   "immersive_paintings.error.hash_failed": "ไม่สามารถสร้างแฮชของภาพวาดได้!",
+  "immersive_paintings.error.image_load_failed": "ไม่สามารถโหลดภาพได้ โปรดตรวจสอบบันทึก!",
   "immersive_paintings.command.success.delete": "ลบภาพวาดทั้งหมดสำหรับผู้เล่น %s",
   "immersive_paintings.command.error.no_player": "ไม่พบภาพวาดที่มีผู้แต่ง '%s'",
   "config.immersive_paintings.common": "การตั้งค่าทั่วไป",
