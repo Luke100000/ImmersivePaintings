@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "图像过大！",
   "immersive_paintings.error.limit_reached": "你上传的图像数量已达上限！",
   "immersive_paintings.error.hash_failed": "创建绘画哈希失败！",
+  "immersive_paintings.error.image_load_failed": "无法加载图像，请检查日志！",
   "immersive_paintings.command.success.delete": "删除玩家 %s 的所有绘画",
   "immersive_paintings.command.error.no_player": "没有找到作者的%s 的画",
   "config.immersive_paintings.common": "常用设置",
