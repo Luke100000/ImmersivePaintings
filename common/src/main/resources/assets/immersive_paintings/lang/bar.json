@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Das Bild ist zu groß!",
   "immersive_paintings.error.limit_reached": "Du hast die maximale Anzahl an hochgeladenen Bildern erreicht!",
   "immersive_paintings.error.hash_failed": "Hash vom Bild erstellen is fehlgeschlagen!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Alle Bildla für Spieler %s wurden gelöscht",
   "immersive_paintings.command.error.no_player": "Keen Bildla mit Autor '%s' gfundn",
   "config.immersive_paintings.common": "Allgemeine Einstellungen",
