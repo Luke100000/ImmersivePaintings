@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Pilt on liiga suur!",
   "immersive_paintings.error.limit_reached": "Sa oled saavutanud oma maksimaalse üleslaaditud maalide arvu!",
   "immersive_paintings.error.hash_failed": "Ei õnnestunud luua hashi maali!",
+  "immersive_paintings.error.image_load_failed": "Ei saanud pilti laadida, kontrollige logi!",
   "immersive_paintings.command.success.delete": "Kustutati kõik mängijate maalid %s",
   "immersive_paintings.command.error.no_player": "Autoriga '%s' ei leitud ühtegi maali.",
   "config.immersive_paintings.common": "Üldised seaded",
