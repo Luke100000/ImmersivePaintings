@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "படம் மிகப் பெரியது!",
   "immersive_paintings.error.limit_reached": "நீங்கள் அதிகபட்சமாக பதிவேற்றிய ஓவியங்களின் எண்ணிக்கையை அடைந்துவிட்டீர்கள்!",
   "immersive_paintings.error.hash_failed": "ஓவியத்தின் ஹேஷ் உருவாக்க முடியவில்லை!",
+  "immersive_paintings.error.image_load_failed": "படத்தை ஏற்ற முடியவில்லை, பதிவேட்டைச் சரிபார்க்கவும்!",
   "immersive_paintings.command.success.delete": "வீரர் %s க்காக எல்லா ஓவியங்களையும் நீக்கினேன்",
   "immersive_paintings.command.error.no_player": "ஆசிரியர் '%s' உடன் இணைந்த எந்த ஓவியங்களும் பெறவில்லை",
   "config.immersive_paintings.common": "பொதுவான அமைப்புகள்",
