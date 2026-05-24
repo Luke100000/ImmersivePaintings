@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Ofbylding is te grut!",
   "immersive_paintings.error.limit_reached": "Jo hawwe jo maksimaal oantal tsjin uploaden fan skilderijen berikt!",
   "immersive_paintings.error.hash_failed": "It is net slagge om in hash fan it skilderij te meitsjen!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "Alle skilderijen foar spiler %s binne ferwidere",
   "immersive_paintings.command.error.no_player": "Gjin skilderijen fûn mei auteur '%s'",
   "config.immersive_paintings.common": "Algemiene ynstellings",
