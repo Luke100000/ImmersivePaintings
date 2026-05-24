@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "¡ǝᵷɹɐꞁ ooʇ sᴉ ǝᵷɐɯI",
   "immersive_paintings.error.limit_reached": "¡sᵷuᴉʇuᴉɐd pǝpɐoꞁdn ɟo ʇunoɯɐ ɯnɯᴉxɐɯ ɹnoʎ pǝɥɔɐǝɹ no⅄",
   "immersive_paintings.error.hash_failed": "!ƃʎʇɐɥs ǝᴉɹʇ ɐo ɹǝʍoʇ ɐᴉʍ ǝʇɐɥs ǝʎolɐʍ ǝʇuǝʍ ʍoɥsǝɯ lǝɹʇ",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "sǝɐɥʎʇ ǝɹo sǝʍ|| ʇɐᴉɹʍ lɐʍ ɟo ʍoɥsǝɯ lǝqɐɯ pɹo ʍop ou \"ʍou",
   "immersive_paintings.command.error.no_player": "'%s'ʏǝɹo mɐʍ ɐʍ| lǝʍ ɐ ɯuᴉnb ɟo ʍoɥsǝɯ lǝqɐɯ sʍuo llɐl ʍoɥsǝɯ ʍop ʍou|dpuɞ",
   "config.immersive_paintings.common": "sǝǝɐW oᴉʍ",
