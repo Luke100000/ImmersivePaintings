@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Imago nimis magna est!",
   "immersive_paintings.error.limit_reached": "Maximam numerum picturarum uploadarum consecutus es!",
   "immersive_paintings.error.hash_failed": "Factum est ne titulus picturae creare!",
+  "immersive_paintings.error.image_load_failed": "Imago onerari non potuit, diarium inspice!",
   "immersive_paintings.command.success.delete": "Omnes picturas pro lusero %s delendae sunt",
   "immersive_paintings.command.error.no_player": "Nullae picturae inventae sunt cum auctore '%s'",
   "config.immersive_paintings.common": "Consilia Communia",
