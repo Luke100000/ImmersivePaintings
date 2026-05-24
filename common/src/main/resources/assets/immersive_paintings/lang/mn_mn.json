@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Зураг хэт том байна!",
   "immersive_paintings.error.limit_reached": "Та uploaded зурагны хамгийн их хэмжээг хүрсэн!",
   "immersive_paintings.error.hash_failed": "Зургийн хэш үүсгэхэд алдаа гарлаа!",
+  "immersive_paintings.error.image_load_failed": "Зургийг ачаалж чадсангүй, лог шалгана уу!",
   "immersive_paintings.command.success.delete": "Хэрэглэгч %s-ийн бүх зургуудыг устгасан",
   "immersive_paintings.command.error.no_player": "'%%s' зохиогчтой зургууд байхгүй",
   "config.immersive_paintings.common": "Ерөнхий тохиргоо",
