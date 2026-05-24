@@ -156,6 +156,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 if (shouldUpload && pixelatedImage != null) {
                     Minecraft.getInstance().getTextureManager().register(Main.locate("temp_pixelated"), new DynamicTexture(ImageManipulations.bufferedToNative(pixelatedImage)));
+                    shouldUpload = false;
                 }
 
                 int maxWidth = 190;
@@ -937,7 +938,9 @@ public class ImmersivePaintingScreen extends Screen {
             BufferedImage image = ImageIO.read(stream);
             if (image != null) {
                 preprocessImage(image);
-                Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                Minecraft.getInstance().execute(() -> {
+                    Minecraft.getInstance().getTextureManager().register(identifier, new DynamicTexture(ImageManipulations.bufferedToNative(image)));
+                });
                 return image;
             }
         } catch (IOException e) {

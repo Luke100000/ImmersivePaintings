@@ -123,14 +123,14 @@ public class ClientPaintingManager {
         // Doing this allows us to quickly load and resize any necessary cached images
         // The only two sizes that can exist on their own are FULL and THUMBNAIL, all others are generated from them
         paintingCache.get(thumbId).ifPresentOrElse(
-            bufferedImage -> registerThumbnail(identifier, bufferedImage, true),
-            () -> requested.remove(thumbId)
+                bufferedImage -> registerThumbnail(identifier, bufferedImage, true),
+                () -> requested.remove(thumbId)
         );
 
 
         paintingCache.get(fullId).ifPresentOrElse(
-            bufferedImage -> registerImage(identifier, bufferedImage, true),
-            () -> requested.remove(fullId)
+                bufferedImage -> registerImage(identifier, bufferedImage, true),
+                () -> requested.remove(fullId)
         );
     }
 
@@ -178,11 +178,15 @@ public class ClientPaintingManager {
                     paintingCache.set(path, target);
             }
 
-            ResourceLocation id = Minecraft.getInstance().getTextureManager().register(Main.MOD_ID + "/" + path, new DynamicTexture(ImageManipulations.bufferedToNative(target)));
-            mapping.put(realSize, id);
+            BufferedImage finalTarget = target;
+            Minecraft.getInstance().execute(() -> {
+                ResourceLocation id = Minecraft.getInstance().getTextureManager().register(Main.MOD_ID + "/" + path, new DynamicTexture(ImageManipulations.bufferedToNative(finalTarget)));
+                mapping.put(realSize, id);
 
-            if (size == Size.THUMBNAIL && Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen)
-                screen.updateWidget(identifier);
+                if (size == Size.THUMBNAIL && Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
+                    screen.updateWidget(identifier);
+                }
+            });
         });
     }
 

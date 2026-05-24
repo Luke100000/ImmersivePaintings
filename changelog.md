@@ -4,6 +4,7 @@
 * Fixed client desync on some painting placements
 * Show error message on invalid images
 * Library filters are now persistent
+* Fixed rare crashes
 
 # 0.7.6
 
