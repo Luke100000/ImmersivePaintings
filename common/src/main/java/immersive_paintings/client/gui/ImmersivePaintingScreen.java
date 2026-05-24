@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -727,8 +728,17 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void filesDragged(List<Path> paths) {
-        Path path = paths.get(0);
-        loadImage(path.toString());
+        for (Path path : paths) {
+            if (path == null) continue;
+
+            String p = path.toString();
+            if (p.isEmpty()) continue;
+
+            if (!Files.exists(path)) continue;
+
+            loadImage(p);
+            break;
+        }
     }
 
     private void loadImage(String path) {
