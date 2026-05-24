@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "الصورة كبيرة جدًا!",
   "immersive_paintings.error.limit_reached": "لقد وصلت إلى الحد الأقصى لعدد اللوحات التي تم تحميلها!",
   "immersive_paintings.error.hash_failed": "فشل في إنشاء هاش للوحة!",
+  "immersive_paintings.error.image_load_failed": "Could not load image, check log!",
   "immersive_paintings.command.success.delete": "تم حذف جميع اللوحات للاعب %s",
   "immersive_paintings.command.error.no_player": "لا توجد لوحات وجدت مع المؤلف '%s'",
   "config.immersive_paintings.common": "الإعدادات العامة",
