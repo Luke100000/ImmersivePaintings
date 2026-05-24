@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "Kuva on liian suuri!",
   "immersive_paintings.error.limit_reached": "Olet saavuttanut ladattujen maalausten enimmäismäärän!",
   "immersive_paintings.error.hash_failed": "maalauksen hash luominen epäonnistui!",
+  "immersive_paintings.error.image_load_failed": "Kuvaa ei voitu ladata, tarkista loki!",
   "immersive_paintings.command.success.delete": "Kaikki maalaukset poistettu pelaajalle %s",
   "immersive_paintings.command.error.no_player": "Maalauksia ei löytynyt tekijän%s kanssa",
   "config.immersive_paintings.common": "Yleiset Asetukset",
