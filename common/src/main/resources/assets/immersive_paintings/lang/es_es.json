@@ -80,6 +80,7 @@
   "immersive_paintings.error.too_large": "¡La imagen es demasiado grande!",
   "immersive_paintings.error.limit_reached": "¡Has alcanzado la cantidad máxima de pinturas subidas!",
   "immersive_paintings.error.hash_failed": "¡No se pudo crear el hash de la pintura!",
+  "immersive_paintings.error.image_load_failed": "No se pudo cargar la imagen, compruebe el registro!",
   "immersive_paintings.command.success.delete": "Eliminó todas las pinturas para el jugador %s",
   "immersive_paintings.command.error.no_player": "No se encontraron pinturas con el autor '%s'",
   "config.immersive_paintings.common": "Ajustes comunes",
