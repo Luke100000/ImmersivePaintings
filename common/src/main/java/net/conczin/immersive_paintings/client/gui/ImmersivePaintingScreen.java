@@ -832,13 +832,21 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public void setPage(Page page) {
+        Page previousPage = this.page;
         this.page = page;
+        if (page != previousPage && isPaintingSelectionPage(page)) {
+            filteredResolution = (page == Page.DATAPACKS ? 32 : 0);
+        }
 
         rebuild();
 
-        if (page == Page.DATAPACKS || page == Page.PLAYERS || page == Page.YOURS) {
+        if (isPaintingSelectionPage(page)) {
             updateSearch();
         }
+    }
+
+    private static boolean isPaintingSelectionPage(Page page) {
+        return page == Page.DATAPACKS || page == Page.PLAYERS || page == Page.YOURS;
     }
 
     private void updateSearch() {
