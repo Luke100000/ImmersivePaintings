@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Видимы ли картины других игроков в интерфейсе редактирования картины",
   "config.immersive_paintings.common.automaticImageResizing": "Автоматическое изменение размера изображения",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Автоматическое изменение размера изображений, превышающих допустимый лимит",
+  "config.immersive_paintings.common.enableBundledPaintings": "Включить Картины в комплекте",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Показать картины по умолчанию с погруженными рисунками",
   "config.immersive_paintings.common.uploadPermissionLevel": "Уровень разрешений для загрузки",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Для загрузки картин требуется определенный уровень доступа. По умолчанию доступно всем игрокам",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимальная ширина изображения",
