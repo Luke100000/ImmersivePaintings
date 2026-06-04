@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Är andra spelares målningar synliga i målningen redigera GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatisk bildanpassning",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Ändra automatiskt storlek på bilder som är större än tillåtna",
+  "config.immersive_paintings.common.enableBundledPaintings": "Aktivera paketerade målningar",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Visa de förvalda målningarna tillsammans med uppslukande målningar",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ladda upp behörighetsnivå",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Behörighetsnivå krävs för att ladda upp målningar. Standard för alla spelare",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximal bildbredd",
