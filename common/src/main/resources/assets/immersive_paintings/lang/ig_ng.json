@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "O nwere ndị ọzọ na-eme nke a na-achọpụta na GUI ndozi eserese",
   "config.immersive_paintings.common.automaticImageResizing": "Nchịkọta Ihe osise nke Akwụkwọ",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Nchịkọta ihe osise na-akpaghị aka nke na-akarịrị oke a na-anabata",
+  "config.immersive_paintings.common.enableBundledPaintings": "Kwe ka eserese agbakọtara",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Gosi eserese ndabara e jikọtara na Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ọkwa Ikikere Nupload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Ọkwa ikikere a chọrọ maka ibudata eserese. Ndi otu egwuregwu niile na-eme ihe.",
   "config.immersive_paintings.common.maxUserImageWidth": "Nha Image kachasị elu",
