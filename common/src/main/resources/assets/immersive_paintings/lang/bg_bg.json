@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Видими ли са картините на други играчи в графичния интерфейс за редактиране на картини",
   "config.immersive_paintings.common.automaticImageResizing": "Автоматично оразмеряване на изображенията",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Автоматично промяна на размера на изображенията, които са по-големи от позволеното ограничение",
+  "config.immersive_paintings.common.enableBundledPaintings": "Активиране на пакетни картини",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Показване на картините по подразбиране, включени в пакета Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Ниво на разрешение за качване",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Изисква се ниво на разрешение за качване на картини. По подразбиране е за всички играчи",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимална ширина на изображението",
