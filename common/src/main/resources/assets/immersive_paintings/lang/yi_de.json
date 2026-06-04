@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "איר פארשטיי אָדער ניט, די פּאַבריקן פון אַנדערע שפּילערס זענען וויוייַטבאר אין דער פאַבריק רעדאַגירן GUI",
   "config.immersive_paintings.common.automaticImageResizing": "אָוטאָמאַטיש בילד יידיש אַנטשפּלאַטן",
   "config.immersive_paintings.common.automaticImageResizing.desc": "אָוטאָמאַטיש פֿאַרשטאַרבן בילדער וואָס זענען גרעסער ווי דער ערלויבט מעבר",
+  "config.immersive_paintings.common.enableBundledPaintings": "אַקטיווירן פֿאַרבונדענע מאָלערײַען",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "ווײַז די סטאַנדאַרטע מאָלערײַען וואָס קומען צוזאַמען מיט אימערסיוו פּיינטינגס",
   "config.immersive_paintings.common.uploadPermissionLevel": "אַפּלאָדע פּערן לוועל",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "פּערן לוועל פארלאנגט צו אַפּלאָדירן פאַבריקן. דיסקאַונט צו אַלע שפּילערס",
   "config.immersive_paintings.common.maxUserImageWidth": "מאַקסימום בילד וויַט",
