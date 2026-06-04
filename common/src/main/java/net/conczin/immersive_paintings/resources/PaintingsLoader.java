@@ -6,6 +6,7 @@ import com.mojang.logging.LogUtils;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -28,13 +29,13 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
     private static final String dataType = "paintings";
     private static final int dataTypeLength = dataType.length() + 1;
     private static final int fileSuffixLength = ".json".length();
-    
+
     protected static final ResourceLocation ID = Main.locate(dataType);
 
     @Override
     protected Map<ResourceLocation, Entry<Painting, Resource>> prepare(ResourceManager manager, ProfilerFiller profiler) {
         Map<ResourceLocation, Entry<Painting, Resource>> map = new HashMap<>();
-        
+
         Map<ResourceLocation, Resource> resources = manager.listResources(dataType, (path) -> path.getPath().endsWith(".png"));
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             String string = entry.getKey().getPath();
@@ -51,6 +52,9 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Resource
 
                 InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
                 JsonObject jsonElement = Objects.requireNonNull(GsonHelper.fromJson(GSON, reader, JsonElement.class)).getAsJsonObject();
+
+                boolean bundled = entry.getKey().getNamespace().equals(Main.MOD_ID);
+                if (bundled && !Configs.COMMON.enableBundledPaintings) continue;
 
                 int width = GsonHelper.getAsInt(jsonElement, "width", 1);
                 int height = GsonHelper.getAsInt(jsonElement, "height", 1);

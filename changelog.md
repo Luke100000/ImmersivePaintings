@@ -2,6 +2,7 @@
 
 * Fixed odd resolution filter behavior
 * Fixed identical images but different settings colliding
+* Added `enableBundledPaintings` config to disable bundled paintings
 
 # 0.7.7
 
