@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "sijo pi palisa ante li toki kepeken palisa toki",
   "config.immersive_paintings.common.automaticImageResizing": "kijetesantakalu palisa",
   "config.immersive_paintings.common.automaticImageResizing.desc": "kijetesantakalu palisa li kama lawa tawa mi tawa lipu wile",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "kammani tu wile upload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "nasin pi kammani tawa upload palisa. li wile e tan ale palisa",
   "config.immersive_paintings.common.maxUserImageWidth": "kijetesantakalu lon ala",
