@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "ghopPaintings jIHvaD Dap lo'ghach suction vIneH",
   "config.immersive_paintings.common.automaticImageResizing": "ghoSghach mIw tIq",
   "config.immersive_paintings.common.automaticImageResizing.desc": "reH ghoSghach mIw tIqmey lo'lu'be' 'e' ghoSmoH 'ej ghoSghach mIw tIq'e' nIDghach",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "ghopPaintings Dap je tIn",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ghopPaintings lo'ghach jIHvaD buS, pIj jIHmoH vIneH",
   "config.immersive_paintings.common.maxUserImageWidth": "mo'  ghopPaintings DaHbe'",
