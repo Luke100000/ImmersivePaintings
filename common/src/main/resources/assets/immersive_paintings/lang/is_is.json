@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Eru myndir annarra spela sjáanlegar í myndatöku GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Sjálfvirk myndastærðarbreyting",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Sjálfvirkt breyta myndum sem eru stærri en leyfileg mörk",
+  "config.immersive_paintings.common.enableBundledPaintings": "Kveikja á inniföldum málverkum",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Sýndu sjálfgefnu málverkin sem fylgja Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upphleðsluréttindi",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Réttindastig sem krafist er til að hlaða upp myndum. Fer aðeins eftir öllum spilurum",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksímmyndarbreidd",

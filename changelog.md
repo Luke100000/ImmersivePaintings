@@ -1,6 +1,9 @@
 # 0.7.8
 
-* Fixed permission issue
+* Fixed odd resolution filter behavior
+* Fixed identical images but different settings colliding
+* Added `enableBundledPaintings` config to disable bundled paintings
+* Fixed a permission issue
 
 # 0.7.7
 
@@ -18,7 +21,7 @@
 
 # 0.7.5
 
-* Fixed crash on weird URLs on Windows
+* Fixed a crash on weird URLs on Windows
 * Synced translations
 
 # 0.7.4

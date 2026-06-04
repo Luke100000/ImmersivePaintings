@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "他のプレイヤーの絵画はペイント編集GUIに表示されます。",
   "config.immersive_paintings.common.automaticImageResizing": "画像の自動サイズ変更",
   "config.immersive_paintings.common.automaticImageResizing.desc": "許可された制限を超える画像のサイズを自動的に変更する",
+  "config.immersive_paintings.common.enableBundledPaintings": "バンドルペイントを有効にする",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "没入型絵画にバンドルされているデフォルトの絵画を表示",
   "config.immersive_paintings.common.uploadPermissionLevel": "権限レベルをアップロード",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "絵画をアップロードするために必要な権限レベル。すべてのプレイヤーの初期値になります",
   "config.immersive_paintings.common.maxUserImageWidth": "最大画像幅",

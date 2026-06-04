@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Zijn de schilderijen van een andere speler zichtbaar in de verfraaiing van de GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatische afbeelding wijzigen",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatisch afbeeldingen aanpassen die groter zijn dan de toegestane limiet",
+  "config.immersive_paintings.common.enableBundledPaintings": "Gebundelde schilderijen inschakelen",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Toon de standaard schilderijen gebundeld met volledig beeldscherm",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload permissie niveau",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Machtigingsniveau vereist om schilderijen te uploaden. Standaard voor alle spelers",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximale afbeeldingsbreedte",

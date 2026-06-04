@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Vai gleznu rediģēšanas GUI ir redzamas citu spēlētāju gleznas?",
   "config.immersive_paintings.common.automaticImageResizing": "Automātiska attēlu izmēru maiņa",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automātiski mainiet attēlu, kas ir lielāki par atļauto limitu, izmērus.",
+  "config.immersive_paintings.common.enableBundledPaintings": "Ieslēgt komplektā esošās gleznas",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Rādīt noklusējuma gleznas, kas pievienotas kopā ar Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Augšupielādes atļaujas līmenis",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nepieciešamais atļaujas līmenis, lai augšupielādētu gleznas. Noklusējuma iestatījums ir visiem spēlētājiem",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimālais attēla platums",

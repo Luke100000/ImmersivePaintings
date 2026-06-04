@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ovatko muut pelaajan maalaukset näkyvissä maalauksen käyttöliittymän muokkauksessa",
   "config.immersive_paintings.common.automaticImageResizing": "Automaattinen Kuvan Koon Muuttaminen",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Muuta automaattisesti sallitun rajan suurempia kuvia",
+  "config.immersive_paintings.common.enableBundledPaintings": "Ota Yhdistetyt Maalaukset Käyttöön",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Näytä oletus maalauksia niputetaan Immersive maalauksia",
   "config.immersive_paintings.common.uploadPermissionLevel": "Lähetyksen Käyttöoikeustaso",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Käyttöoikeustaso vaaditaan maalauksien lataamiseen. Oletuksena kaikille pelaajille",
   "config.immersive_paintings.common.maxUserImageWidth": "Kuvan Enimmäisleveys",

@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "As pinturas de outro jogador são visíveis na interface de edição da pintura",
   "config.immersive_paintings.common.automaticImageResizing": "Redimensionamento automático de imagem",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensionar automaticamente as imagens que são maiores que o limite permitido",
+  "config.immersive_paintings.common.enableBundledPaintings": "Habilitar pinturas em pacotes",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Mostrar as pinturas padrão agrupadas com pinturas imersivas",
   "config.immersive_paintings.common.uploadPermissionLevel": "Carregar nível de permissão",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nível de permissão necessário para enviar pinturas. O padrão é para todos os jogadores",
   "config.immersive_paintings.common.maxUserImageWidth": "Largura máxima da imagem",

@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ar kitų žaidėjų paveikslai matomi paveikslų redagavimo GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatinis vaizdo dydžio keitimas",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatiškai pakeiskite didesnių nei leistina vaizdų dydį",
+  "config.immersive_paintings.common.enableBundledPaintings": "Įgalinti susietus paveikslus",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Rodyti numatytuosius paveikslus, pateiktus kartu su \"Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Įkėlimo leidimo lygis",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Leidimo lygis, reikalingas paveikslams įkelti. Numatytoji reikšmė - visi žaidėjai",
   "config.immersive_paintings.common.maxUserImageWidth": "Didžiausias vaizdo plotis",

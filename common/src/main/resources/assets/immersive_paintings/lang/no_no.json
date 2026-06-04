@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Er andre spilleres malerier synlig i maleriets redigering GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatisk bildeskalering",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Endre størrelsen på bilder som er større enn tillatt grense automatisk",
+  "config.immersive_paintings.common.enableBundledPaintings": "Aktiver buntede tegninger",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Vis standard malerier samlet med Immersive malerier",
   "config.immersive_paintings.common.uploadPermissionLevel": "Last opp tillatelsesnivå",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Tillatelsesnivå kreves for å laste opp malerier. Standard til alle spillere",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimal bildebredde",

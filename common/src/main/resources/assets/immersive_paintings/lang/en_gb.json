@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Are other player's paintings visible in the painting edit GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatic Image Resizing",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatically resize images that are larger than the allowed limit",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Permission Level",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Permission level required to upload paintings. Defaults to all players",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximum Image Width",

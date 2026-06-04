@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "在繪圖編輯 GUI 中，其他玩家的繪圖是否可見",
   "config.immersive_paintings.common.automaticImageResizing": "自動調整影像大小",
   "config.immersive_paintings.common.automaticImageResizing.desc": "自動調整大於允許限制的影像大小",
+  "config.immersive_paintings.common.enableBundledPaintings": "啟用捆綁式繪圖",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "顯示與 Immersive Paintings 綁定的預設繪圖",
   "config.immersive_paintings.common.uploadPermissionLevel": "上傳權限等級",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "上傳繪畫所需的權限等級。預設為所有玩家",
   "config.immersive_paintings.common.maxUserImageWidth": "最大影像寬度",
