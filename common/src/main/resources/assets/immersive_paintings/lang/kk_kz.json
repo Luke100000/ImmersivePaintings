@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Басқа ойыншының суреттері сурет редакторында көрінетін бе?",
   "config.immersive_paintings.common.automaticImageResizing": "Автоматты сурет өлшемін өзгерту",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Рұқсат етілген шектен үлкен суреттерді автоматты түрде өлшемін өзгертеді",
+  "config.immersive_paintings.common.enableBundledPaintings": "Жинақталған суреттерді қосу",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Immersive Paintings-пен бірге берілген әдепкі суреттерді көрсетіңіз",
   "config.immersive_paintings.common.uploadPermissionLevel": "Жүктеу рұқсаты деңгейі",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Суреттерді жүктеу үшін қажетті рұсат деңгейі. Барлық ойыншылар үшін әдеттегідей",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимум сурет ені",
