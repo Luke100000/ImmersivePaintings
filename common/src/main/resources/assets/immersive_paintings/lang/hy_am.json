@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ադմինների նկարները տեսանելի են նկարների խմբագրման GUI-ում",
   "config.immersive_paintings.common.automaticImageResizing": "Ավտոմատ կերպով պատկերների չափերի փոփոխում",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Ավտոմատ կերպով փոփոխեք պատկերները, որոնք գերազանցում են թույլատրելի սահմանը",
+  "config.immersive_paintings.common.enableBundledPaintings": "Ակտիվացնել փաթեթավորված նկարները",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Ցուցադրել Immersive Paintings-ի հետ ներառված ստանդարտ նկարները",
   "config.immersive_paintings.common.uploadPermissionLevel": "Թույլտվության մակարդակի բեռնաթափում",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Նկարներ բեռնելու համար անհրաժեշտ է թույլտվության մակարդակ։ Ստանդարտը բոլոր խաղացողների համար է",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимальный ширина изображения",
