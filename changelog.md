@@ -20,7 +20,7 @@
 
 # 0.7.5
 
-* Fixed crash on weird URLs on Windows
+* Fixed a crash on weird URLs on Windows
 * Synced translations
 
 # 0.7.4
