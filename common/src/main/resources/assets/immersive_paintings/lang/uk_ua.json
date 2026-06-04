@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ви видимі в редакторі картин інших гравців",
   "config.immersive_paintings.common.automaticImageResizing": "Автоматичне масштабування зображень",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Автоматично змінювати розмір зображень, більших за дозволений",
+  "config.immersive_paintings.common.enableBundledPaintings": "Увімкнути вбудовані малюнки",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Показати стандартні картини, поєднані з Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Завантаження рівня дозволів",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Рівень дозволу, необхідний для завантаження картин. За замовчуванням всі гравці",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимальна ширина зображення",
