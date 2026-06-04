@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Başqa oyunçunun rəngləmələri rəngləmə redaktə GUI-də görünürmü",
   "config.immersive_paintings.common.automaticImageResizing": "Avtomatik Şəkil Ölçüsünü Dəyişmə",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Müəyyən edilmiş limitdən daha böyük olan şəkilləri avtomatik ölçüsünü dəyişdirin",
+  "config.immersive_paintings.common.enableBundledPaintings": "Paketlənmiş rəsm əsərlərini aktivləşdirin",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Immersive Paintings ilə birlikdə gələn standart rəsm əsərlərini göstərin",
   "config.immersive_paintings.common.uploadPermissionLevel": "Yükləmə İcazə Səviyyəsi",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Rəngləmə yükləmək üçün tələb olunan icazə səviyyəsi. Bütün oyunçulara uyğun gəlir",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimum Şəkil Enliyi",
