@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "هل لوحات اللاعبين الآخرين مرئية في واجهة تحرير اللوحات",
   "config.immersive_paintings.common.automaticImageResizing": "تغيير حجم الصورة تلقائيًا",
   "config.immersive_paintings.common.automaticImageResizing.desc": "تغيير حجم الصور تلقائيًا التي تزيد عن الحد المسموح به",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "مستوى إذن التحميل",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "مستوى الإذن المطلوب لتحميل اللوحات. الإعداد الافتراضي هو لجميع اللاعبين",
   "config.immersive_paintings.common.maxUserImageWidth": "أقصى عرض للصورة",
