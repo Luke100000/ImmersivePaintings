@@ -135,7 +135,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 if (shouldReProcess && currentImage != null) {
-                    service.submit(() -> pixelateImage());
+                    service.submit(this::pixelateImage);
                     shouldReProcess = false;
                 }
 
@@ -160,8 +160,6 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case DELETE, ADMIN_DELETE -> {
-                Identifier background = Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
-
                 Component component;
                 if (page == Page.DELETE) {
                     component = Component.translatable("immersive_paintings.gui.confirm_deletion");
@@ -211,7 +209,7 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
 
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Config.COMMON.uploadPermissionLevel)))) {
+            if (canUploadPainting()) {
                 b.add(Page.NEW);
             }
 
@@ -644,7 +642,7 @@ public class ImmersivePaintingScreen extends Screen {
                     setPage(p);
                 }));
 
-                if (page == Page.ADMIN_DELETE)  {
+                if (page == Page.ADMIN_DELETE) {
                     buttonList.add(Button.builder(Component.translatable("immersive_paintings.gui.delete_all"), v -> {
                         NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
                         setPage(Page.PLAYERS);
@@ -831,7 +829,16 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean isOp() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        return player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+    }
+
+    private static boolean canUploadPainting() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        PermissionLevel level = PermissionLevel.byId(Config.COMMON.uploadPermissionLevel);
+        return level == PermissionLevel.ALL || player.permissions().hasPermission(new Permission.HasCommandLevel(level));
     }
 
     private void setSelectionPage(int p) {

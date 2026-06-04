@@ -1,3 +1,7 @@
+# 0.7.8
+
+* Fixed permission issue
+
 # 0.7.7
 
 * Added gold, crimson, weather copper, and amethyst frames
