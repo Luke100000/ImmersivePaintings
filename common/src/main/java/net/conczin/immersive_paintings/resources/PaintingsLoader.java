@@ -6,7 +6,7 @@ import com.mojang.logging.LogUtils;
 import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.conczin.immersive_paintings.registration.Configs;
+import net.conczin.immersive_paintings.registry.Config;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -53,8 +53,8 @@ public class PaintingsLoader extends SimplePreparableReloadListener<Map<Identifi
                 InputStreamReader reader = new InputStreamReader(resource.get().open(), StandardCharsets.UTF_8);
                 JsonObject jsonElement = Objects.requireNonNull(GsonHelper.fromJson(GSON, reader, JsonElement.class)).getAsJsonObject();
 
-                boolean bundled = entry.getKey().getNamespace().equals(Main.MOD_ID);
-                if (bundled && !Configs.COMMON.enableBundledPaintings) continue;
+                boolean bundled = entry.getKey().getNamespace().equals(ImmersivePaintings.MOD_ID);
+                if (bundled && !Config.COMMON.enableBundledPaintings) continue;
 
                 int width = GsonHelper.getAsInt(jsonElement, "width", 1);
                 int height = GsonHelper.getAsInt(jsonElement, "height", 1);
