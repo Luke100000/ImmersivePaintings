@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sunt picturile celuilalt jucător vizibile în editarea picturii GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Redimensionare automată a imaginilor",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensionează automat imaginile care sunt mai mari decât limita permisă",
+  "config.immersive_paintings.common.enableBundledPaintings": "Activare Picturi Bundled",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Arată picturile implicite grupate cu Picturi Immersive",
   "config.immersive_paintings.common.uploadPermissionLevel": "Nivel de incarcare permisiuni",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivel de permisiuni necesar pentru a încărca picturile. Implicit la toți jucătorii",
   "config.immersive_paintings.common.maxUserImageWidth": "Lățimea maximă a imaginii",

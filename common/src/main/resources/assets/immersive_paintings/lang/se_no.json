@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Tii'rán eage geavahan ájagat",
   "config.immersive_paintings.common.automaticImageResizing": "Automatikalaš biletit oagi",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatikalaš oagii biletit mii nuppii lea sállin",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Uploadit ađđe",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Bifohkkama ađđá rinneiden spekula seji ahte geavahit. Defaultas geavahitti masu",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximá Imagen  Leavta",

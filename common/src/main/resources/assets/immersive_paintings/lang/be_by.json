@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Ці бачныя карціны іншых гульцоў у GUI рэдагавання карцін",
   "config.immersive_paintings.common.automaticImageResizing": "Аўтаматычнае змяншэнне памеру малюнкаў",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Аўтаматычна змяншаць памеры малюнкаў, якія перавышаюць дазволеныя абмежаванні",
+  "config.immersive_paintings.common.enableBundledPaintings": "Уключыць убудаваныя карціны",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Паказаць стандартныя карціны з набору Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Узровень дазволу на загрузку",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Узровень дазволу, неабходны для загрузкі карцін. Па змаўчанні для ўсіх гульцоў",
   "config.immersive_paintings.common.maxUserImageWidth": "Максимальная шырыня выявы",

@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "மற்ற வீரரின் ஓவியங்கள் ஓவியத் திருத்த GUI யில் குறிக்கோளாக உள்ளதா",
   "config.immersive_paintings.common.automaticImageResizing": "Automatic Image Resizing",
   "config.immersive_paintings.common.automaticImageResizing.desc": "அனுமதிக்கப்பட்ட எல்லையின் மிதிவண்டியை விட பெரிய படங்களை தானாகவே மீட்டமை செய்யவும்",
+  "config.immersive_paintings.common.enableBundledPaintings": "தொகுக்கப்பட்ட ஓவியங்களை இயக்கவும்",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Immersive Paintings உடன் தொகுக்கப்பட்ட இயல்புநிலை ஓவியங்களைக் காட்டவும்",
   "config.immersive_paintings.common.uploadPermissionLevel": "ஓவியங்களை பதிவேற்றுவதற்கான அனுமதி நிலை",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ஓவியங்களை பதிவேற்றுவதற்கு தேவையான அனுமதி நிலை. அனைத்து வீரர்களுக்கும் அடிக்கடி உள்ளது",
   "config.immersive_paintings.common.maxUserImageWidth": "மிகவும் அதிகபட்ச படம் அகலம்",

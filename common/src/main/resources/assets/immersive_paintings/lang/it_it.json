@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "I dipinti di altri giocatori sono visibili nella GUI di modifica del dipinto",
   "config.immersive_paintings.common.automaticImageResizing": "Ridimensionamento Automatico Dell'Immagine",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Ridimensiona automaticamente le immagini che sono più grandi del limite consentito",
+  "config.immersive_paintings.common.enableBundledPaintings": "Abilita Dipinti Bundled",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Mostra i dipinti predefiniti in bundle con dipinti immersivi",
   "config.immersive_paintings.common.uploadPermissionLevel": "Carica Livello Permessi",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Livello di autorizzazione richiesto per caricare i dipinti. Predefiniti per tutti i giocatori",
   "config.immersive_paintings.common.maxUserImageWidth": "Larghezza Massima Immagine",

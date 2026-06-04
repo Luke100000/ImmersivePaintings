@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Lizze de skilderijen fan oare spilers sichtber yn 'e skilderijbewurkings- GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatyske ôfbylding resizing",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatysk ôfbyldings resize dy't grutter binne as de tastiene limyt",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Permisjennivo",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Permisjennivo dat nedich is om skilderijen te uploaden. Standert foar alle spilers",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimale Ofbyldbreedte",

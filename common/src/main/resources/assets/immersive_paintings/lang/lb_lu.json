@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sinn déi zousätzlech Molen vun aneren Spiller sichtbar an der Moolerei Editer GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automatesch Bild Gréisstännerung",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatesch Gréisstännerung vun Biller déi méi grouss sinn wéi den zulässigen Limit",
+  "config.immersive_paintings.common.enableBundledPaintings": "Gepackte Molereien aktivéieren",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Weis d'Standardmolereien, déi mat Immersive Paintings abegraff sinn.",
   "config.immersive_paintings.common.uploadPermissionLevel": "Upload Berechtigungsniveau",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Berechtigungsniveau neeedd fir Molen ze uploaden. Standarde fir all Spiller",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximal Bildbreet",

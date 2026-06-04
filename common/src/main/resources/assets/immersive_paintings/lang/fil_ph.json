@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Nakikita ba ang mga painting ng ibang manlalaro sa GUI ng pag-edit ng painting",
   "config.immersive_paintings.common.automaticImageResizing": "Awtomatikong Pagbabago ng Sukat ng Imahe",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Awtomatikong itama ang laki ng mga imahe na mas malaki kaysa sa pinapayagang limitasyon",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Antas ng Pahintulot sa Pag-upload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Antas ng pahintulot na kinakailangan upang mag-upload ng mga painting. Naka-default sa lahat ng manlalaro",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximun na Lapad ng Imahe",

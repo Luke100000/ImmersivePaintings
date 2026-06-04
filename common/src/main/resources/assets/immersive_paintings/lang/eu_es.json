@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Beste jokalari baten pinturak ikusgarriak al dira pintura editatzeko GUIan",
   "config.immersive_paintings.common.automaticImageResizing": "Irudiak Automatikoki Neurrira egokitzea",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatikoki egokitu irudiak baimendutako muga gainditzen dutenak",
+  "config.immersive_paintings.common.enableBundledPaintings": "Bildutako margolanak gaitzea",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Immersive Paintings-ekin batera doazen margolan lehenetsiak erakutsi.",
   "config.immersive_paintings.common.uploadPermissionLevel": "Kargatzeko Baimen Maila",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Pinturak kargatzeko beharrezko baimen maila. Oinarrizko jokalarientzat",
   "config.immersive_paintings.common.maxUserImageWidth": "Irudiaren Altuerarik Handiena",

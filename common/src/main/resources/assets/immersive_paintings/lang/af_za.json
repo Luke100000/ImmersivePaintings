@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Is ander speler se skilderye sigbaar in die skildery-redigeer GUI",
   "config.immersive_paintings.common.automaticImageResizing": "Automaties beeldgrootte aanpas",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Pas outomaties die grootte van beelde aan wat groter is as die toelaatbare limiet",
+  "config.immersive_paintings.common.enableBundledPaintings": "Aktiveer gebundelde skilderye",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Wys die standaardskilderye wat saam met Immersive Paintings gebundel is.",
   "config.immersive_paintings.common.uploadPermissionLevel": "Laai op Permissievlak",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Permissievlak wat benodig word om skilderye op te laai. Standaard vir alle spelers",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimum Beeld Breedte",

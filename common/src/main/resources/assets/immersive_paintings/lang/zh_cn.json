@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "是否在绘图编辑界面中可见其他玩家的绘画？",
   "config.immersive_paintings.common.automaticImageResizing": "自动缩放图像",
   "config.immersive_paintings.common.automaticImageResizing.desc": "自动调整大于允许限制的图像",
+  "config.immersive_paintings.common.enableBundledPaintings": "启用捆绑绘画",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "显示与沉浸绘画捆绑在一起的默认绘画",
   "config.immersive_paintings.common.uploadPermissionLevel": "上传权限级别",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "上传绘画所需的权限级别。默认值为所有玩家",
   "config.immersive_paintings.common.maxUserImageWidth": "最大图像宽度",

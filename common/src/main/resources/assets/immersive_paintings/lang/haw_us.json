@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "E ʻike ana nā kiʻi o nā mea ʻē aʻe i loko o ke GUI ʻOihana kiʻi",
   "config.immersive_paintings.common.automaticImageResizing": "Ke hoʻololi maʻalahi i nā kiʻi",
   "config.immersive_paintings.common.automaticImageResizing.desc": "E hoʻololi maʻalahi i nā kiʻi ʻoi aku nō i ka palena i ʻae ʻia",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Kekele ʻAkomai",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Kekele e pono ai e hoʻokuʻu i nā kiʻi. Kua i nā mea pāʻani a pau",
   "config.immersive_paintings.common.maxUserImageWidth": "Nā ʻĀkau ʻĀkau",

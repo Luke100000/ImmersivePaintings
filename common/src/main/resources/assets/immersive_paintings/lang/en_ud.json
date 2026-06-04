@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "ɯǝɯǝᴉ ɐɾǝOw",
   "config.immersive_paintings.common.automaticImageResizing": "gniziseR egamI citamotA",
   "config.immersive_paintings.common.automaticImageResizing.desc": "timil deewolla eht naht regral era st sega mi ,yzelicereR ylanoit automA",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "7pɹɐʯʍgno l@opuo@I=!LƆ,value,=ɹ€........",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "ɹǝɯɐQɔn...ǝʎɔn sǝɥʇɹǝou sʇ noʇʇ,ǝΓ",
   "config.immersive_paintings.common.maxUserImageWidth": "ez𝜏dɔƃS','",

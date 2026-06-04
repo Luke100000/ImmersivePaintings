@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Da li su slike drugih igrača vidljive u GUI-u za uređivanje slika",
   "config.immersive_paintings.common.automaticImageResizing": "Automatsko promijenjanje veličine slike",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatski promijenite veličinu slika koje su veće od dozvoljenog limita",
+  "config.immersive_paintings.common.enableBundledPaintings": "Omogući priložene slike",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Prikaži zadanih slika koje dolaze uz Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Nivo dozvole za postavljanje",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivo dozvole potreban za postavljanje slika. Zadani je za sve igrače",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksimalna širina slike",

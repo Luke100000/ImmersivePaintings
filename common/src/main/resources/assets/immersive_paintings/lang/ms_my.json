@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Adakah lukisan pemain lain boleh dilihat dalam GUI penyunting lukisan",
   "config.immersive_paintings.common.automaticImageResizing": "Pengubahsuaian Gambar Automatik",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Secara automatik mengubah saiz gambar yang lebih besar daripada had yang dibenarkan",
+  "config.immersive_paintings.common.enableBundledPaintings": "Aktifkan Lukisan Terbungkus",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Tunjukkan lukisan lalai yang disertakan dengan Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Tahap Kebenaran Penghantaran",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Tahap kebenaran yang diperlukan untuk memuat naik lukisan. Secara lalai kepada semua pemain",
   "config.immersive_paintings.common.maxUserImageWidth": "Lebar Imej Maksimum",

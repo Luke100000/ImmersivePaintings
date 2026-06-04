@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Sú obrazy iných hráčov viditeľné v grafickom rozhraní na úpravu obrazov",
   "config.immersive_paintings.common.automaticImageResizing": "Automatická zmena veľkosti obrázkov",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatická zmena veľkosti obrázkov, ktoré sú väčšie ako povolený limit",
+  "config.immersive_paintings.common.enableBundledPaintings": "Povolenie viazaných obrazov",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Zobrazenie predvolených obrazov dodaných so službou Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Úroveň oprávnenia na nahrávanie",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Úroveň povolenia potrebná na nahrávanie obrazov. Predvolené nastavenie pre všetkých hráčov",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximálna šírka obrazu",

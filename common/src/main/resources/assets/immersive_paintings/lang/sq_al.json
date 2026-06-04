@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "A janë pikturat e lojtarëve të tjerë të dukshme në GUI për editimin e pikturave",
   "config.immersive_paintings.common.automaticImageResizing": "Rregullimi Automatik i Imazheve",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Rregullo automatikisht imazhet që janë më të mëdha se kufiri i lejuar",
+  "config.immersive_paintings.common.enableBundledPaintings": "Aktivizo pikturat e paketuar",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Shfaq pikturat e paracaktuara të përfshira me Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Niveli i lejes për ngarkim",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Niveli i lejes i kërkuar për të ngarkuar pikturat. Parazgjedhja është për të gjithë lojtarët",
   "config.immersive_paintings.common.maxUserImageWidth": "Gjerësia maksimale e imazhit",

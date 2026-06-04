@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Các bức tranh của người chơi khác có hiển thị trong giao diện chỉnh sửa tranh không?",
   "config.immersive_paintings.common.automaticImageResizing": "Tự động điều chỉnh kích thước hình ảnh",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Tự động điều chỉnh kích thước hình ảnh có kích thước lớn hơn giới hạn cho phép.",
+  "config.immersive_paintings.common.enableBundledPaintings": "Bật tính năng \"Tranh gói\"",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Hiển thị các bức tranh mặc định đi kèm với Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Mức quyền truy cập tải lên",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Mức quyền hạn cần thiết để tải lên tranh. Mặc định là tất cả người chơi.",
   "config.immersive_paintings.common.maxUserImageWidth": "Chiều rộng tối đa của hình ảnh",
