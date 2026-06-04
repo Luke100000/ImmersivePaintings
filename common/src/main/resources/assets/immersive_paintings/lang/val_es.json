@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Les pintures d'altres jugadors són visibles a la GUI d'edició de pintures",
   "config.immersive_paintings.common.automaticImageResizing": "Redimensionament Automàtic d'Imatges",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Redimensiona automàticament les imatges que són més grans que el límit permès",
+  "config.immersive_paintings.common.enableBundledPaintings": "Enable Bundled Paintings",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Show the default paintings bundled with Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "Nivell de permís d'upload",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Nivell de permís requerit per a pujar pintures. Per defecte, tots els jugadors",
   "config.immersive_paintings.common.maxUserImageWidth": "Amplada màxima de la imatge",
