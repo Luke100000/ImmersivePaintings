@@ -1,6 +1,7 @@
 # 0.7.8
 
 * Fixed odd resolution filter behavior
+* Fixed identical images but different settings colliding
 
 # 0.7.7
 
