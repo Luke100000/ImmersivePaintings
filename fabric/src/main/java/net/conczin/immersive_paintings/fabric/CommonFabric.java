@@ -17,13 +17,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.packs.PackType;
 
 import java.util.function.Consumer;
@@ -39,7 +39,7 @@ public final class CommonFabric implements ModInitializer {
 
         // Entities and Serializers
         registerHelper(BuiltInRegistries.ENTITY_TYPE, Entities::registerEntities);
-        Entities.registerEntitySerializers((name, serializer) -> EntityDataSerializers.registerSerializer(serializer));
+        Entities.registerEntitySerializers(FabricTrackedDataRegistry::register);
 
         // Items and Creative Tabs
         registerHelper(BuiltInRegistries.ITEM, Items::registerItems);
