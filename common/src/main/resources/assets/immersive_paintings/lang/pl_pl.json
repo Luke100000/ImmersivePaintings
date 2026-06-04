@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Obrazy innego gracza są widoczne w interfejsie edycji obrazu",
   "config.immersive_paintings.common.automaticImageResizing": "Automatyczny rozmiar obrazu",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatycznie zmień rozmiar obrazów, które są większe niż dozwolony limit",
+  "config.immersive_paintings.common.enableBundledPaintings": "Włącz wiązane obrazy",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Pokaż domyślne obrazy połączone z obrazem pełnoekranowym",
   "config.immersive_paintings.common.uploadPermissionLevel": "Poziom uprawnień do przesyłania",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Poziom uprawnień wymagany do przesyłania obrazów. Domyślnie dla wszystkich graczy",
   "config.immersive_paintings.common.maxUserImageWidth": "Maksymalna szerokość obrazu",
