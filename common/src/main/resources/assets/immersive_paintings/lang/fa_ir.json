@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "آیا نقاشی‌های بازیکن دیگر در رابط ویرایش نقاشی قابل مشاهده‌اند",
   "config.immersive_paintings.common.automaticImageResizing": "تغییر اندازه خودکار تصاویر",
   "config.immersive_paintings.common.automaticImageResizing.desc": "به طور خودکار تصاویر بزرگ‌تر از حد مجاز را تغییر اندازه دهید",
+  "config.immersive_paintings.common.enableBundledPaintings": "نقاشی‌های بسته‌بندی‌شده را فعال کنید",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "نمایش نقاشی‌های پیش‌فرض همراه با Immersive Paintings",
   "config.immersive_paintings.common.uploadPermissionLevel": "سطح مجوز بارگذاری",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "سطح مجوز لازم برای بارگذاری نقاشی‌ها. به‌طور پیش‌فرض برای همه بازیکنان فعال است",
   "config.immersive_paintings.common.maxUserImageWidth": "حداکثر عرض تصویر",
