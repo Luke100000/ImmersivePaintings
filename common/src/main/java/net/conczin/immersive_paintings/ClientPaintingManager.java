@@ -64,6 +64,7 @@ public class ClientPaintingManager {
         }
     }
 
+    // By this point an image with size "size" will exist, validate any NSFW settings before returning
     private static Identifier getOrNSFW(Map<Size, Identifier> mapping, Identifier identifier, Size size) {
         if (Configs.CLIENT.showNSFWPaintings)
             return mapping.get(size);
@@ -199,7 +200,6 @@ public class ClientPaintingManager {
     }
 
     // TODO: for datapacks, use FULL for all sizes that aren't thumbnail
-    // registers this textures and make it readable
     public static void registerImage(Identifier identifier, BufferedImage image, boolean alreadyCached) {
         if (!paintings.containsKey(identifier) && !alreadyCached) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);

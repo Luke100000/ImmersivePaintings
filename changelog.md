@@ -1,3 +1,35 @@
+# 0.7.8
+
+* Fixed odd resolution filter behavior
+* Fixed identical images but different settings colliding
+* Added `enableBundledPaintings` config to disable bundled paintings
+
+# 0.7.7
+
+* Added gold, crimson, weather copper, and amethyst frames
+* Added thin frame
+* Fixed pixel art import issues
+* Fixed client desync on some painting placements
+* Show error message on invalid images
+* Library filters are now persistent
+* Fixed rare crashes
+
+# 0.7.6
+
+* Fixed crash introduced in 0.7.5
+
+# 0.7.5
+
+* Fixed a crash on weird URLs on Windows
+* Synced translations
+
+# 0.7.4
+
+* Fixed graffiti transparency issue
+* Added automatic resize of huge images
+* More error handling
+* Fixed pixel-multiple-deduplication being confused on small images
+
 # 0.7.0
 
 * Updated to Minecraft 1.21 (Thanks turtletowerz!)

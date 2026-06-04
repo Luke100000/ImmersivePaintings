@@ -30,7 +30,7 @@ public class ImageManipulations {
 
     public static void processByteArrayInChunks(byte[] input, TriConsumer<byte[], Integer, Integer> consumer) {
         int packetSize = Configs.COMMON.packetSize;
-        int splits = (int)Math.ceil((double)input.length / packetSize);
+        int splits = (int) Math.ceil((double) input.length / packetSize);
         int split = 0;
         for (int i = 0; i < input.length; i += packetSize) {
             byte[] b = Arrays.copyOfRange(input, i, Math.min(input.length, i + packetSize));
@@ -48,9 +48,9 @@ public class ImageManipulations {
                 Object elements = image.getRaster().getDataElements(x, y, null);
 
                 int abgr = (model.getAlpha(elements) << 24) |
-                        (model.getBlue(elements) << 16) |
-                        (model.getGreen(elements) << 8) |
-                        model.getRed(elements);
+                           (model.getBlue(elements) << 16) |
+                           (model.getGreen(elements) << 8) |
+                           model.getRed(elements);
 
                 nativeImage.setPixelABGR(x, y, abgr);
             }
@@ -98,16 +98,16 @@ public class ImageManipulations {
             }
             case Size.NSFW -> {
                 // NSFW Images can only be resized from thumbnails, so there's no need to downscale
-                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize / 8);
+                return ImageUtil.blur(in, (float) Configs.CLIENT.thumbnailSize * Configs.CLIENT.nsfwBlurAmount);
             }
         }
 
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        resize(out, in, (float)in.getWidth() / w, 0, 0);
+        resize(out, in, (float) in.getWidth() / w, 0, 0);
         return out;
     }
 
-    // Color.HSBtoRGB returns 255 alpha for all pixels, so we need to apply our own alpha
+    // Color.HSBtoRGB returns alpha 255 for all pixels, so we need to apply our own alpha
     // 16777215 is the opposite of the number set in Color.HSBtoRGB
     private static int HSBtoARGB(float[] hsv, int alpha) {
         int colorNoAlpha = Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]) & 16777215;
@@ -124,8 +124,8 @@ public class ImageManipulations {
             for (int y = 0; y < image.getHeight(); y++) {
                 int red = 0, green = 0, blue = 0, alpha = 0;
                 int samples = 0;
-                for (int px = Math.max(0, (int)(ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
-                    for (int py = Math.max(0, (int)(oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
+                for (int px = Math.max(0, (int) (ox + zoom * x)); px < Math.min(source.getWidth(), ox + zoom * (x + 1)); px++) {
+                    for (int py = Math.max(0, (int) (oy + zoom * y)); py < Math.min(source.getHeight(), oy + zoom * (y + 1)); py++) {
                         Object elements = source.getRaster().getDataElements(px, py, null);
 
                         red += sourceModel.getRed(elements);
@@ -144,7 +144,7 @@ public class ImageManipulations {
                     alpha /= samples;
                 }
 
-                image.setRGB(x, y,(alpha << 24) | (red << 16) | (green << 8) | blue);
+                image.setRGB(x, y, (alpha << 24) | (red << 16) | (green << 8) | blue);
             }
         }
     }
@@ -160,9 +160,9 @@ public class ImageManipulations {
 
                 for (int i = 1; i < 3; i++) {
                     if (x % 2 == y % 2) {
-                        hsv[i] = (float)Math.min(1.0f, hsv[i] + dither * 0.5);
+                        hsv[i] = (float) Math.min(1.0f, hsv[i] + dither * 0.5);
                     } else {
-                        hsv[i] = (float)Math.max(0.0f, hsv[i] - dither * 0.5);
+                        hsv[i] = (float) Math.max(0.0f, hsv[i] - dither * 0.5);
                     }
                 }
 
@@ -216,7 +216,7 @@ public class ImageManipulations {
                 }
 
                 for (int b = start; b < end; b++) {
-                    lookup[channel][b] = (float)sum / pixels / 255.0f;
+                    lookup[channel][b] = (float) sum / pixels / 255.0f;
                 }
 
                 start = end;
@@ -239,38 +239,75 @@ public class ImageManipulations {
     }
 
     private static int toByte(float v) {
-        return Math.min(255, Math.max(0, (int)(v * 255)));
+        return Math.clamp((int) (v * 255), 0, 255);
     }
 
+    private static final int MAX_PIXEL_ART_MULTIPLE = 64;
+    private static final int TILE_COLOR_TOLERANCE = 16;
+    private static final int MAX_OFF_COLOR_PIXELS_PER_TILE = 1;
+
     public static int scanForPixelArtMultiple(BufferedImage image) {
-        int[] hist = new int[64];
-        for (int y = 0; y < image.getHeight(); y += 7) {
-            int l = 0;
-            int lastColor = 0;
-            for (int x = 0; x < image.getWidth(); x++) {
-                int color = image.getRGB(x, y);
-                if (x == 0 || lastColor == color) {
-                    l++;
-                } else {
-                    if (l < hist.length) {
-                        hist[l]++;
-                    }
-                    l = 1;
+        int maxMultiple = Math.min(MAX_PIXEL_ART_MULTIPLE, Math.min(image.getWidth(), image.getHeight()));
+        for (int multiple = maxMultiple; multiple > 1; multiple--) {
+            if (image.getWidth() % multiple == 0 && image.getHeight() % multiple == 0 && isPixelArtMultiple(image, multiple)) {
+                return multiple;
+            }
+        }
+
+        return 1;
+    }
+
+    private static boolean isPixelArtMultiple(BufferedImage image, int multiple) {
+        for (int tileX = 0; tileX < image.getWidth(); tileX += multiple) {
+            for (int tileY = 0; tileY < image.getHeight(); tileY += multiple) {
+                if (!isSingleColorTile(image, tileX, tileY, multiple)) {
+                    return false;
                 }
-                lastColor = color;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isSingleColorTile(BufferedImage image, int tileX, int tileY, int size) {
+        long red = 0;
+        long green = 0;
+        long blue = 0;
+        long alpha = 0;
+        int samples = size * size;
+
+        for (int x = tileX; x < tileX + size; x++) {
+            for (int y = tileY; y < tileY + size; y++) {
+                int color = image.getRGB(x, y);
+                red += (color >> 16) & 0xFF;
+                green += (color >> 8) & 0xFF;
+                blue += color & 0xFF;
+                alpha += (color >> 24) & 0xFF;
             }
         }
 
-        int bestScore = 0;
-        int best = 1;
-        for (int i = 1; i < hist.length; i++) {
-            if (hist[i] > bestScore) {
-                bestScore = hist[i];
-                best = i;
+        int averageRed = (int)(red / samples);
+        int averageGreen = (int)(green / samples);
+        int averageBlue = (int)(blue / samples);
+        int averageAlpha = (int)(alpha / samples);
+        int offColorPixels = 0;
+
+        for (int x = tileX; x < tileX + size; x++) {
+            for (int y = tileY; y < tileY + size; y++) {
+                int color = image.getRGB(x, y);
+                if (!isCloseColor(color, averageRed, averageGreen, averageBlue, averageAlpha) && ++offColorPixels > MAX_OFF_COLOR_PIXELS_PER_TILE) {
+                    return false;
+                }
             }
         }
 
-        return best;
+        return true;
+    }
+
+    private static boolean isCloseColor(int color, int red, int green, int blue, int alpha) {
+        return Math.abs(((color >> 16) & 0xFF) - red) <= TILE_COLOR_TOLERANCE
+               && Math.abs(((color >> 8) & 0xFF) - green) <= TILE_COLOR_TOLERANCE
+               && Math.abs((color & 0xFF) - blue) <= TILE_COLOR_TOLERANCE
+               && Math.abs(((color >> 24) & 0xFF) - alpha) <= TILE_COLOR_TOLERANCE;
     }
 
     public static int getCurrentImagePixelZoomCache(BufferedImage currentImage, int zoomCache) {

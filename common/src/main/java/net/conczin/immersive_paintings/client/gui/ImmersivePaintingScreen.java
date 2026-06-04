@@ -34,7 +34,6 @@ import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.commons.io.FilenameUtils;
 import org.joml.Matrix3x2fStack;
 
 import javax.imageio.ImageIO;
@@ -44,6 +43,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -56,10 +57,10 @@ public class ImmersivePaintingScreen extends Screen {
 
     public final ImmersivePaintingEntity entity;
 
-    private String filteredString = "";
-    private int filteredResolution = 0;
-    private int filteredWidth = 0;
-    private int filteredHeight = 0;
+    private static String filteredString = "";
+    private static int filteredResolution = 32;
+    private static int filteredWidth = 0;
+    private static int filteredHeight = 0;
     private final List<Identifier> filteredPaintings = new ArrayList<>();
 
     private int selectionPage;
@@ -120,13 +121,6 @@ public class ImmersivePaintingScreen extends Screen {
         }
     }
 
-    private void clearSearch() {
-        filteredString = "";
-        filteredResolution = 0;
-        filteredWidth = 0;
-        filteredHeight = 0;
-    }
-
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         switch (page) {
@@ -141,7 +135,7 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case CREATE -> {
                 if (shouldReProcess && currentImage != null) {
-                    service.submit(() -> pixelateImage());
+                    service.submit(this::pixelateImage);
                     shouldReProcess = false;
                 }
 
@@ -166,8 +160,6 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case DELETE, ADMIN_DELETE -> {
-                Identifier background = Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
-
                 Component component;
                 if (page == Page.DELETE) {
                     component = Component.translatable("immersive_paintings.gui.confirm_deletion");
@@ -217,7 +209,7 @@ public class ImmersivePaintingScreen extends Screen {
                 b.add(Page.PLAYERS);
             }
 
-            if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Configs.COMMON.uploadPermissionLevel)))) {
+            if (canUploadPainting()) {
                 b.add(Page.NEW);
             }
 
@@ -428,7 +420,7 @@ public class ImmersivePaintingScreen extends Screen {
                 // Save
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.save"), v -> {
-                                    byte[] encoded = null;
+                                    byte[] encoded;
 
                                     try {
                                         encoded = ImageManipulations.encode(pixelatedImage);
@@ -650,7 +642,7 @@ public class ImmersivePaintingScreen extends Screen {
                     setPage(p);
                 }));
 
-                if (page == Page.ADMIN_DELETE)  {
+                if (page == Page.ADMIN_DELETE) {
                     buttonList.add(Button.builder(Component.translatable("immersive_paintings.gui.delete_all"), v -> {
                         NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
                         setPage(Page.PLAYERS);
@@ -801,18 +793,21 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     public void setPage(Page page) {
-        if (page != this.page) {
-            clearSearch();
-        }
-
+        Page previousPage = this.page;
         this.page = page;
-        filteredResolution = (page == Page.DATAPACKS ? 32 : 0);
+        if (page != previousPage && isPaintingSelectionPage(page)) {
+            filteredResolution = (page == Page.DATAPACKS ? 32 : 0);
+        }
 
         rebuild();
 
-        if (page == Page.DATAPACKS || page == Page.PLAYERS || page == Page.YOURS) {
+        if (isPaintingSelectionPage(page)) {
             updateSearch();
         }
+    }
+
+    private static boolean isPaintingSelectionPage(Page page) {
+        return page == Page.DATAPACKS || page == Page.PLAYERS || page == Page.YOURS;
     }
 
     private void updateSearch() {
@@ -842,7 +837,16 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private boolean isOp() {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        return player.permissions().hasPermission(Permissions.COMMANDS_OWNER);
+    }
+
+    private static boolean canUploadPainting() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        PermissionLevel level = PermissionLevel.byId(Configs.COMMON.uploadPermissionLevel);
+        return level == PermissionLevel.ALL || player.permissions().hasPermission(new Permission.HasCommandLevel(level));
     }
 
     private void setSelectionPage(int p) {
@@ -864,24 +868,49 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void onFilesDrop(List<Path> paths) {
-        loadImage(paths.getFirst().toString());
+        for (Path path : paths) {
+            if (path == null) continue;
+
+            String p = path.toString();
+            if (p.isEmpty()) continue;
+
+            if (!Files.exists(path)) continue;
+
+            if (loadImage(p)) {
+                return;
+            }
+        }
+
+        setError(Component.translatable("immersive_paintings.error.image_load_failed"));
     }
 
-    private void loadImage(String path) {
+    private boolean loadImage(String path) {
         currentImage = loadImage(path, Main.locate("temp"));
         currentImagePixelZoomCache = -1;
         if (currentImage != null) {
-            currentImageName = FilenameUtils.getBaseName(path).replaceFirst("[.][^.]+$", "");
+            currentImageName = toFileName(path);
             settings = new ImageManipulations.PixelatorSettings(currentImage);
             setPage(Page.CREATE);
             pixelateImage();
+            return true;
         }
+        return false;
+    }
+
+    private String toFileName(String path) {
+        path = path.replace("\\", "/");
+        int lastSlash = path.lastIndexOf('/');
+        int lastDot = path.lastIndexOf('.');
+        if (lastDot < lastSlash) lastDot = path.length(); // no extension
+        return path.substring(lastSlash + 1, lastDot);
     }
 
     private BufferedImage loadImage(String path, Identifier identifier) {
         InputStream stream = null;
         try {
-            stream = new URL(path).openStream();
+            URLConnection connection = new URL(path).openConnection();
+            connection.setRequestProperty("User-Agent", "Main/1.0");
+            stream = connection.getInputStream();
         } catch (Exception exception) {
             try {
                 stream = new FileInputStream(path);

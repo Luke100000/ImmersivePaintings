@@ -44,7 +44,7 @@ public class PaintingArgumentType implements ArgumentType<String> {
         Map<Identifier, Painting> paintings = new HashMap<>();
         if (context.getSource() instanceof CommandSourceStack sourceStack) {
             paintings = ServerPaintingManager.getCustomPaintings(sourceStack.getServer());
-        } else if (context.getSource() instanceof ClientSuggestionProvider clientSuggestionProvider) {
+        } else if (context.getSource() instanceof ClientSuggestionProvider) {
             paintings = ClientPaintingManager.getPaintings();
         }
 

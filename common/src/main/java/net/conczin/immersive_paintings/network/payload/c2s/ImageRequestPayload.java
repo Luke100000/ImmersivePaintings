@@ -34,7 +34,7 @@ public record ImageRequestPayload(Identifier identifier, boolean thumbnail) impl
             Optional<byte[]> image = ServerPaintingManager.getImageData(id, thumbnail);
             if (image.isPresent()) {
                 ImageManipulations.processByteArrayInChunks(image.get(), (bytes, split, count) -> LazyNetworkManager.sendToClient(new ImageResponsePayload(id, thumbnail, bytes, split, count), (ServerPlayer) player));
-            } else if (!thumbnail) {
+            } else if (!thumbnail && player.level().getServer() != null) {
                 // If the painting was deleted on the server (or doesn't exist) we want to remove it from the client's view
                 NetworkHandler.sendToAllClients(player.level().getServer(), new PaintingSyncPayload(id, null));
             }
