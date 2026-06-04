@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Башка oyuncыларның рәсмилектәре рәсем төзәтмәсендә күренәме",
   "config.immersive_paintings.common.automaticImageResizing": "Автоматты рәсемнәрне зурлык белән көйләү",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Рөхсәт ителгән чиктән зуррак рәсемнәрне автоматик рәвештә зурлагыз",
+  "config.immersive_paintings.common.enableBundledPaintings": "Җыелма рәсемнәрне активлаштыру",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Immersive Paintings белән бергә килгән стандарт рәсемнәрне күрсәтегез",
   "config.immersive_paintings.common.uploadPermissionLevel": "Йөкләү рөхсәте дәрәҗәсе",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "Рәсемнәрне йөкләү өчен кирәкле рөхсәт дәрәҗәсе. Барлык oyuncылар өчен стандарт.",
   "config.immersive_paintings.common.maxUserImageWidth": "Иң зур рәсем киңлеге",
