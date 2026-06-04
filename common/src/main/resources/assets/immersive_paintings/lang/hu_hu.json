@@ -102,6 +102,8 @@
   "config.immersive_paintings.common.showOtherPlayersPaintings.desc": "Láthatóak-e más játékosok festményei a festményszerkesztő GUI-ban?",
   "config.immersive_paintings.common.automaticImageResizing": "Automatikus képátméretezés",
   "config.immersive_paintings.common.automaticImageResizing.desc": "Automatikusan átméretezi a megengedettnél nagyobb képeket",
+  "config.immersive_paintings.common.enableBundledPaintings": "Csomagolt festmények engedélyezése",
+  "config.immersive_paintings.common.enableBundledPaintings.desc": "Az Immersive Paintings csomagban lévő alapértelmezett festmények megjelenítése",
   "config.immersive_paintings.common.uploadPermissionLevel": "Feltöltési engedélyezési szint",
   "config.immersive_paintings.common.uploadPermissionLevel.desc": "A festmények feltöltéséhez szükséges engedélyezési szint. Alapértelmezés szerint minden játékos",
   "config.immersive_paintings.common.maxUserImageWidth": "Maximális képszélesség",
