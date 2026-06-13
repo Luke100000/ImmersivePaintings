@@ -7,3 +7,5 @@ Hosted on CurseForge: https://www.curseforge.com/minecraft/mc-mods/immersive-pai
 Config docu here: https://github.com/Luke100000/ImmersivePaintings/wiki/Config
 
 Modpack/Datapack Creator help: https://github.com/Luke100000/ImmersivePaintings/wiki/Custom-Paintings
+
+Contributors please check https://github.com/Luke100000/minecraft-comes-alive/wiki/Porting
