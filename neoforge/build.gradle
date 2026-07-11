@@ -5,6 +5,7 @@ plugins {
 
 repositories {
     maven { url = "https://thedarkcolour.github.io/KotlinForForge/" }
+    maven { url = "https://repo.nyon.dev/releases" }
 }
 
 neoForge {
