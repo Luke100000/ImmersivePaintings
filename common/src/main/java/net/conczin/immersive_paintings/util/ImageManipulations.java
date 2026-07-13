@@ -98,7 +98,7 @@ public class ImageManipulations {
             }
             case Size.NSFW -> {
                 // NSFW Images can only be resized from thumbnails, so there's no need to downscale
-                return ImageUtil.blur(in, (float) Config.CLIENT.thumbnailSize / 8);
+                return ImageUtil.blur(in, (float) Config.CLIENT.thumbnailSize * Config.CLIENT.nsfwBlurAmount);
             }
         }
 
@@ -242,39 +242,6 @@ public class ImageManipulations {
         return Math.min(255, Math.max(0, (int) (v * 255)));
     }
 
-    public static int scanForPixelArtMultiple(BufferedImage image) {
-        int maxScale = Math.min(image.getWidth(), image.getHeight()) / 64;
-
-        int[] hist = new int[64];
-        for (int y = 0; y < image.getHeight(); y += 7) {
-            int l = 0;
-            int lastColor = 0;
-            for (int x = 0; x < image.getWidth(); x++) {
-                int color = image.getRGB(x, y);
-                if (x == 0 || lastColor == color) {
-                    l++;
-                } else {
-                    if (l < hist.length) {
-                        hist[l]++;
-                    }
-                    l = 1;
-                }
-                lastColor = color;
-            }
-        }
-
-        int bestScore = 0;
-        int best = 1;
-        for (int i = 1; i < Math.min(hist.length, maxScale); i++) {
-            if (hist[i] > bestScore) {
-                bestScore = hist[i];
-                best = i;
-            }
-        }
-
-        return best;
-    }
-
     public static int getCurrentImagePixelZoomCache(BufferedImage currentImage, int zoomCache) {
         if (zoomCache < 0) {
             return scanForPixelArtMultiple(currentImage);
@@ -387,5 +354,73 @@ public class ImageManipulations {
 
             return flags;
         }
+    }
+
+    private static final int MAX_PIXEL_ART_MULTIPLE = 64;
+    private static final int TILE_COLOR_TOLERANCE = 16;
+    private static final int MAX_OFF_COLOR_PIXELS_PER_TILE = 1;
+
+    public static int scanForPixelArtMultiple(BufferedImage image) {
+        int maxMultiple = Math.min(MAX_PIXEL_ART_MULTIPLE, Math.min(image.getWidth(), image.getHeight()));
+        for (int multiple = maxMultiple; multiple > 1; multiple--) {
+            if (image.getWidth() % multiple == 0 && image.getHeight() % multiple == 0 && isPixelArtMultiple(image, multiple)) {
+                return multiple;
+            }
+        }
+
+        return 1;
+    }
+
+    private static boolean isPixelArtMultiple(BufferedImage image, int multiple) {
+        for (int tileX = 0; tileX < image.getWidth(); tileX += multiple) {
+            for (int tileY = 0; tileY < image.getHeight(); tileY += multiple) {
+                if (!isSingleColorTile(image, tileX, tileY, multiple)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean isSingleColorTile(BufferedImage image, int tileX, int tileY, int size) {
+        long red = 0;
+        long green = 0;
+        long blue = 0;
+        long alpha = 0;
+        int samples = size * size;
+
+        for (int x = tileX; x < tileX + size; x++) {
+            for (int y = tileY; y < tileY + size; y++) {
+                int color = image.getRGB(x, y);
+                red += (color >> 16) & 0xFF;
+                green += (color >> 8) & 0xFF;
+                blue += color & 0xFF;
+                alpha += (color >> 24) & 0xFF;
+            }
+        }
+
+        int averageRed = (int)(red / samples);
+        int averageGreen = (int)(green / samples);
+        int averageBlue = (int)(blue / samples);
+        int averageAlpha = (int)(alpha / samples);
+        int offColorPixels = 0;
+
+        for (int x = tileX; x < tileX + size; x++) {
+            for (int y = tileY; y < tileY + size; y++) {
+                int color = image.getRGB(x, y);
+                if (!isCloseColor(color, averageRed, averageGreen, averageBlue, averageAlpha) && ++offColorPixels > MAX_OFF_COLOR_PIXELS_PER_TILE) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean isCloseColor(int color, int red, int green, int blue, int alpha) {
+        return Math.abs(((color >> 16) & 0xFF) - red) <= TILE_COLOR_TOLERANCE
+               && Math.abs(((color >> 8) & 0xFF) - green) <= TILE_COLOR_TOLERANCE
+               && Math.abs((color & 0xFF) - blue) <= TILE_COLOR_TOLERANCE
+               && Math.abs(((color >> 24) & 0xFF) - alpha) <= TILE_COLOR_TOLERANCE;
     }
 }

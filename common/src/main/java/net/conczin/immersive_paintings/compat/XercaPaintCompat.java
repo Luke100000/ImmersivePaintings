@@ -55,7 +55,7 @@ public class XercaPaintCompat {
             if (CANVAS_PIXELS == null)
                 return false;
 
-            if (w > 0 && stack.has(CANVAS_PIXELS)) {
+            if (CANVAS_PIXELS != null && w > 0 && stack.has(CANVAS_PIXELS)) {
                 DataComponentMap map = stack.getComponents();
 
                 // convert

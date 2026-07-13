@@ -7,6 +7,7 @@ for flip, group in enumerate(
     (
         (
             "acacia",
+            "bamboo",
             "birch",
             "crimson",
             "dark_oak",
@@ -16,15 +17,15 @@ for flip, group in enumerate(
             "spruce",
         ),
         (
+            "amethyst",
             "calcite",
             "coal",
             "copper",
-            "crimson",
-            "dark_oak",
             "diamond",
             "emerald",
             "end_stone",
             "glowstone",
+            "gold",
             "iron",
             "lapis",
             "netherite",
@@ -34,6 +35,7 @@ for flip, group in enumerate(
             "sandstone",
             "stone",
             "sugar_cane",
+            "weathered_copper",
         ),
     )
 ):
@@ -53,6 +55,21 @@ for flip, group in enumerate(
                     "brightness": [0.6, 0.8, 1.0, 1.0, 0.8],
                     "mirroring": [(2, 0, 1), (3, 0, 1)],
                     "edges": [(1, 2), (4, 3)],
+                    "contrast": 1.4,
+                }
+            ),
+
+            files.append(
+                {
+                    "frame": "thin",
+                    "material": material,
+                    "dir": directory[1],
+                    "texture": f"{directory[0]}/{material}.png",
+                    "flip": flip == 0,
+                    "offsetY": 6,
+                    "brightness": [0.6, 0.7, 1.0, 0.8],
+                    "mirroring": [(2, 0, 0)],
+                    "edges": [],
                     "contrast": 1.4,
                 }
             ),
