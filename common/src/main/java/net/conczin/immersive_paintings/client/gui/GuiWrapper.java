@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public class GuiWrapper {
     public static void open(UUID entityId) {
-        Minecraft.getInstance().setScreen(new ImmersivePaintingScreen(entityId));
+        Minecraft.getInstance().gui.setScreen(new ImmersivePaintingScreen(entityId));
     }
 }

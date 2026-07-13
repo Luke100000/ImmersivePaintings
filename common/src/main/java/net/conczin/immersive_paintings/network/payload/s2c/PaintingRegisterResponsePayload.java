@@ -32,7 +32,7 @@ public record PaintingRegisterResponsePayload(Optional<Identifier> identifier, S
         String err = error();
 
         runner.run(() -> {
-            if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
+            if (Minecraft.getInstance().gui.screen() instanceof ImmersivePaintingScreen screen) {
                 if (err.isEmpty()) {
                     if (screen.entity != null && id.isPresent()) {
                         NetworkHandler.Client.sendToServer(new PaintingEditPayload(screen.entity.getUUID(), Map.of(
@@ -42,7 +42,7 @@ public record PaintingRegisterResponsePayload(Optional<Identifier> identifier, S
                         )));
 
                         if (screen.entity.isGraffiti()) {
-                            Minecraft.getInstance().setScreen(null);
+                            Minecraft.getInstance().gui.setScreen(null);
                         } else {
                             screen.setPage(ImmersivePaintingScreen.Page.FRAME);
                         }

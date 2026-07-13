@@ -40,7 +40,7 @@ public record PaintingSyncPayload(Map<Identifier, Optional<Painting>> paintings)
                 }
             });
 
-            if (Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen) {
+            if (Minecraft.getInstance().gui.screen() instanceof ImmersivePaintingScreen screen) {
                 screen.refreshPage();
             }
         });

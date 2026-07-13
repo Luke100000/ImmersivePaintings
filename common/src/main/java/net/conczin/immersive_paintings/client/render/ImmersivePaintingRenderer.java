@@ -9,7 +9,6 @@ import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -43,7 +42,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
     public void extractRenderState(T entity, ImmersivePaintingRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
 
-        state.light = LevelRenderer.getLightCoords(entity.level(), entity.blockPosition());
+        state.light = LightCoordsUtil.getLightCoords(entity.level(), entity.blockPosition());
 
         state.xRot = entity.getXRot(partialTick);
         state.yRot = entity.getYRot(partialTick);

@@ -52,17 +52,13 @@ repositories {
     }
 }
 
-sourcesJar {
+tasks.withType(Jar).configureEach {
     from(rootProject.file('LICENSE')) {
         rename { "${it}_${mod_name}" }
     }
 }
 
 jar {
-    from(rootProject.file('LICENSE')) {
-        rename { "${it}_${mod_name}" }
-    }
-
     manifest {
         attributes([
                 'Specification-Title'   : mod_name,
@@ -94,8 +90,6 @@ processResources {
             'description'                  : project.description,
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
-//            'forge_version'                : forge_version,
-//            'forge_loader_version_range'   : forge_loader_version_range,
             'fzzy_config_version'          : fzzy_config_version,
             'modmenu_version'              : modmenu_version,
             'credits'                      : credits,

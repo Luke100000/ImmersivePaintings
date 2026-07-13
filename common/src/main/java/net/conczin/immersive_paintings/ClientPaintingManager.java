@@ -188,7 +188,7 @@ public class ClientPaintingManager {
             newTexture(name, target);
             mapping.put(realSize, name);
 
-            if (size == Size.THUMBNAIL && Minecraft.getInstance().screen instanceof ImmersivePaintingScreen screen)
+            if (size == Size.THUMBNAIL && Minecraft.getInstance().gui.screen() instanceof ImmersivePaintingScreen screen)
                 screen.updateWidget(identifier);
         });
     }
