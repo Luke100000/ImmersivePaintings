@@ -27,7 +27,7 @@ public class SegmentManager {
             try {
                 return Optional.of(ImageManipulations.decode(byteBuffer.toByteArray()));
             } catch (IOException e) {
-                ImmersivePaintings.LOGGER.error("could not combne segmented payloads for {}", key, e);
+                ImmersivePaintings.LOGGER.error("Could not combine segmented payloads for {}", key, e);
             }
         }
 
