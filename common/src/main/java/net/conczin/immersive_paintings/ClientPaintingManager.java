@@ -27,6 +27,8 @@ public class ClientPaintingManager {
 
     private static final Map<String, Boolean> requested = Collections.synchronizedMap(new HashMap<>());
 
+    private static boolean paintingsWereHidden;
+
     private static final ClientCache paintingCache = new ClientCache();
 
     private final static ExecutorService service = Executors.newFixedThreadPool(2);
@@ -37,6 +39,16 @@ public class ClientPaintingManager {
 
     public static Optional<Painting> getPainting(ResourceLocation identifier) {
         return Optional.ofNullable(paintings.get(identifier));
+    }
+
+    public static boolean arePaintingsHidden() {
+        boolean hidden = !Configs.CLIENT.loadPaintings && !Minecraft.getInstance().hasSingleplayerServer();
+        if (hidden && !paintingsWereHidden) {
+            requested.clear();
+        }
+
+        paintingsWereHidden = hidden;
+        return hidden;
     }
 
     private static String textureIdentifier(ResourceLocation identifier, Size size) {
@@ -80,6 +92,9 @@ public class ClientPaintingManager {
     }
 
     public static ResourceLocation getImageIdentifier(ResourceLocation identifier, Size size) {
+        if (arePaintingsHidden())
+            return Painting.DEFAULT_IDENTIFIER;
+
         if (!paintings.containsKey(identifier))
             return Painting.DEFAULT_IDENTIFIER;
 
@@ -113,11 +128,14 @@ public class ClientPaintingManager {
         String fullId = textureIdentifier(identifier, Size.FULL);
         String thumbId = textureIdentifier(identifier, Size.THUMBNAIL);
 
+        paintings.put(identifier, painting);
+
+        if (arePaintingsHidden())
+            return;
+
         // Set that they are being processed so we don't try to reach out to the network at the same time
         requested.put(fullId, true);
         requested.put(thumbId, true);
-
-        paintings.put(identifier, painting);
 
         // When registering a painting we need to check the user's existing cache
         // Doing this allows us to quickly load and resize any necessary cached images
@@ -191,13 +209,17 @@ public class ClientPaintingManager {
     }
 
     public static void registerThumbnail(ResourceLocation identifier, BufferedImage image, boolean alreadyCached) {
+        if (arePaintingsHidden()) return;
+
         registerImageType(identifier, image, Size.THUMBNAIL, Size.THUMBNAIL, alreadyCached);
         setImageRequest(identifier, true, true);
     }
 
-    // TODO: for datapacks, use FULL for all sizes that aren't thumbnail
+    // TODO: for datapacks, use "FULL" for all sizes that aren't thumbnail
     // registers this textures and make it readable
     public static void registerImage(ResourceLocation identifier, BufferedImage image, boolean alreadyCached) {
+        if (arePaintingsHidden()) return;
+
         if (!paintings.containsKey(identifier) && !alreadyCached) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;

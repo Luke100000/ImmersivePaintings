@@ -33,6 +33,8 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
 
     @Override
     public void render(T entity, float yaw, float tickDelta, PoseStack poses, MultiBufferSource buffer, int light) {
+        if (ClientPaintingManager.arePaintingsHidden()) return;
+
         poses.pushPose();
         poses.mulPose(Axis.YP.rotationDegrees(-yaw));
         poses.mulPose(Axis.XP.rotationDegrees(-entity.getViewXRot(tickDelta)));

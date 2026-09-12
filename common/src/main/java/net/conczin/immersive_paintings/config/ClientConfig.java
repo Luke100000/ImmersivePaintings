@@ -13,6 +13,7 @@ public class ClientConfig extends Config {
     }
 
     public ConfigGroup generalGroup = new ConfigGroup("general");
+    public boolean loadPaintings = true;
     public boolean showOtherPlayersPaintings = true;
     @ConfigGroup.Pop
     public boolean showNSFWPaintings = true;

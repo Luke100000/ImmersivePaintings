@@ -25,6 +25,8 @@ public record ImageResponsePayload(ResourceLocation identifier, boolean thumbnai
 
     @Override
     public void handle(Player player, Runner runner) {
+        if (ClientPaintingManager.arePaintingsHidden()) return;
+
         String key = identifier().toString();
         if (thumbnail)
             key += "_thumbnail"; // Allows Thumbnail and FULL to download together
