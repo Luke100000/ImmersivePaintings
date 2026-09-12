@@ -1,9 +1,13 @@
+# 0.7.9
+
+* Added `loadPaintings` config to disable downloading and rendering paintings
+* Maybe fixed paintings despawning
+
 # 0.7.8
 
 * Fixed odd resolution filter behavior
 * Fixed identical images but different settings colliding
 * Added `enableBundledPaintings` config to disable bundled paintings
-* Added `loadPaintings` config to disable downloading and rendering paintings
 
 # 0.7.7
 
