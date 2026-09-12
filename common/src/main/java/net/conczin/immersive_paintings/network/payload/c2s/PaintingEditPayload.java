@@ -3,6 +3,8 @@ package net.conczin.immersive_paintings.network.payload.c2s;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.Painting;
+import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public record PaintingEditPayload(int entityId, Map<Option, String> options) implements ImmersivePayload {
     public static final Type<PaintingEditPayload> TYPE = new Type<>(Main.locate("painting_edit"));
@@ -36,7 +39,25 @@ public record PaintingEditPayload(int entityId, Map<Option, String> options) imp
                 options.forEach((option, value) -> {
                     switch (option) {
                         case Option.MOTIVE:
-                            painting.setMotive(ResourceLocation.parse(value));
+                            ResourceLocation motive = ResourceLocation.parse(value);
+                            Optional<Painting> target = ServerPaintingManager.getPainting(player.getServer(), motive);
+
+                            if (target.isEmpty()) {
+                                break;
+                            }
+
+                            Painting selectedPainting = target.get();
+                            boolean owner = selectedPainting.authorUUID().equals(player.getUUID());
+                            boolean operator = player.hasPermissions(4);
+                            boolean allowed = (!selectedPainting.has(Painting.Flag.HIDDEN) || owner || operator)
+                                    && selectedPainting.has(Painting.Flag.GRAFFITI) == painting.isGraffiti();
+
+                            if (!allowed) {
+                                Main.LOGGER.warn("Player {} tried to use inaccessible painting {}", player, motive);
+                                break;
+                            }
+
+                            painting.setMotive(motive);
                             break;
                         case Option.FRAME:
                             painting.setFrame(ResourceLocation.parse(value));
