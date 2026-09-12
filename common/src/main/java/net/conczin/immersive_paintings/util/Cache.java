@@ -40,10 +40,16 @@ public abstract class Cache<K, V> {
 
     public abstract byte[] encode(V key);
 
+    private Path getPath(K key) {
+        Path root = CACHE_PATH.toAbsolutePath().normalize();
+        Path path = root.resolve(getCachePath(key)).normalize();
+        return path.startsWith(root) ? path : null;
+    }
+
     // TODO: Some sort of logging needs to be done if the file doesn't exist
     private File getFile(K key) {
-        Path path = CACHE_PATH.resolve(getCachePath(key));
-        return Files.exists(path) ? path.toFile() : null;
+        Path path = getPath(key);
+        return path != null && Files.exists(path) ? path.toFile() : null;
     }
 
     public boolean exists(K key) {
@@ -74,7 +80,9 @@ public abstract class Cache<K, V> {
     }
 
     public void set(K key, V value) {
-        Path path = CACHE_PATH.resolve(getCachePath(key));
+        Path path = getPath(key);
+        if (path == null) return;
+
         if (!Files.exists(path.getParent())) {
             try {
                 Files.createDirectories(path.getParent());
