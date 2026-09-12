@@ -3,6 +3,7 @@ package net.conczin.immersive_paintings.network.payload.c2s;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.network.SegmentManager;
 import net.conczin.immersive_paintings.network.payload.ImmersivePayload;
+import net.conczin.immersive_paintings.registration.Configs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,11 +27,23 @@ public record ImageUploadPayload(byte[] data, int segment, int totalSegments) im
 
     @Override
     public void handle(Player player, Runner runner) {
+        if (!player.hasPermissions(Configs.COMMON.uploadPermissionLevel)) return;
+
         String key = player.getStringUUID();
         byte[] data = data();
         int segment = segment();
         int totalSegments = totalSegments();
-        manager.handleSegmentedPayload(key, data, segment, totalSegments).ifPresent(image -> runner.run(() -> uploaded.put(key, image)));
+        int maxWidth = Configs.COMMON.maxUserImageWidth;
+        int maxHeight = Configs.COMMON.maxUserImageHeight;
+        int maxBytes = (int)Math.min(Integer.MAX_VALUE, (long)maxWidth * maxHeight * 4 + 1024 * 1024);
+        manager.handleSegmentedPayload(key, data, segment, totalSegments, maxBytes, maxWidth, maxHeight)
+                .ifPresent(image -> runner.run(() -> uploaded.put(key, image)));
+    }
+
+    public static void playerLoggedOut(Player player) {
+        String key = player.getStringUUID();
+        manager.clear(key);
+        uploaded.remove(key);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.conczin.immersive_paintings;
 
 import net.conczin.immersive_paintings.network.NetworkHandler;
+import net.conczin.immersive_paintings.network.payload.c2s.ImageUploadPayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.util.Cache;
 import net.conczin.immersive_paintings.util.ImageManipulations;
@@ -99,6 +100,7 @@ public class ServerPaintingManager extends SavedData {
 
     public static void playerLoggedOut(ServerPlayer player) {
         sent.remove(player.getUUID());
+        ImageUploadPayload.playerLoggedOut(player);
     }
 
     public static void playerLoggedIn(ServerPlayer player) {
