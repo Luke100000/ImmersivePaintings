@@ -3,6 +3,7 @@
 * Added `loadPaintings` config to disable downloading and rendering paintings
 * Maybe fixed paintings despawning
 * Security-related fixes
+* Added `cacheOtherPlayersPaintings` config to disable caching other players paintings
 * Added Sable support
 * Added Valkyrion Skies support
 
