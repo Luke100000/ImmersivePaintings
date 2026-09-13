@@ -57,8 +57,15 @@ public abstract class Cache<K, V> {
     }
 
     public Optional<V> get(K key) {
+        return get(key, true);
+    }
+
+    public Optional<V> get(K key, boolean persistent) {
         if (cache.containsKey(key))
             return Optional.of(cache.get(key));
+
+        if (!persistent)
+            return Optional.empty();
 
         File file = getFile(key);
         if (file == null)
@@ -80,6 +87,15 @@ public abstract class Cache<K, V> {
     }
 
     public void set(K key, V value) {
+        set(key, value, true);
+    }
+
+    public void set(K key, V value, boolean persistent) {
+        if (!persistent) {
+            cache.put(key, value);
+            return;
+        }
+
         Path path = getPath(key);
         if (path == null) return;
 

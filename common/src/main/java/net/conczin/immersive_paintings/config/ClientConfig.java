@@ -15,6 +15,7 @@ public class ClientConfig extends Config {
     public ConfigGroup generalGroup = new ConfigGroup("general");
     public boolean loadPaintings = true;
     public boolean showOtherPlayersPaintings = true;
+    public boolean cacheOtherPlayersPaintings = false;
     @ConfigGroup.Pop
     public boolean showNSFWPaintings = true;
     public float nsfwBlurAmount = 0.25f;
