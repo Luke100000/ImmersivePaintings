@@ -4,6 +4,7 @@
 * Maybe fixed paintings despawning
 * Security-related fixes
 * Added Sable support
+* Added Valkyrion Skies support
 
 # 0.7.8
 
