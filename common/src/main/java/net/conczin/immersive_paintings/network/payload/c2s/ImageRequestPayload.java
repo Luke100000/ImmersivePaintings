@@ -12,6 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -31,12 +32,15 @@ public record ImageRequestPayload(Identifier identifier, boolean thumbnail) impl
         boolean thumbnail = thumbnail();
 
         runner.run(() -> {
+            MinecraftServer server = player.level().getServer();
+            if (server == null || ServerPaintingManager.getPainting(server, id).isEmpty()) return;
+
             Optional<byte[]> image = ServerPaintingManager.getImageData(id, thumbnail);
             if (image.isPresent()) {
                 ImageManipulations.processByteArrayInChunks(image.get(), (bytes, split, count) -> LazyNetworkManager.sendToClient(new ImageResponsePayload(id, thumbnail, bytes, split, count), (ServerPlayer) player));
-            } else if (!thumbnail && player.level().getServer() != null) {
-                // If the painting was deleted on the server (or doesn't exist) we want to remove it from the client's view
-                NetworkHandler.sendToAllClients(player.level().getServer(), new PaintingSyncPayload(id, null));
+            } else if (!thumbnail) {
+                // If the painting was deleted on the server (or doesn't exist), we want to remove it from the client's view
+                NetworkHandler.sendToAllClients(server, new PaintingSyncPayload(id, null));
             }
         });
     }

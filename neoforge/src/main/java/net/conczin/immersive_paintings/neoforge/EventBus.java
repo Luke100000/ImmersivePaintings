@@ -32,6 +32,13 @@ public class EventBus {
     }
 
     @SubscribeEvent
+    public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (!event.getEntity().level().isClientSide()) {
+            ServerPaintingManager.playerLoggedOut((ServerPlayer)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getEntity().level().isClientSide()) {
             ServerPaintingManager.playerLoggedIn((ServerPlayer)event.getEntity());

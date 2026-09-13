@@ -25,6 +25,8 @@ public class ClientPaintingManager {
 
     private static final Set<String> requested = Collections.synchronizedSet(new HashSet<>());
 
+    private static boolean paintingsWereHidden;
+
     // We don't need to cache entries in memory on the client, the value is always immediately registered as a texture
     private static final ClientCache paintingCache = new ClientCache(0);
 
@@ -46,10 +48,26 @@ public class ClientPaintingManager {
         return Optional.ofNullable(paintings.get(identifier));
     }
 
+    public static boolean arePaintingsHidden() {
+        boolean hidden = !Configs.CLIENT.loadPaintings && !Minecraft.getInstance().hasSingleplayerServer();
+        if (hidden && !paintingsWereHidden) {
+            requested.clear();
+        }
+
+        paintingsWereHidden = hidden;
+        return hidden;
+    }
+
     private static String textureIdentifier(Identifier identifier, Size size) {
         if (size == Size.FULL)
             return identifier.getPath();
         return identifier.getPath() + "_" + size.name().toLowerCase();
+    }
+
+    private static boolean shouldCachePainting(Identifier identifier) {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.hasSingleplayerServer() || Configs.CLIENT.cacheOtherPlayersPaintings ||
+                minecraft.player != null && getPainting(identifier).map(p -> p.authorUUID().equals(minecraft.player.getUUID())).orElse(false);
     }
 
     private static void setImageRequest(Identifier identifier, boolean thumbnail, boolean delete) {
@@ -82,12 +100,16 @@ public class ClientPaintingManager {
             return Painting.DEFAULT_IDENTIFIER;
         }
 
-        Optional<BufferedImage> image = paintingCache.get(textureIdentifier(identifier, Size.THUMBNAIL));
+        Optional<BufferedImage> image = paintingCache.get(textureIdentifier(identifier, Size.THUMBNAIL), shouldCachePainting(identifier));
         image.ifPresent(bufferedImage -> registerImageType(identifier, bufferedImage, Size.NSFW, Size.NSFW, false));
         return Painting.DEFAULT_IDENTIFIER;
     }
 
     public static Identifier getImageIdentifier(Identifier identifier, Size size) {
+        if (arePaintingsHidden())
+            return Painting.DEFAULT_IDENTIFIER;
+
+
         if (!paintings.containsKey(identifier))
             return Painting.DEFAULT_IDENTIFIER;
 
@@ -121,21 +143,24 @@ public class ClientPaintingManager {
         String fullId = textureIdentifier(identifier, Size.FULL);
         String thumbId = textureIdentifier(identifier, Size.THUMBNAIL);
 
+        paintings.put(identifier, painting);
+
+        if (arePaintingsHidden())
+            return;
+
         // Set that they are being processed so we don't try to reach out to the network at the same time
         requested.add(fullId);
         requested.add(thumbId);
 
-        paintings.put(identifier, painting);
-
         // When registering a painting we need to check the user's existing cache
         // Doing this allows us to quickly load and resize any necessary cached images
         // The only two sizes that can exist on their own are FULL and THUMBNAIL, all others are generated from them
-        paintingCache.get(thumbId).ifPresentOrElse(
+        paintingCache.get(thumbId, shouldCachePainting(identifier)).ifPresentOrElse(
             bufferedImage -> registerThumbnail(identifier, bufferedImage, true),
             () -> requested.remove(thumbId)
         );
 
-        paintingCache.get(fullId).ifPresentOrElse(
+        paintingCache.get(fullId, shouldCachePainting(identifier)).ifPresentOrElse(
             bufferedImage -> registerImage(identifier, bufferedImage, true),
             () -> requested.remove(fullId)
         );
@@ -160,6 +185,7 @@ public class ClientPaintingManager {
     private static void registerImageType(Identifier identifier, BufferedImage fullImage, Size size, Size realSize, final boolean alreadyCached) {
         textureMap.putIfAbsent(identifier, new HashMap<>());
         Map<Size, Identifier> mapping = textureMap.get(identifier);
+        boolean cache = shouldCachePainting(identifier);
 
         // Handle cases where an image is too small, and realSize == Size.HALF/QUARTER but size == Size.FULL
         if (mapping.containsKey(size) && size != realSize) {
@@ -171,7 +197,7 @@ public class ClientPaintingManager {
             BufferedImage target;
 
             String path = textureIdentifier(identifier, realSize);
-            Optional<BufferedImage> img = paintingCache.get(path);
+            Optional<BufferedImage> img = paintingCache.get(path, cache);
             if (img.isPresent()) {
                 target = img.get();
             } else {
@@ -182,7 +208,7 @@ public class ClientPaintingManager {
                 }
 
                 if (!alreadyCached)
-                    paintingCache.set(path, target);
+                    paintingCache.set(path, target, cache);
             }
 
             Identifier name = Main.locate(path);
@@ -195,12 +221,18 @@ public class ClientPaintingManager {
     }
 
     public static void registerThumbnail(Identifier identifier, BufferedImage image, boolean alreadyCached) {
+        if (arePaintingsHidden()) return;
+
+
         registerImageType(identifier, image, Size.THUMBNAIL, Size.THUMBNAIL, alreadyCached);
         setImageRequest(identifier, true, true);
     }
 
     // TODO: for datapacks, use FULL for all sizes that aren't thumbnail
     public static void registerImage(Identifier identifier, BufferedImage image, boolean alreadyCached) {
+        if (arePaintingsHidden()) return;
+
+
         if (!paintings.containsKey(identifier) && !alreadyCached) {
             Main.LOGGER.error("no existing painting record for identifier {}", identifier);
             return;

@@ -84,6 +84,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
+    public void tick() {
+        if (!level().isClientSide() && !level().isLoaded(pos.relative(getDirection().getOpposite()))) {
+            return;
+        }
+        super.tick();
+    }
+
+    @Override
     protected AABB calculateBoundingBox(BlockPos pos, Direction side) {
         Vec3 front = Vec3.atLowerCornerOf(side.getUnitVec3i());
         Vec3 up = side.getAxis().isVertical() ? new Vec3(0, 0, 1) : new Vec3(0, 1, 0);

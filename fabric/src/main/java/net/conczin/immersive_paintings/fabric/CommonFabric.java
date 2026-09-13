@@ -53,6 +53,10 @@ public final class CommonFabric implements ModInitializer {
         ArgumentTypeRegistry.registerArgumentType(Main.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> Command.registerCommands(dispatcher::register));
 
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+                ServerPaintingManager.playerLoggedOut(handler.player)
+        );
+
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
                 ServerPaintingManager.playerLoggedIn(handler.player)
         );

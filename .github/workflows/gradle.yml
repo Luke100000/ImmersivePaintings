@@ -44,7 +44,7 @@ jobs:
           separator: "+"
           msg: ${{steps.tag.outputs.tag}}
       - name: "Upload Fabric"
-        uses: Kir-Antipov/mc-publish@v3.3
+        uses: Kira-NT/mc-publish@v3.3.1
         if: ${{ success() }}
         with:
           modrinth-id: 6txNkua3
@@ -60,6 +60,7 @@ jobs:
           files: "fabric/build/libs/immersive_paintings-fabric-${{steps.split.outputs._1}}-${{steps.split.outputs._0}}.jar"
           loaders: |
             fabric
+          environment: client | server
           game-versions: |
             ${{steps.split.outputs._1}}
           java: |
@@ -71,7 +72,7 @@ jobs:
 
           fail-mode: skip
       - name: "Upload NeoForge"
-        uses: Kir-Antipov/mc-publish@v3.3
+        uses: Kira-NT/mc-publish@v3.3.1
         if: ${{ success() }}
         with:
           modrinth-id: 6txNkua3
@@ -87,6 +88,7 @@ jobs:
           files: "neoforge/build/libs/immersive_paintings-neoforge-${{steps.split.outputs._1}}-${{steps.split.outputs._0}}.jar"
           loaders: |
             neoforge
+          environment: client | server
           game-versions: |
             ${{steps.split.outputs._1}}
           java: |
