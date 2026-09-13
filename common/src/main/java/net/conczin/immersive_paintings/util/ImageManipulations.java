@@ -8,6 +8,8 @@ import net.conczin.immersive_paintings.registry.Config;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -16,10 +18,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Iterator;
 
 public class ImageManipulations {
     public static BufferedImage decode(byte[] bytes) throws IOException {
         return ImageIO.read(new ByteArrayInputStream(bytes));
+    }
+
+    public static BufferedImage decode(byte[] bytes, int maxWidth, int maxHeight) throws IOException {
+        try (ImageInputStream input = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) return null;
+
+            ImageReader reader = readers.next();
+            try {
+                reader.setInput(input, true, true);
+                if (reader.getWidth(0) > maxWidth || reader.getHeight(0) > maxHeight) return null;
+                return reader.read(0);
+            } finally {
+                reader.dispose();
+            }
+        }
     }
 
     public static byte[] encode(BufferedImage image) throws IOException {

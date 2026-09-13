@@ -25,6 +25,8 @@ public record ImageResponsePayload(Identifier identifier, boolean thumbnail, byt
 
     @Override
     public void handle(Player player, Runner runner) {
+        if (ClientPaintingManager.arePaintingsHidden()) return;
+
         String key = identifier().toString();
         if (thumbnail)
             key += "_thumbnail"; // Allows Thumbnail and FULL to download together
@@ -38,9 +40,9 @@ public record ImageResponsePayload(Identifier identifier, boolean thumbnail, byt
 
         manager.handleSegmentedPayload(key, data, segment, totalSegments).ifPresent(image -> runner.run(() -> {
             if (thumbnail) {
-                ClientPaintingManager.registerThumbnail(id, image);
+                ClientPaintingManager.registerThumbnail(id, image, false);
             } else {
-                ClientPaintingManager.registerImage(id, image);
+                ClientPaintingManager.registerImage(id, image, false);
             }
         }));
     }

@@ -95,6 +95,13 @@ public final class CommonNeoForge {
     }
 
     @SubscribeEvent
+    public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (!event.getEntity().level().isClientSide()) {
+            ServerPaintingManager.playerLoggedOut((ServerPlayer)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
     public static void onAddReloadListener(AddServerReloadListenersEvent event) {
         event.addListener(PaintingsLoader.ID, new PaintingsLoader());
     }

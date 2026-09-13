@@ -2,6 +2,7 @@ package net.conczin.immersive_paintings;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.conczin.immersive_paintings.network.NetworkHandler;
+import net.conczin.immersive_paintings.network.payload.c2s.ImageUploadPayload;
 import net.conczin.immersive_paintings.network.payload.s2c.PaintingSyncPayload;
 import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.util.Cache;
@@ -108,6 +109,10 @@ public class ServerPaintingManager extends SavedData {
         get(server).setDirty(true);
         paintingCache.delete(identifier);
         thumbnailCache.delete(identifier);
+    }
+
+    public static void playerLoggedOut(ServerPlayer player) {
+        ImageUploadPayload.playerLoggedOut(player);
     }
 
     public static void playerLoggedIn(ServerPlayer player) {

@@ -51,6 +51,10 @@ public final class CommonFabric implements ModInitializer {
         ArgumentTypeRegistry.registerArgumentType(ImmersivePaintings.locate("painting_argument"), PaintingArgumentType.class, PaintingArgumentType.INFO);
         CommandRegistrationCallback.EVENT.register((dispatcher, _, _) -> Command.register(dispatcher::register));
 
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+                ServerPaintingManager.playerLoggedOut(handler.player)
+        );
+
         ServerPlayConnectionEvents.JOIN.register((handler, _, _) -> ServerPaintingManager.playerLoggedIn(handler.player));
 
         ServerTickEvents.START_SERVER_TICK.register(_ -> LazyNetworkManager.tickServer());

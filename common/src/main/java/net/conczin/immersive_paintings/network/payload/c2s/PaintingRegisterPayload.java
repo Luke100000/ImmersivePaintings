@@ -92,16 +92,26 @@ public record PaintingRegisterPayload(int width, int height, int resolution, Str
         EnumSet<Painting.Flag> flags = flags();
 
         runner.run(() -> {
-            BufferedImage image = ImageUploadPayload.uploaded.remove(player.getStringUUID());
-
             if (!player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(Config.COMMON.uploadPermissionLevel)))) {
                 paintingRegisterError(player, "no_permission", null);
                 return;
             }
 
+            BufferedImage image = ImageUploadPayload.uploaded.remove(player.getStringUUID());
+            if (image == null) {
+                paintingRegisterError(player, "image_load_failed", null);
+                return;
+            }
+
             long count = ServerPaintingManager.getCustomPaintings(player.level().getServer()).values().stream().filter(p -> p.authorUUID().equals(player.getUUID())).count();
-            if (count > Config.COMMON.maxUserImages) {
+            if (count >= Config.COMMON.maxUserImages) {
                 paintingRegisterError(player, "limit_reached", null);
+                return;
+            }
+
+            if (width < 1 || width > 16 || height < 1 || height > 16 ||
+                    resolution < Config.COMMON.minPaintingResolution || resolution > Config.COMMON.maxPaintingResolution || name.length() > 256) {
+                paintingRegisterError(player, "image_load_failed", null);
                 return;
             }
 
