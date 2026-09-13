@@ -35,7 +35,7 @@ public record PaintingEditPayload(int entityId, Map<Option, String> options) imp
         runner.run(() -> {
             Entity entity = player.level().getEntity(entityId);
 
-            if (entity instanceof ImmersivePaintingEntity painting) {
+            if (entity instanceof ImmersivePaintingEntity painting && player.mayBuild() && player.canInteractWithEntity(painting, 1.0)) {
                 options.forEach((option, value) -> {
                     switch (option) {
                         case Option.MOTIVE:
