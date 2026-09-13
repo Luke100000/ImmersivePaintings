@@ -35,6 +35,11 @@ public record ImageUploadPayload(byte[] data, int segment, int totalSegments) im
         int totalSegments = totalSegments();
         int maxWidth = Configs.COMMON.maxUserImageWidth;
         int maxHeight = Configs.COMMON.maxUserImageHeight;
+        if (Configs.COMMON.automaticImageResizing) {
+            int maxClientSize = 16 * Configs.COMMON.maxPaintingResolution;
+            maxWidth = Math.max(maxWidth, maxClientSize);
+            maxHeight = Math.max(maxHeight, maxClientSize);
+        }
         int maxBytes = (int)Math.min(Integer.MAX_VALUE, (long)maxWidth * maxHeight * 4 + 1024 * 1024);
         manager.handleSegmentedPayload(key, data, segment, totalSegments, maxBytes, maxWidth, maxHeight)
                 .ifPresent(image -> runner.run(() -> uploaded.put(key, image)));
