@@ -3,6 +3,7 @@
 * Added `loadPaintings` config to disable downloading and rendering paintings
 * Maybe fixed paintings despawning
 * Security-related fixes
+* Added Sable support
 
 # 0.7.8
 
