@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "immersive_paintings:graffiti",
+    "immersive_paintings:glow_graffiti",
+    "immersive_paintings:painting",
+    "immersive_paintings:glow_painting"
+  ]
+}

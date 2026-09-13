@@ -86,6 +86,8 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
 
     @Override
     public void submit(ImmersivePaintingRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+        if (ClientPaintingManager.arePaintingsHidden()) return;
+
         super.submit(renderState, poseStack, collector, cameraState);
 
         poseStack.pushPose();

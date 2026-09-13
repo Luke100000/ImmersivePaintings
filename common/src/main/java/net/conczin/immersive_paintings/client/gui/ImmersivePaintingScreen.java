@@ -274,6 +274,7 @@ public class ImmersivePaintingScreen extends Screen {
                         Component.translatable("immersive_paintings.gui.name")));
                 editBox.setMaxLength(256);
                 editBox.setValue(currentImageName);
+                currentImageName = editBox.getValue();
                 editBox.setResponder(s -> currentImageName = s);
 
                 int y = height / 2 - 60;
