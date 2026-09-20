@@ -1,5 +1,6 @@
 package net.conczin.immersive_paintings.client.gui.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registry.Config;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -50,7 +51,7 @@ public class PaintingWidget extends Button {
     @Override
     public void onPress(InputWithModifiers input) {
         if (input instanceof MouseButtonEvent event) {
-            if (event.button() == 0) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 onPress.onPress(this);
             } else {
                 onPressRight.onPress(this);
@@ -60,7 +61,7 @@ public class PaintingWidget extends Button {
 
     @Override
     protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
-        return buttonInfo.button() == 0 || buttonInfo.button() == 1;
+        return buttonInfo.button() == InputConstants.MOUSE_BUTTON_LEFT || buttonInfo.button() == InputConstants.MOUSE_BUTTON_RIGHT;
     }
 
     @Override
