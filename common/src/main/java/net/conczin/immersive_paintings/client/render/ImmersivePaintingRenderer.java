@@ -1,5 +1,6 @@
 package net.conczin.immersive_paintings.client.render;
 
+import com.mojang.math.Transformation;
 import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.client.render.state.ImmersivePaintingRenderState;
 import net.conczin.immersive_paintings.config.ClientConfig;
@@ -18,6 +19,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
+import org.joml.Matrix4fc;
+import org.joml.Quaternionf;
 import owens.oobjloader.Face;
 import owens.oobjloader.FaceVertex;
 
@@ -90,8 +93,8 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         super.submit(renderState, poseStack, collector, cameraState);
 
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-renderState.yRot));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-renderState.xRot));
+        poseStack.mulPose(new Transformation(null, Axis.YP.rotationDegrees(-renderState.yRot), null, new Quaternionf()));
+        poseStack.mulPose(new Transformation(null, Axis.XP.rotationDegrees(-renderState.xRot), null, new Quaternionf()));
         poseStack.scale(0.0625f, 0.0625f, 0.0625f);
 
         boolean hasFrame = !renderState.frame.equals(ImmersivePaintings.NONE_LOCATION);
