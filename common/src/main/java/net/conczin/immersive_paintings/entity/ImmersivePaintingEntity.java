@@ -24,9 +24,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -45,6 +48,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ImmersivePaintingEntity extends HangingEntity {
+    private static final int HIT_WINDOW_TICKS = 10;
+
     protected static final Predicate<Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
 
     private static final EntityDataAccessor<ResourceLocation> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entities.TRACKED_IDENTIFIER);
@@ -55,6 +60,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
 
     private int rotation;
+    private long wobbleUntil;
 
     public ImmersivePaintingEntity(EntityType<? extends HangingEntity> entityType, Level level) {
         super(entityType, level);
@@ -100,7 +106,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         Vec3 cross = up.cross(front);
 
         if (rotation != 0) {
-            float radians = (float)(rotation * Math.PI / 180.0);
+            float radians = (float) (rotation * Math.PI / 180.0);
             up = up.yRot(radians);
             cross = cross.yRot(radians);
         }
@@ -130,16 +136,16 @@ public class ImmersivePaintingEntity extends HangingEntity {
                 .relative(facing, dy);
 
         Vec3 shift = up.scale(getPaintingHeight())
-            .add(cross.scale(getPaintingWidth()))
-            .add(front.scale(0.0625)); // 1 / 16
+                .add(cross.scale(getPaintingWidth()))
+                .add(front.scale(0.0625)); // 1 / 16
 
         return AABB.ofSize(vec3d, shift.x(), shift.y(), shift.z());
     }
 
     private double offsetForPaintingSize(int size) {
-        return size % 2 == 0 ? (double)0.5F : (double)0.0F;
+        return size % 2 == 0 ? (double) 0.5F : (double) 0.0F;
     }
-    
+
     @Override
     public boolean survives() {
         if (Configs.COMMON.testIfSpaceEmpty && !level().noCollision(this)) {
@@ -152,12 +158,44 @@ public class ImmersivePaintingEntity extends HangingEntity {
             return false;
         }
 
-        return level().getEntities(this, getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((ImmersivePaintingEntity)v).direction == direction);
+        return level().getEntities(this, getBoundingBox(), PREDICATE).stream().noneMatch(v -> ((ImmersivePaintingEntity) v).direction == direction);
     }
 
     @Override
     public boolean canBeCollidedWith() {
         return Configs.COMMON.paintingsHaveCollision;
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (isInvulnerableTo(source)) return false;
+
+        if (!level().isClientSide) {
+            long gameTime = level().getGameTime();
+            if (gameTime < wobbleUntil) {
+                return super.hurt(source, amount);
+            }
+
+            wobbleUntil = gameTime + HIT_WINDOW_TICKS;
+            level().broadcastEntityEvent(this, EntityEvent.ARMORSTAND_WOBBLE);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void handleEntityEvent(byte event) {
+        if (event == EntityEvent.ARMORSTAND_WOBBLE) {
+            wobbleUntil = level().getGameTime() + HIT_WINDOW_TICKS;
+        } else {
+            super.handleEntityEvent(event);
+        }
+    }
+
+    public float getWobble(float tickDelta) {
+        float remaining = (float) (wobbleUntil - level().getGameTime()) - tickDelta;
+        if (remaining <= 0) return 0;
+        return Mth.sin(remaining * Mth.HALF_PI) * remaining * 0.2F;
     }
 
     @Override
@@ -218,7 +256,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void playPlacementSound() {
         playSound(SoundEvents.PAINTING_PLACE, 1.0f, 1.0f);
     }
-    
+
     @Override
     public void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(MOTIVE, Main.locate("none"));
@@ -252,14 +290,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
     /*
      * Both direction and rotation need to be present in the spawn packet for the client
      * To avoid any issues with yaw/pitch being set externally, pack the values into entityData
-     * 
-     * 
+     *
+     *
      * NOTE: This will probably never need a change, but should direction become
      * larger than a byte there will need to be a way to future-proof this
      */
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entityTrackerEntry) {
-        return new ClientboundAddEntityPacket(this, (rotation << 4) | (byte)direction.get3DDataValue(), getPos());
+        return new ClientboundAddEntityPacket(this, (rotation << 4) | (byte) direction.get3DDataValue(), getPos());
     }
 
     @Override

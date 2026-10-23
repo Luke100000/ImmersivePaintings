@@ -38,6 +38,7 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         poses.pushPose();
         poses.mulPose(Axis.YP.rotationDegrees(-yaw));
         poses.mulPose(Axis.XP.rotationDegrees(-entity.getViewXRot(tickDelta)));
+        poses.mulPose(Axis.ZP.rotationDegrees(entity.getWobble(tickDelta)));
         poses.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(poses, buffer, entity);
         poses.popPose();

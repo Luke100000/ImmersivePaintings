@@ -1,3 +1,8 @@
+# TBD
+
+* Paintings and graffiti now wobble on the first hit and break on a second hit
+* Fixed screenshot selection not working reliable
+
 # 0.7.9
 
 * Added `loadPaintings` config to disable downloading and rendering paintings
