@@ -888,7 +888,7 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     private void setScreenshotPage(int p) {
-        int maxPages = (int) Math.ceil(screenshots.size() / 8.0);
+        int maxPages = Math.max(1, (int) Math.ceil((double) screenshots.size() / SCREENSHOTS_PER_PAGE));
         int oldPage = screenshotPage;
         screenshotPage = Math.min(maxPages - 1, Math.max(0, p));
         if (oldPage != screenshotPage) {
