@@ -98,6 +98,11 @@ public class ServerPaintingManager extends SavedData {
         thumbnailCache.delete(identifier);
     }
 
+    public static void updatePainting(MinecraftServer server, ResourceLocation identifier, Painting painting) {
+        getCustomPaintings(server).put(identifier, painting);
+        get(server).setDirty(true);
+    }
+
     public static void playerLoggedOut(ServerPlayer player) {
         sent.remove(player.getUUID());
         ImageUploadPayload.playerLoggedOut(player);

@@ -11,10 +11,7 @@ import net.conczin.immersive_paintings.client.gui.widget.TexturedButtonWidget;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
 import net.conczin.immersive_paintings.network.LazyNetworkManager;
 import net.conczin.immersive_paintings.network.NetworkHandler;
-import net.conczin.immersive_paintings.network.payload.c2s.ImageUploadPayload;
-import net.conczin.immersive_paintings.network.payload.c2s.PaintingDeletePayload;
-import net.conczin.immersive_paintings.network.payload.c2s.PaintingEditPayload;
-import net.conczin.immersive_paintings.network.payload.c2s.PaintingRegisterPayload;
+import net.conczin.immersive_paintings.network.payload.c2s.*;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.resources.FrameLoader;
 import net.conczin.immersive_paintings.util.ImageManipulations;
@@ -79,7 +76,8 @@ public class ImmersivePaintingScreen extends Screen {
     private List<File> screenshots = List.of();
     private int screenshotPage;
 
-    private ResourceLocation deletePainting;
+    private ResourceLocation selectedPainting;
+    private Page editReturnPage;
     private Component error;
     private boolean shouldReProcess;
     private static volatile boolean shouldUpload;
@@ -129,12 +127,28 @@ public class ImmersivePaintingScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+
+        switch (page) {
+            case NEW -> {
+                graphics.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
+            }
+            case EDIT -> {
+                graphics.fill(width / 2 - 160, height / 2 - 60, width / 2 + 160, height / 2 + 60, 0x88000000);
+            }
+            case DELETE, ADMIN_DELETE -> {
+                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
+            }
+        }
+    }
+
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
 
         switch (page) {
             case NEW -> {
-                graphics.fill(width / 2 - 115, height / 2 - 68, width / 2 + 115, height / 2 - 41, 0x50000000);
                 List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.drop"), 220);
                 int y = height / 2 - 40 - wrap.size() * 12;
                 for (Component text : wrap) {
@@ -165,8 +179,11 @@ public class ImmersivePaintingScreen extends Screen {
                 graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 poseStack.popPose();
             }
+            case EDIT -> {
+                ClientPaintingManager.getPainting(selectedPainting).ifPresent(painting ->
+                        graphics.drawCenteredString(font, font.plainSubstrByWidth(painting.name(), 300), width / 2, height / 2 - 45, 0xFFFFFF));
+            }
             case DELETE -> {
-                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
                 List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Component t : wrap) {
@@ -175,7 +192,6 @@ public class ImmersivePaintingScreen extends Screen {
                 }
             }
             case ADMIN_DELETE -> {
-                graphics.fill(width / 2 - 160, height / 2 - 50, width / 2 + 160, height / 2 + 50, 0x88000000);
                 List<Component> wrap = wrap(Component.translatable("immersive_paintings.gui.confirm_admin_deletion"), 300);
                 int y = height / 2 - 35;
                 for (Component t : wrap) {
@@ -634,16 +650,45 @@ public class ImmersivePaintingScreen extends Screen {
                         .build()
                 );
             }
+            case EDIT -> {
+                Optional<Painting> painting = ClientPaintingManager.getPainting(selectedPainting);
+                if (painting.isEmpty()) {
+                    setPage(editReturnPage);
+                    return;
+                }
+
+                addRenderableWidget(Checkbox.builder(Component.translatable("immersive_paintings.gui.show"), font)
+                        .pos(width / 2 - 100, height / 2 - 20)
+                        .selected(!painting.get().has(Painting.Flag.HIDDEN))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.visibility")))
+                        .onValueChange((widget, value) -> NetworkHandler.Client.sendToServer(new PaintingFlagPayload(selectedPainting, Painting.Flag.HIDDEN, !value)))
+                        .build());
+
+                addRenderableWidget(Checkbox.builder(Component.translatable("immersive_paintings.gui.nsfw"), font)
+                        .pos(width / 2 - 100, height / 2 + 4)
+                        .selected(painting.get().has(Painting.Flag.NSFW))
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.nsfw")))
+                        .onValueChange((widget, value) -> NetworkHandler.Client.sendToServer(new PaintingFlagPayload(selectedPainting, Painting.Flag.NSFW, value)))
+                        .build());
+
+                addRenderableWidget(Button.builder(Component.translatable("immersive_paintings.gui.back"),
+                                widget -> setPage(editReturnPage))
+                        .bounds(width / 2 - 105, height / 2 + 32, 100, 20).build());
+
+                addRenderableWidget(Button.builder(Component.translatable("immersive_paintings.gui.delete"),
+                                widget -> setPage(editReturnPage == Page.YOURS ? Page.DELETE : Page.ADMIN_DELETE))
+                        .bounds(width / 2 + 5, height / 2 + 32, 100, 20).build());
+            }
             case DELETE -> {
                 addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.YOURS))
+                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.EDIT))
                         .bounds(width / 2 - 100 - 5, height / 2 + 20, 100, 20)
                         .build()
                 );
 
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.delete"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
+                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(selectedPainting, false));
                                     setPage(Page.YOURS);
                                 })
                         .bounds(width / 2 + 5, height / 2 + 20, 100, 20)
@@ -652,14 +697,14 @@ public class ImmersivePaintingScreen extends Screen {
             }
             case ADMIN_DELETE -> {
                 addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.PLAYERS))
+                                Component.translatable("immersive_paintings.gui.cancel"), v -> setPage(Page.EDIT))
                         .bounds(width / 2 - 115, height / 2 + 10, 70, 20)
                         .build()
                 );
 
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.delete"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, false));
+                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(selectedPainting, false));
                                     setPage(Page.PLAYERS);
                                 })
                         .bounds(width / 2 - 40, height / 2 + 10, 70, 20)
@@ -668,7 +713,7 @@ public class ImmersivePaintingScreen extends Screen {
 
                 addRenderableWidget(Button.builder(
                                 Component.translatable("immersive_paintings.gui.delete_all"), v -> {
-                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(deletePainting, true));
+                                    NetworkHandler.Client.sendToServer(new PaintingDeletePayload(selectedPainting, true));
                                     setPage(Page.PLAYERS);
                                 })
                         .bounds(width / 2 + 35, height / 2 + 10, 70, 20)
@@ -750,7 +795,7 @@ public class ImmersivePaintingScreen extends Screen {
                         }
 
                         if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
-                            tooltip.add(Component.translatable("immersive_paintings.gui.right_click_to_delete").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                            tooltip.add(Component.translatable("immersive_paintings.gui.right_click_to_modify").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                         }
                     });
 
@@ -768,12 +813,10 @@ public class ImmersivePaintingScreen extends Screen {
                                 }
                             },
                             sender -> {
-                                if (page == Page.YOURS) {
-                                    deletePainting = identifier;
-                                    setPage(Page.DELETE);
-                                } else if (page == Page.PLAYERS && isOp()) {
-                                    deletePainting = identifier;
-                                    setPage(Page.ADMIN_DELETE);
+                                if (page == Page.YOURS || page == Page.PLAYERS && isOp()) {
+                                    selectedPainting = identifier;
+                                    editReturnPage = page;
+                                    setPage(Page.EDIT);
                                 }
                             }
                     ));
@@ -1058,6 +1101,7 @@ public class ImmersivePaintingScreen extends Screen {
         NEW,
         CREATE,
         FRAME,
+        EDIT,
         DELETE,
         ADMIN_DELETE,
         LOADING

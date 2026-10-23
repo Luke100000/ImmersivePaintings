@@ -37,16 +37,18 @@ public record PaintingDeletePayload(ResourceLocation identifier, boolean adminDe
         boolean adminDelete = adminDelete();
 
         runner.run(() -> {
-            Painting painting = ServerPaintingManager.getCustomPaintings(player.getServer()).get(identifier);
+            MinecraftServer server = player.getServer();
+            if (server == null) return;
+
+            Painting painting = ServerPaintingManager.getCustomPaintings(server).get(identifier);
+            if (painting == null) return;
+
             UUID authorUUID = painting.authorUUID();
 
             if (!(authorUUID.equals(player.getUUID()) || player.hasPermissions(4))) {
                 Main.LOGGER.warn("Player {} tried to delete painting {}, which they do not own", player, identifier);
                 return;
             }
-
-            MinecraftServer server = player.getServer();
-            if (server == null) return;
 
             PaintingSyncPayload payload;
             if (adminDelete) {

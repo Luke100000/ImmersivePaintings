@@ -1,5 +1,6 @@
 # TBD
 
+* Added right-click editing of uploaded paintings' visibility and NSFW flags
 * Paintings and graffiti now wobble on the first hit and break on a second hit
 * Fixed screenshot selection not working reliable
 
