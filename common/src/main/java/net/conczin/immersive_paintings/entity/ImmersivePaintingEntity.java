@@ -248,15 +248,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
     }
 
-    // Three methods below are taken from Painting
-    // They are needed to avoid an issue where when updating a motive, the motive is
-    // temporarily reset to "none" and the position gets messed up.
-    // NOTE: I think trackingPosition is the only one that matters, but keep all of them just in case
     @Override
     public void moveTo(double x, double y, double z, float yRot, float xRot) {
-        this.setPos(x, y, z);
+        // Placement supplies the visible center; round back to the nearest attachment block.
+        Vec3 offset = calculateBoundingBox(BlockPos.ZERO, direction).getCenter();
+        setPos(x - offset.x + 0.5, y - offset.y + 0.5, z - offset.z + 0.5);
     }
 
+    // Network updates use attachment coordinates so resizing cannot shift the painting.
     @Override
     public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
         this.setPos(x, y, z);
@@ -319,6 +318,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket packet) {
         super.recreateFromPacket(packet);
+        setPos(BlockPos.containing(packet.getX(), packet.getY(), packet.getZ()));
         int data = packet.getData();
         setDirection(Direction.from3DDataValue(data & 15), data >> 4);
     }

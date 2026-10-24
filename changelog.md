@@ -4,6 +4,7 @@
 * Paintings and graffiti now wobble on the first hit and break on a second hit
     * Added `canOnlyBeDestroyedByPlayer` config to protect paintings and graffiti from non-player damage
 * Fixed screenshot selection not working reliable
+* Fixed paintings shifting when placed from their center coordinates, such as schematic pastes
 
 # 0.7.9
 
