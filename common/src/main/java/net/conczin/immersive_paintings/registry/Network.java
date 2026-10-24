@@ -13,6 +13,7 @@ public class Network {
         c.register(ImageUploadPayload.TYPE, ImageUploadPayload.STREAM_CODEC, true);
         c.register(PaintingRegisterPayload.TYPE, PaintingRegisterPayload.STREAM_CODEC, true);
         c.register(PaintingEditPayload.TYPE, PaintingEditPayload.STREAM_CODEC, true);
+        c.register(PaintingFlagPayload.TYPE, PaintingFlagPayload.STREAM_CODEC, true);
         c.register(PaintingDeletePayload.TYPE, PaintingDeletePayload.STREAM_CODEC, true);
 
         c.register(ImageResponsePayload.TYPE, ImageResponsePayload.STREAM_CODEC, false);

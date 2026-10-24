@@ -7,6 +7,7 @@ public class ImmersivePaintingRenderState extends EntityRenderState {
     public int light;
     public float xRot;
     public float yRot;
+    public float wobble;
 
     public boolean isGlowing;
     public boolean isGraffiti;

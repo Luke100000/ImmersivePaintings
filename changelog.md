@@ -1,3 +1,15 @@
+# 0.8.0
+
+* Added per-painting depth adjustment from -16 to +16 pixels
+* Added right-click editing of uploaded paintings' visibility and NSFW flags
+* Paintings and graffiti now wobble on the first hit and break on a second hit
+    * Added `canOnlyBeDestroyedByPlayer` config to protect paintings and graffiti from non-player damage
+* Fixed screenshot selection not working reliable
+* Fixed paintings shifting when placed from their center coordinates, such as schematic pastes
+* Graffitis anti-Z fighter is now less obvious
+* Added Zetter painting imports
+* Fixed Joy of Paintings
+
 # 0.7.9
 
 * Added `loadPaintings` config to disable downloading and rendering paintings

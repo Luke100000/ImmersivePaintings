@@ -36,15 +36,18 @@ public record PaintingDeletePayload(Identifier identifier, boolean adminDelete) 
         boolean adminDelete = adminDelete();
 
         runner.run(() -> {
-            Painting painting = ServerPaintingManager.getCustomPaintings(player.level().getServer()).get(identifier);
+            MinecraftServer server = player.level().getServer();
+            if (server == null) return;
+
+            Painting painting = ServerPaintingManager.getCustomPaintings(server).get(identifier);
+            if (painting == null) return;
+
             UUID authorUUID = painting.authorUUID();
 
             if (!(authorUUID.equals(player.getUUID()) || player.permissions().hasPermission(Permissions.COMMANDS_OWNER))) {
                 ImmersivePaintings.LOGGER.warn("Player {} tried to delete painting {}, which they do not own", player, identifier);
                 return;
             }
-
-            MinecraftServer server = player.level().getServer();
 
             PaintingSyncPayload payload;
             if (adminDelete) {
