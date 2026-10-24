@@ -2,6 +2,7 @@
 
 * Added right-click editing of uploaded paintings' visibility and NSFW flags
 * Paintings and graffiti now wobble on the first hit and break on a second hit
+    * Added `canOnlyBeDestroyedByPlayer` config to protect paintings and graffiti from non-player damage
 * Fixed screenshot selection not working reliable
 
 # 0.7.9

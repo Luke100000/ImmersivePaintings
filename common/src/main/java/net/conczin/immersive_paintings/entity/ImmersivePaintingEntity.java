@@ -31,6 +31,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -167,8 +168,23 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
+    public void move(MoverType type, Vec3 movement) {
+        if (Configs.COMMON.canOnlyBeDestroyedByPlayer) return;
+
+        super.move(type, movement);
+    }
+
+    @Override
+    public void push(double x, double y, double z) {
+        if (Configs.COMMON.canOnlyBeDestroyedByPlayer) return;
+
+        super.push(x, y, z);
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         if (isInvulnerableTo(source)) return false;
+        if (Configs.COMMON.canOnlyBeDestroyedByPlayer && !(source.getDirectEntity() instanceof Player)) return false;
 
         if (!level().isClientSide) {
             long gameTime = level().getGameTime();
