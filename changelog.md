@@ -1,4 +1,4 @@
-# TBD
+# 0.8.0
 
 * Added per-painting depth adjustment from -16 to +16 pixels
 * Added right-click editing of uploaded paintings' visibility and NSFW flags
