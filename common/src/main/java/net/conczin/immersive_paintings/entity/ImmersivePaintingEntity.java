@@ -4,7 +4,7 @@ import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
-import net.conczin.immersive_paintings.compat.XercaPaintCompat;
+import net.conczin.immersive_paintings.compat.PaintingImports;
 import net.conczin.immersive_paintings.config.CommonConfig;
 import net.conczin.immersive_paintings.network.NetworkHandler;
 import net.conczin.immersive_paintings.network.payload.s2c.OpenGuiPayload;
@@ -220,7 +220,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
-            if (!XercaPaintCompat.interactWithPainting(this, player, hand)) {
+            if (!PaintingImports.interact(this, serverPlayer, hand)) {
                 CommonConfig config = Configs.COMMON;
                 NetworkHandler.sendToClient(serverPlayer, new OpenGuiPayload(
                         OpenGuiPayload.GuiType.EDITOR, getId(),

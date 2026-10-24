@@ -7,6 +7,8 @@
 * Fixed screenshot selection not working reliable
 * Fixed paintings shifting when placed from their center coordinates, such as schematic pastes
 * Graffitis anti-Z fighter is now less obvious
+* Added Zetter painting imports
+* Fixed Joy of Paintings
 
 # 0.7.9
 
