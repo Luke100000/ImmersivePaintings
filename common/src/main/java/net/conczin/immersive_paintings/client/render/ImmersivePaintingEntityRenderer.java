@@ -1,17 +1,17 @@
 package net.conczin.immersive_paintings.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.conczin.immersive_paintings.ClientPaintingManager;
 import net.conczin.immersive_paintings.Main;
+import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.config.ClientConfig;
 import net.conczin.immersive_paintings.entity.ImmersivePaintingEntity;
-import net.conczin.immersive_paintings.ClientPaintingManager;
-import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registration.Configs;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -22,11 +22,9 @@ import owens.oobjloader.FaceVertex;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-
 public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T> {
+    private static final double GRAFFITI_DEPTH_SCALE = 4.0 / (GameRenderer.PROJECTION_Z_NEAR * (1 << 24));
+
     public ImmersivePaintingEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
@@ -38,6 +36,14 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         poses.pushPose();
         poses.mulPose(Axis.YP.rotationDegrees(-yaw));
         poses.mulPose(Axis.XP.rotationDegrees(-entity.getViewXRot(tickDelta)));
+
+        if (entity.isGraffiti()) {
+            double distanceSquared = entityRenderDispatcher.distanceToSqr(entity);
+            double radius = Math.hypot(entity.getPaintingWidth(), entity.getPaintingHeight()) * 0.5;
+            double rasterOffset = (Math.sqrt(distanceSquared) + radius) * 2.0e-4;
+            poses.translate(0, 0, Math.max(rasterOffset, distanceSquared * GRAFFITI_DEPTH_SCALE));
+        }
+
         poses.mulPose(Axis.ZP.rotationDegrees(entity.getWobble(tickDelta)));
         poses.scale(0.0625f, 0.0625f, 0.0625f);
         renderPainting(poses, buffer, entity);
@@ -62,9 +68,9 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
 
         Painting.Size size = pixelDensity > config.thumbResolutionThreshold ? Painting.Size.THUMBNAIL
                 : pixelDensity > config.eighthResolutionThreshold ? Painting.Size.EIGHTH
-                : pixelDensity > config.quarterResolutionThreshold ? Painting.Size.QUARTER
-                : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
-                : Painting.Size.FULL;
+                  : pixelDensity > config.quarterResolutionThreshold ? Painting.Size.QUARTER
+                    : pixelDensity > config.halfResolutionThreshold ? Painting.Size.HALF
+                      : Painting.Size.FULL;
 
 
         return ClientPaintingManager.getImageIdentifier(paintingEntity.getMotive(), size);
@@ -74,14 +80,14 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
         if (!glowing)
             return light;
 
-        return LightTexture.pack((int)(LightTexture.block(light) * 0.25 + 15 * 0.75), LightTexture.sky(light));
+        return LightTexture.pack((int) (LightTexture.block(light) * 0.25 + 15 * 0.75), LightTexture.sky(light));
     }
 
     protected int getFrameLight(int light, boolean glowing) {
         if (!glowing)
             return light;
 
-        return LightTexture.pack((int)(LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
+        return LightTexture.pack((int) (LightTexture.block(light) * 0.875 + 2), LightTexture.sky(light));
     }
 
     private void renderPainting(PoseStack poses, MultiBufferSource buffer, T entity) {

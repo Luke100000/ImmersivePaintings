@@ -6,6 +6,7 @@
     * Added `canOnlyBeDestroyedByPlayer` config to protect paintings and graffiti from non-player damage
 * Fixed screenshot selection not working reliable
 * Fixed paintings shifting when placed from their center coordinates, such as schematic pastes
+* Graffitis anti-Z fighter is now less obvious
 
 # 0.7.9
 
