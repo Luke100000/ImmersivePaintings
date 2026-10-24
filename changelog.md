@@ -1,5 +1,6 @@
 # TBD
 
+* Added per-painting depth adjustment from -16 to +16 pixels
 * Added right-click editing of uploaded paintings' visibility and NSFW flags
 * Paintings and graffiti now wobble on the first hit and break on a second hit
     * Added `canOnlyBeDestroyedByPlayer` config to protect paintings and graffiti from non-player damage

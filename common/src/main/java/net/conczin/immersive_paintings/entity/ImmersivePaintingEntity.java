@@ -49,6 +49,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ImmersivePaintingEntity extends HangingEntity {
+    public static final int MAX_DEPTH_OFFSET = 16;
+
     private static final int HIT_WINDOW_TICKS = 10;
 
     protected static final Predicate<Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
@@ -59,6 +61,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     private static final EntityDataAccessor<Integer> WIDTH = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DEPTH_OFFSET = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
 
     private int rotation;
     private long wobbleUntil;
@@ -132,7 +135,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
 
         Vec3 vec3d = Vec3.atCenterOf(pos)
-                .relative(side, -0.46875f)
+                .relative(side, -0.46875 + getDepthOffset() / 16.0)
                 .relative(counter, dx)
                 .relative(facing, dy);
 
@@ -279,6 +282,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         builder.define(MATERIAL, Main.locate("none"));
         builder.define(WIDTH, 1);
         builder.define(HEIGHT, 1);
+        builder.define(DEPTH_OFFSET, 0);
     }
 
     @Override
@@ -297,6 +301,8 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
                 recalculateBoundingBox();
             });
+        } else if (DEPTH_OFFSET.equals(data)) {
+            recalculateBoundingBox();
         }
 
         super.onSyncedDataUpdated(data);
@@ -331,6 +337,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         nbt.putString("Material", tracker.get(MATERIAL).toString());
         nbt.putInt("Facing", direction.get3DDataValue());
         nbt.putInt("Rotation", rotation);
+        nbt.putInt("DepthOffset", getDepthOffset());
         super.addAdditionalSaveData(nbt);
     }
 
@@ -345,6 +352,8 @@ public class ImmersivePaintingEntity extends HangingEntity {
         // saving the number of times that the painting calculates its bounding box.
         super.readAdditionalSaveData(nbt);
         setMotive(ResourceLocation.parse(nbt.getString("Motive")));
+
+        setDepthOffset(nbt.getInt("DepthOffset"));
     }
 
     public Item getItem() {
@@ -357,6 +366,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     public boolean isGlowing() {
         return false;
+    }
+
+    public int getDepthOffset() {
+        return getEntityData().get(DEPTH_OFFSET);
+    }
+
+    public void setDepthOffset(int offset) {
+        getEntityData().set(DEPTH_OFFSET, Mth.clamp(offset, -MAX_DEPTH_OFFSET, MAX_DEPTH_OFFSET));
     }
 
     public int getPaintingWidth() {

@@ -65,6 +65,8 @@ public class ImmersivePaintingScreen extends Screen {
     private Page page;
 
     private Button pageWidget;
+    private Button decreaseDepthButton;
+    private Button increaseDepthButton;
 
     private final Map<ResourceLocation, PaintingWidget> paintingWidgets = new HashMap<>();
     private BufferedImage currentImage;
@@ -145,6 +147,11 @@ public class ImmersivePaintingScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        if (page == Page.FRAME) {
+            decreaseDepthButton.active = entity.getDepthOffset() > -ImmersivePaintingEntity.MAX_DEPTH_OFFSET;
+            increaseDepthButton.active = entity.getDepthOffset() < ImmersivePaintingEntity.MAX_DEPTH_OFFSET;
+        }
+
         super.render(graphics, mouseX, mouseY, delta);
 
         switch (page) {
@@ -178,6 +185,9 @@ public class ImmersivePaintingScreen extends Screen {
                 poseStack.scale(size, size, 1.0f);
                 graphics.blit(Main.locate("temp_pixelated"), 0, 0, 0, 0, tw, th, tw, th);
                 poseStack.popPose();
+            }
+            case FRAME -> {
+                graphics.drawCenteredString(font, Component.translatable("immersive_paintings.gui.depth_offset", entity.getDepthOffset()), decreaseDepthButton.getX() + 60, decreaseDepthButton.getY() + 6, 0xFFFFFF);
             }
             case EDIT -> {
                 ClientPaintingManager.getPainting(selectedPainting).ifPresent(painting ->
@@ -233,15 +243,14 @@ public class ImmersivePaintingScreen extends Screen {
             if (Minecraft.getInstance().player == null || Minecraft.getInstance().player.hasPermissions(uploadPermissionLevel)) {
                 b.add(Page.NEW);
             }
-            if (!entity.isGraffiti()) {
-                b.add(Page.FRAME);
-            }
+            b.add(Page.FRAME);
 
             int x = width / 2 - 200;
             int w = 400 / b.size();
             for (Page page : b) {
+                String pageName = page == Page.FRAME && entity.isGraffiti() ? "depth" : page.name().toLowerCase(Locale.ROOT);
                 Button btn = addRenderableWidget(Button.builder(
-                                Component.translatable("immersive_paintings.gui.page." + page.name().toLowerCase(Locale.ROOT)), sender -> setPage(page))
+                                Component.translatable("immersive_paintings.gui.page." + pageName), sender -> setPage(page))
                         .bounds(x, height / 2 - 90 - 22, w, 20)
                         .build()
                 );
@@ -587,7 +596,7 @@ public class ImmersivePaintingScreen extends Screen {
             case FRAME -> {
                 //frame
                 int y = height / 2 - 80;
-                List<ResourceLocation> frames = FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(ResourceLocation::compareTo).toList();
+                List<ResourceLocation> frames = entity.isGraffiti() ? List.of() : FrameLoader.frames.values().stream().map(FrameLoader.Frame::frame).distinct().sorted(ResourceLocation::compareTo).toList();
                 for (ResourceLocation frame : frames) {
                     Button widget = addRenderableWidget(Button.builder(
                                     Component.translatable("immersive_paintings.frame." + identifierToTranslation(frame)), v -> {
@@ -614,7 +623,7 @@ public class ImmersivePaintingScreen extends Screen {
                 //material
                 int py = 0;
                 int px = 0;
-                List<ResourceLocation> materials = getMaterialsList(entity.getFrame());
+                List<ResourceLocation> materials = entity.isGraffiti() ? List.of() : getMaterialsList(entity.getFrame());
                 List<Button> materialList = new LinkedList<>();
                 for (ResourceLocation material : materials) {
                     Button widget = addRenderableWidget(new TexturedButtonWidget(
@@ -649,6 +658,17 @@ public class ImmersivePaintingScreen extends Screen {
                         .bounds(width / 2 - 50, height / 2 + 70, 100, 20)
                         .build()
                 );
+
+                int depthX = width / 2 + (entity.isGraffiti() ? -60 : 60);
+                int depthY = height / 2 + (entity.isGraffiti() ? -10 : 70);
+                decreaseDepthButton = addRenderableWidget(Button.builder(Component.literal("<"), v -> changeDepthOffset(-1))
+                        .bounds(depthX, depthY, 20, 20)
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.depth_in")))
+                        .build());
+                increaseDepthButton = addRenderableWidget(Button.builder(Component.literal(">"), v -> changeDepthOffset(1))
+                        .bounds(depthX + 100, depthY, 20, 20)
+                        .tooltip(Tooltip.create(Component.translatable("immersive_paintings.gui.tooltip.depth_out")))
+                        .build());
             }
             case EDIT -> {
                 Optional<Painting> painting = ClientPaintingManager.getPainting(selectedPainting);
@@ -917,6 +937,13 @@ public class ImmersivePaintingScreen extends Screen {
                 .toList());
 
         setSelectionPage(selectionPage);
+    }
+
+    private void changeDepthOffset(int delta) {
+        entity.setDepthOffset(entity.getDepthOffset() + delta);
+        NetworkHandler.Client.sendToServer(new PaintingEditPayload(entity.getId(), Map.of(
+                PaintingEditPayload.Option.DEPTH_OFFSET, Integer.toString(entity.getDepthOffset())
+        )));
     }
 
     private boolean isOp() {

@@ -65,6 +65,13 @@ public record PaintingEditPayload(int entityId, Map<Option, String> options) imp
                         case Option.MATERIAL:
                             painting.setMaterial(ResourceLocation.parse(value));
                             break;
+                        case Option.DEPTH_OFFSET:
+                            try {
+                                painting.setDepthOffset(Integer.parseInt(value));
+                            } catch (NumberFormatException ignored) {
+                                return;
+                            }
+                            break;
                         case Option.DELETE:
 
                             break;
@@ -83,7 +90,8 @@ public record PaintingEditPayload(int entityId, Map<Option, String> options) imp
         MOTIVE,
         FRAME,
         MATERIAL,
-        DELETE;
+        DELETE,
+        DEPTH_OFFSET;
 
         @Override
         public String getSerializedName() {
