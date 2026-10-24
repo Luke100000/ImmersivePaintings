@@ -5,7 +5,7 @@ import net.conczin.immersive_paintings.ImmersivePaintings;
 import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.ServerPaintingManager;
 import net.conczin.immersive_paintings.client.gui.GuiWrapper;
-import net.conczin.immersive_paintings.compat.XercaPaintCompat;
+import net.conczin.immersive_paintings.compat.PaintingImports;
 import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.registry.Entity;
 import net.conczin.immersive_paintings.registry.Item;
@@ -20,10 +20,15 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -41,6 +46,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ImmersivePaintingEntity extends HangingEntity {
+    public static final int MAX_DEPTH_OFFSET = 16;
+
+    private static final int HIT_WINDOW_TICKS = 10;
+
     protected static final Predicate<net.minecraft.world.entity.Entity> PREDICATE = entity -> entity instanceof ImmersivePaintingEntity;
 
     private static final EntityDataAccessor<Identifier> MOTIVE = SynchedEntityData.defineId(ImmersivePaintingEntity.class, Entity.TRACKED_IDENTIFIER);
@@ -49,8 +58,10 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     private static final EntityDataAccessor<Integer> WIDTH = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DEPTH_OFFSET = SynchedEntityData.defineId(ImmersivePaintingEntity.class, EntityDataSerializers.INT);
 
     private int rotation;
+    private long wobbleUntil;
 
     public ImmersivePaintingEntity(EntityType<? extends HangingEntity> entityType, Level level) {
         super(entityType, level);
@@ -96,7 +107,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         Vec3 cross = up.cross(front);
 
         if (rotation != 0) {
-            float radians = (float)(rotation * Math.PI / 180.0);
+            float radians = (float) (rotation * Math.PI / 180.0);
             up = up.yRot(radians);
             cross = cross.yRot(radians);
         }
@@ -121,21 +132,21 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
 
         Vec3 vec3d = Vec3.atCenterOf(pos)
-                .relative(side, -0.46875f)
+                .relative(side, -0.46875 + getDepthOffset() / 16.0)
                 .relative(counter, dx)
                 .relative(facing, dy);
 
         Vec3 shift = up.scale(getPaintingHeight())
-            .add(cross.scale(getPaintingWidth()))
-            .add(front.scale(0.0625)); // 1 / 16
+                .add(cross.scale(getPaintingWidth()))
+                .add(front.scale(0.0625)); // 1 / 16
 
         return AABB.ofSize(vec3d, shift.x(), shift.y(), shift.z());
     }
 
     private double offsetForPaintingSize(int size) {
-        return size % 2 == 0 ? (double)0.5F : (double)0.0F;
+        return size % 2 == 0 ? (double) 0.5F : (double) 0.0F;
     }
-    
+
     @Override
     public boolean survives() {
         if (Config.COMMON.testIfSpaceEmpty && !level().noCollision(this)) {
@@ -157,14 +168,58 @@ public class ImmersivePaintingEntity extends HangingEntity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
-        boolean clientSide = level().isClientSide();
+    public void move(MoverType type, Vec3 movement) {
+        if (Config.COMMON.canOnlyBeDestroyedByPlayer) return;
 
-        if (player.isCrouching()) {
-            if (!clientSide && XercaPaintCompat.interactWithPainting(this, player, hand)) {
-                return InteractionResult.CONSUME;
-            }
-        } else if (clientSide) {
+        super.move(type, movement);
+    }
+
+    @Override
+    public void push(double x, double y, double z) {
+        if (Config.COMMON.canOnlyBeDestroyedByPlayer) return;
+
+        super.push(x, y, z);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+        if (isInvulnerableToBase(source)) return false;
+        if (Config.COMMON.canOnlyBeDestroyedByPlayer && !(source.getDirectEntity() instanceof Player)) return false;
+
+        long gameTime = level.getGameTime();
+        if (gameTime < wobbleUntil) {
+            return super.hurtServer(level, source, amount);
+        }
+
+        wobbleUntil = gameTime + HIT_WINDOW_TICKS;
+        level.broadcastEntityEvent(this, EntityEvent.ARMORSTAND_WOBBLE);
+        return true;
+    }
+
+    @Override
+    public void handleEntityEvent(byte event) {
+        if (event == EntityEvent.ARMORSTAND_WOBBLE) {
+            wobbleUntil = level().getGameTime() + HIT_WINDOW_TICKS;
+        } else {
+            super.handleEntityEvent(event);
+        }
+    }
+
+    public float getWobble(float tickDelta) {
+        float remaining = (float) (wobbleUntil - level().getGameTime()) - tickDelta;
+        if (remaining <= 0) return 0;
+        return Mth.sin(remaining * Mth.HALF_PI) * remaining * 0.2F;
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        if (!player.mayBuild()) return InteractionResult.PASS;
+
+        if (player instanceof ServerPlayer serverPlayer && PaintingImports.interact(this, serverPlayer, hand)) {
+            return InteractionResult.CONSUME;
+        }
+
+        if (level().isClientSide()) {
             GuiWrapper.open(getUUID());
             return InteractionResult.SUCCESS;
         }
@@ -189,8 +244,19 @@ public class ImmersivePaintingEntity extends HangingEntity {
         }
     }
 
-    // When updating a motive, the motive is temporarily reset to "none" and the position gets messed up.
-    // Fix this by fixing the tracking position to the lower corner.
+    @Override
+    public void snapTo(double x, double y, double z, float yRot, float xRot) {
+        // Client position packets already contain attachment coordinates.
+        if (level().isClientSide()) {
+            setPos(x, y, z);
+            return;
+        }
+
+        // Placement supplies the visible center; round back to the nearest attachment block.
+        Vec3 offset = calculateBoundingBox(BlockPos.ZERO, getDirection()).getCenter();
+        setPos(x - offset.x + 0.5, y - offset.y + 0.5, z - offset.z + 0.5);
+    }
+
     @Override
     public Vec3 trackingPosition() {
         return Vec3.atLowerCornerOf(this.pos);
@@ -200,7 +266,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     public void playPlacementSound() {
         playSound(SoundEvents.PAINTING_PLACE, 1.0f, 1.0f);
     }
-    
+
     @Override
     public void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
@@ -209,6 +275,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         builder.define(MATERIAL, ImmersivePaintings.NONE_LOCATION);
         builder.define(WIDTH, 1);
         builder.define(HEIGHT, 1);
+        builder.define(DEPTH_OFFSET, 0);
     }
 
     @Override
@@ -227,6 +294,8 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
                 recalculateBoundingBox();
             });
+        } else if (DEPTH_OFFSET.equals(data)) {
+            recalculateBoundingBox();
         }
 
         super.onSyncedDataUpdated(data);
@@ -235,8 +304,8 @@ public class ImmersivePaintingEntity extends HangingEntity {
     /*
      * Both direction and rotation need to be present in the spawn packet for the client
      * To avoid any issues with yaw/pitch being set externally, pack the values into entityData
-     * 
-     * 
+     *
+     *
      * NOTE: This will probably never need a change, but should direction become
      * larger than a byte there will need to be a way to future-proof this
      */
@@ -248,6 +317,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket packet) {
         super.recreateFromPacket(packet);
+        setPos(BlockPos.containing(packet.getX(), packet.getY(), packet.getZ()));
         int data = packet.getData();
         setDirection(Direction.from3DDataValue(data & 15), data >> 4);
     }
@@ -260,6 +330,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
         tag.putString("Material", tracker.get(MATERIAL).toString());
         tag.putInt("Facing", getDirection().get3DDataValue());
         tag.putInt("VRotation", rotation);
+        tag.putInt("DepthOffset", getDepthOffset());
         super.addAdditionalSaveData(tag);
     }
 
@@ -271,7 +342,8 @@ public class ImmersivePaintingEntity extends HangingEntity {
         setMaterial(Identifier.parse(input.getStringOr("Material", ImmersivePaintings.NONE_LOCATION.toString())));
         Direction direction = Direction.from3DDataValue(input.getIntOr("Facing", Direction.SOUTH.get3DDataValue()));
 
-        setDirection(direction, input.getIntOr("VRotation", 0));
+        setDepthOffset(input.getIntOr("DepthOffset", 0));
+        setDirection(direction, input.getIntOr("VRotation", input.getIntOr("Rotation", 0)));
         setMotive(Identifier.parse(input.getStringOr("Motive", ImmersivePaintings.NONE_LOCATION.toString())));
     }
 
@@ -285,6 +357,14 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
     public boolean isGlowing() {
         return false;
+    }
+
+    public int getDepthOffset() {
+        return getEntityData().get(DEPTH_OFFSET);
+    }
+
+    public void setDepthOffset(int offset) {
+        getEntityData().set(DEPTH_OFFSET, Mth.clamp(offset, -MAX_DEPTH_OFFSET, MAX_DEPTH_OFFSET));
     }
 
     public int getPaintingWidth() {

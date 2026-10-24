@@ -9,6 +9,7 @@ import net.conczin.immersive_paintings.Painting;
 import net.conczin.immersive_paintings.registry.Config;
 import net.conczin.immersive_paintings.resources.ObjectLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -30,6 +31,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
 public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T, ImmersivePaintingRenderState> {
+    private static final double GRAFFITI_DEPTH_SCALE = 4.0 / (Camera.PROJECTION_Z_NEAR * (1 << 24));
+
     public ImmersivePaintingRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
@@ -49,6 +52,7 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         state.yRot = entity.getYRot(partialTick);
         state.isGlowing = entity.isGlowing();
         state.isGraffiti = entity.isGraffiti();
+        state.wobble = entity.getWobble(partialTick);
         state.widthPixels = entity.getPaintingWidth() * 16;
         state.heightPixels = entity.getPaintingHeight() * 16;
 
@@ -93,6 +97,14 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-renderState.yRot));
         poseStack.mulPose(Axis.XP.rotationDegrees(-renderState.xRot));
+
+        if (renderState.isGraffiti) {
+            double radius = Math.hypot(renderState.widthPixels, renderState.heightPixels) / 32.0;
+            double rasterOffset = (Math.sqrt(renderState.distanceToCameraSq) + radius) * 2.0e-4;
+            poseStack.translate(0, 0, Math.max(rasterOffset, renderState.distanceToCameraSq * GRAFFITI_DEPTH_SCALE));
+        }
+
+        poseStack.mulPose(Axis.ZP.rotationDegrees(renderState.wobble));
         poseStack.scale(0.0625f, 0.0625f, 0.0625f);
 
         boolean hasFrame = !renderState.frame.equals(ImmersivePaintings.NONE_LOCATION);
