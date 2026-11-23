@@ -1,3 +1,7 @@
+# 0.8.1
+
+* Added `requireSolidSupport` 
+
 # 0.8.0
 
 * Added per-painting depth adjustment from -16 to +16 pixels

@@ -16,6 +16,7 @@ public class CommonConfig extends Config {
 
     public ConfigGroup generalGroup = new ConfigGroup("general");
     public boolean testIfSpaceEmpty = false;
+    public boolean requireSolidSupport = true;
     public boolean paintingsHaveCollision = false;
     public boolean canOnlyBeDestroyedByPlayer = false;
     public boolean showOtherPlayersPaintings = true;
