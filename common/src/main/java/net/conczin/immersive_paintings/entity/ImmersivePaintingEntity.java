@@ -155,7 +155,7 @@ public class ImmersivePaintingEntity extends HangingEntity {
 
         BlockPos blockPos = pos.relative(getDirection().getOpposite());
         BlockState blockState = level().getBlockState(blockPos);
-        if (!blockState.isSolid() && !DiodeBlock.isDiode(blockState)) {
+        if (Config.COMMON.requireSolidSupport && !blockState.isSolid() && !DiodeBlock.isDiode(blockState)) {
             return false;
         }
 

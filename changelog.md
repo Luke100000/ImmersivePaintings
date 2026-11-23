@@ -1,3 +1,8 @@
+# 0.8.1
+
+* Added `requireSolidSupport`
+* Fixed Graffiti not visible on Sable sublevels
+
 # 0.8.0
 
 * Added per-painting depth adjustment from -16 to +16 pixels
