@@ -25,6 +25,10 @@ import java.util.Optional;
 public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T> {
     private static final double GRAFFITI_DEPTH_SCALE = 4.0 / (GameRenderer.PROJECTION_Z_NEAR * (1 << 24));
 
+    // Sable and co compat
+    private static final double MAX_DEPTH_OFFSET_DISTANCE = 1024.0;
+    private static final double FALLBACK_DEPTH_OFFSET_DISTANCE = 64.0;
+
     public ImmersivePaintingEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
@@ -39,6 +43,9 @@ public class ImmersivePaintingEntityRenderer<T extends ImmersivePaintingEntity> 
 
         if (entity.isGraffiti()) {
             double distanceSquared = entityRenderDispatcher.distanceToSqr(entity);
+            if (distanceSquared > MAX_DEPTH_OFFSET_DISTANCE * MAX_DEPTH_OFFSET_DISTANCE) {
+                distanceSquared = FALLBACK_DEPTH_OFFSET_DISTANCE * FALLBACK_DEPTH_OFFSET_DISTANCE;
+            }
             double radius = Math.hypot(entity.getPaintingWidth(), entity.getPaintingHeight()) * 0.5;
             double rasterOffset = (Math.sqrt(distanceSquared) + radius) * 2.0e-4;
             poses.translate(0, 0, Math.max(rasterOffset, distanceSquared * GRAFFITI_DEPTH_SCALE));

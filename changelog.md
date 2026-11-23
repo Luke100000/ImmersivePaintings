@@ -1,6 +1,7 @@
 # 0.8.1
 
-* Added `requireSolidSupport` 
+* Added `requireSolidSupport`
+* Fixed Graffiti not visible on Sable sublevels
 
 # 0.8.0
 
