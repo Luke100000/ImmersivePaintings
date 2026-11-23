@@ -33,6 +33,10 @@ import com.mojang.math.Axis;
 public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extends EntityRenderer<T, ImmersivePaintingRenderState> {
     private static final double GRAFFITI_DEPTH_SCALE = 4.0 / (Camera.PROJECTION_Z_NEAR * (1 << 24));
 
+    // Sable and co compat
+    private static final double MAX_DEPTH_OFFSET_DISTANCE = 1024.0;
+    private static final double FALLBACK_DEPTH_OFFSET_DISTANCE = 64.0;
+
     public ImmersivePaintingRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
@@ -99,9 +103,13 @@ public class ImmersivePaintingRenderer<T extends ImmersivePaintingEntity> extend
         poseStack.mulPose(Axis.XP.rotationDegrees(-renderState.xRot));
 
         if (renderState.isGraffiti) {
+            double distanceSquared = renderState.distanceToCameraSq;
+            if (distanceSquared > MAX_DEPTH_OFFSET_DISTANCE * MAX_DEPTH_OFFSET_DISTANCE) {
+                distanceSquared = FALLBACK_DEPTH_OFFSET_DISTANCE * FALLBACK_DEPTH_OFFSET_DISTANCE;
+            }
             double radius = Math.hypot(renderState.widthPixels, renderState.heightPixels) / 32.0;
-            double rasterOffset = (Math.sqrt(renderState.distanceToCameraSq) + radius) * 2.0e-4;
-            poseStack.translate(0, 0, Math.max(rasterOffset, renderState.distanceToCameraSq * GRAFFITI_DEPTH_SCALE));
+            double rasterOffset = (Math.sqrt(distanceSquared) + radius) * 2.0e-4;
+            poseStack.translate(0, 0, Math.max(rasterOffset, distanceSquared * GRAFFITI_DEPTH_SCALE));
         }
 
         poseStack.mulPose(Axis.ZP.rotationDegrees(renderState.wobble));
