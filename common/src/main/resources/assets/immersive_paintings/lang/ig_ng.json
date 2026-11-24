@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Ntọala Mmasị",
   "config.immersive_paintings.client.generalGroup": "Ntọala Izugbe",
   "config.immersive_paintings.client.advancedGroup": "Ntọala Mmasị",
+  "config.immersive_paintings.common.requireSolidSupport": "Chọọ nkwado siri ike",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ọ bụrụ na e gbanyụrụ ya, a pụrụ itinye eserese na graffiti n'elu blọk ọ bụla, gụnyere ikuku.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Nyocha ma Ebe eserese adịghị",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Kwe ka e nyochaa ebe eserese n'ime sekọnd 5. Ịkwụsịghị nke a na-azọpụta ọtụtụ ọrụ sava",
   "config.immersive_paintings.common.paintingsHaveCollision": "Eserese nwere njikọ",
