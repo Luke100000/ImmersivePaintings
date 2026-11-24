@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Izvērstie iestatījumi",
   "config.immersive_paintings.client.generalGroup": "Vispārīgie iestatījumi",
   "config.immersive_paintings.client.advancedGroup": "Izvērstie iestatījumi",
+  "config.immersive_paintings.common.requireSolidSupport": "Nepieciešams stabils atbalsts",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ja šī funkcija ir atspējota, gleznas un grafiti var novietot uz jebkura bloka, ieskaitot gaisa telpu.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Tests, ja gleznošanas telpa ir tukša",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Iespējot vietas pārbaudi gleznām ik pēc 5 sekundēm. Šīs funkcijas atspējošana ļauj ietaupīt daudz servera skaitļošanas",
   "config.immersive_paintings.common.paintingsHaveCollision": "Gleznām ir sadursmes",
