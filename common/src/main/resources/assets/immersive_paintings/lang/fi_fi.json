@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Edistyneet Asetukset",
   "config.immersive_paintings.client.generalGroup": "Yleiset Asetukset",
   "config.immersive_paintings.client.advancedGroup": "Edistyneet Asetukset",
+  "config.immersive_paintings.common.requireSolidSupport": "Vaadi Kiinteä Tuki",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Jos pois päältä, maalauksia ja graffitia voidaan sijoittaa mihin tahansa lohkoon, myös ilmaan.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testaa Jos Maalaustila Tyhjä",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Ota käyttöön tilan tarkistus 5 sekunnin välein. Tämän poistaminen käytöstä tallentaa paljon palvelintietokonetta",
   "config.immersive_paintings.common.paintingsHaveCollision": "Maalauksia On Yhteentörmäyksiä",
