@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "高级设置",
   "config.immersive_paintings.client.generalGroup": "常规设置",
   "config.immersive_paintings.client.advancedGroup": "高级设置",
+  "config.immersive_paintings.common.requireSolidSupport": "需要实心支持",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "如果禁用，绘画和涂鸦可以放在任何区块上，包括空气。",
   "config.immersive_paintings.common.testIfSpaceEmpty": "如果绘画空间为空",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "每隔5秒启用绘画空间检查。禁用这将节省许多服务器的计算",
   "config.immersive_paintings.common.paintingsHaveCollision": "绘制具有碰撞性",
