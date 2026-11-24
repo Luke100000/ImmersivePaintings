@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Алга киткән көйләүләр",
   "config.immersive_paintings.client.generalGroup": "Генерал көйләүләр",
   "config.immersive_paintings.client.advancedGroup": "Алга киткән көйләүләр",
+  "config.immersive_paintings.common.requireSolidSupport": "Ышанычлы ярдәм таләп ителә",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Әгәр сүндерелгән булса, картиналар һәм граффити теләсә кайсы блокка, шул исәптән һава блокларына да урнаштырылырга мөмкин.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Рәсем урынының бушлыгын тикшерегез",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Рәсемнәр өчен 5 секунд саен бушлыкны тикшерүне көчкә китерегез. Бу сүндерү сервер компьютерын күп саклый.",
   "config.immersive_paintings.common.paintingsHaveCollision": "Рәсемнәр арасында бәрелешләр бар",
