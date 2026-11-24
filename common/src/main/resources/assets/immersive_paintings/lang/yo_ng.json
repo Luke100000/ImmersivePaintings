@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Àwọn Ìtọ́sọ́nà To ti ni ìmọ̀",
   "config.immersive_paintings.client.generalGroup": "Àwọn Ìtọ́sọ́nà Gbogbogbo",
   "config.immersive_paintings.client.advancedGroup": "Àwọn Ìtọ́sọ́nà To ti ni ìmọ̀",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test If Painting Space Empty",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Mú àyẹ̀wò àyè fún iṣẹ́ ọnà pọ̀ ní gbogbo iṣẹ́ ìṣẹ́jú 5. Ṣíṣí ìwọ̀n yìí pa dà ń fipamọ́ ẹ̀sìn jù lọ",
   "config.immersive_paintings.common.paintingsHaveCollision": "Àwọn iṣẹ́ ọnà ní ikọsílẹ̀",
