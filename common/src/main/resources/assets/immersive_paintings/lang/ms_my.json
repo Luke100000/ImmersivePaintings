@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Tetapan Lanjutan",
   "config.immersive_paintings.client.generalGroup": "Tetapan Am",
   "config.immersive_paintings.client.advancedGroup": "Tetapan Lanjutan",
+  "config.immersive_paintings.common.requireSolidSupport": "Perlukan sokongan kukuh",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Jika dilumpuhkan, lukisan dan grafiti boleh diletakkan pada mana-mana blok, termasuk udara.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Uji Jika Ruang Lukisan Kosong",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktifkan semakan ruang untuk lukisan setiap 5 saat. Menonaktifkan ini menjimatkan banyak pemprosesan server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Lukisan Mempunyai Perlanggaran",
