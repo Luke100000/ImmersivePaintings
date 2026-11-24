@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "மேம்பட்ட செயல்முறைகள்",
   "config.immersive_paintings.client.generalGroup": "பொதுவான செயல்முறைகள்",
   "config.immersive_paintings.client.advancedGroup": "மேம்பட்ட செயல்முறைகள்",
+  "config.immersive_paintings.common.requireSolidSupport": "உறுதியான ஆதரவு தேவை",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "முடக்கப்பட்டிருந்தால், ஓவியங்களையும் சுவரோவியங்களையும் காற்று உட்பட எந்தவொரு கட்டத்திலும் வைக்கலாம்.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "ஓவிய இடம் காலியாக உள்ளதா என சோதிக்கவும்",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "ஒவ்வொரு 5 விநாடிக்கு ஓவியங்களுக்கான இடம் சோதிக்கவும். இது செயலிழக்கும் போது சேவையக கணக்கீட்டை நீக்குகிறது",
   "config.immersive_paintings.common.paintingsHaveCollision": "ஓவியங்கள் மோதல்கள் உள்ளன",
