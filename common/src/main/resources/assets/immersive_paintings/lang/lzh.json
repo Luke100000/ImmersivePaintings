@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "高级设置",
   "config.immersive_paintings.client.generalGroup": "一般设置",
   "config.immersive_paintings.client.advancedGroup": "高级设置",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "测试画作空间是否为空",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "每 5 秒检查一次画作空间。禁用此项可以节省大量服务器计算",
   "config.immersive_paintings.common.paintingsHaveCollision": "画作有碰撞",
