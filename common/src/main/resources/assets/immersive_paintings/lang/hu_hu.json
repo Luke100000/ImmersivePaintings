@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Speciális beállítások",
   "config.immersive_paintings.client.generalGroup": "Általános beállítások",
   "config.immersive_paintings.client.advancedGroup": "Speciális beállítások",
+  "config.immersive_paintings.common.requireSolidSupport": "Szilárd támogatásra van szükség",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ha ez a beállítás ki van kapcsolva, a festmények és a graffitik bármelyik blokkra elhelyezhetők, beleértve a levegőt is.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Tesztelés, ha a festési hely üres",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Engedélyezze a festmények 5 másodpercenkénti helyellenőrzését. Ennek kikapcsolása sok szerver számítási kapacitást takarít meg.",
   "config.immersive_paintings.common.paintingsHaveCollision": "A festmények ütköznek",
