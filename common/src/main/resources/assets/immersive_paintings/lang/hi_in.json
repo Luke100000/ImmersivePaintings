@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "उन्नत सेटिंग्स",
   "config.immersive_paintings.client.generalGroup": "सामान्य सेटिंग्स",
   "config.immersive_paintings.client.advancedGroup": "उन्नत सेटिंग्स",
+  "config.immersive_paintings.common.requireSolidSupport": "मजबूत समर्थन आवश्यक है",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "यदि अक्षम किया गया हो, तो चित्र और ग्रैफिटी किसी भी ब्लॉक पर, हवा सहित, रखे जा सकते हैं।",
   "config.immersive_paintings.common.testIfSpaceEmpty": "परीक्षा करें कि चित्र स्थान खाली है या नहीं",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "हर 5 सेकंड में चित्रों के लिए स्थान जांच सक्षम करें। इसे बंद करने से सर्वर की गणना बचती है",
   "config.immersive_paintings.common.paintingsHaveCollision": "चित्रों में टकराव होता है",
