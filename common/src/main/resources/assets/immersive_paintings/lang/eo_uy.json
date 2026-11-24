@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Progresintaj Agordoj",
   "config.immersive_paintings.client.generalGroup": "Ĝeneralaj Agordoj",
   "config.immersive_paintings.client.advancedGroup": "Progresintaj Agordoj",
+  "config.immersive_paintings.common.requireSolidSupport": "Postulu solidan subtenon",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Se malŝaltita, pentraĵoj kaj grafitioj povas esti metitaj sur iun ajn blokon, inkluzive de aero.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testu se la pentraĵa spaco estas malplena",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivigi spacon kontrolu por pentraĵoj ĉiun 5 sekundojn. Malŝalti ĉi tion savas multe da komputila potenco en la servilo",
   "config.immersive_paintings.common.paintingsHaveCollision": "Pentraĵoj Havas Koliziojn",
