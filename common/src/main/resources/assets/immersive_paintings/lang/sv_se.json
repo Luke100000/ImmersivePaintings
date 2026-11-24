@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avancerade inställningar",
   "config.immersive_paintings.client.generalGroup": "Allmänna inställningar",
   "config.immersive_paintings.client.advancedGroup": "Avancerade inställningar",
+  "config.immersive_paintings.common.requireSolidSupport": "Kräv fast support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Om den är funktionshindrad kan målningar och graffiti placeras på vilket block som helst, inklusive luft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testa om måleriet är tomt",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivera utrymmeskontroll för målningar var femte sekund. Inaktivera detta sparar en hel del server beräkna",
   "config.immersive_paintings.common.paintingsHaveCollision": "Målningar har kollisioner",
