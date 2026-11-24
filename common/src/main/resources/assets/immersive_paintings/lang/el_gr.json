@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Ρυθμίσεις Για Προχωρημένους",
   "config.immersive_paintings.client.generalGroup": "Γενικές Ρυθμίσεις",
   "config.immersive_paintings.client.advancedGroup": "Ρυθμίσεις Για Προχωρημένους",
+  "config.immersive_paintings.common.requireSolidSupport": "Απαιτείται Υποστήριξη Στερεών",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Εάν απενεργοποιηθεί, πίνακες και γκράφιτι μπορούν να τοποθετηθούν σε οποιοδήποτε τετράγωνο, συμπεριλαμβανομένου του αέρα.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Δοκιμή Αν Χώρο Ζωγραφικής Κενό",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Ενεργοποίηση ελέγχου χώρου για πίνακες ζωγραφικής κάθε 5 δευτερόλεπτα. Η απενεργοποίηση αυτού αποθηκεύει πολλούς υπολογιστές διακομιστή",
   "config.immersive_paintings.common.paintingsHaveCollision": "Ζωγραφική Έχουν Συγκρούσεις",
