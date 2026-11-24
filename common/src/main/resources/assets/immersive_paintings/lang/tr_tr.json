@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Gelişmiş Ayarlar",
   "config.immersive_paintings.client.generalGroup": "Genel Ayarlar",
   "config.immersive_paintings.client.advancedGroup": "Gelişmiş Ayarlar",
+  "config.immersive_paintings.common.requireSolidSupport": "Güçlü Destek Gerekiyor",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Bu özellik devre dışı bırakıldığında, resimler ve grafiti, hava dahil olmak üzere herhangi bir bloğa yerleştirilebilir.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Boyama Alanının Boş Olup Olmadığını Test Edin",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Her 5 saniyede bir resimler için alan kontrolünü etkinleştirin. Bunu devre dışı bırakmak çok fazla sunucu işleminden tasarruf sağlar",
   "config.immersive_paintings.common.paintingsHaveCollision": "Resimlerin Çarpışması Vardır",
