@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "고급 설정",
   "config.immersive_paintings.client.generalGroup": "일반 설정",
   "config.immersive_paintings.client.advancedGroup": "고급 설정",
+  "config.immersive_paintings.common.requireSolidSupport": "확실한 지원이 필요합니다",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "이 기능을 비활성화하면 그림과 그래피티를 공중을 포함한 모든 블록에 배치할 수 있습니다.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "페인팅 공간이 비어 있는지 테스트",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "5초마다 그림에 대한 공간 확인을 사용하도록 설정합니다. 이 기능을 비활성화하면 서버 컴퓨팅을 많이 절약할 수 있습니다.",
   "config.immersive_paintings.common.paintingsHaveCollision": "그림에 충돌이 있습니다",
