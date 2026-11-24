@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Geavanceerde Instellingen",
   "config.immersive_paintings.client.generalGroup": "Algemene Groep Instellingen",
   "config.immersive_paintings.client.advancedGroup": "Geavanceerde Instellingen",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test of schilderijruimte leeg is",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Controleer de ruimte voor schilderieë elke 5 seconde. Het afschakelen hiervan bespaart veel serverkracht",
   "config.immersive_paintings.common.paintingsHaveCollision": "Schilderieë hebbe botsingen",
