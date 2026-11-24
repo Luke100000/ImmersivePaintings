@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Розширені налаштування",
   "config.immersive_paintings.client.generalGroup": "Загальні налаштування",
   "config.immersive_paintings.client.advancedGroup": "Розширені налаштування",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Перевірити, чи пустий простір для малюнків",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Увімкнути перевірку простору для малюнків кожні 5 секунд. Вимкнення цього заощаджує багато серверних ресурсів",
   "config.immersive_paintings.common.paintingsHaveCollision": "Малюнки мають колізії",
