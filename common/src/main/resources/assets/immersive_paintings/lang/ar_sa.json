@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "الإعدادات المتقدمة",
   "config.immersive_paintings.client.generalGroup": "الإعدادات العامة",
   "config.immersive_paintings.client.advancedGroup": "الإعدادات المتقدمة",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "اختبر إذا كانت مساحة اللوحة فارغة",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "قم بتمكين فحص الفضاء من أجل اللوحات كل 5 ثوانٍ. تعطيل هذا يوفر الكثير من معالجة الخادم",
   "config.immersive_paintings.common.paintingsHaveCollision": "اللوحات لها تصادمات",
