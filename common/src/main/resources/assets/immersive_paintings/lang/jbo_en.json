@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "lo nu sruri morji",
   "config.immersive_paintings.client.generalGroup": "lo nu sruri selci",
   "config.immersive_paintings.client.advancedGroup": "lo nu sruri morji",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "testi lo nu fenga cu zutse",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "cairca lo nu fenga ca lo 5 segundu. palta lo nu ca lo server cu se spofu",
   "config.immersive_paintings.common.paintingsHaveCollision": "lo fenga cu se jerna",
