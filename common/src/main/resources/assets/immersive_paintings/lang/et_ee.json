@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Täiustatud seaded",
   "config.immersive_paintings.client.generalGroup": "Üldised seaded",
   "config.immersive_paintings.client.advancedGroup": "Täiustatud seaded",
+  "config.immersive_paintings.common.requireSolidSupport": "Vajab kindlat tuge",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Kui see funktsioon on välja lülitatud, võib maalid ja graffitid paigutada mis tahes plokile, sealhulgas õhku.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testi, kas värvimisruum on tühi",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Lubage maalide ruumikontroll iga 5 sekundi järel. Selle väljalülitamine säästab palju serveri arvutusmahtu.",
   "config.immersive_paintings.common.paintingsHaveCollision": "Maalid on kokkupõrked",
