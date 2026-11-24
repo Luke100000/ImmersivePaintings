@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Сонгомол тохиргоо",
   "config.immersive_paintings.client.generalGroup": "Ерөнхий тохиргооны бүлэг",
   "config.immersive_paintings.client.advancedGroup": "Сонгомол тохиргоо",
+  "config.immersive_paintings.common.requireSolidSupport": "Бат бөх дэмжлэг шаардана",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Хэрэв идэвхгүй болгосон бол зургууд болон граффитиг агаар багтаж аливаа блок дээр байрлуулж болно.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Зургийн орон зайг хоосон эсэхийг шалгах",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Зургийн орон зайг 5 секундын давтамжтай шалгана. Энэ функцын нүүрийг хаах нь серверийн тооцооллыг ихээхэн хөнгөвчилнө",
   "config.immersive_paintings.common.paintingsHaveCollision": "Зургуудын мөргөлдөөн",
