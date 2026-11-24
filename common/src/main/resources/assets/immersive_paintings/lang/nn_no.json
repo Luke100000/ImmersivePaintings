@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avanserte innstillingar",
   "config.immersive_paintings.client.generalGroup": "Generelle innstillingar",
   "config.immersive_paintings.client.advancedGroup": "Avanserte innstillingar",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test om måleriplassen er tom",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktiver plasskontroll for måleriar kvar 5 sekund. Å deaktivere dette sparar mykje serverkapasitet",
   "config.immersive_paintings.common.paintingsHaveCollision": "Måleriar har kollisjonar",
