@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Settyans Uhel",
   "config.immersive_paintings.client.generalGroup": "Settyans Generel",
   "config.immersive_paintings.client.advancedGroup": "Settyans Uhel",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testha Mena Res yl Dewhans Arghes",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Yma gwell gul he syoth ow kelwel rag pleynd ow senne liw 5 ewned. An darmyon y whath a-sett ne dhyn gasa morley",
   "config.immersive_paintings.common.paintingsHaveCollision": "Oma pleynd hwi a gelwel",
