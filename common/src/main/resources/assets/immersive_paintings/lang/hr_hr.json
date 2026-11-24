@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Napredne postavke",
   "config.immersive_paintings.client.generalGroup": "Opće postavke",
   "config.immersive_paintings.client.advancedGroup": "Napredne postavke",
+  "config.immersive_paintings.common.requireSolidSupport": "Zahtijevajte čvrstu podršku",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ako je omogućeno, slike i grafiti mogu se postaviti na bilo koji blok, uključujući zrak.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testiraj je li prostor za slike prazan",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Omogući provjeru prostora za slike svake 5 sekundi. Onemogućavanje ovog štedi puno server resursa",
   "config.immersive_paintings.common.paintingsHaveCollision": "Slike imaju kolizije",

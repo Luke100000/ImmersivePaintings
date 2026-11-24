@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Gevorderde Instellings",
   "config.immersive_paintings.client.generalGroup": "Generiese Instellings",
   "config.immersive_paintings.client.advancedGroup": "Gevorderde Instellings",
+  "config.immersive_paintings.common.requireSolidSupport": "Vereis stewige ondersteuning",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "As dit gedeaktiveer is, kan skilderye en graffiti op enige blok geplaas word, insluitend lug.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Toets of skilderyspeletjie leeg is",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktiveer spasie toets vir skilderye elke 5 sekondes. Deaktiveer dit om baie bediener rekenaarverwerkings tyd te spaar",
   "config.immersive_paintings.common.paintingsHaveCollision": "Skilderye het kollisies",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Додаткові параметри",
   "config.immersive_paintings.client.generalGroup": "Загальні налаштування",
   "config.immersive_paintings.client.advancedGroup": "Додаткові параметри",
+  "config.immersive_paintings.common.requireSolidSupport": "Вимагати суцільної підтримки",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Якщо це вимкнено, картини та графіті можна розмістити на будь-якому блоці, включаючи повітря.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Тестувати, якщо простір для малюнку порожній",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Увімкнути перевірку простору для малюнків кожні 5 секунд. Вимкнення цього дозволяє здійснювати обчислення на сервері",
   "config.immersive_paintings.common.paintingsHaveCollision": "Картини з колізіями",

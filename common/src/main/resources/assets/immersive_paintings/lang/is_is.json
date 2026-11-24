@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Fyrirferðarmiklar stillingar",
   "config.immersive_paintings.client.generalGroup": "Almennar stillingar",
   "config.immersive_paintings.client.advancedGroup": "Fyrirferðarmiklar stillingar",
+  "config.immersive_paintings.common.requireSolidSupport": "Krefst trausts stuðnings",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ef þetta er óvirkjað er hægt að setja málverk og veggjakrot á hvaða blokk sem er, þar á meðal loft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Prófaðu hvort myndarýmið sé autt",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Virkja rýmisathugun fyrir myndir á 5 sekúndna fresti. Að slökkva á þessu sparar mikið af útreikningi á þjóninum",
   "config.immersive_paintings.common.paintingsHaveCollision": "Myndir hafa árekstra",

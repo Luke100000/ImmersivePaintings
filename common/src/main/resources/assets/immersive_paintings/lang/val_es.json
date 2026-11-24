@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Configuracions avançades",
   "config.immersive_paintings.client.generalGroup": "Configuracions generals",
   "config.immersive_paintings.client.advancedGroup": "Configuracions avançades",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Prova si l'espai de pintura està buit",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Activar la comprovació d'espai per a les pintures cada 5 segons. Desactivar això estalvia molta capacitat del servidor",
   "config.immersive_paintings.common.paintingsHaveCollision": "Les pintures tenen col·lisions",

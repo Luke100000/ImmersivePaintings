@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Cài đặt nâng cao",
   "config.immersive_paintings.client.generalGroup": "Cài đặt chung",
   "config.immersive_paintings.client.advancedGroup": "Cài đặt nâng cao",
+  "config.immersive_paintings.common.requireSolidSupport": "Cần có sự hỗ trợ vững chắc",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Nếu tính năng này bị tắt, các bức tranh và hình vẽ graffiti có thể được đặt trên bất kỳ ô nào, kể cả ô trống.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Kiểm tra xem không gian sơn có trống không",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Bật tính năng kiểm tra không gian cho các bức tranh mỗi 5 giây. Tắt tính năng này sẽ tiết kiệm đáng kể tài nguyên tính toán của máy chủ.",
   "config.immersive_paintings.common.paintingsHaveCollision": "Bức tranh va chạm",

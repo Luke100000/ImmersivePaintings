@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Consilia Avançata",
   "config.immersive_paintings.client.generalGroup": "Consilia Generalia",
   "config.immersive_paintings.client.advancedGroup": "Consilia Avançata",
+  "config.immersive_paintings.common.requireSolidSupport": "Sustentaculum Firmum Postula",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Si habilitata est, picturae et graffiti in quolibet spatio, etiam aere, poni possunt.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Teste Si Spatium Picturae Vacuum Est",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Sistens spatii inspectionem pro picturis omni quinto secundo. Hanc desinendo plures computatus servatori servat",
   "config.immersive_paintings.common.paintingsHaveCollision": "Picturae Collisiones Habent",

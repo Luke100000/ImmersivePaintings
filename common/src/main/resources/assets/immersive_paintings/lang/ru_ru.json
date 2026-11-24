@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Расширенные настройки",
   "config.immersive_paintings.client.generalGroup": "Общие настройки",
   "config.immersive_paintings.client.advancedGroup": "Расширенные настройки",
+  "config.immersive_paintings.common.requireSolidSupport": "Требуется твердая поддержка",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Если отключено, картины и граффити могут быть размещены на любом блоке, в том числе в воздухе.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Проверка пустого места для картины",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Включите проверку пространства для картин каждые 5 секунд. Если отключить эту функцию, нагрузка на сервер значительно снизится",
   "config.immersive_paintings.common.paintingsHaveCollision": "Картины имеют коллизию",

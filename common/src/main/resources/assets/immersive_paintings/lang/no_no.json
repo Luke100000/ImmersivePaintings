@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avanserte innstillinger",
   "config.immersive_paintings.client.generalGroup": "Generelle innstillinger",
   "config.immersive_paintings.client.advancedGroup": "Avanserte innstillinger",
+  "config.immersive_paintings.common.requireSolidSupport": "Krev Solid støtte",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Hvis deaktivert, kan malerier og graffiti plasseres på alle blokker, inkludert luft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test hvis Painting Space er tom",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktiver mellomromskontroll for malinger hvert 5 sekunder. Deaktivering av dette lagrer mye server beregner",
   "config.immersive_paintings.common.paintingsHaveCollision": "Maling Ha kollisjoner",

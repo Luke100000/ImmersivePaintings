@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Үҫеш көйләүҙәре",
   "config.immersive_paintings.client.generalGroup": "Генераль көйләүҙәр",
   "config.immersive_paintings.client.advancedGroup": "Үҫеш көйләүҙәре",
+  "config.immersive_paintings.common.requireSolidSupport": "Ышаныслы ярҙам талап ителә",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Әгәр ул һүндерелгән булһа, картиналарҙы һәм граффитиҙы теләһә ниндәй блокҡа, шул иҫәптән һауаға ла ҡуйырға мөмкин.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Рәсем урыны бушмы икәнен тикшерегеҙ",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Рәсемдәр өсөн бушлыҡты 5 секунд һайын тикшерегәндә мөмкин. Буну сүндергәндә сервер иҫәпләүе күпкә яйлы",
   "config.immersive_paintings.common.paintingsHaveCollision": "Рәсемдәрҙең бәрелештәре бар",

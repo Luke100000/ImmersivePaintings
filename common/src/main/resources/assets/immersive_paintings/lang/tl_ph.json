@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Mga Advanced na Setting",
   "config.immersive_paintings.client.generalGroup": "Pangkalahatang Mga Setting",
   "config.immersive_paintings.client.advancedGroup": "Mga Advanced na Setting",
+  "config.immersive_paintings.common.requireSolidSupport": "Kailangan ng matibay na suporta",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Kung naka-disable, maaaring ilagay ang mga pinta at graffiti sa anumang bloke, pati na sa hangin.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Suriin Kung Walang Nilalaman ang Puwang ng Pintura",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "I-enable ang pagsusuri ng puwang para sa mga pintura tuwing 5 segundo. Ang pag-disable nito ay nagse-save ng maraming compute ng server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Nagkakaroon ng mga Pagbangga ang mga Pintura",

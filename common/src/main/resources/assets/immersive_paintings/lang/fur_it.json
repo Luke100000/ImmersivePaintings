@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Impostazions Avanzadis",
   "config.immersive_paintings.client.generalGroup": "Impostazions Generâl",
   "config.immersive_paintings.client.advancedGroup": "Impostazions Avanzadis",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testâ se il spazi dei dipint al è vuot",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Abilita il control del spazi par i dipint ogni 5 secondi. Disabilitâ chest al risparmiâ tant risorse dal server",
   "config.immersive_paintings.common.paintingsHaveCollision": "I dipint àn collisioni",

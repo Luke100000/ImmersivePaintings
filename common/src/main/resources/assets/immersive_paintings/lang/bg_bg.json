@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Разширени настройки",
   "config.immersive_paintings.client.generalGroup": "Общи настройки",
   "config.immersive_paintings.client.advancedGroup": "Разширени настройки",
+  "config.immersive_paintings.common.requireSolidSupport": "Необходима е солидна подкрепа",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ако тази опция е деактивирана, картините и графитите могат да се поставят върху всеки блок, включително и във въздуха.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Тест дали пространството за рисуване е празно",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Активирайте проверката на пространството за картини на всеки 5 секунди. Деактивирането на тази функция спестява много изчисления на сървъра",
   "config.immersive_paintings.common.paintingsHaveCollision": "Картините имат сблъсъци",

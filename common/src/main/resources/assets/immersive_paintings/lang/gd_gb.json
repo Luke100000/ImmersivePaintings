@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Seataidhean Adhartach",
   "config.immersive_paintings.client.generalGroup": "Seataidhean Coitcheann",
   "config.immersive_paintings.client.advancedGroup": "Seataidhean Adhartach",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Deuchainn ma tha an t-eòlas peantadh falamh",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Cuir comhairle air a' t-seiche airson peantaidhean gach 5 diogan. A' cur dheth seo a' sàbhaladh mòran de chomas seirbheis",
   "config.immersive_paintings.common.paintingsHaveCollision": "Tha Càich Peantaidhean",

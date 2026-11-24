@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Fördere Einstellungen",
   "config.immersive_paintings.client.generalGroup": "Allgemeine Einstellungen",
   "config.immersive_paintings.client.advancedGroup": "Fördere Einstellungen",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testen, ob der Målplatz leer is",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktiviere den Platzcheck för Molen alle 5 Sekunden. Deaktivieren, spar den Server rechen",
   "config.immersive_paintings.common.paintingsHaveCollision": "Molen hebben Kollisionen",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Advanced na Mga Setting",
   "config.immersive_paintings.client.generalGroup": "Pangkalahatang Mga Setting",
   "config.immersive_paintings.client.advancedGroup": "Advanced na Mga Setting",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Subukan Kung Walang Painting Space",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "I-enable ang pagsusuri sa espasyo para sa mga painting tuwing 5 segundo. Ang pag-disable nito ay nag-save ng maraming compute sa server",
   "config.immersive_paintings.common.paintingsHaveCollision": "May mga Pagtalbog ang mga Painting",

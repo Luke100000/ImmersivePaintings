@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "უახლესი პარამეტრები",
   "config.immersive_paintings.client.generalGroup": "ზოგადი პარამეტრები",
   "config.immersive_paintings.client.advancedGroup": "უახლესი პარამეტრები",
+  "config.immersive_paintings.common.requireSolidSupport": "მყარი მხარდაჭერა აუცილებელია",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "გამორთვის შემთხვევაში, მხატვრობა და გრაფიტი შეიძლება განთავსდეს ნებისმიერ ბლოკზე, მათ შორის ჰაერზეც.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "შემოწმეთ, არის თუ არა ნახატების ადგილი ცარიელი",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "განყოფილების შემოწევის დაკვეთა 5 წამში. ამ ფუნქციის отключება მნიშვნელოვნად ჩამოწერს სერვერის დატვირთვას",
   "config.immersive_paintings.common.paintingsHaveCollision": "ნახატებზე ინტერექცია",

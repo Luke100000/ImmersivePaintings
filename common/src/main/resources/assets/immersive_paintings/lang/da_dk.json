@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avancerede Indstillinger",
   "config.immersive_paintings.client.generalGroup": "Generelle Indstillinger",
   "config.immersive_paintings.client.advancedGroup": "Avancerede Indstillinger",
+  "config.immersive_paintings.common.requireSolidSupport": "Kræver Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Hvis deaktiveret, kan malerier og graffiti placeres på en hvilken som helst blok, herunder luft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test Hvis Malerplads Tom",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivér pladstjek for malerier hvert 5. sekund. Deaktivering af dette gemmer en masse serverberegninger",
   "config.immersive_paintings.common.paintingsHaveCollision": "Malerier Har Kollisioner",

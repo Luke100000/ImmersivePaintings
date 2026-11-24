@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Mizaret Livañ",
   "config.immersive_paintings.client.generalGroup": "Mizaret Frank",
   "config.immersive_paintings.client.advancedGroup": "Mizaret Livañ",
+  "config.immersive_paintings.common.requireSolidSupport": "Goulenn ur skoazell solut",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ma vez diweredekaet, e c'haller lakaat livadurioù ha graffiti war n'eus forzh peseurt bloc'h, en o zouez an aer.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test da welet ma 'z eus palmou war an skeudenn",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Dibabit ar bezh da wiriañ skeudennoù e 5 eured. Disablout an dra-se a c'houlenn ur bern prientiñ war an server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Emañ ar skeudennoù o c'holl",

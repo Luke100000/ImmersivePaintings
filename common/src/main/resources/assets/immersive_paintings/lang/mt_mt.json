@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Impostazzjonijiet Avvanzati",
   "config.immersive_paintings.client.generalGroup": "Impostazzjonijiet Ġenerali",
   "config.immersive_paintings.client.advancedGroup": "Impostazzjonijiet Avvanzati",
+  "config.immersive_paintings.common.requireSolidSupport": "Teħtieġ appoġġ sod",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Jekk diżattivati, pitturi u graffiti jistgħu jitpoġġew fuq kwalunkwe blokka, inkluż l-arja.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Itestja jekk il-Kiżża tal-Pittura tkunx Voida",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Attiva l-iċċekkjar tal-ispazju għall-pitturi kull 5 sekondi. Id-diżattivazzjoni ta' dan tiffranka ħafna proċessur tas-server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Il-Pitturi Għandhom Kollisioni",

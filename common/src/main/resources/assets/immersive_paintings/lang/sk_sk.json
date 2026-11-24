@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Rozšírené nastavenia",
   "config.immersive_paintings.client.generalGroup": "Všeobecné nastavenia",
   "config.immersive_paintings.client.advancedGroup": "Rozšírené nastavenia",
+  "config.immersive_paintings.common.requireSolidSupport": "Je potrebná spoľahlivá podpora",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Ak je táto funkcia vypnutá, obrazy a graffiti je možné umiestňovať na akýkoľvek blok, vrátane vzduchu.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testovanie, či je priestor na maľovanie prázdny",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Povolenie kontroly priestoru pre obrazy každých 5 sekúnd. Vypnutím tejto funkcie sa ušetrí veľa výpočtovej kapacity servera",
   "config.immersive_paintings.common.paintingsHaveCollision": "Obrazy majú kolízie",

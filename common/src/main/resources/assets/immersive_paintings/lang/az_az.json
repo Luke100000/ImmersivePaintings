@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "İrəliləmiş Parametrlər",
   "config.immersive_paintings.client.generalGroup": "Ümumi Parametrlər",
   "config.immersive_paintings.client.advancedGroup": "İrəliləmiş Parametrlər",
+  "config.immersive_paintings.common.requireSolidSupport": "Müstəhkəm dəstək tələb edin",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Əgər söndürülmüşdürsə, rəsm əsərləri və qraffiti istənilən blokun üzərinə, hava blokları da daxil olmaqla, yerləşdirilə bilər.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Rəngləmə sahəsinin boş olduğunu test et",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Rəngləmələr üçün sahə yoxlamasını hər 5 saniyədən bir aktiv edin. Bunu deaktiv etmək çoxlu server hesablamağı saxlayır",
   "config.immersive_paintings.common.paintingsHaveCollision": "Rəngləmələr toqquşmalar var",

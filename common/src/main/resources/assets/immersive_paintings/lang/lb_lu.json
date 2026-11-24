@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Fortgeschratt Astellungen",
   "config.immersive_paintings.client.generalGroup": "Allgemeng Astellungen",
   "config.immersive_paintings.client.advancedGroup": "Fortgeschratt Astellungen",
+  "config.immersive_paintings.common.requireSolidSupport": "Solide Ënnerstëtzung verlaangen",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Wann dech aktivéiert ass, kënnen Molereien a Graffiti op all Block gesat ginn, och op Loft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test ob de Moolraum eidel ass",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivéiert den Raumcheck fir Molen all 5 Sekonnen. D'Ofschaltung spuert vill Serververaarbechtung",
   "config.immersive_paintings.common.paintingsHaveCollision": "Molen hunn Kollisionen",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Erweiterte Einstellungen",
   "config.immersive_paintings.client.generalGroup": "Allgemeine Einstellungen",
   "config.immersive_paintings.client.advancedGroup": "Erweiterte Einstellungen",
+  "config.immersive_paintings.common.requireSolidSupport": "Benötigt solide Unterstützung",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Wenn diese Option deaktiviert ist, können Gemälde und Graffiti auf jedem Block platziert werden, auch in der Luft.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Überprüfen, ob der Malbereich leer ist",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivieren Sie die Überprüfung des Raums für Gemälde alle 5 Sekunden. Das Deaktivieren spart viel Serverressourcen",
   "config.immersive_paintings.common.paintingsHaveCollision": "Gemälde haben Kollisionen",

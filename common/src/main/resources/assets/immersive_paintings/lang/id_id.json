@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Pengaturan Lanjutan",
   "config.immersive_paintings.client.generalGroup": "Pengaturan Umum",
   "config.immersive_paintings.client.advancedGroup": "Pengaturan Lanjutan",
+  "config.immersive_paintings.common.requireSolidSupport": "Membutuhkan Dukungan yang Kuat",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Jika dinonaktifkan, lukisan dan grafiti dapat ditempatkan di blok mana pun, termasuk di udara.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Uji Jika Ruang Lukisan Kosong",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktifkan pemeriksaan ruang untuk lukisan setiap 5 detik. Menonaktifkan ini akan menghemat banyak komputasi server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Lukisan Memiliki Tabrakan",

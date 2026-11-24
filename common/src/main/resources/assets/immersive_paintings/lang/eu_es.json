@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Aurreratuak",
   "config.immersive_paintings.client.generalGroup": "Orokorrak",
   "config.immersive_paintings.client.advancedGroup": "Aurreratuak",
+  "config.immersive_paintings.common.requireSolidSupport": "Euskarririk sendoena eskatzen da",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Desaktibatuta badago, margolanak eta grafitiak edozein blokean jar daitezke, airea barne.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Proba pintura espazioa huts dagoen",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Pinturen espazioaren egiaztapena 5 segunduro aktibatzea. Hori desgaitzeak zerbitzariaren kalkulu asko aurrezten du",
   "config.immersive_paintings.common.paintingsHaveCollision": "Pinturrek Talka egiten dute",

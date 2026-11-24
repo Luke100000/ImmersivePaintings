@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Paramètres avancés",
   "config.immersive_paintings.client.generalGroup": "Paramètres généraux",
   "config.immersive_paintings.client.advancedGroup": "Paramètres avancés",
+  "config.immersive_paintings.common.requireSolidSupport": "Exiger un soutien solide",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Si cette option est désactivée, les peintures et les graffitis peuvent être placés sur n’importe quel bloc, y compris dans l’air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Tester si l’espace de peinture est vide",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Activer la vérification de l’espace pour les peintures toutes les 5 secondes. Désactiver cela permet d'économiser beaucoup de ressources serveur",
   "config.immersive_paintings.common.paintingsHaveCollision": "Les peintures ont des collisions",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Caktimet e avancuara",
   "config.immersive_paintings.client.generalGroup": "Caktimet e përgjithshme",
   "config.immersive_paintings.client.advancedGroup": "Caktimet e avancuara",
+  "config.immersive_paintings.common.requireSolidSupport": "Kërko mbështetje të fortë",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Nëse është çaktivizuar, piktura dhe grafite mund të vendosen në çdo bllok, përfshirë ajrin.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testoni nëse hapësira për piktura është e zbrazët",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivizoni kontrolle të hapësirës për pikturat çdo 5 sekonda. Çaktivizimi i kësaj kursen shumë llogaritje në server",
   "config.immersive_paintings.common.paintingsHaveCollision": "Pikturat kanë përplasje",

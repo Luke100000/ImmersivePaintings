@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avansita Agordes",
   "config.immersive_paintings.client.generalGroup": "Generala Agordes",
   "config.immersive_paintings.client.advancedGroup": "Avansita Agordes",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testar se la spaco de pintura es malplena",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivizar kontrola spaco por pinturas cada 5 sekundi. Desabilizanta tio savas multe da server komputo",
   "config.immersive_paintings.common.paintingsHaveCollision": "Pinturas havas koliziones",

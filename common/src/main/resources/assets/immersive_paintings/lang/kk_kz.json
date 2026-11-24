@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Алға жылжыған параметрлер",
   "config.immersive_paintings.client.generalGroup": "Жалпы параметрлер",
   "config.immersive_paintings.client.advancedGroup": "Алға жылжыған параметрлер",
+  "config.immersive_paintings.common.requireSolidSupport": "Мықты қолдауды талап етіңіз",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Өшірілген кезде кескіндер мен граффити кез келген блокқа, соның ішінде ауаға да орналастырылуы мүмкін.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Сурет кеңістігінің бос екенін тексеру",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Суреттер үшін әр 5 секунд сайын кеңістікті тексеруді қосу. Мұны өшіру сервердің есептеуі үшін көп сақтауды үнемдейді",
   "config.immersive_paintings.common.paintingsHaveCollision": "Суреттер бір-бірімен соқтығысу",

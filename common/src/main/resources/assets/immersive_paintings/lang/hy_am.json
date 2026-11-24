@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Հասարակական պարամետրեր",
   "config.immersive_paintings.client.generalGroup": "Ընդհանուր պարամետրեր",
   "config.immersive_paintings.client.advancedGroup": "Հասարակական պարամետրեր",
+  "config.immersive_paintings.common.requireSolidSupport": "Պահանջել ամուր աջակցություն",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Եթե անջատված է, նկարներն ու գրաֆիտիները կարելի է տեղադրել ցանկացած բլոկի վրա, այդ թվում՝ օդի։",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Թեստեք, եթե նկարը դատարկ է",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Անհրաժեշտ է յուրաքանչյուր 5 վայրկյանում ստուգել նկարի տեղը։ Սա անջատելը առցանց հաշվի համար մեծ աջակցություն է",
   "config.immersive_paintings.common.paintingsHaveCollision": "Նկարների միջև պատահարներ կան",

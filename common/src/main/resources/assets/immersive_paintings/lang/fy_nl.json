@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Ferdjippe ynstellingen",
   "config.immersive_paintings.client.generalGroup": "Algemene ynstellingen",
   "config.immersive_paintings.client.advancedGroup": "Ferdjippe ynstellingen",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Tester as it skilderijromte leech is",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivearje romtekontrole foar skilderijen elke 5 sekonden. It útskeakeljen fan dizze opsje besparret in protte serveerkapasiteit",
   "config.immersive_paintings.common.paintingsHaveCollision": "Skilderijen hawwe kolizjes",

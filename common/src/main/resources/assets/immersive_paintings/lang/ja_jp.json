@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "詳細設定",
   "config.immersive_paintings.client.generalGroup": "全般設定",
   "config.immersive_paintings.client.advancedGroup": "詳細設定",
+  "config.immersive_paintings.common.requireSolidSupport": "ソリッドサポートが必要",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "無効にすると、絵画や落書きは空気を含む任意のブロックに置くことができます。",
   "config.immersive_paintings.common.testIfSpaceEmpty": "空白の場合にテストする",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "5秒ごとに空白チェックを有効にします。これを無効にすると、サーバーの計算が大幅に節約されます",
   "config.immersive_paintings.common.paintingsHaveCollision": "絵画は衝突しています",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "進階設定",
   "config.immersive_paintings.client.generalGroup": "一般設定",
   "config.immersive_paintings.client.advancedGroup": "進階設定",
+  "config.immersive_paintings.common.requireSolidSupport": "需要堅實的支持",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "若此功能已停用，畫作和塗鴉即可放置於任何方塊上，包括空中。",
   "config.immersive_paintings.common.testIfSpaceEmpty": "測試繪圖空間是否為空",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "啟用每 5 秒一次的繪圖空間檢查。停用此功能可節省大量伺服器運算。",
   "config.immersive_paintings.common.paintingsHaveCollision": "繪畫有碰撞",

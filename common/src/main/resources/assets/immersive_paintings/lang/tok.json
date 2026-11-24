@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "nasin ante",
   "config.immersive_paintings.client.generalGroup": "nasin ale",
   "config.immersive_paintings.client.advancedGroup": "nasin ante",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "kijetesantakalu li ala lie li lon",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "kijetesantakalu li wile e palisa lon tenpo 5 sekondi. ni li wile e pali mi nena tan ni: li pala ijo pi sitelen lawa",
   "config.immersive_paintings.common.paintingsHaveCollision": "palisa li kama jo e tusu",

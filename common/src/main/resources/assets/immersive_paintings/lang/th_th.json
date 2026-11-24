@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "การตั้งค่าขั้นสูง",
   "config.immersive_paintings.client.generalGroup": "การตั้งค่าทั่วไป",
   "config.immersive_paintings.client.advancedGroup": "การตั้งค่าขั้นสูง",
+  "config.immersive_paintings.common.requireSolidSupport": "ต้องการการสนับสนุนที่มั่นคง",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "หากปิดฟังก์ชันนี้ ภาพวาดและกราฟฟิตีสามารถวางได้บนบล็อกใดก็ได้ รวมถึงพื้นที่ว่าง",
   "config.immersive_paintings.common.testIfSpaceEmpty": "ทดสอบว่าพื้นที่ทาสีว่างหรือไม่",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "เปิดใช้งานการตรวจสอบพื้นที่สำหรับภาพวาดทุก 5 วินาที การปิดนี้จะช่วยประหยัดการประมวลผลของเซิร์ฟเวอร์ได้มาก",
   "config.immersive_paintings.common.paintingsHaveCollision": "ภาพวาดมีการปะทะกัน",

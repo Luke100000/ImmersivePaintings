@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Gosodiadau Uwch",
   "config.immersive_paintings.client.generalGroup": "Gosodiadau Cyffredinol",
   "config.immersive_paintings.client.advancedGroup": "Gosodiadau Uwch",
+  "config.immersive_paintings.common.requireSolidSupport": "Gofynnwch am gefnogaeth gadarn",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Os yw'n anabl, gellir gosod paentiadau a graffiti ar unrhyw floc, gan gynnwys aer.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Prawf os yw'r gofod paentiad yn wag",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Caniatáu prawf gofod ar gyfer paentiadau pob 5 eiliad. Mae tynnu'r gosodiad hwn yn arbed llawer o gyfrifiad gweinydd",
   "config.immersive_paintings.common.paintingsHaveCollision": "Mae Paentiadau'n Cynnwys Cyffro",

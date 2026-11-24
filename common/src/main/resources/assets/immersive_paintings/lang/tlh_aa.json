@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "muvwI' nIv",
   "config.immersive_paintings.client.generalGroup": "muvwI' pIj",
   "config.immersive_paintings.client.advancedGroup": "muvwI' nIv",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "ghopPaintings nIteb vaj jIHvaD veS vItu' ghom",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "ghopPaintings rIntaH ghom yIneH 5 tup ropbogh. vItoQta'lu' ghuHqa' naQ vIghaj",
   "config.immersive_paintings.common.paintingsHaveCollision": "ghopPaintings vISuchHa'",

@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Dáru sihttaid",
   "config.immersive_paintings.client.generalGroup": "Generaleda sihttaid",
   "config.immersive_paintings.client.advancedGroup": "Dáru sihttaid",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testa if geavahuspahtta lea geavahit",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Gáddit geavahusa sihttaid lokálahkkua 5 sekunda. Gohččat dasa gávdni lotta server ovdali",
   "config.immersive_paintings.common.paintingsHaveCollision": "Geavahit leat kolidat",
