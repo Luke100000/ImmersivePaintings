@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Geavanceerde Instellingen",
   "config.immersive_paintings.client.generalGroup": "Algemene Instellingen",
   "config.immersive_paintings.client.advancedGroup": "Geavanceerde Instellingen",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test of het Schilderijgebied Leeg is",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Schakel ruimtecontrole voor schilderijen elke 5 seconden in. Dit uitschakelen bespaart veel serververwerking.",
   "config.immersive_paintings.common.paintingsHaveCollision": "Schilderijen Hebbe Botsingen",
