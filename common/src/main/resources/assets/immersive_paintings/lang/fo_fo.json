@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Avanceret innstillingar",
   "config.immersive_paintings.client.generalGroup": "Almennar innstillingar",
   "config.immersive_paintings.client.advancedGroup": "Avanceret innstillingar",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testa um plássið fyri myndir er tómt",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Aktivér plásskontroll fyri myndir hvønn 5.sec. At deaktivera hetta sparar nógv av server-bering",
   "config.immersive_paintings.common.paintingsHaveCollision": "Myndir hava kollisiónir",
