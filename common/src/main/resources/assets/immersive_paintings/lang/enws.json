@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Advanced Settings",
   "config.immersive_paintings.client.generalGroup": "General Settings",
   "config.immersive_paintings.client.advancedGroup": "Advanced Settings",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Test If Painting Space Empty",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Enable space check for paintings every 5 seconds. Disabling this saves a great deal of server compute",
   "config.immersive_paintings.common.paintingsHaveCollision": "Paintings Have Collisions",
