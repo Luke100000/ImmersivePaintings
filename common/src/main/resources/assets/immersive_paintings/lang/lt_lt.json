@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Išplėstiniai nustatymai",
   "config.immersive_paintings.client.generalGroup": "Bendrieji nustatymai",
   "config.immersive_paintings.client.advancedGroup": "Išplėstiniai nustatymai",
+  "config.immersive_paintings.common.requireSolidSupport": "Reikalingas tvirtas atraminis pagrindas",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Jei ši funkcija išjungta, paveikslus ir grafičius galima talpinti ant bet kurio bloko, įskaitant ir tuščią erdvę.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Testas, ar paveikslo erdvė tuščia",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Įjungti paveikslų vietos tikrinimą kas 5 sekundes. Išjungus šią funkciją sutaupoma daug serverio skaičiavimo",
   "config.immersive_paintings.common.paintingsHaveCollision": "Paveikslai susiduria",
