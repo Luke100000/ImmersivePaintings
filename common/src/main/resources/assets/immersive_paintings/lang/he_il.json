@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "הגדרות מתקדמות",
   "config.immersive_paintings.client.generalGroup": "הגדרות כלליות",
   "config.immersive_paintings.client.advancedGroup": "הגדרות מתקדמות",
+  "config.immersive_paintings.common.requireSolidSupport": "נדרשת תמיכה איתנה",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "אם האפשרות מושבתת, ניתן למקם ציורים וגרפיטי על כל בלוק, כולל באוויר.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "בדוק אם שטח הציור ריק",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "אפשר בדיקת מקום עבור ציורים כל 5 שניות. השבתת אפשרות זו חוסכת הרבה משאבי מחשוב לשרת.",
   "config.immersive_paintings.common.paintingsHaveCollision": "ציורים מתנגשים",
