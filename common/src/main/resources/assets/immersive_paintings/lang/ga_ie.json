@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Socruithe Casta",
   "config.immersive_paintings.client.generalGroup": "Socruithe Ginearálta",
   "config.immersive_paintings.client.advancedGroup": "Socruithe Casta",
+  "config.immersive_paintings.common.requireSolidSupport": "Tacaíocht Láidir Riachtanach",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Má tá sé cumasaithe, is féidir pictiúir agus grafítí a chur ar aon bhloc, aer san áireamh.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Tástáil An bhfuil Spás na Péintéireachta Duíll",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Ná­lig do sheiceáil spáis do phéintéisí gach 5 soicind. Cuireann an bhforáil seo tuilleadh comhoibre ar an gcuideachta",
   "config.immersive_paintings.common.paintingsHaveCollision": "Tá Chomhthionscnaimh ag na Péintéisí",
