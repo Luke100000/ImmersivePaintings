@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Пашыраныя налады",
   "config.immersive_paintings.client.generalGroup": "Агульныя налады",
   "config.immersive_paintings.client.advancedGroup": "Пашыраныя налады",
+  "config.immersive_paintings.common.requireSolidSupport": "Патрабуецца надзейная падтрымка",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "Калі адключана, карціны і графіці могуць быць размешчаны на любым блоку, у тым ліку на паветры.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "Праверыць, ці пустое месца для карцін",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "Уключыць праверку месца для карцін кожныя 5 секунд. Дасанкванне гэтага эканоміць шмат вылічальнай магутнасці сервера",
   "config.immersive_paintings.common.paintingsHaveCollision": "Карціны маюць калізіі",
