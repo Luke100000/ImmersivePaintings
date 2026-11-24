@@ -100,6 +100,8 @@
   "config.immersive_paintings.common.advancedGroup": "Nā Kūlana ʻIkeʻike",
   "config.immersive_paintings.client.generalGroup": "Nā Kūlana Pāʻoihana Pāʻoihana",
   "config.immersive_paintings.client.advancedGroup": "Nā Kūlana ʻIkeʻike",
+  "config.immersive_paintings.common.requireSolidSupport": "Require Solid Support",
+  "config.immersive_paintings.common.requireSolidSupport.desc": "If disabled, paintings and graffiti can be placed on any block, including air.",
   "config.immersive_paintings.common.testIfSpaceEmpty": "E hoʻāʻo inā loaʻa ke kūlana kiʻi",
   "config.immersive_paintings.common.testIfSpaceEmpty.desc": "E hoʻokuʻu i ka ʻike kūlana no nā kiʻi i kēlā me kēia mau sekona 5. ʻAʻohe ka waiho ʻana i kēia e mālama i nā hāmeʻa koa",
   "config.immersive_paintings.common.paintingsHaveCollision": "Hoʻokomo nā kiʻi i loko o nā hana",
